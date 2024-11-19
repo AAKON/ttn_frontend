@@ -1,0 +1,55 @@
+.auth-wrap{
+    background-image: url("/auth/bg-patterns.svg");
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+.auth_title{
+    font-size: 30px;
+    line-height: 38px;
+    color: #101828;
+    font-weight: 600;
+}
+.frm_cr{
+    color: #667085;
+    font-size: 16px;
+    line-height: 24px;
+}
+.frm-alink{
+    font-size: 12px;
+    line-height: 18px;
+    color: #475467;
+}
+.afrm-label{
+    font-size: 14px;
+    line-height: 20px;
+    color: #101828;
+}
+.gray-500{
+    color: #667085;
+}
+.btype-check button[aria-checked="false"]{
+    border-color: #667085;
+}
+button[disabled]{
+    background-color: #F2F4F7;
+    color: #98A2B3;
+}
+button[variant="link"]{
+    background: none;
+    margin: 0;
+    padding: 0;
+    color: #6941C6;
+}
+
+@media only screen and (max-width: 767px) {
+    .auth_title{
+        font-size: 24px;
+        line-height: 32px;
+    }
+}
+@media only screen and (max-width: 575px) {
+    .auth_title{
+        font-size: 20px;
+        line-height: 30px;
+    }
+}

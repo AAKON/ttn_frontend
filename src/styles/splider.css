@@ -1,0 +1,21 @@
+.splide__list {
+    height: 185px;
+}
+
+.splide__pagination__page {
+    background: #d0d5dd;
+    transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    -o-transform: scale(1.2);
+}
+.splide__pagination__page.is-active {
+    background: #f7931e;
+}
+
+.splide__pagination {
+    display: flex;
+    column-gap: 18px;
+    align-self: center;
+}
