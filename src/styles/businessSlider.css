@@ -1,0 +1,35 @@
+.splider2 .splide__list {
+  height: 260px;
+}
+
+.splide__arrows .splide__arrow.splide__arrow--prev ,
+.splide__arrows .splide__arrow.splide__arrow--next {
+  width: 48px;
+  height: 48px;
+  border: 1px solid #D0D5DD;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.06) , 0 4px 6px -2px rgba(16, 24, 40, 0.3);
+  background: #ffffff;
+  cursor: not-allowed;
+}
+.splide__arrows .splide__arrow svg  {
+  fill: #344054 !important;
+}
+.splide__arrows .splide__arrow:hover {
+  background: #F9FAFB;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.06) , 0 4px 6px -2px rgba(16, 24, 40, 0.3) !important;
+}
+
+.splide__arrow:hover:not(:disabled) {
+  opacity: 1 !important;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.06), 0 4px 6px -2px rgba(16, 24, 40, 0.3) !important;
+  background: #F9FAFB !important;
+  cursor: pointer;
+}
+.splide__arrow:not(:disabled) {
+  opacity: 1 !important;
+  box-shadow: 0 12px 16px -4px rgba(16, 24, 40, 0.06), 0 4px 6px -2px rgba(16, 24, 40, 0.3) !important;
+  background: #F9FAFB !important;
+}
+.splide__arrow:not(:disabled) svg {
+  fill: #344054 !important;
+}

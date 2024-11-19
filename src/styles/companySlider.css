@@ -1,0 +1,9 @@
+.company-slider .splide__list {
+  height: 422px;
+}
+#company-slider  {
+  overflow-x: hidden;
+}
+#company-slider .splide__track {
+  overflow: visible !important;
+}

@@ -1,0 +1,21 @@
+<svg width="910" height="559" viewBox="0 0 910 559" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_2406_29861" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="-4" y="-355" width="918" height="918">
+<rect x="-3.00977" y="-187.785" width="768" height="768" rx="20" transform="rotate(-12.5 -3.00977 -187.785)" fill="url(#paint0_radial_2406_29861)"/>
+</mask>
+<g mask="url(#mask0_2406_29861)">
+<rect x="398.344" y="67.9073" width="95" height="95" rx="19.5" transform="rotate(-12.5 398.344 67.9073)" stroke="#EAECF0"/>
+<rect x="341.094" y="31.4336" width="191" height="191" rx="19.5" transform="rotate(-12.5 341.094 31.4336)" stroke="#EAECF0"/>
+<rect x="283.842" y="-5.03902" width="287" height="287" rx="19.5" transform="rotate(-12.5 283.842 -5.03902)" stroke="#EAECF0"/>
+<rect x="226.591" y="-41.5126" width="383" height="383" rx="19.5" transform="rotate(-12.5 226.591 -41.5126)" stroke="#EAECF0"/>
+<rect x="169.341" y="-77.9853" width="479" height="479" rx="19.5" transform="rotate(-12.5 169.341 -77.9853)" stroke="#EAECF0"/>
+<rect x="112.089" y="-114.459" width="575" height="575" rx="19.5" transform="rotate(-12.5 112.089 -114.459)" stroke="#EAECF0"/>
+<rect x="54.8366" y="-150.932" width="671" height="671" rx="19.5" transform="rotate(-12.5 54.8366 -150.932)" stroke="#EAECF0"/>
+<rect x="-2.4134" y="-187.405" width="767" height="767" rx="19.5" transform="rotate(-12.5 -2.4134 -187.405)" stroke="#EAECF0"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_2406_29861" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(380.99 196.215) rotate(90) scale(384 384)">
+<stop/>
+<stop offset="1" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
