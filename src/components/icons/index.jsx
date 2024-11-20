@@ -17,3 +17,5 @@ export { Minus } from './minus'
 export {Email} from './email'
 export {Location} from './location'
 export {Phone} from './phone'
+
+export {WorldMap} from './world-map'

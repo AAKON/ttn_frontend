@@ -1,6 +1,5 @@
 import {Section} from "@/components/shared";
 import Count from "./count";
-import CountItem from "@/ui/count-item";
 import Button from "@/components/ui/button";
 
 const Counter = () => {
@@ -24,11 +23,11 @@ const Counter = () => {
                 </div>
                 {/* right */}
                 <div className="grid grid-cols-3 mt-8 md:items-center md:max-w-[692px] gap-[15px]">
-                    <Count title={"12+"} role={"Partners"}/>
-                    <Count title={"7+"} role={"Countries"}/>
-                    <Count title={"9000+"} role={"Professionals Connected"}/>
-                    <Count title={"300,000+"} role={"Global Audiences"}/>
-                    <Count title={"80+"} role={"Business"}/>
+                    <Count title={"12"} role={"Partners"} />
+                    <Count title={"7"} role={"Countries"} />
+                    <Count title={"9000"} role={"Professionals Connected"} />
+                    <Count title={"300000"} role={"Global Audiences"} />
+                    <Count title={"300000"} role={"Business"} />
                 </div>
             </div>
         </Section>
