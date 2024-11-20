@@ -1,11 +1,20 @@
+"use client";
+import CountUp from "react-countup";
 
-const Count = ({ title, role }) => {
+const Count = ({ title, role, className, titleClass, roleClass, icon }) => {
     return (
-        <div className="pl-4 border-l-2 border-l-gray-200 w-[220px]">
-            <h5 className="font-medium text-[20px] leading-normal md:text-[30px] text-brand-600 pb-2">
-                {title ? title : "12+"}
+        <div
+            className={`xl:pl-4 pl-2 border-l-2 border-l-gray-200 w-[130px] xl:w-[220px] ${className}`}
+        >
+            <h5
+                className={`font-medium text-xl xl:text-[30px] text-orange-500 pb-2 ${titleClass}`}
+            >
+                <CountUp start={0} end={title} />
+                {icon}+
             </h5>
-            <p className="text-gray-500 text-xs md:text-base font-medium capitalize">
+            <p
+                className={`text-gray-500 text-xs xl:text-base font-medium capitalize ${roleClass}`}
+            >
                 {role ? role : "Partners"}
             </p>
         </div>

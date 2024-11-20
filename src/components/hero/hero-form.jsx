@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from "@/components/ui/button";
-import {SelectBox} from "@/components/hero/hero";
+import {Categories, Country} from "@/components/hero/hero";
+import Counter from "@/components/counter/counter";
 
 const style = {
     boxShadow: "0px 4px 12px 0px rgba(0,0,0,0.04)"
@@ -13,7 +14,7 @@ function HeroForm(props) {
                 action=""
                 className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap md:flex-nowrap"
             >
-                <div className="flex w-full items-center gap-2 border border-border rounded-lg py-3 px-6 bg-gray-50 md:order-2">
+                <div className="flex w-full items-center gap-2 rounded-lg py-3 px-6 md:order-2">
                 <span>
                   <svg
                       width={24}
@@ -37,11 +38,11 @@ function HeroForm(props) {
                         placeholder="T-shirt manufacturer"
                     />
                 </div>
-                <div className="md:order-1">
-                    <SelectBox/>
+                <div className="md:order-1 lg:border-r lg:border-r-gray-300">
+                    <Categories/>
                 </div>
                 <div className="md:order-3">
-                    <SelectBox/>
+                    <Country />
                 </div>
                 <div className="flex-1 md:order-4">
                     <Button className="w-full md:w-[210px]" type="submit">

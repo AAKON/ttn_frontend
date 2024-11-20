@@ -14,7 +14,7 @@ const footerLink = [
 
 export const Footer = () => {
   return (
-    <footer className="mt-8 xl:mt-20 md:mt-12">
+    <footer className="pt-8 xl:pt-20 md:pt-12 border-t border-t-gray-200">
       <Container>
         <FooterBanner />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-[63.4%_1fr] md:my-12">
@@ -86,7 +86,7 @@ function FooterContact() {
       <NewsletterForm />
       <p className="text-sm text-[#475467] pt-[6px] leading-5">
         We care about your data in our{" "}
-        <Link href="/" className="underline ">
+        <Link href="/privacy-policy" className="underline ">
           Privacy Policy
         </Link>
         .
