@@ -86,7 +86,7 @@ function FooterContact() {
       <NewsletterForm />
       <p className="text-sm text-[#475467] pt-[6px] leading-5">
         We care about your data in our{" "}
-        <Link href="/" className="underline ">
+        <Link href="/privacy-policy" className="underline ">
           Privacy Policy
         </Link>
         .
