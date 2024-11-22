@@ -1,16 +1,17 @@
-
 const Button = ({
   TagName = "button",
-  secondary,
+  secondary=false,
   icon = false,
   children,
   className = "",
   ...props
 }) => {
   return (
-    <button
-      className={`transition-all ${className} ${
-        secondary ? "bg-white text-gray-700 hover:bg-gradient-to-r from-gray-50 to-gray-200" : "bg-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700"
+    <TagName
+      className={`transition-all flex items-center gap-1 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-bold ${className} ${
+        secondary
+          ? "bg-white text-gray-700 border border-gray-300 hover:bg-gradient-to-r from-gray-50 to-gray-200"
+          : "bg-brand-600 text-white border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700"
       }`}
       {...props}
     >
@@ -33,7 +34,7 @@ const Button = ({
       )}
 
       {children}
-    </button>
+    </TagName>
   );
 };
 

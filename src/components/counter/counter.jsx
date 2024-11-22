@@ -12,11 +12,10 @@ const Counter = () => {
                         Explore Your Business Needs{" "}
                     </h3>
                     <div className="flex items-center justify-center md:justify-start gap-x-2">
-                        <Button
-                            className="bg-transparent text-gray-700 py-[10px] rounded-lg px-4 border-2 border-gray-300">
+                        <Button secondary>
                             Get quote
                         </Button>
-                        <Button className="py-[10px] hover:bg-brand-500 rounded-lg px-6">
+                        <Button>
                             Add Company
                         </Button>
                     </div>
