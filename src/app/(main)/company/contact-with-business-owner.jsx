@@ -14,6 +14,7 @@ const ContactWithBusinessOwner = () => {
 
     const emailClick = () => {
         setEmail(true)
+
     }
     const reportClick = () => {
         setReport(true)
@@ -21,13 +22,13 @@ const ContactWithBusinessOwner = () => {
 
 
     return (
-        <div className='bg-gray-100 pb-4 relative'>
+        <div className='bg-white p-6 rounded-2xl relative'>
             <button
                 onClick={() => setOwner(!Owner)}
-                className="lg:text-lg w-full flex justify-between lg:text-brand-600 font-semibold lg:py-0 lg:px-0 lg:bg-transparent text-white px-4 py-3 text-base">
+                className="lg:text-lg w-full flex justify-between items-center lg:text-brand-600 font-semibold lg:py-0 lg:px-0 lg:bg-transparent text-white px-4 py-3 text-base">
                 Contact With Business Owner
-                <span className={`lg:hidden ${Owner ? "rotate-180" : "rotate-0"} `}>
-                    <ChevronDownIcon stroke="#C67618" />
+                <span className={`lg:hidden p-0 ${Owner ? "rotate-180" : "rotate-0"} `}>
+                    <ChevronDownIcon width={12} height={6} stroke="#ffffff" />
                 </span>
             </button>
 
@@ -55,7 +56,8 @@ const ContactWithBusinessOwner = () => {
                 </Button>
 
                 <Button
-                    className='bg-transparent !text-gray-700 border !border-gray-300 lg:h-[60px] w-full text-center lg:text-lg font-semibold mt-4 px-4 py-3 text-base'>
+                    secondary
+                    className='lg:h-[60px] w-full text-center lg:text-lg mt-4 px-4 py-3 '>
                     Send inquiry
                 </Button>
 
