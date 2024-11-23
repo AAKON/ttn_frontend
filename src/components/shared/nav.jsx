@@ -1,159 +1,192 @@
 "use client";
 import Button from "../ui/button";
-import {useEffect, useRef, useState} from "react";
-import {Bars, Cross} from "@/components/icons";
+import { useEffect, useRef, useState } from "react";
+import { Bars, Cross } from "@/components/icons";
 import HeroForm from "@/components/hero/hero-form";
 
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
-import {usePathname} from "next/navigation";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const menuItems = [
-    {id:1, label: "Business", path: "/business"},
-    {id:2, label: "Services", path: "/services"},
-    {id:3, label: "Projects", path: "/projects"},
-    {id:4, label: "Blog", path: "/blog"},
-    {id:5, label: "Contact", path: "/contact"},
-]
-
+  { id: 1, label: "Business", path: "/business" },
+  { id: 2, label: "Services", path: "/services" },
+  { id: 3, label: "Projects", path: "/projects" },
+  { id: 4, label: "Blog", path: "/blog" },
+  { id: 5, label: "Contact", path: "/contact" },
+];
 
 export const Nav = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const nav = useRef(null)
-  const pathname = usePathname()
+  const nav = useRef(null);
+  const pathname = usePathname();
 
-
-
-
-useEffect(() => {
-  window.onscroll = () => {
-    if (window.scrollY > 100) {
-      nav.current.classList.add("bg-white")
-    } else {
-      if (showMobileNav) {
-        nav.current.classList.add("bg-white")
-      }else  {
-        nav.current.classList.remove("bg-white")
+  useEffect(() => {
+    window.onscroll = () => {
+      if (window.scrollY > 100) {
+        nav.current.classList.add("bg-white");
+      } else {
+        if (showMobileNav) {
+          nav.current.classList.add("bg-white");
+        } else {
+          nav.current.classList.remove("bg-white");
+        }
       }
-    }
-  }
-},[])
+    };
+  }, []);
 
   return (
-      <>
-        <nav ref={nav} className={`${showMobileNav ? "bg-white" : ""}`}>
-          <div className="container mx-auto">
-            <div className="flex justify-between items-center gap-12">
-              <div className="logo">
-                <Link href={"/"} className="hidden md:block">
-              <svg
+    <>
+      <nav ref={nav} className={`${showMobileNav ? "bg-white" : ""}`}>
+        <div className="container mx-auto">
+          <div className="flex justify-between items-center gap-12">
+            <div className="logo">
+              <Link href={"/"} className="hidden md:block">
+                <svg
                   width="169"
                   height="28"
                   viewBox="0 0 169 28"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
+                >
+                  <path
                     d="M0.78125 8.78906V6H13.9219V8.78906H9.02344V22H5.67969V8.78906H0.78125ZM19.752 22.2344C18.5176 22.2344 17.4551 21.9844 16.5645 21.4844C15.679 20.9792 14.9967 20.2656 14.5176 19.3437C14.0384 18.4167 13.7988 17.3203 13.7988 16.0547C13.7988 14.8203 14.0384 13.737 14.5176 12.8047C14.9967 11.8724 15.6712 11.1458 16.541 10.625C17.416 10.1042 18.4421 9.84375 19.6191 9.84375C20.4108 9.84375 21.1478 9.97135 21.8301 10.2266C22.5176 10.4766 23.1165 10.8542 23.627 11.3594C24.1426 11.8646 24.5436 12.5 24.8301 13.2656C25.1165 14.026 25.2598 14.9167 25.2598 15.9375V16.8516H15.127V14.7891H22.127C22.127 14.3099 22.0228 13.8854 21.8145 13.5156C21.6061 13.1458 21.3171 12.8568 20.9473 12.6484C20.5827 12.4349 20.1582 12.3281 19.6738 12.3281C19.1686 12.3281 18.7207 12.4453 18.3301 12.6797C17.9447 12.9089 17.6426 13.2187 17.4238 13.6094C17.2051 13.9948 17.0931 14.4245 17.0879 14.8984V16.8594C17.0879 17.4531 17.1973 17.9661 17.416 18.3984C17.64 18.8307 17.9551 19.1641 18.3613 19.3984C18.7676 19.6328 19.2493 19.75 19.8066 19.75C20.1764 19.75 20.515 19.6979 20.8223 19.5938C21.1296 19.4896 21.3926 19.3333 21.6113 19.125C21.8301 18.9167 21.9967 18.6615 22.1113 18.3594L25.1895 18.5625C25.0332 19.3021 24.7129 19.9479 24.2285 20.5C23.7493 21.0469 23.1296 21.474 22.3691 21.7813C21.6139 22.0833 20.7415 22.2344 19.752 22.2344ZM29.998 10L32.2012 14.1953L34.459 10H37.873L34.3965 16L37.9668 22H34.5684L32.2012 17.8516L29.873 22H26.4355L29.998 16L26.5605 10H29.998ZM46.2324 10V12.5H39.0059V10H46.2324ZM40.6465 7.125H43.9746V18.3125C43.9746 18.6198 44.0215 18.8594 44.1152 19.0312C44.209 19.1979 44.3392 19.3151 44.5059 19.3828C44.6777 19.4505 44.8757 19.4844 45.0996 19.4844C45.2559 19.4844 45.4121 19.4714 45.5684 19.4453C45.7246 19.4141 45.8444 19.3906 45.9277 19.375L46.4512 21.8516C46.2845 21.9036 46.0501 21.9635 45.748 22.0313C45.446 22.1042 45.0788 22.1484 44.6465 22.1641C43.8444 22.1953 43.1413 22.0885 42.5371 21.8437C41.9382 21.599 41.472 21.2187 41.1387 20.7031C40.8053 20.1875 40.6413 19.5365 40.6465 18.75V7.125ZM48.4004 22V10H51.7285V22H48.4004ZM50.0723 8.45312C49.5775 8.45312 49.153 8.28906 48.7988 7.96094C48.4499 7.6276 48.2754 7.22917 48.2754 6.76562C48.2754 6.30729 48.4499 5.91406 48.7988 5.58594C49.153 5.2526 49.5775 5.08594 50.0723 5.08594C50.5671 5.08594 50.9889 5.2526 51.3379 5.58594C51.6921 5.91406 51.8691 6.30729 51.8691 6.76562C51.8691 7.22917 51.6921 7.6276 51.3379 7.96094C50.9889 8.28906 50.5671 8.45312 50.0723 8.45312ZM57.7227 6V22H54.3945V6H57.7227ZM65.8574 22.2344C64.623 22.2344 63.5605 21.9844 62.6699 21.4844C61.7845 20.9792 61.1022 20.2656 60.623 19.3437C60.1439 18.4167 59.9043 17.3203 59.9043 16.0547C59.9043 14.8203 60.1439 13.737 60.623 12.8047C61.1022 11.8724 61.7767 11.1458 62.6465 10.625C63.5215 10.1042 64.5475 9.84375 65.7246 9.84375C66.5163 9.84375 67.2533 9.97135 67.9355 10.2266C68.623 10.4766 69.222 10.8542 69.7324 11.3594C70.248 11.8646 70.6491 12.5 70.9355 13.2656C71.222 14.026 71.3652 14.9167 71.3652 15.9375V16.8516H61.2324V14.7891H68.2324C68.2324 14.3099 68.1283 13.8854 67.9199 13.5156C67.7116 13.1458 67.4225 12.8568 67.0527 12.6484C66.6882 12.4349 66.2637 12.3281 65.7793 12.3281C65.2741 12.3281 64.8262 12.4453 64.4355 12.6797C64.0501 12.9089 63.748 13.2187 63.5293 13.6094C63.3105 13.9948 63.1986 14.4245 63.1934 14.8984V16.8594C63.1934 17.4531 63.3027 17.9661 63.5215 18.3984C63.7454 18.8307 64.0605 19.1641 64.4668 19.3984C64.873 19.6328 65.3548 19.75 65.9121 19.75C66.2819 19.75 66.6204 19.6979 66.9277 19.5938C67.235 19.4896 67.498 19.3333 67.7168 19.125C67.9355 18.9167 68.1022 18.6615 68.2168 18.3594L71.2949 18.5625C71.1387 19.3021 70.8184 19.9479 70.334 20.5C69.8548 21.0469 69.235 21.474 68.4746 21.7813C67.7194 22.0833 66.847 22.2344 65.8574 22.2344ZM92.0742 6V22H89.1523L82.1914 11.9297H82.0742V22H78.6914V6H81.6602L88.5664 16.0625H88.707V6H92.0742ZM100.275 22.2344C99.041 22.2344 97.9785 21.9844 97.0879 21.4844C96.2025 20.9792 95.5202 20.2656 95.041 19.3437C94.5618 18.4167 94.3223 17.3203 94.3223 16.0547C94.3223 14.8203 94.5618 13.737 95.041 12.8047C95.5202 11.8724 96.1947 11.1458 97.0645 10.625C97.9395 10.1042 98.9655 9.84375 100.143 9.84375C100.934 9.84375 101.671 9.97135 102.354 10.2266C103.041 10.4766 103.64 10.8542 104.15 11.3594C104.666 11.8646 105.067 12.5 105.354 13.2656C105.64 14.026 105.783 14.9167 105.783 15.9375V16.8516H95.6504V14.7891H102.65C102.65 14.3099 102.546 13.8854 102.338 13.5156C102.13 13.1458 101.84 12.8568 101.471 12.6484C101.106 12.4349 100.682 12.3281 100.197 12.3281C99.6921 12.3281 99.2441 12.4453 98.8535 12.6797C98.4681 12.9089 98.166 13.2187 97.9473 13.6094C97.7285 13.9948 97.6165 14.4245 97.6113 14.8984V16.8594C97.6113 17.4531 97.7207 17.9661 97.9395 18.3984C98.1634 18.8307 98.4785 19.1641 98.8848 19.3984C99.291 19.6328 99.7728 19.75 100.33 19.75C100.7 19.75 101.038 19.6979 101.346 19.5938C101.653 19.4896 101.916 19.3333 102.135 19.125C102.354 18.9167 102.52 18.6615 102.635 18.3594L105.713 18.5625C105.557 19.3021 105.236 19.9479 104.752 20.5C104.273 21.0469 103.653 21.474 102.893 21.7813C102.137 22.0833 101.265 22.2344 100.275 22.2344ZM114.338 10V12.5H107.111V10H114.338ZM108.752 7.125H112.08V18.3125C112.08 18.6198 112.127 18.8594 112.221 19.0312C112.314 19.1979 112.445 19.3151 112.611 19.3828C112.783 19.4505 112.981 19.4844 113.205 19.4844C113.361 19.4844 113.518 19.4714 113.674 19.4453C113.83 19.4141 113.95 19.3906 114.033 19.375L114.557 21.8516C114.39 21.9036 114.156 21.9635 113.854 22.0313C113.551 22.1042 113.184 22.1484 112.752 22.1641C111.95 22.1953 111.247 22.0885 110.643 21.8437C110.044 21.599 109.577 21.2187 109.244 20.7031C108.911 20.1875 108.747 19.5365 108.752 18.75V7.125ZM118.873 22L115.607 10H118.975L120.834 18.0625H120.943L122.881 10H126.186L128.154 18.0156H128.256L130.084 10H133.443L130.186 22H126.662L124.6 14.4531H124.451L122.389 22H118.873ZM140.34 22.2344C139.126 22.2344 138.077 21.9766 137.191 21.4609C136.311 20.9401 135.632 20.2161 135.152 19.2891C134.673 18.3568 134.434 17.276 134.434 16.0469C134.434 14.8073 134.673 13.724 135.152 12.7969C135.632 11.8646 136.311 11.1406 137.191 10.625C138.077 10.1042 139.126 9.84375 140.34 9.84375C141.553 9.84375 142.6 10.1042 143.48 10.625C144.366 11.1406 145.048 11.8646 145.527 12.7969C146.007 13.724 146.246 14.8073 146.246 16.0469C146.246 17.276 146.007 18.3568 145.527 19.2891C145.048 20.2161 144.366 20.9401 143.48 21.4609C142.6 21.9766 141.553 22.2344 140.34 22.2344ZM140.355 19.6562C140.908 19.6562 141.368 19.5 141.738 19.1875C142.108 18.8698 142.387 18.4375 142.574 17.8906C142.767 17.3437 142.863 16.7214 142.863 16.0234C142.863 15.3255 142.767 14.7031 142.574 14.1562C142.387 13.6094 142.108 13.1771 141.738 12.8594C141.368 12.5417 140.908 12.3828 140.355 12.3828C139.798 12.3828 139.329 12.5417 138.949 12.8594C138.574 13.1771 138.29 13.6094 138.098 14.1562C137.91 14.7031 137.816 15.3255 137.816 16.0234C137.816 16.7214 137.91 17.3437 138.098 17.8906C138.29 18.4375 138.574 18.8698 138.949 19.1875C139.329 19.5 139.798 19.6562 140.355 19.6562ZM148.41 22V10H151.637V12.0937H151.762C151.98 11.349 152.348 10.7865 152.863 10.4063C153.379 10.0208 153.973 9.82812 154.645 9.82812C154.811 9.82812 154.991 9.83854 155.184 9.85937C155.376 9.88021 155.546 9.90885 155.691 9.94531V12.8984C155.535 12.8516 155.319 12.8099 155.043 12.7734C154.767 12.737 154.514 12.7188 154.285 12.7188C153.796 12.7188 153.358 12.8255 152.973 13.0391C152.592 13.2474 152.29 13.5391 152.066 13.9141C151.848 14.2891 151.738 14.7214 151.738 15.2109V22H148.41ZM160.428 18.5469L160.436 14.5547H160.92L164.764 10H168.584L163.42 16.0313H162.631L160.428 18.5469ZM157.412 22V6H160.74V22H157.412ZM164.912 22L161.381 16.7734L163.6 14.4219L168.811 22H164.912Z"
                     fill="#F7931E"
-                />
-              </svg>
-            </Link>
-                <Link href={"/"} className="md:hidden">
-                  <svg
-                      width={32}
-                      height={32}
-                      viewBox="0 0 32 32"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                        d="M0 2.13333C0 0.955126 0.955126 0 2.13333 0H29.8667C31.0449 0 32 0.955126 32 2.13333V29.8667C32 31.0449 31.0449 32 29.8667 32H2.13333C0.955126 32 0 31.0449 0 29.8667V2.13333Z"
-                        fill="#F7931E"
-                    />
-                    <path
-                        d="M6.27839 9.0137C6.30638 8.9332 6.70009 7.85493 7.14977 6.61567C7.59945 5.37827 7.97262 4.36739 7.98009 4.36926C7.98755 4.37301 9.90196 6.65872 12.2343 9.448C14.5686 12.2373 16.5595 14.6203 16.8412 14.9611L15.9736 17.3535C15.4959 18.6676 15.1003 19.7478 15.0947 19.7534C15.0891 19.759 15.0798 19.7534 15.0723 19.7421C15.0649 19.7309 14.4547 19.0008 13.7158 18.1191C12.9769 17.2355 12.3687 16.5148 12.3631 16.5148C12.3575 16.5148 11.4506 19.0083 10.3479 22.0578C9.24516 25.1073 8.33834 27.6083 8.33274 27.6177C8.32714 27.627 7.32329 27.6326 3.63629 27.6251L6.3493 20.1371L6.36753 20.0868C7.85013 15.9912 9.06606 12.6322 9.07163 12.6117C9.0791 12.5817 8.77869 12.2111 6.22428 9.15784L6.27839 9.0137Z"
-                        fill="white"
-                    />
-                    <path
-                        d="M22.7635 11.7C24.1984 7.74261 25.387 4.4741 25.4038 4.43478L25.4336 4.36365L25.4728 4.4067C25.4952 4.43104 26.2304 5.30901 28.7045 8.26864L25.2265 17.8627C23.3121 23.1398 21.7336 27.4978 21.6832 27.6364L18.7258 24.1039C17.0987 22.1608 15.759 20.5583 15.7459 20.5415C15.7291 20.5172 15.8803 20.0828 16.5725 18.1715C17.039 16.8855 17.4308 15.8035 17.4663 15.7061L18.8004 17.2992C19.5337 18.1753 20.1382 18.8923 20.1438 18.8923C20.1494 18.8923 21.3287 15.6556 22.7635 11.7Z"
-                        fill="white"
-                    />
-                  </svg>
-            </Link>
-              </div>
+                  />
+                </svg>
+              </Link>
+              <Link href={"/"} className="md:hidden">
+                <svg
+                  width={32}
+                  height={32}
+                  viewBox="0 0 32 32"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 2.13333C0 0.955126 0.955126 0 2.13333 0H29.8667C31.0449 0 32 0.955126 32 2.13333V29.8667C32 31.0449 31.0449 32 29.8667 32H2.13333C0.955126 32 0 31.0449 0 29.8667V2.13333Z"
+                    fill="#F7931E"
+                  />
+                  <path
+                    d="M6.27839 9.0137C6.30638 8.9332 6.70009 7.85493 7.14977 6.61567C7.59945 5.37827 7.97262 4.36739 7.98009 4.36926C7.98755 4.37301 9.90196 6.65872 12.2343 9.448C14.5686 12.2373 16.5595 14.6203 16.8412 14.9611L15.9736 17.3535C15.4959 18.6676 15.1003 19.7478 15.0947 19.7534C15.0891 19.759 15.0798 19.7534 15.0723 19.7421C15.0649 19.7309 14.4547 19.0008 13.7158 18.1191C12.9769 17.2355 12.3687 16.5148 12.3631 16.5148C12.3575 16.5148 11.4506 19.0083 10.3479 22.0578C9.24516 25.1073 8.33834 27.6083 8.33274 27.6177C8.32714 27.627 7.32329 27.6326 3.63629 27.6251L6.3493 20.1371L6.36753 20.0868C7.85013 15.9912 9.06606 12.6322 9.07163 12.6117C9.0791 12.5817 8.77869 12.2111 6.22428 9.15784L6.27839 9.0137Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M22.7635 11.7C24.1984 7.74261 25.387 4.4741 25.4038 4.43478L25.4336 4.36365L25.4728 4.4067C25.4952 4.43104 26.2304 5.30901 28.7045 8.26864L25.2265 17.8627C23.3121 23.1398 21.7336 27.4978 21.6832 27.6364L18.7258 24.1039C17.0987 22.1608 15.759 20.5583 15.7459 20.5415C15.7291 20.5172 15.8803 20.0828 16.5725 18.1715C17.039 16.8855 17.4308 15.8035 17.4663 15.7061L18.8004 17.2992C19.5337 18.1753 20.1382 18.8923 20.1438 18.8923C20.1494 18.8923 21.3287 15.6556 22.7635 11.7Z"
+                    fill="white"
+                  />
+                </svg>
+              </Link>
+            </div>
 
-              <div className="flex-1 hidden lg:block">
-                <ul className="flex lg:gap-8 md:gap-6 items-center">
-                  {menuItems?.map((item) => (
-                      <li key={item.id}>
-                        <Link href={item.path} className={`text-base font-semibold ${pathname === item.path ? "active-nav-item" : ""} ${pathname === "/" ? "text-gray-200" : "text-gray-900"}`}>
-                          {item.label}
-                        </Link>
-                      </li>
-                  ))}
-                </ul>
-              </div>
+            <div className="flex-1 hidden lg:block">
+              <ul className="flex lg:gap-8 md:gap-6 items-center">
+                {menuItems?.map((item) => (
+                  <li key={item.id}>
+                    <Link
+                      href={item.path}
+                      className={`text-base font-semibold ${
+                        pathname === item.path ? "active-nav-item" : ""
+                      } ${
+                        pathname === "/" ? "text-gray-200" : "text-gray-900"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <div className="flex justify-end items-center gap-3 md:gap-4 ">
-                <Button secondary>Login</Button>
-                <Button type="button" icon>
-                  Add
-                </Button>
-                <button onClick={() => setShowMobileNav(!showMobileNav)} className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center">
-                  {showMobileNav ? <Cross /> : <Bars/>}
-                </button>
-              </div>
+            <div className="flex justify-end items-center gap-3 md:gap-4 ">
+              <Button
+                TagName={Link}
+                href="/login"
+                secondary
+                className="!text-gray-900"
+              >
+                Login
+              </Button>
+              <Button TagName={Link} href="/" icon>
+                Add
+              </Button>
+              <button
+                onClick={() => setShowMobileNav(!showMobileNav)}
+                className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center"
+              >
+                {showMobileNav ? <Cross /> : <Bars />}
+              </button>
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
       {/*  Show on Mobile */}
-        {showMobileNav && <MobileNav />}
-      </>
+      {showMobileNav && <MobileNav />}
+    </>
   );
 };
 
 function MobileNav() {
   return (
-      <div className="h-screen w-screen bg-white fixed z-[9999] top-[80px] p-4">
-        <HeroForm />
-        <div className="mt-3">
-          <Accordion type="single" collapsible className="w-full gap-6 flex flex-col">
-            <AccordionItem value="item-1">
-              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">Business</AccordionTrigger>
-              <AccordionContent className="bg-[#F4F5F6]">
-                Yes. It adheres to the WAI-ARIA design pattern.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">Ask</AccordionTrigger>
-              <AccordionContent>
-                Yes. It comes with default styles that matches the other
-                components&apos; aesthetic.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">Jobs</AccordionTrigger>
-              <AccordionContent>
-                Yes. It&apos;s animated by default, but you can disable it if you
-                prefer.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-4">
-              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">Blog</AccordionTrigger>
-              <AccordionContent>
-                Yes. It&apos;s animated by default, but you can disable it if you
-                prefer.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-4">
-              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">More</AccordionTrigger>
-              <AccordionContent>
-                Yes. It&apos;s animated by default, but you can disable it if you
-                prefer.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
+    <div className="h-screen w-screen bg-white fixed z-[9999] top-[80px] p-4">
+      <HeroForm />
+      <div className="mt-3">
+        <Accordion
+          type="single"
+          collapsible
+          className="w-full gap-6 flex flex-col"
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
+              Business
+            </AccordionTrigger>
+            <AccordionContent className="bg-[#F4F5F6]">
+              Yes. It adheres to the WAI-ARIA design pattern.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
+              Ask
+            </AccordionTrigger>
+            <AccordionContent>
+              Yes. It comes with default styles that matches the other
+              components&apos; aesthetic.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
+              Jobs
+            </AccordionTrigger>
+            <AccordionContent>
+              Yes. It&apos;s animated by default, but you can disable it if you
+              prefer.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
+              Blog
+            </AccordionTrigger>
+            <AccordionContent>
+              Yes. It&apos;s animated by default, but you can disable it if you
+              prefer.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
+              More
+            </AccordionTrigger>
+            <AccordionContent>
+              Yes. It&apos;s animated by default, but you can disable it if you
+              prefer.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
-  )}
+    </div>
+  );
+}
