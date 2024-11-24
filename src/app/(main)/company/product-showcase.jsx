@@ -57,7 +57,7 @@ const ProductShowCase = () => {
         arrows: true,
         pagination: false,
         breakpoints: {
-            1024: {
+            1280: {
                 perPage: 3,
             },
             768: {

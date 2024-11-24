@@ -1,111 +1,127 @@
-import Image from 'next/image'
-import Button from '@/components/ui/button'
-import { Container } from '@/shared'
-import shield_tick from '@/assets/shield-tick.png'
-import AU from '@/assets/AU.png'
-import CodeBlue from '@/assets/CodeBlue.svg'
+import Image from "next/image";
+import Button from "@/components/ui/button";
+import { Container } from "@/shared";
+import shield_tick from "@/assets/shield-tick.png";
+import AU from "@/assets/AU.png";
+import CodeBlue from "@/assets/CodeBlue.svg";
 
-import {BookmarkIcon,
-    BuildingOneIcon,
-    BuildingTwoIcon,
-    EyeIcon,
-    GridIcon,
-    MarkerPinIcon,
-    ShareBoldIcon,
-    TagsIcon,
-    } from "@/icons"
-
+import {
+  BookmarkIcon,
+  BuildingOneIcon,
+  BuildingTwoIcon,
+  EyeIcon,
+  GridIcon,
+  MarkerPinIcon,
+  ShareBoldIcon,
+  TagsIcon,
+} from "@/icons";
 
 const Frame = ({ className }) => {
-    return (
-        <div className={`relative ${className}`}>
-            <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full">
+  return (
+    <div className={`relative ${className}`}>
+      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full"></div>
+
+      <Container>
+        <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px] grid grid-cols-1 gap-8 xl:gap-12">
+          <div className="flex lg:flex-row flex-col gap-4 lg:justify-between">
+            <div className="flex lg:flex-row flex-col lg:items-center gap-3.5">
+              <Image
+                className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]"
+                src={CodeBlue}
+                alt="CodeBlue"
+              />
+              <div className="flex flex-col gap-[10px]">
+                <p className="text-brand-600 lg:text-sm lg:leading-sm lg:font-semibold text-[12px] font-bold leading-[18px] uppercase">
+                  Your company motto goes here
+                </p>
+                <h3 className="text-gray-900 flex gap-4 lg:text-3xl lg:leading-[38px] text-[20px] leading-[30px] font-semibold">
+                  CodeBlue Clothing Pvt Ltd{" "}
+                  <Image
+                    src={shield_tick}
+                    alt="CompanyIcon"
+                    className="max-sm:w-6 max-sm:h-6"
+                  />
+                </h3>
+                <div className="flex flex-wrap lg:flex-row flex-col lg:gap-6 gap-[10px]">
+                  <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
+                    <TagsIcon />
+                    Used Clothes/Used Shoes/Used Bags
+                    <span className="max-sm:hidden lg:block">/Mixed Rags</span>
+                  </h6>
+                  <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
+                    <BuildingOneIcon /> Joined: January 2023
+                  </h6>
+                </div>
+              </div>
             </div>
 
-            <Container>
-                <div className="lg:h-[280px] lg:w-[1400px] w-[90%] h-[414px] absolute bg-white -translate-x-1/2 lg:top-[300px] top-[34.667vw] left-1/2 border border-gray-100 rounded-2xl">
+            <div className="flex lg:gap-4 gap-2">
+              <a
+                href=""
+                className="lg:h-[48px] lg:w-[48px] h-9 w-10 border !border-gray-300 flex items-center justify-center rounded-md"
+              >
+                <ShareBoldIcon stroke={"#344054"} />
+              </a>
+              <Button
+                secondary
+                className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-300 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
+              >
+                Claim this Business
+              </Button>
+              <Button className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9">
+                <BookmarkIcon stroke="#ffffff" />
+                <span className="max-sm:hidden sm:hidden md:block">Save</span>
+              </Button>
+            </div>
+          </div>
 
-                    <div className="lg:p-8 p-4">
-
-                        <div className="flex lg:flex-row flex-col gap-4 lg:justify-between">
-
-                            <div className="flex lg:flex-row flex-col lg:items-center gap-3.5">
-
-                                <Image className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]" src={CodeBlue} alt="CodeBlue" />
-
-                                <div className="flex flex-col gap-[10px]">
-
-                                    <p className='text-brand-600 lg:text-sm lg:leading-sm lg:font-semibold text-[12px] font-bold leading-[18px] uppercase'>
-                                        Your company motto goes here
-                                    </p>
-
-                                    <h3 className='text-gray-900 flex gap-4 lg:text-3xl lg:leading-[38px] text-[20px] leading-[30px] font-semibold'>
-                                        CodeBlue Clothing Pvt Ltd <Image src={shield_tick} alt='CompanyIcon' className='max-sm:w-6 max-sm:h-6' />
-                                    </h3>
-
-                                    <div className="flex lg:flex-row flex-col lg:gap-6 gap-[10px]">
-
-                                        <h6 className='text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]'>
-                                            <TagsIcon/>
-                                            Used Clothes/Used Shoes/Used Bags<span className='max-sm:hidden lg:block'>/Mixed Rags</span>
-                                        </h6>
-
-                                        <h6 className='text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]'>
-                                            <BuildingOneIcon/> Joined: January 2023
-                                        </h6>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            <div className="flex lg:gap-4 gap-2">
-
-                                <a href="" className='lg:h-[48px] lg:w-[48px] h-9 w-10 border !border-gray-300 flex items-center justify-center rounded-md'>
-                                    <ShareBoldIcon stroke={"#344054"}/>
-                                </a>
-
-                                <Button secondary className='!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-300 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] '>
-                                    Claim this Business
-                                </Button>
-
-                                <Button className='lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9'>
-                                    <BookmarkIcon stroke="#ffffff"/>
-                                    <span className='max-sm:hidden sm:hidden md:block'>Save</span>
-                                </Button>
-                            </div>
-
-                        </div>
-
-                        <div className="lg:flex lg:justify-between lg:mt-[48px] grid grid-cols-2 gap-[16px] mt-[32px]">
-                            <LdtCard icon={<GridIcon/>} text={"Category"} title={"Manufacturing"} />
-                            <LdtCard icon={<BuildingTwoIcon />} text={"Company size"} title={"1000-10000 Manpower"} />
-                            <LdtCard icon={<MarkerPinIcon />} text={"Location"} ExtSrc={AU} title={"Australia"} />
-                            <LdtCard icon={<EyeIcon />} text={"Monthly Visitor"} title={"2343"} />
-                        </div>
-                    </div>
-                </div>
-            </Container>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <LdtCard
+              icon={<GridIcon />}
+              text={"Category"}
+              title={"Manufacturing"}
+            />
+            <LdtCard
+              icon={<BuildingTwoIcon />}
+              text={"Company size"}
+              title={"1000-10000 Manpower"}
+            />
+            <LdtCard
+              icon={<MarkerPinIcon />}
+              text={"Location"}
+              ExtSrc={AU}
+              title={"Australia"}
+            />
+            <LdtCard
+              icon={<EyeIcon />}
+              text={"Monthly Visitor"}
+              title={"2343"}
+            />
+          </div>
         </div>
-    )
-}
+      </Container>
+    </div>
+  );
+};
 
 // LTD Card
-export function LdtCard ({ icon, text, title, ExtSrc }) {
-    return (
-        <div className="flex flex-col lg:gap-[6px] lg:w-[330px] w-[175px] gap-1">
-            <div className="flex items-center lg:gap-[11px] gap-2">
-                {icon}
-                <p className='text-gray-400 lg:text-lg text-[14px]'>{text}</p>
-            </div>
-            <h3 className='text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2'>
-                {title}
-                {ExtSrc ? <Image src={ExtSrc} alt='ExtSrc' className='lg:h-6 lg:w-6 h-5 w-5' /> : false}
-            </h3>
-        </div>
-    )
+export function LdtCard({ icon, text, title, ExtSrc }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center lg:gap-[11px] gap-2">
+        {icon}
+        <p className="text-gray-400 font-light lg:text-lg text-[14px]">{text}</p>
+      </div>
+      <h3 className="text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2">
+        {title}
+        {ExtSrc ? (
+          <Image src={ExtSrc} alt="ExtSrc" className="lg:h-6 lg:w-6 h-5 w-5" />
+        ) : (
+          false
+        )}
+      </h3>
+    </div>
+  );
 }
 
-
-export default Frame
+export default Frame;

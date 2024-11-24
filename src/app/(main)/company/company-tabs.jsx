@@ -43,12 +43,25 @@ const allCertifications = [
 ];
 
 import AwardsSlider from "./awards-slider";
+import ChartYearly from "./chart-yearly";
+
+// icons
+import {
+  MarkerPinIcon,
+  WhatsAppIcon,
+  EmailIcon,
+  PhoneIcon,
+  GlobeIcon,
+} from "@/icons";
 
 function CompanyTabs() {
   return (
     <div>
-      <Tabs defaultValue="profile" className="company-tabs w-full">
-        <TabsList className="justify-between rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px]">
+      <Tabs
+        defaultValue="profile"
+        className="company-tabs w-full overflow-hidden"
+      >
+        <TabsList className="justify-between rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="profile"
@@ -86,12 +99,10 @@ function CompanyTabs() {
             FAQ
           </TabsTrigger>
         </TabsList>
-        <TabsContent className="bg-white rounded-2xl p-6" value="profile">
-          <div className="lg:flex justify-between mt-6">
-            <h3 className="text-base font-semibold text-gray-900 h-full">
-              Overview
-            </h3>
-            <div className="lg:w-[700px] lg:mt-0 w-[360px] grid grid-cols-2 lg:gap-6 gap-[32px] mt-4">
+        <TabsContent value="profile">
+          <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 bg-white rounded-2xl p-4 lg:p-6">
+            <h3 className="text-base font-semibold text-gray-900">Overview</h3>
+            <div className="grid grid-cols-2 lg:gap-6 gap-[32px]">
               <FeedBackList
                 text={"Available Selling Query"}
                 text2={"Lorem ipsum"}
@@ -104,12 +115,12 @@ function CompanyTabs() {
               <FeedBackList text={"Manpower"} text2={"Lorem ipsum"} />
             </div>
           </div>
-          <div className="lg:flex justify-between mt-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
             <h3 className="text-base font-semibold text-gray-900 h-full">
               Business Insight
             </h3>
 
-            <div className="lg:w-[700px] lg:mt-0 w-[360px] mt-6">
+            <div className="lg:mt-0 mt-6">
               <p className="text-gray-500 text-sm leading-[20px]">
                 Market Share
               </p>
@@ -122,16 +133,24 @@ function CompanyTabs() {
                 Yearly Turnover
               </p>
 
-              <div className="border rounded-[16px] mt-3">CHART</div>
+              <div className="border border-gray-200 rounded-[16px] p-6 mt-3">
+                <ChartYearly />
+              </div>
             </div>
           </div>
         </TabsContent>
-        <TabsContent className="bg-white rounded-2xl p-6" value="clients">
-          <h3 className="text-xl font-semibold text-gray-900 mb-8">Clients</h3>
-          <MarqueeSlider slideItems={allClients} className="mr-10" />
+        <TabsContent value="clients">
+          <div className="bg-white rounded-2xl p-4 lg:p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-8">
+              Clients
+            </h3>
+            <MarqueeSlider slideItems={allClients} className="mr-10" />
+          </div>
         </TabsContent>
-        <TabsContent className="bg-white rounded-2xl p-6" value="awards">
-          <AwardsSlider />
+        <TabsContent value="awards">
+          <div className="bg-white rounded-2xl p-4 lg:p-6">
+            <AwardsSlider />
+          </div>
         </TabsContent>
         <TabsContent
           className="bg-white rounded-2xl p-6"
@@ -142,14 +161,127 @@ function CompanyTabs() {
           </h3>
           <MarqueeSlider slideItems={allCertifications} className="mr-8" />
         </TabsContent>
-        <TabsContent className="bg-white rounded-2xl p-6" value="contacts">
-          Contact
+        <TabsContent value="contacts">
+          <div className="bg-white rounded-2xl p-4 lg:p-6">
+            {/* Business Contact start */}
+            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-6">
+              <h3 className="text-base font-semibold text-gray-900 h-full">
+                Business Contact
+              </h3>
+
+              <div className="lg:mt-0 mt-4">
+                <div className="grid grid-cols-2 gap-6">
+                  <FeedBackList
+                    text="Address"
+                    text2="Noida Road, D Block, Sector 11, Noida, Uttar Pradesh, India"
+                    icon={
+                      <MarkerPinIcon width={30} height={30} stroke="#F7931E" />
+                    }
+                  />
+                  <FeedBackList
+                    text={"Email"}
+                    text2={"contact@codeblueindia.com"}
+                    icon={<EmailIcon width={20} height={20} stroke="#F7931E" />}
+                  />
+                  <FeedBackList
+                    text={"Whatsapp"}
+                    text2={"Contact via Whatsapp"}
+                    icon={
+                      <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
+                    }
+                  />
+                  <FeedBackList
+                    text={"Phone"}
+                    text2={"+919810211006"}
+                    icon={<PhoneIcon width={20} height={20} stroke="#F7931E" />}
+                  />
+                  <FeedBackList
+                    text={"Website"}
+                    text2={"www.abcdcompany.com"}
+                    icon={<GlobeIcon width={20} height={20} stroke="#F7931E" />}
+                  />
+                </div>
+
+                <div className="w-full h-[280px] border-2 rounded-[16px] mt-6">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.170254395742!2d90.38000527589689!3d23.741307389124334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b7a55cd36f%3A0xfcc5b021faff43ea!2sCreative%20IT%20Institute!5e0!3m2!1sen!2sbd!4v1731247486413!5m2!1sen!2sbd"
+                    className="w-full h-full"
+                  ></iframe>
+                </div>
+              </div>
+            </div>
+            {/* Business Contact end */}
+
+            {/* Decision Makers start */}
+            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-8 mt-6 lg:mt-8">
+              <h3 className="text-base font-semibold text-gray-900">
+                Decision Makers
+              </h3>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
+                <ContactCard
+                  contactId="Contact 01"
+                  personName="Naim Bin Abdul"
+                  designation="Executive Sales"
+                  emailIcon={
+                    <EmailIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  phoneIcon={
+                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  whatsAppIcon={
+                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  emailAddress="contact@codeblueindia.com"
+                  phoneNumber="+919810211006"
+                  whatsAppText="Contact via Whatsapp"
+                />
+                <ContactCard
+                  contactId="Contact 02"
+                  personName="Naim Bin Abdul"
+                  designation="Executive Sales"
+                  emailIcon={
+                    <EmailIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  phoneIcon={
+                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  whatsAppIcon={
+                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  emailAddress="contact@codeblueindia.com"
+                  phoneNumber="+919810211006"
+                  whatsAppText="Contact via Whatsapp"
+                />
+                <ContactCard
+                  contactId="Contact 03"
+                  personName="Naim Bin Abdul"
+                  designation="Executive Sales"
+                  emailIcon={
+                    <EmailIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  phoneIcon={
+                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  whatsAppIcon={
+                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
+                  }
+                  emailAddress="contact@codeblueindia.com"
+                  phoneNumber="+919810211006"
+                  whatsAppText="Contact via Whatsapp"
+                />
+              </div>
+            </div>
+            {/* Decision Makers end */}
+          </div>
         </TabsContent>
-        <TabsContent className="bg-white rounded-2xl p-6" value="faq">
-          <h3 className="text-xl font-semibold text-gray-900 mb-8">
-            Frequently asked questions
-          </h3>
-          <FrequentlyAskedQuestions />
+        <TabsContent value="faq">
+          <div className="bg-white rounded-2xl p-4 lg:p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-8">
+              Frequently asked questions
+            </h3>
+            <FrequentlyAskedQuestions />
+          </div>
         </TabsContent>
       </Tabs>
     </div>
@@ -160,10 +292,46 @@ export function FeedBackList({ text, text2, icon, className }) {
   return (
     <div className={`lg:w-[335px] w-[165px] ${className}`}>
       <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
-      <h3 className="text-gray-900 text-base leading-[24px] font-medium mt-1 flex lg:items-center items-start  gap-3">
+      <h3 className="text-gray-900 text-base leading-[24px] font-medium mt-1 flex items-start  gap-3">
         {icon && icon}
         <span>{text2}</span>
       </h3>
+    </div>
+  );
+}
+
+export function ContactCard({
+  contactId,
+  personName,
+  designation,
+  emailAddress,
+  phoneNumber,
+  whatsAppText,
+  emailIcon,
+  phoneIcon,
+  whatsAppIcon,
+}) {
+  return (
+    <div className="">
+      <p className="text-gray-500 text-sm leading-[20px]">{contactId}</p>
+      <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
+        {personName}
+      </h5>
+      <p className="text-gray-500 text-sm leading-[20px]">{designation}</p>
+      <ul className="grid gap-2 grid-cols-1 mt-2">
+        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+          <span>{emailIcon}</span>
+          <span>{emailAddress}</span>
+        </li>
+        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+          <span>{phoneIcon}</span>
+          <span>{phoneNumber}</span>
+        </li>
+        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+          <span>{whatsAppIcon}</span>
+          <span>{whatsAppText}</span>
+        </li>
+      </ul>
     </div>
   );
 }

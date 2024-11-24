@@ -1,0 +1,27 @@
+.recharts-layer.recharts-cartesian-axis-tick line[orientation="left"],
+.recharts-layer.recharts-cartesian-axis-tick line[orientation="bottom"] {
+  stroke: transparent !important;
+}
+
+.recharts-layer.recharts-cartesian-axis.recharts-yAxis.yAxis
+  line[orientation="left"],
+.recharts-layer.recharts-cartesian-axis.recharts-xAxis.xAxis
+  line[orientation="bottom"] {
+  stroke: transparent !important;
+}
+
+.recharts-legend-wrapper {
+  left: auto !important;
+  right: 0 !important;
+}
+.recharts-legend-wrapper .recharts-default-legend {
+  text-align: right !important;
+}
+.recharts-default-legend .recharts-surface {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+}
+.recharts-legend-item.legend-item-1 {
+    display: none !important;
+}
