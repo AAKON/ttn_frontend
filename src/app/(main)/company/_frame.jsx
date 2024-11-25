@@ -15,6 +15,7 @@ import {
   ShareBoldIcon,
   TagsIcon,
 } from "@/icons";
+import ShareModal from "./share-modal";
 
 const Frame = ({ className }) => {
   return (
@@ -23,7 +24,7 @@ const Frame = ({ className }) => {
 
       <Container>
         <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px] grid grid-cols-1 gap-8 xl:gap-12">
-          <div className="flex lg:flex-row flex-col gap-4 lg:justify-between">
+          <div className="flex items-start lg:flex-row flex-col gap-4 lg:justify-between">
             <div className="flex lg:flex-row flex-col lg:items-center gap-3.5">
               <Image
                 className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]"
@@ -56,12 +57,10 @@ const Frame = ({ className }) => {
             </div>
 
             <div className="flex lg:gap-4 gap-2">
-              <a
-                href=""
-                className="lg:h-[48px] lg:w-[48px] h-9 w-10 border !border-gray-300 flex items-center justify-center rounded-md"
-              >
-                <ShareBoldIcon stroke={"#344054"} />
-              </a>
+              {/* Share Modal */}
+              <>
+                <ShareModal />
+              </>
               <Button
                 secondary
                 className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-300 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
@@ -110,7 +109,9 @@ export function LdtCard({ icon, text, title, ExtSrc }) {
     <div className="flex flex-col gap-1">
       <div className="flex items-center lg:gap-[11px] gap-2">
         {icon}
-        <p className="text-gray-400 font-light lg:text-lg text-[14px]">{text}</p>
+        <p className="text-gray-400 font-light lg:text-lg text-[14px]">
+          {text}
+        </p>
       </div>
       <h3 className="text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2">
         {title}

@@ -11,8 +11,8 @@ function Company() {
       <div className="relative">
         <Frame />
         <Container>
-          <div className="lg:flex gap-6 xl:gap-12 lg:justify-between relative mt-4 xl:mt-10">
-            <div className="lg:flex-1">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-12 relative mt-4 xl:mt-10">
+            <div>
               <div className="p-4 lg:p-6 bg-white rounded-2xl z-[2]">
                 {/* AboutCompany part start */}
                 <div className="lg:mb-[32px] relative grid grid-cols-1 gap-6 xl:gap-8">
@@ -26,7 +26,7 @@ function Company() {
               </div>
             </div>
 
-            <div className="lg:w-[340px] xl:w-[370px] w-full">
+            <div>
               <ContactWithBusinessOwner />
             </div>
           </div>
