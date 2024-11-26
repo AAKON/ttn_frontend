@@ -57,7 +57,7 @@ const GlobalSourcing = () => {
               Services.{" "}
             </p>
             <div className="flex items-center gap-x-4 pt-6 md:pt-12">
-              <Button className="bg-transparent border-2 border-gray-300 text-gray-700">
+              <Button secondary >
                 Get a quote
               </Button>
               <Button>See Partnership Plan</Button>
