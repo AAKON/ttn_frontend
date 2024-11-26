@@ -103,3 +103,10 @@ body {
 .active-nav-item {
   @apply !text-primary;
 }
+
+
+/*Company page slider css*/
+.splide__arrow.splide__arrow--prev,
+.splide__arrow.splide__arrow--next{
+  z-index: 1000;
+}
