@@ -4,12 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import NewsletterForm from "@/ui/newsletter-form";
 const footerLink = [
-  "Membership",
-  "Blog",
-  "About us",
-  "Jobs",
-  "Influencers",
-  "Privacy",
+  {title: "Membership", link: "/" },
+  {title: "Blog", link: "/" },
+  {title: "About us", link: "/" },
+  {title: "Jobs", link: "/" },
+  {title: "Influencers", link: "/" },
+  {title: "Privacy", link: "/privacy-policy" },
 ];
 
 export const Footer = () => {
@@ -68,7 +68,7 @@ function FooterLinks() {
       <ul className="flex gap-6 md:gap-[30px] items-center mt-8 md:mt-7 flex-wrap">
         {footerLink.map((item, index) => (
           <li key={index} className="text-[#475467] font-semibold">
-            <Link href="/">{item}</Link>
+            <Link href={item?.link}>{item?.title}</Link>
           </li>
         ))}
       </ul>
