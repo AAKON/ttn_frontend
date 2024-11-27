@@ -112,7 +112,7 @@ export const Nav = () => {
               >
                 Login
               </Button>
-              <Button TagName={Link} href="/" icon>
+              <Button TagName={Link} href="/register" icon>
                 Add
               </Button>
               <button
