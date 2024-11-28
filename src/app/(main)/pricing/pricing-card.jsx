@@ -107,7 +107,7 @@ const PricingCard = () => {
         {/* Show the content when isOpen is true */}
         <span
           onClick={toggleAccordion}
-          className="font-semibold text-md pl-2 text-blue cursor-pointer flex items-center absolute bottom-0 z-10 left-1/2 -translate-x-1/2"
+          className="font-semibold text-md pl-2 text-blue cursor-pointer flex gap-2 items-center absolute bottom-0 z-10 left-1/2 -translate-x-1/2"
         >
           {isOpen ? "Less" : "See More"}
           {
