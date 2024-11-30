@@ -44,3 +44,5 @@ export {FacebookFIcon} from './facebook-f'
 export {EnvelopeIcon} from './envelope'
 export { UserUpArrowIcon } from "./user-uparrow";
 export { CheckMarkIcon } from "./check-mark";
+export { ViewAs } from "./view-as";
+export { EditIcon } from "./edit";
