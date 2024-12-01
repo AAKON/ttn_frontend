@@ -4,6 +4,7 @@ import Button from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
 import profile_pic from "@/assets/profile-pic.png";
+import CompanyForm from "./company-form";
 
 const AdminEdit = () => {
   return (
@@ -23,6 +24,9 @@ const AdminEdit = () => {
           </div>
           <div className="size-[96px] rounded-full overflow-hidden">
             <Image src={profile_pic} alt="avatar" width={96} height={96} />
+          </div>
+          <div className="pt-4">
+            <CompanyForm />
           </div>
         </div>
       </Container>
