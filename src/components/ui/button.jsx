@@ -1,18 +1,26 @@
 const Button = ({
   TagName = "button",
-  secondary=false,
+  secondary = false,
+  primaryOutline = false,
   icon = false,
   children,
   className = "",
   ...props
 }) => {
+  let dynamicClasses = "";
+  if (secondary) {
+    dynamicClasses =
+      "bg-white text-gray-700 border border-gray-300 hover:bg-gradient-to-r from-gray-50 to-gray-200";
+  } else if (primaryOutline) {
+    dynamicClasses =
+      "bg-white text-brand-600 border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700 hover:text-white";
+  } else {
+    dynamicClasses =
+      "bg-brand-600 text-white border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700";
+  }
   return (
     <TagName
-      className={`transition-all flex items-center gap-1 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-bold ${className} ${
-        secondary
-          ? "bg-white text-gray-700 border border-gray-300 hover:bg-gradient-to-r from-gray-50 to-gray-200"
-          : "bg-brand-600 text-white border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700"
-      }`}
+      className={`transition-all flex items-center gap-1 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-bold ${className} ${dynamicClasses}`}
       {...props}
     >
       {icon && (
