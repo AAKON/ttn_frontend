@@ -1,5 +1,5 @@
-import { EditIcon, ViewAs } from "@/components/icons";
-import { Container } from "@/components/shared";
+import { EditIcon, ViewAs } from "@/icons";
+import { Container } from "@/shared";
 import Button from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
