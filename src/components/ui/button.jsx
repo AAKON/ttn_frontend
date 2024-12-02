@@ -20,7 +20,7 @@ const Button = ({
   }
   return (
     <TagName
-      className={`transition-all flex items-center gap-1 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-bold ${className} ${dynamicClasses}`}
+      className={`group transition-all flex items-center gap-2 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-semibold ${className} ${dynamicClasses}`}
       {...props}
     >
       {icon && (
@@ -33,10 +33,11 @@ const Button = ({
         >
           <path
             d="M6.99999 1.16666V12.8333M1.16666 6.99999H12.8333"
-            stroke="white"
+            stroke={"none"}
             strokeWidth="1.66667"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className={`${primaryOutline? "stroke-brand-600 group-hover:!stroke-white" : "stroke-white"}`}
           />
         </svg>
       )}

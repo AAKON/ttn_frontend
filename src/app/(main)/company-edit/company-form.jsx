@@ -227,7 +227,7 @@ const CompanyForm = () => {
               name="tags"
               render={() => (
                 <FormItem>
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Compliance</FormLabel>
                   <div className={`h-[46px] mt-2 ${inputStyle}`}>
                     {/* Display Tags */}
                     <div className="flex flex-wrap gap-2">

@@ -28,8 +28,8 @@ export default function Home() {
           <Fragment>
               <SocialSlider/>
           </Fragment>
-          <BusinessArea/>
           <RecentCompany/>
+          <BusinessArea/>
           <Section>
               <h3 className="pb-8 font-medium text-gray-900 uppercase text-xl text-center">
                   We’ve worked with some great Companies
