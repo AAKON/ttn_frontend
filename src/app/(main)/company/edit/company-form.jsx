@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import {companyBasicReq} from "@/services/company";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-100";
@@ -35,12 +36,14 @@ const formSchema = z.object({
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  category: z.string({ required_error: "Please select an category." }),
-  tags: z.array(z.string()).min(1, { message: "Please add at least one tag." }),
+  moto: z.string().optional(),
+  business_category_id: z.string({ required_error: "Please select an category." }),
+  compliance: z.array(z.string()).min(1, { message: "Please add at least one compliance." }),
+  tags: z.string().optional(),
   company_website: z.string().optional(),
-  company_location: z.string().optional(),
-  company_size: z.string().optional(),
-  about_us: z.string().optional(),
+  location_id: z.string({ required_error: "Please select location." }),
+  manpower: z.string().optional(),
+  about: z.string().optional(),
 });
 
 const CompanyForm = () => {
@@ -51,80 +54,70 @@ const CompanyForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      category: "apparel",
-      tags: ["Sedex", "Ekotex", "Leed Gold"],
+      moto: "",
+      business_category_id: "",
+      tags: "",
+      compliance: ["Sedex", "Ekotex", "Leed Gold"],
       company_website: "",
-      company_location: "",
-      company_size: "",
-      about_us: "",
+      location_id: "",
+      manpower: "",
+      about: "",
     },
   });
 
-  const modifyFormData = (data) => {
-    const name = data?.name;
-    const category = data?.category;
-    const tags = data?.tags;
-    const company_website = data?.company_website;
-    const company_location = data?.company_location;
-    const company_size = data?.company_size;
-    const about_us = data?.about_us;
-    return {
-      name,
-      category,
-      tags,
-      company_website,
-      company_location,
-      company_size,
-      about_us,
-    };
-  };
-
-  const submitCompanyForm = async (data, toast) => {
-    // Your API call or form submission logic
-    console.log(data);
-
-    return { status: true, code: 200 };
-  };
-
   //   Add new tag
-//   const addTag = () => {
-//     if (newTag.trim() && !form.getValues("tags").includes(newTag.trim())) {
-//       form.setValue("tags", [...form.getValues("tags"), newTag.trim()]);
-//       setNewTag("");
-//     }
-//   };
+  const addTag = () => {
+    if (newTag.trim() && !form.getValues("compliance").includes(newTag.trim())) {
+      form.setValue("compliance", [...form.getValues("compliance"), newTag.trim()]);
+      setNewTag("");
+    }
+  };
 
   //   Remove tag
   const removeTag = (tagToRemove) => {
     form.setValue(
       "tags",
-      form.getValues("tags").filter((tag) => tag !== tagToRemove)
+      form.getValues("compliance").filter((tag) => tag !== tagToRemove)
     );
   };
 
   // Function to handle form submission
   const onSubmit = async (data) => {
     setLoading(true);
-    const modifiedFormData = modifyFormData(data);
-    try {
-      const result = await submitCompanyForm(modifiedFormData, toast);
-      if (result?.status && result?.code === 200) {
-        toast({
-          title: "Success!",
-          description: "Form submitted successfully.",
-        });
-        form.reset();
-      } else {
-        toast({
-          title: "Error",
-          description: result?.message || "Something went wrong.",
-        });
+
+      const modifyFormData = (data) => {
+          const name = data?.name;
+          const business_category_id = data?.business_category_id;
+          const tags = data?.tags;
+          const compliance = data?.compliance;
+          const company_website = data?.company_website;
+          const location_id = data?.location_id;
+          const manpower = data?.manpower;
+          const about = data?.about;
+          return {
+              name,
+              business_category_id,
+              tags,
+              compliance,
+              company_website,
+              location_id,
+              manpower,
+              about,
+          };
+      };
+
+      try {
+          const result = await companyBasicReq(modifyFormData, toast);
+          if (result.status && result.code === 200) {
+              //form reset
+          }
+      } catch (error) {
+          console.log('Error in registration:', error.message);
       }
-    } catch (error) {
-      toast({ title: "Error", description: "Form submission failed." });
-    } finally {
-      setLoading(false);
-    }
+      finally {
+          setLoading(false);
+      }
+
   };
 
   return (
@@ -153,7 +146,7 @@ const CompanyForm = () => {
               />
               <FormField
                 control={form.control}
-                name="email"
+                name="moto"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>Company Motto</FormLabel>
@@ -161,7 +154,7 @@ const CompanyForm = () => {
                       <Input
                         className={inputStyle}
                         placeholder="Tour tagline here"
-                        type="email"
+                        type="text"
                         {...field}
                       />
                     </FormControl>
@@ -176,7 +169,7 @@ const CompanyForm = () => {
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               <FormField
                 control={form.control}
-                name="password"
+                name="tags"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>Tags</FormLabel>
@@ -194,7 +187,7 @@ const CompanyForm = () => {
               />
               <FormField
                 control={form.control}
-                name="category"
+                name="business_category_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>Category</FormLabel>
@@ -210,8 +203,8 @@ const CompanyForm = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="apparel">Apparel</SelectItem>
-                        <SelectItem value="clothing">Clothing</SelectItem>
+                        <SelectItem value="1">Apparel</SelectItem>
+                        <SelectItem value="2">Clothing</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -220,18 +213,17 @@ const CompanyForm = () => {
               />
             </div>
           </li>
-
           <li>
             <FormField
               control={form.control}
-              name="tags"
+              name="compliance"
               render={() => (
                 <FormItem>
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Compliance</FormLabel>
                   <div className={`h-[46px] mt-2 ${inputStyle}`}>
                     {/* Display Tags */}
                     <div className="flex flex-wrap gap-2">
-                      {form.getValues("tags").map((tag, index) => (
+                      {form.getValues("compliance").map((tag, index) => (
                         <Badge
                           key={index}
                           className="flex h-7 items-center gap-2 text-sm px-2 py-1 rounded-sm bg-transparent border border-gray-300 text-gray-900 font-normal"
@@ -274,7 +266,7 @@ const CompanyForm = () => {
               />
               <FormField
                 control={form.control}
-                name="company_location"
+                name="location_id"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>Location</FormLabel>
@@ -300,7 +292,7 @@ const CompanyForm = () => {
               />
               <FormField
                 control={form.control}
-                name="company_size"
+                name="manpower"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>Company size</FormLabel>
@@ -330,7 +322,7 @@ const CompanyForm = () => {
           <li>
             <FormField
               control={form.control}
-              name="about_us"
+              name="about"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className={labelStyle}>About us</FormLabel>
@@ -344,7 +336,7 @@ const CompanyForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />  
+            />
           </li>
         </ul>
 
