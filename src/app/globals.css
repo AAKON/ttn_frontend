@@ -104,9 +104,24 @@ body {
   @apply !text-primary;
 }
 
-
 /*Company page slider css*/
 .splide__arrow.splide__arrow--prev,
-.splide__arrow.splide__arrow--next{
+.splide__arrow.splide__arrow--next {
   z-index: 1000;
+}
+
+.pricing-accordion .lucide-chevron-down {
+  display: none !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: block;
+  position: absolute;
+  z-index: 100;
+  left: 13px;
+  top: 13px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }

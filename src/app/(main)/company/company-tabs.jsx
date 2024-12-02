@@ -99,6 +99,7 @@ function CompanyTabs() {
             FAQ
           </TabsTrigger>
         </TabsList>
+        
         <TabsContent value="profile">
           <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 bg-white rounded-2xl p-4 lg:p-6">
             <h3 className="text-base font-semibold text-gray-900">Overview</h3>

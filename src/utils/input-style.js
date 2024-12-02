@@ -1,4 +1,6 @@
 const inputClasses =
   "bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-12 block w-full border border-gray-300 rounded-md px-2 py-2 focus-visible:ring-0 focus-visible:ring-offset-0";
 
-export { inputClasses };
+const formLabelClasses = "text-gray-900 font-medium";
+
+export { inputClasses, formLabelClasses };
