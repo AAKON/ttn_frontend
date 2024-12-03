@@ -1,7 +1,7 @@
 // utils/api.js
 
 import {showErrorToast, showSuccessToast} from "@/utils/toast";
-async function apiRequest(endpoint, options = {}, toast) {
+async function apiRequest(endpoint, options = {}, toast, token) {
 
     const { isFormData, body, ...restOptions } = options;
     const config = {
@@ -9,6 +9,7 @@ async function apiRequest(endpoint, options = {}, toast) {
         headers: {
             'Content-Type': isFormData ? undefined : 'application/json',
             ...restOptions.headers,
+            ...(token && { Authorization: `Bearer ${token}` }),
         },
     };
 
