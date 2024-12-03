@@ -1,4 +1,4 @@
-import {Container, Section} from "@/shared";
+import { Container, Section } from "@/shared";
 import Count from "@/ui/count-item";
 import Button from "@/components/ui/button";
 import Option from "@/ui/option";
@@ -29,9 +29,9 @@ const GlobalMarket = () => {
   return (
     <>
       <Section className="bg-gray-100">
-        <div className="flex lg:flex-row-reverse gap-y-10 flex-col justify-between">
+        <div className="flex lg:flex-row-reverse gap-y-10 flex-col gap-x-6 xl:gap-x-[170px]">
           {/* left */}
-          <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start">
+          <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[582px]">
             <h4 className="text-gray-900 hidden lg:block pb-[10px] font-semibold text-4xl capitalize">
               Global Marketing Partner Benefits
             </h4>
@@ -46,14 +46,12 @@ const GlobalMarket = () => {
               Services.{" "}
             </p>
             <div className="flex items-center gap-x-4 pt-6 md:pt-12">
-              <Button secondary>
-                Get a quote
-              </Button>
+              <Button secondary>Get a quote</Button>
               <Button>See Partnership Plan</Button>
             </div>
           </div>
           {/* right */}
-          <div className="hidden md:flex flex-col items-start gap-y-8">
+          <div className="hidden md:flex flex-col items-start gap-y-8 xl:w-[648px]">
             {benefit?.map((item, index) => (
               <Option key={index} index={index} item={item} />
             ))}
