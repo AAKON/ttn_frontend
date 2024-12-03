@@ -29,7 +29,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 
 const labelStyle = formLabelClasses;
-const inputStyle = inputClasses + " " + "h-9 bg-gray-100";
+const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -87,12 +87,12 @@ const CompanyForm = () => {
   };
 
   //   Add new tag
-//   const addTag = () => {
-//     if (newTag.trim() && !form.getValues("tags").includes(newTag.trim())) {
-//       form.setValue("tags", [...form.getValues("tags"), newTag.trim()]);
-//       setNewTag("");
-//     }
-//   };
+  //   const addTag = () => {
+  //     if (newTag.trim() && !form.getValues("tags").includes(newTag.trim())) {
+  //       form.setValue("tags", [...form.getValues("tags"), newTag.trim()]);
+  //       setNewTag("");
+  //     }
+  //   };
 
   //   Remove tag
   const removeTag = (tagToRemove) => {
@@ -201,7 +201,7 @@ const CompanyForm = () => {
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger
-                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-100`}
+                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
                         >
                           <SelectValue
                             placeholder="Select Category"
@@ -234,7 +234,7 @@ const CompanyForm = () => {
                       {form.getValues("tags").map((tag, index) => (
                         <Badge
                           key={index}
-                          className="flex h-7 items-center gap-2 text-sm px-2 py-1 rounded-sm bg-transparent border border-gray-300 text-gray-900 font-normal"
+                          className="flex h-7 items-center gap-2 text-sm px-2 py-1 rounded-sm bg-transparent border border-gray-200 text-gray-900 font-normal"
                         >
                           {tag}
                           <span
@@ -259,7 +259,9 @@ const CompanyForm = () => {
                 name="company_website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>Company Website</FormLabel>
+                    <FormLabel className={labelStyle}>
+                      Company Website
+                    </FormLabel>
                     <FormControl>
                       <Input
                         className={inputStyle}
@@ -281,7 +283,7 @@ const CompanyForm = () => {
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger
-                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-100`}
+                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
                         >
                           <SelectValue
                             placeholder="Select Category"
@@ -307,7 +309,7 @@ const CompanyForm = () => {
                     <Select onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger
-                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-100`}
+                          className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
                         >
                           <SelectValue
                             placeholder="Select Category"
@@ -344,7 +346,7 @@ const CompanyForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />  
+            />
           </li>
         </ul>
 

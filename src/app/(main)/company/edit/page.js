@@ -1,11 +1,11 @@
 import { EditIcon, ViewAs } from "@/icons";
 import { Container } from "@/shared";
 import Button from "@/components/ui/button";
-import Image from "next/image";
 import React from "react";
 import profile_pic from "@/assets/profile-pic.png";
-import CompanyForm from "./company-form";
-import CompanyDragAndDropImage from "./_componets/company-image";
+import CompanyForm from "./_components/company-form";
+import ProductsForm from "./_components/products-form";
+import ContactWithBusinessOwner from "./_components/contact-with-business-owner";
 
 const AdminEdit = () => {
   return (
@@ -25,6 +25,15 @@ const AdminEdit = () => {
           </div>
           <div className="pt-4">
             <CompanyForm />
+          </div>
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-12">
+          <div className="bg-white border border-gray-100 p-6 rounded-2xl mt-8">
+              <ProductsForm />
+          </div>
+          <div>
+            <ContactWithBusinessOwner />
           </div>
         </div>
       </Container>

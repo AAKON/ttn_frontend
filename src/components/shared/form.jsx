@@ -151,7 +151,7 @@ const Forms = () => {
 
               <div
                 id="countryCodeList"
-                className={`bg-gray-200 py-2 overflow-y-scroll w-full absolute top-11 z-50 left-0 flex flex-col rounded-lg h-[230px] border-2 border-gray-300 ${
+                className={`bg-gray-50 py-2 overflow-y-scroll w-full absolute top-11 z-50 left-0 flex flex-col rounded-lg h-[230px] border-2 border-gray-200 ${
                   listOpen ? "scale-100" : "scale-0"
                 }`}
               >
@@ -182,10 +182,15 @@ const Forms = () => {
         {/* terms and condition */}
         <div className="flex items-center gap-x-2 lg:gap-x-3">
           <div className="flex items-center space-x-2">
-            <Checkbox id="terms" className={"p-1 bg-transparent border border-gray-300 checked:!border-brand-600"}/>
+            <Checkbox
+              id="terms"
+              className={
+                "p-1 bg-transparent border border-gray-200 checked:!border-brand-600"
+              }
+            />
             <label
-                htmlFor="terms"
-                className="font-normal text-sm lg:text-base text-gray-600"
+              htmlFor="terms"
+              className="font-normal text-sm lg:text-base text-gray-600"
             >
               You agree to our friendly{" "}
               <a href="#" className="underline">

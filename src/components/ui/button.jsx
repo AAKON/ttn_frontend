@@ -10,7 +10,7 @@ const Button = ({
   let dynamicClasses = "";
   if (secondary) {
     dynamicClasses =
-      "bg-white text-gray-700 border border-gray-300 hover:bg-gradient-to-r from-gray-50 to-gray-200";
+      "bg-white text-gray-700 border border-gray-200 hover:bg-gradient-to-r from-gray-50 to-gray-200";
   } else if (primaryOutline) {
     dynamicClasses =
       "bg-white text-brand-600 border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700 hover:text-white";
@@ -37,7 +37,13 @@ const Button = ({
             strokeWidth="1.66667"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`${primaryOutline? "stroke-brand-600 group-hover:!stroke-white" : "stroke-white"}`}
+            className={`${
+              primaryOutline
+                ? "stroke-brand-600 group-hover:!stroke-white"
+                : secondary && icon
+                ? "stroke-gray-700 "
+                : "stroke-white"
+            }`}
           />
         </svg>
       )}

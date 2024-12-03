@@ -43,7 +43,7 @@ const CompanyDragAndDropImage = ({ onImageChange }) => {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`size-[96px] border border-gray-200 rounded-full flex items-center justify-center bg-gray-100 cursor-pointer ${
+        className={`size-[96px] border border-gray-200 rounded-full flex items-center justify-center bg-gray-50 cursor-pointer ${
           isDragging ? "border-brand-600 border-dotted" : "border-gray-200"
         }`}
         onClick={() => document.getElementById("fileInput").click()}
@@ -55,9 +55,7 @@ const CompanyDragAndDropImage = ({ onImageChange }) => {
             className="w-full h-full rounded-full object-cover"
           />
         ) : (
-          <span className="text-gray-400 text-[10px]">
-            Drop or click
-          </span>
+          <span className="text-gray-400 text-[10px]">Drop or click</span>
         )}
       </div>
       <input
