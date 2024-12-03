@@ -29,11 +29,13 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import {companyBasicReq} from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
+import CompanyDragAndDropImage from "./_componets/company-image";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-100";
 
 const formSchema = z.object({
+  image: z.string().optional(),
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -55,6 +57,7 @@ const CompanyForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      image: "",
       name: "",
       moto: "",
       business_category_id: "",
@@ -90,6 +93,9 @@ const CompanyForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <div className="flex justify-start">
+            <CompanyDragAndDropImage onImageChange={(image) => form.setValue("image", image)} />
+          </div>
           <div className="grid grid-cols-1 gap-3 lg:gap-3">
               <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                   <FormField
