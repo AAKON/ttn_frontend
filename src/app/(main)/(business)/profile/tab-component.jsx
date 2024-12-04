@@ -81,7 +81,7 @@ const TabComponents = () => {
                   id="name"
                   type="text"
                   placeholder="Bashar bro"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
 
@@ -96,7 +96,7 @@ const TabComponents = () => {
                   id="email"
                   type="email"
                   placeholder="Tour tagline here"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
             </div>
@@ -118,7 +118,7 @@ const TabComponents = () => {
                   id="password"
                   type="password"
                   placeholder="**********"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
 
@@ -133,7 +133,7 @@ const TabComponents = () => {
                   id="password"
                   type="password"
                   placeholder="**********"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ const TabComponents = () => {
                   id="text"
                   type="text"
                   placeholder="Bashar bro"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
 
@@ -170,7 +170,7 @@ const TabComponents = () => {
                     id="number"
                     type="number"
                     placeholder="23423 8234 327 238"
-                    className={`${inputClasses} bg-gray-100 pl-14`}
+                    className={`${inputClasses} bg-gray-50 pl-14`}
                   />
                   <Image
                     src={Visa_card}
@@ -190,7 +190,7 @@ const TabComponents = () => {
                   id="date"
                   type="date"
                   placeholder="23/53"
-                  className={`${inputClasses} bg-gray-100`}
+                  className={`${inputClasses} bg-gray-50`}
                 />
               </div>
               <div className="w-full  relative">
@@ -205,7 +205,7 @@ const TabComponents = () => {
                     id="text"
                     type="text"
                     placeholder="3547"
-                    className={`${inputClasses} bg-gray-100 pl-8`}
+                    className={`${inputClasses} bg-gray-50 pl-8`}
                   />
                   <Image
                     src={Cvv_icon}
@@ -233,7 +233,7 @@ const TabComponents = () => {
                     id="text"
                     type="text"
                     placeholder="https://www.facebook.com/basahar"
-                    className={`${inputClasses} bg-gray-100 pr-8`}
+                    className={`${inputClasses} bg-gray-50 pr-8`}
                   />
                   <Image
                     src={Fb_icon}
@@ -255,7 +255,7 @@ const TabComponents = () => {
                     id="text"
                     type="text"
                     placeholder="https://www.facebook.com/basahar"
-                    className={`${inputClasses} bg-gray-100 pl-3 pr-10`}
+                    className={`${inputClasses} bg-gray-50 pl-3 pr-10`}
                   />
                   <Image
                     src={Linkedin_icon}
@@ -277,7 +277,7 @@ const TabComponents = () => {
                     id="text"
                     type="text"
                     placeholder="https://www.facebook.com/basahar"
-                    className={`${inputClasses} bg-gray-100 pl-3 pr-8`}
+                    className={`${inputClasses} bg-gray-50 pl-3 pr-8`}
                   />
                   <Image
                     src={Teligram_icon}

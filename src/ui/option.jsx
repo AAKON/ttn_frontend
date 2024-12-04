@@ -11,7 +11,9 @@ const Option = ({ index, item }) => {
         className={` ${index === 0 ? "w-[64px]" : "w-[56px]"}`}
       />
       <h4
-        className={`leading-normal ${index === 0 ? "text-gray-900 text-[20px]" : "text-gray-700 text-base"}`}
+        className={`leading-normal ${
+          index === 0 ? "text-gray-900 text-[30px]" : "text-gray-700 text-2xl"
+        }`}
       >
         {title}
       </h4>
