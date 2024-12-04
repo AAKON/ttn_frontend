@@ -1,7 +1,7 @@
 import {apiRequest} from "@/utils/api";
 
-export async function getPricingList() {
-    const endpoint = 'pricing/list?type=marketing';
+export async function getPricingList(tabType) {
+    const endpoint = `pricing/list?type=${tabType}`;
     const options = {
         method: 'GET'
     };
