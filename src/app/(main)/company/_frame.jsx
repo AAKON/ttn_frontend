@@ -63,7 +63,7 @@ const Frame = ({ className }) => {
               </>
               <Button
                 secondary
-                className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-300 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
+                className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
               >
                 Claim this Business
               </Button>

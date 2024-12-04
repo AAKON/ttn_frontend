@@ -2,7 +2,7 @@ import { Section } from "@/components/shared";
 import Count from "./count";
 import Button from "@/components/ui/button";
 
-const Counter = () => {
+const  Counter = () => {
   return (
     <Section>
       <div className="flex items-center justify-center flex-col md:flex-row md:justify-between">
@@ -20,9 +20,9 @@ const Counter = () => {
         <div className="grid grid-cols-3 mt-8 md:items-center md:max-w-[692px] gap-[15px]">
           <Count value={"12+"} role={"Partners"} />
           <Count value={"7+"} role={"Countries"} />
-          <Count value={"70+"} role={"Professionals Connected"} />
-          <Count value={"10K"} role={"Global Audiences"} />
-          <Count value={"300k"} role={"Business"} />
+          <Count value={"9000+"} role={"Professionals Connected"} />
+          <Count value={"300,000+"} role={"Global Audiences"} />
+          <Count value={"80+"} role={"Business"} />
         </div>
       </div>
     </Section>

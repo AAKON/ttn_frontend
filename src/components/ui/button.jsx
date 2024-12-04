@@ -10,7 +10,7 @@ const Button = ({
   let dynamicClasses = "";
   if (secondary) {
     dynamicClasses =
-      "bg-white text-gray-700 border border-gray-300 hover:bg-gradient-to-r from-gray-50 to-gray-200";
+      "bg-white text-gray-700 border border-gray-200 hover:bg-gradient-to-r from-gray-50 to-gray-200";
   } else if (primaryOutline) {
     dynamicClasses =
       "bg-white text-brand-600 border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700 hover:text-white";
@@ -20,7 +20,7 @@ const Button = ({
   }
   return (
     <TagName
-      className={`transition-all flex items-center gap-1 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-bold ${className} ${dynamicClasses}`}
+      className={`group transition-all flex items-center gap-2 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-semibold ${className} ${dynamicClasses}`}
       {...props}
     >
       {icon && (
@@ -33,10 +33,17 @@ const Button = ({
         >
           <path
             d="M6.99999 1.16666V12.8333M1.16666 6.99999H12.8333"
-            stroke="white"
+            stroke={"none"}
             strokeWidth="1.66667"
             strokeLinecap="round"
             strokeLinejoin="round"
+            className={`${
+              primaryOutline
+                ? "stroke-brand-600 group-hover:!stroke-white"
+                : secondary && icon
+                ? "stroke-gray-700 "
+                : "stroke-white"
+            }`}
           />
         </svg>
       )}
