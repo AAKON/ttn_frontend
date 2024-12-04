@@ -20,6 +20,7 @@ import { Loader2 } from "lucide-react";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import { companyBasicReq } from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
+import PhotoUploadBox from "./photo-upload-box";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -28,9 +29,10 @@ const formSchema = z.object({
   categories: z
     .array(z.string())
     .min(1, { message: "Please add at least one category." }),
+  product_card_image: z.string().optional(),
   tag: z.string().optional(),
-  company_name: z.string().optional(),
-  company_price: z.string().optional(),
+  product_name: z.string().optional(),
+  product_price: z.string().optional(),
 });
 
 const ProductsForm = () => {
@@ -42,6 +44,7 @@ const ProductsForm = () => {
     defaultValues: {
       categories: ["Cap", "Yarn", "T-shirt", "Jacket"],
       tag: "",
+      product_card_image: "",
       product_name: "",
       product_price: ""
     },
@@ -87,6 +90,18 @@ const ProductsForm = () => {
               </FormItem>
             )}
           />
+          
+        <FormField
+            control={control}
+            name="product_card_image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Product Card</FormLabel>
+                <PhotoUploadBox handleFileChange={field.onChange} />
+              </FormItem>
+            )}
+          />
+
         <FormField
           control={form.control}
           name="tag"
