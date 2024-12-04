@@ -97,9 +97,7 @@ const RecentCompany = () => {
           </Splide>
         </div>
         <div className="flex items-center justify-center pt-12">
-          <Button icon>
-            Add Company Free
-          </Button>
+          <Button icon primaryOutline>Add Company for Free</Button>
         </div>
     </Section>
   );

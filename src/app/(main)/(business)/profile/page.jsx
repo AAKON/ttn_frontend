@@ -46,7 +46,7 @@ const BusinessProfile = () => {
   ];
   let [active, setactive] = useState(tabs[0]);
   return (
-    <section className="bg-gray-100 py-40">
+    <section className="bg-gray-50 py-40">
       <Container>
         {/* profile card start */}
         <div className="">{/* <ProfileCard /> */}</div>
@@ -69,9 +69,8 @@ const BusinessProfile = () => {
         </div>
         {/* tabs part end */}
 
-
         {/* contact part start */}
-        
+
         {/* card slider */}
 
         {/* <div className="bg-white mt-5 shadow-sm rounded-2xl hidden lg:block relative">

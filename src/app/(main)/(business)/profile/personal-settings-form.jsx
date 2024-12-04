@@ -131,7 +131,7 @@ const PersonalSettingsForm = () => {
                     <FormLabel className={formLabelClasses}>Name</FormLabel>
                     <FormControl>
                       <Input
-                        className={`${inputClasses} bg-gray-100`}
+                        className={`${inputClasses} bg-gray-50`}
                         placeholder="Bashar bro"
                         type="text"
                         {...field}
@@ -151,7 +151,7 @@ const PersonalSettingsForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className={`${inputClasses} bg-gray-100`}
+                        className={`${inputClasses} bg-gray-50`}
                         placeholder="Tour email here"
                         type="email"
                         {...field}
@@ -179,7 +179,7 @@ const PersonalSettingsForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className={`${inputClasses} bg-gray-100`}
+                        className={`${inputClasses} bg-gray-50`}
                         placeholder="*********"
                         type="password"
                         {...field}
@@ -199,7 +199,7 @@ const PersonalSettingsForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className={`${inputClasses} bg-gray-100`}
+                        className={`${inputClasses} bg-gray-50`}
                         placeholder="*********"
                         type="password"
                         {...field}
@@ -227,7 +227,7 @@ const PersonalSettingsForm = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className={`${inputClasses} bg-gray-100`}
+                        className={`${inputClasses} bg-gray-50`}
                         placeholder="Bashar bro"
                         type="text"
                         {...field}
@@ -248,7 +248,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pl-14`}
+                          className={`${inputClasses} bg-gray-50 pl-14`}
                           placeholder="Bashar bro"
                           type="text"
                           {...field}
@@ -273,7 +273,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative ">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pl-14`}
+                          className={`${inputClasses} bg-gray-50 pl-14`}
                           placeholder="Bashar bro"
                           type="date"
                           {...field}
@@ -298,7 +298,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pl-14`}
+                          className={`${inputClasses} bg-gray-50 pl-14`}
                           placeholder="3547"
                           {...field}
                         />
@@ -329,7 +329,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pr-16`}
+                          className={`${inputClasses} bg-gray-50 pr-16`}
                           placeholder="https://www.facebook.com/basahar"
                           {...field}
                         />
@@ -353,7 +353,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pr-16`}
+                          className={`${inputClasses} bg-gray-50 pr-16`}
                           placeholder="https://www.facebook.com/basahar"
                           {...field}
                         />
@@ -377,7 +377,7 @@ const PersonalSettingsForm = () => {
                     <FormControl>
                       <div className="relative">
                         <Input
-                          className={`${inputClasses} bg-gray-100 pr-14`}
+                          className={`${inputClasses} bg-gray-50 pr-14`}
                           placeholder="https://www.facebook.com/basahar"
                           {...field}
                         />
