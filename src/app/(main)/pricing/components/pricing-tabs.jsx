@@ -8,6 +8,7 @@ import {getPricingList} from "@/services/pricing";
 function PricingTabs(props) {
     const arr = ["B2B Partnership", "Marketing Partnership"];
     const [active, setactive] = useState(arr[0]);
+    const [pricingData, setPricingData] = useState({});
 
     // Mapping tab names to API types
     const tabTypeMap = {
@@ -20,17 +21,22 @@ function PricingTabs(props) {
     useEffect(() => {
         const fetchData = async () => {
             const tabType = tabTypeMap[active];
-            try {
-                const result = await getPricingList(tabType);
-                console.log('Data fetched:', result);
-                // Handle API response (e.g., update state)
-            } catch (error) {
-                console.error('Error fetching pricing list:', error);
+            // Only fetch if data for this tab doesn't exist
+            if (!pricingData[tabType]) {
+                try {
+                    const result = await getPricingList(tabType);
+                    setPricingData((prevData) => ({
+                        ...prevData,
+                        [tabType]: result?.pricings, // Store data in object with tab type as key
+                    }));
+                } catch (error) {
+                    console.error('Error fetching pricing list:', error);
+                }
             }
         };
 
-        fetchData(); // Call the inner function
-    }, [active]); // Runs when 'active' changes
+        fetchData();
+    }, [active]);
 
     return (
         <Container>
@@ -61,68 +67,33 @@ function PricingTabs(props) {
 
                 <TabsContent value="B2B Partnership">
                     <div>
-                        {/* b2b Accordion part Start */}
+                        {active === "B2B Partnership" &&
+                            pricingData?.b2b &&
+                            pricingData?.b2b.map((item, index) => (
                         <AccordionCard
+                            key={index}
                             item={"item-1"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
+                            title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
                             text={"Free"}
                             price={"/Price"}
                         />
-
-                        <AccordionCard
-                            item={"item-2"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Win-Win"}
-                            price={"/Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-3"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Contact for Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-4"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"1499$"}
-                            price={"/Price"}
-                        />
-
-                        {/* b2b Accordion part end */}
+                        ))}
                     </div>
                 </TabsContent>
 
                 <TabsContent value="Marketing Partnership">
                     <div>
-                        {/* marketing Accordion part Start */}
+                        {active === "Marketing Partnership" &&
+                            pricingData?.marketing &&
+                            pricingData?.marketing.map((item, index) => (
                         <AccordionCard
+                            key={index}
                             item={"item-1"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
+                            title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
                             text={"Paid"}
                             price={"/Price"}
                         />
-
-                        <AccordionCard
-                            item={"item-2"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Win"}
-                            price={"/Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-3"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Contact for Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-4"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"1799$"}
-                            price={"/Price"}
-                        />
-                        {/* marketing Accordion part end */}
+                            ))}
                     </div>
                 </TabsContent>
             </Tabs>
