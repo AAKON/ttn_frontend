@@ -46,3 +46,4 @@ export { UserUpArrowIcon } from "./user-uparrow";
 export { CheckMarkIcon } from "./check-mark";
 export { ViewAs } from "./view-as";
 export { EditIcon } from "./edit";
+export { DeleteIcon } from "./delete";
