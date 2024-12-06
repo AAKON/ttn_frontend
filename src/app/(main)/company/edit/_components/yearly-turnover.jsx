@@ -132,7 +132,7 @@ const YearlyTurnover = () => {
             className="h-9 w-full"
             onClick={() => append({ year: "", turnover: "" })}
           >
-            Add new row
+            Add new country
           </Button>
         </div>
       </form>
