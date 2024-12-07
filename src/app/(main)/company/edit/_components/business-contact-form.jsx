@@ -62,16 +62,12 @@ const BusinessContactForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: "",
-      name: "",
-      moto: "",
-      business_category_id: "",
-      tags: "",
-      compliance: ["Sedex", "Ekotex", "Leed Gold"],
-      company_website: "",
-      location_id: "",
-      manpower: "",
-      about: "",
+      address: "",
+      email: "",
+      whatsapp: "",
+      phone: "",
+      website: "",
+      location: "",
     },
   });
 
@@ -206,6 +202,9 @@ const BusinessContactForm = () => {
           <div className="grid grid-cols-1">
             <LocationPicker form={form} labelStyle={labelStyle} />
           </div>
+          <Button secondary className="h-9">
+            Save
+          </Button>
         </div>
       </form>
     </Form>
