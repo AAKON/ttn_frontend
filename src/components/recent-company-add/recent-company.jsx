@@ -1,12 +1,12 @@
 "use client";
-import {Section, SectionHeading} from "@/shared";
+import { Section, SectionHeading } from "@/shared";
 import CompanyCard from "./company-card";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import "@/styles/companySlider.css";
 import Button from "../ui/button";
 
-import businessLogo_1 from "@/assets/business-logo-2.png"
+import businessLogo_1 from "@/assets/business-logo-2.png";
 
 const RecentCompany = () => {
   // all company data is here
@@ -79,26 +79,30 @@ const RecentCompany = () => {
   };
 
   return (
-    <Section  id={"company-slider"}>
-        {/* heading */}
-        <SectionHeading heading={"Recently Added"} description={"Boost Your Business Globally with Our Free Business Listings"}/>
+    <Section id={"company-slider"}>
+      {/* heading */}
+      <SectionHeading
+        heading={"Recently Added"}
+        description={
+          "Boost Your Business Globally with Our Free Business Listings"
+        }
+      />
 
-        {/* all company */}
-        <div >
-          <Splide
-              className="company-slider"
-              options={options}
-          >
-            {data?.map((item) => (
-                <SplideSlide key={item.id}>
-                  <CompanyCard item={item}/>
-                </SplideSlide>
-            ))}
-          </Splide>
-        </div>
-        <div className="flex items-center justify-center pt-12">
-          <Button icon primaryOutline>Add Company for Free</Button>
-        </div>
+      {/* all company */}
+      <div className="pt-12">
+        <Splide className="company-slider" options={options}>
+          {data?.map((item) => (
+            <SplideSlide key={item.id}>
+              <CompanyCard item={item} />
+            </SplideSlide>
+          ))}
+        </Splide>
+      </div>
+      <div className="flex items-center justify-center pt-12">
+        <Button icon primaryOutline>
+          Add Company for Free
+        </Button>
+      </div>
     </Section>
   );
 };
