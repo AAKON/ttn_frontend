@@ -28,7 +28,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { companyBasicReq } from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
-import CompanyDragAndDropImage from "./company-image";
 import { Link } from "@/components/icons";
 import { LinkIcon } from "@/components/icons/linkIcon";
 import LocationPicker from "./location-picker";
