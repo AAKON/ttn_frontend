@@ -60,7 +60,7 @@ const AvailableProducts = () => {
 import Image from "next/image";
 import ShowCase1 from "@/assets/ShowCase1.png";
 import Button from "@/components/ui/button";
-import { DeleteIcon, EditIcon } from "@/components/icons";
+import { DeleteIcon, EditIcon } from "@/icons";
 function AvailableProductsCard({ product }) {
   const description = "Wholesale custom OEM retro checkerboard shoes slip on";
 

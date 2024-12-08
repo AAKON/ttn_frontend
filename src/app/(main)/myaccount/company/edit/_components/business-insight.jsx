@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import Button from "@/components/ui/button";
-import { DeleteIcon } from "@/components/icons";
+import { DeleteIcon } from "@/icons";
 import { DropdownSelect } from "./dropdown-select";
 
 const labelStyle = formLabelClasses;

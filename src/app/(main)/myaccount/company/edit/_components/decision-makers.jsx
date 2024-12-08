@@ -24,7 +24,7 @@ import {
   EmailIcon,
   PhoneIcon,
   WhatsAppIcon,
-} from "@/components/icons";
+} from "@/icons";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";

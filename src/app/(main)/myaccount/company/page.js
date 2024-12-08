@@ -1,5 +1,5 @@
 import CompanyCard from "@/components/cards/company-card";
-import { Section, SectionHeading } from "@/components/shared";
+import { Section, SectionHeading } from "@/shared";
 import React from "react";
 
 const Companies = () => {

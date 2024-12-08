@@ -5,7 +5,7 @@ import {
   TwitterIcon,
   WhatsAppIcon,
   RedditIcon,
-} from "@/components/icons";
+} from "@/icons";
 import { EnvelopeIcon } from "@/components/icons/envelope";
 import Button from "@/components/ui/button";
 import {

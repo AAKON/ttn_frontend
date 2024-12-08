@@ -6,7 +6,7 @@ import codeBlue from "@/assets/CodeBlue.svg";
 import CountCard from "./count-card";
 import TabComponents from "./tab-component";
 import Button from "@/components/ui/button";
-import { EditIcon, UserUpArrowIcon } from "@/components/icons";
+import { EditIcon, UserUpArrowIcon } from "@/icons";
 import Image from "next/image";
 
 const BusinessProfile = () => {
