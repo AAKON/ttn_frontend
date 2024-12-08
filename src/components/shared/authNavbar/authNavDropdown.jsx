@@ -13,9 +13,12 @@ import {Blocks, LogOutIcon, User} from "lucide-react";
 import {useToast} from "@/hooks/use-toast";
 import {signOut} from "next-auth/react";
 import {showErrorToast, showSuccessToast} from "@/utils/toast";
+import { useRouter } from "next/router";
 
 function AuthNavDropdown({userInfo}) {
     const {toast} = useToast();
+    const router = useRouter();
+
     const handleSignout = () => {
         try {
             signOut({callbackUrl: '/'});
@@ -23,6 +26,7 @@ function AuthNavDropdown({userInfo}) {
             document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
             document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
             showSuccessToast(toast, 'Sign Out successful!');
+            router.replace(router.asPath);
         } catch (error) {
             console.error("Sign-out error:", error);
             showErrorToast(toast, 'Sign Out failed!');
