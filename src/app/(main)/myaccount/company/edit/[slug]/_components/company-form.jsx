@@ -1,0 +1,372 @@
+"use client";
+
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {useToast} from "@/hooks/use-toast";
+import {useState, useEffect} from "react";
+
+import Button from "@/components/ui/button";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Loader2} from "lucide-react";
+import {formLabelClasses, inputClasses} from "@/utils/input-style";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {Textarea} from "@/components/ui/textarea";
+import {companyBasicReq} from "@/services/company";
+import TagsInput from "@/components/ui/tagsInput";
+import CustomSelectTags from "@/components/ui/customSelectTags";
+import DropDownTags from "@/components/ui/dropDownTags";
+import FileUploadPreview from "@/components/ui/file-upload-preview";
+
+const labelStyle = formLabelClasses;
+const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
+
+const formSchema = z.object({
+    name: z.string().min(2, {
+        message: "Username must be at least 2 characters.",
+    }),
+    moto: z.string().optional(),
+    business_category_id: z.number({
+        required_error: "Please select an category.",
+    }),
+    compliances: z
+        .array(z.number())
+        .min(1, {message: "Please add at least one compliance."}),
+    tags: z.string().optional(),
+    company_website: z.string().optional(),
+    location_id: z.number({required_error: "Please select location."}),
+    manpower: z.string().optional(),
+    about: z.string().optional(),
+    profile_pic: z.string().optional(),
+});
+
+const CompanyForm = ({preData, basic}) => {
+
+    const [fileData, setFileData] = useState(null); // File object
+
+    const [loading, setLoading] = useState(false);
+    const [tags, setTags] = useState([]);
+    const {toast} = useToast();
+
+
+    const form = useForm({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            name: "",
+            moto: "",
+            business_category_id: "",
+            tags: "",
+            compliances: [],
+            company_website: "",
+            location_id: "",
+            manpower: "",
+            about: "",
+            profile_pic: ""
+        },
+    });
+
+    const {
+        control,
+        handleSubmit,
+        formState: {errors},
+        setValue,
+    } = form;
+
+    console.log(fileData, 'set file data')
+
+    // Function to handle form submission
+    const onSubmit = async (data) => {
+
+        const formData = {
+            ...data,
+            profile_pic: fileData
+        };
+
+        console.log(formData, 'sending file');
+
+        setLoading(true);
+        try {
+          const result = await companyBasicReq(formData, toast);
+          if (result.status && result.code === 200) {
+            //form reset
+          }
+        } catch (error) {
+          console.log("Error in submitting:", error.message);
+        } finally {
+          setLoading(false);
+        }
+
+    };
+
+    // Options for the select dropdown
+    const tagOptions = preData?.compliances?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) || [];
+
+    const initialCompliances = basic?.compliances && Array.isArray(basic?.compliances) && basic?.compliances.length > 0 &&
+        basic?.compliances?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) || [];
+
+    useEffect(() => {
+        if (basic) {
+            setValue("name", basic?.name || "");
+            setValue("moto", basic?.moto || "");
+            setValue("tags", basic?.tags || "");
+            setValue("manpower", basic?.manpower || "");
+            setValue("about", basic?.about || "");
+            setValue("compliances", initialCompliances || []);
+            setValue("company_website", basic?.company_website || "");
+            setValue("about", basic?.about || "");
+        }
+    }, [basic, setValue]);
+
+            return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <div className="flex justify-start">
+                    <FileUploadPreview
+                        onImageChange={({ file }) => {
+                            setFileData(file);
+                        }}
+                    />
+                </div>
+                <div className="grid grid-cols-1 gap-3 lg:gap-3">
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="CodeBlue Clothing Pvt Ltd"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="moto"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company Motto</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="Tour tagline here"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                        <FormField
+                            control={form.control}
+                            name="tags"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Tags</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="Used Clothes/Used Shoes/Used Bags/Mixed Rags"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="business_category_id"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Category</FormLabel>
+                                    <Select defaultValue={basic?.businessCategory?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select Category"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {preData?.categories?.map((category) => (
+                                                <SelectItem key={category.id} value={String(category.id)}>
+                                                    {category.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <FormField
+                        control={control}
+                        name="compliances"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>Compliance</FormLabel>
+                                <DropDownTags
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={tagOptions}
+                                />
+                                <FormMessage>{errors.tags?.message}</FormMessage>
+                            </FormItem>
+                        )}
+                    />
+                    <div className="grid grid-cols-1 gap-3 lg:grid-cols-[4fr_2fr_1fr]">
+                        <FormField
+                            control={form.control}
+                            name="company_website"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company Website</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="www.companyurl.com"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="location_id"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Location</FormLabel>
+                                    <Select defaultValue={basic?.location?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select location"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {preData?.locations?.map((location) => (
+                                                <SelectItem key={location.id} value={String(location.id)}>
+                                                    {location.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="manpower"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company size</FormLabel>
+                                    <Select defaultValue={basic?.manpower} onValueChange={field.onChange}>
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select Category"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="1000-10000">1000-10000</SelectItem>
+                                            <SelectItem value="10000-20000">10000-20000</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <FormField
+                        control={form.control}
+                        name="about"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel className={labelStyle}>About us</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        className={inputStyle}
+                                        placeholder="Enter a description"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
+                {/* Buttons */}
+                <div className="flex justify-start">
+                    {/* Submit Button */}
+                    <Button
+                        secondary
+                        type="submit"
+                        disabled={loading}
+                        className="w-[200px] h-9"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                                Please wait
+                            </>
+                        ) : (
+                            "Done"
+                        )}
+                    </Button>
+                </div>
+            </form>
+        </Form>
+    );
+};
+
+export default CompanyForm;

@@ -89,7 +89,7 @@ const CompanyCard = ({data}) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/companies/${data?.slug}`} secondary>
+        <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>
         <Button type="button" primaryOutline>

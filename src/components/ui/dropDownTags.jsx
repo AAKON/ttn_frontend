@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import {X} from "lucide-react";
 
 const DropDownTags = ({ value = [], onChange, options }) => {
+
     const [inputValue, setInputValue] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -49,10 +50,10 @@ const DropDownTags = ({ value = [], onChange, options }) => {
                     const tag = options.find((opt) => opt.value === tagValue);
                     return (
                     <Badge
-                        key={tag.value}
+                        key={tag?.value ? tag?.value : tagValue?.value}
                         className="flex h-7 items-center gap-2 text-sm px-2 py-1 rounded-sm bg-transparent border border-gray-200 text-gray-900 font-normal"
                     >
-                        {tag.label}
+                        {tag?.label ? tag?.label : tagValue?.label}
                         <X
                             className="ml-2 h-4 w-4 cursor-pointer"
                             onClick={() => handleRemoveTag(tagValue)}
