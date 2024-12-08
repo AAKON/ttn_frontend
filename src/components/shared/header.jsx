@@ -1,12 +1,12 @@
 import HeaderInner from "@/components/shared/headerInner";
-import {getServerToken} from "@/utils/getServerToken";
+import {getSSUserData} from "@/utils/getSSUserData";
 
 export const Header = async () => {
-    const token = await getServerToken();
+    const {token, user} = await getSSUserData();
 
   return (
     <header>
-        <HeaderInner hasToken={token} />
+        <HeaderInner hasToken={token} userInfo={user} />
     </header>
   );
 };

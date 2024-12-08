@@ -1,12 +1,22 @@
 // services/company/index.js
 import {apiRequest} from "@/utils/api";
 import { getSession } from "next-auth/react";
-import {getServerToken} from "@/utils/getServerToken";
+import {getSSToken} from "@/utils/getSSToken";
 
 export async function getDataPreBasic() {
 
-    const token = await getServerToken();
+    const token = await getSSToken();
     const endpoint = `my/company/preparation-data/for-basic`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}
+
+export async function getMyCompanies() {
+    const token = await getSSToken();
+    const endpoint = `my/company/list`;
     const options = {
         method: 'GET'
     };

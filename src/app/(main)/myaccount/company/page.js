@@ -1,23 +1,27 @@
 import CompanyCard from "@/components/cards/company-card";
 import { Section, SectionHeading } from "@/shared";
-import React from "react";
+import React, {Suspense} from "react";
+import {getMyCompanies} from "@/services/company";
 
-const Companies = () => {
+export default async function Companies(){
+    const myCompanies = await getMyCompanies();
+    console.log(myCompanies, 'get myCompanies')
   return (
     <Section>
       <div className="pb-10">
       <SectionHeading heading="My Companies" />
       </div>
-      <div className="grid grid-cols-3 gap-6">
-        <CompanyCard />
-        <CompanyCard />
-        <CompanyCard />
-        <CompanyCard />
-        <CompanyCard />
-        <CompanyCard />
-      </div>
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="grid grid-cols-3 gap-6">
+                {myCompanies && Array.isArray(myCompanies) && myCompanies.length > 0 ?
+                    myCompanies.map((company) => (
+                        <CompanyCard key={company.id} data={company} />
+                    ))
+                :
+                    <p>No Companies found.</p>
+                }
+            </div>
+        </Suspense>
     </Section>
   );
 };
-
-export default Companies;
