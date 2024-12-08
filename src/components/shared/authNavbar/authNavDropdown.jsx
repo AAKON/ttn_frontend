@@ -12,13 +12,21 @@ import Link from "next/link";
 import {Blocks, LogOutIcon, User} from "lucide-react";
 import {useToast} from "@/hooks/use-toast";
 import {signOut} from "next-auth/react";
-import {showSuccessToast} from "@/utils/toast";
+import {showErrorToast, showSuccessToast} from "@/utils/toast";
 
 function AuthNavDropdown({userInfo}) {
     const {toast} = useToast();
     const handleSignout = () => {
-        signOut({callbackUrl: '/'});
-        showSuccessToast(toast, 'Sign Out successful!');
+        try {
+            signOut({callbackUrl: '/'});
+            // Clear session cookies explicitly
+            document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
+            document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
+            showSuccessToast(toast, 'Sign Out successful!');
+        } catch (error) {
+            console.error("Sign-out error:", error);
+            showErrorToast(toast, 'Sign Out failed!');
+        }
     }
 
     return (
@@ -36,24 +44,23 @@ function AuthNavDropdown({userInfo}) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="right-0">
                     <DropdownMenuLabel className="pb-0.5">{userInfo?.user_name}</DropdownMenuLabel>
-                    <DropdownMenuLabel className="font-normal text-xs pt-0">jhon@gmail.com</DropdownMenuLabel>
+                    <DropdownMenuLabel className="font-normal text-xs pt-0 text-gray-500">jhon@gmail.com</DropdownMenuLabel>
                     <DropdownMenuSeparator className="bg-gray-200"/>
                     <DropdownMenuItem>
-                        <Link className="flex items-center gap-1" href="/myaccount/profile">
+                        <Link className="flex items-center gap-1 text-gray-500" href="/myaccount/profile">
                             <User/>
                             <span>Profile</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                        <Link className="flex items-center gap-1" href="/myaccount/company">
+                        <Link className="flex items-center gap-1 text-gray-500" href="/myaccount/company">
                             <Blocks/>
                             <span>My Companies</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-gray-200"/>
-                    <DropdownMenuItem className="flex items-center gap-1"
-                                      onClick={handleSignout}
-                                      className="cursor-pointer">
+                    <DropdownMenuItem className="flex items-center gap-1 text-gray-700 cursor-pointer"
+                                      onClick={handleSignout}>
                         <LogOutIcon/>
                         <span>Log out</span>
                     </DropdownMenuItem>

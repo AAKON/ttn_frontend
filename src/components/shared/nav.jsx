@@ -127,7 +127,7 @@ export const Nav = () => {
 
 function MobileNav() {
   return (
-    <div className="h-screen w-screen bg-white fixed z-[9999] top-[80px] p-4">
+    <div className="h-screen w-screen bg-white fixed z-10 top-[80px] p-4">
       <HeroForm />
       <div className="mt-3">
         <Accordion
