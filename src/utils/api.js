@@ -3,11 +3,18 @@
 import {showErrorToast, showSuccessToast} from "@/utils/toast";
 async function apiRequest(endpoint, options = {}, toast, token) {
 
-    const { isFormData, body, ...restOptions } = options;
+    const { isFormData, isMultipart, body, ...restOptions } = options;
     const config = {
         ...restOptions,
+        // headers: {
+        //     'Content-Type': isFormData ? undefined : 'application/json',
+        //     ...restOptions.headers,
+        //     ...(token && { Authorization: `Bearer ${token}` }),
+        // },
         headers: {
-            'Content-Type': isFormData ? undefined : 'application/json',
+            ...(isFormData || isMultipart
+                ? { 'Content-Type': isMultipart ? 'multipart/form-data' : undefined }
+                : { 'Content-Type': 'application/json' }),
             ...restOptions.headers,
             ...(token && { Authorization: `Bearer ${token}` }),
         },

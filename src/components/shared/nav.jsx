@@ -2,7 +2,6 @@
 import Button from "../ui/button";
 import { useEffect, useRef, useState } from "react";
 import { Bars, Cross } from "@/components/icons";
-import user_pic from "@/assets/user_pic.png";
 import HeroForm from "@/components/hero/hero-form";
 
 import {
@@ -24,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOutIcon } from "lucide-react";
+import AuthNavbar from "@/components/shared/authNavbar";
 
 const menuItems = [
   { id: 1, label: "Business", path: "/business" },
@@ -33,7 +33,8 @@ const menuItems = [
   { id: 5, label: "Contact", path: "/contact" },
 ];
 
-export const Nav = () => {
+export const Nav = ({hasToken}) => {
+
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [login, setLogin] = useState(true);
   const nav = useRef(null);
@@ -117,35 +118,11 @@ export const Nav = () => {
             </div>
 
             <div className="flex justify-end items-center gap-3 md:gap-4 ">
-              <Button TagName={Link} href="/companies" icon>
+              <Button TagName={Link} href="/myaccount/company/add" icon>
                 Add
               </Button>
-              {login ? (
-                <DropdownMenu className="left-auto right-0">
-                  <DropdownMenuTrigger className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
-                    <Image
-                      src={user_pic}
-                      width={48}
-                      height={48}
-                      alt="profile"
-                      className="rounded-full"
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="right-0">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <Link href="/profile">Profile</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link href="/my-companies">My Companies</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setLogin(false)} className="cursor-pointer">
-                      Log out
-                      <LogOutIcon />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              {hasToken ? (
+                <AuthNavbar />
               ) : (
                 // <div>
                 //   <div className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center">
