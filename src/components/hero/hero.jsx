@@ -63,7 +63,7 @@ const categories = [
 export function Categories({ className = "", }) {
   return (
       <Select className={className}>
-        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none">
+        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
           <SelectValue
               placeholder="All Categories"
               className="text_16 text-red-400"
