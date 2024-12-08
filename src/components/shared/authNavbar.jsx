@@ -1,3 +1,7 @@
+'use client'
+import {
+    User, Blocks, LogOutIcon
+} from "lucide-react"
 import React from 'react';
 import {
     DropdownMenu,
@@ -9,9 +13,9 @@ import {
 import Image from "next/image";
 import user_pic from "@/assets/user_pic.png";
 import Link from "next/link";
-import {LogOutIcon} from "lucide-react";
 
-function AuthNavbar(props) {
+function AuthNavbar({userInfo}) {
+
     return (
         <DropdownMenu className="left-auto right-0">
             <DropdownMenuTrigger className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
@@ -24,17 +28,25 @@ function AuthNavbar(props) {
                 />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="right-0">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuLabel className="pb-0.5">{userInfo?.user_name}</DropdownMenuLabel>
+                <DropdownMenuLabel className="font-normal text-xs pt-0">jhon@gmail.com</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-gray-200" />
                 <DropdownMenuItem>
-                    <Link href="/myaccount/profile">Profile</Link>
+                    <Link className="flex items-center gap-1" href="/myaccount/profile">
+                        <User />
+                        <span>Profile</span>
+                    </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                    <Link href="/myaccount/company">My Companies</Link>
+                    <Link className="flex items-center gap-1" href="/myaccount/company">
+                        <Blocks />
+                        <span>My Companies</span>
+                    </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLogin(false)} className="cursor-pointer">
-                    Log out
-                    <LogOutIcon />
+                <DropdownMenuSeparator className="bg-gray-200"/>
+                <DropdownMenuItem className="flex items-center gap-1" onClick={() => setLogin(false)} className="cursor-pointer">
+                    <LogOutIcon/>
+                    <span>Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

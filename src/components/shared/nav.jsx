@@ -33,7 +33,7 @@ const menuItems = [
   { id: 5, label: "Contact", path: "/contact" },
 ];
 
-export const Nav = ({hasToken}) => {
+export const Nav = ({hasToken, userInfo}) => {
 
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [login, setLogin] = useState(true);
@@ -122,7 +122,7 @@ export const Nav = ({hasToken}) => {
                 Add
               </Button>
               {hasToken ? (
-                <AuthNavbar />
+                <AuthNavbar userInfo={userInfo} />
               ) : (
                 // <div>
                 //   <div className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center">

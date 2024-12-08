@@ -13,7 +13,7 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { MarkerPinIcon, StarIcon, LoveIcon } from "@/icons";
 import Link from "next/link";
 
-const CompanyCard = () => {
+const CompanyCard = ({data}) => {
   return (
     <Card>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
@@ -28,11 +28,12 @@ const CompanyCard = () => {
             />
           </div>
           <div className="flex-1">
+            {data?.businessCategory &&
             <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
-              Media & Marketing
-            </CardTitle>
+              {data?.businessCategory?.name}
+            </CardTitle>}
             <CardDescription className="font-semibold text-md sm:text-2xl sm:leading-8 text-gray-900">
-              Caseworks Pte Ltd
+              {data?.name}
             </CardDescription>
           </div>
         </div>
@@ -45,45 +46,24 @@ const CompanyCard = () => {
       </CardHeader>
 
       {/* 1st btn start */}
+      {data?.compliances && Array.isArray(data?.compliances) && data?.compliances.length > 0 &&
       <CardContent className="flex gap-x-2 mr-2 w-full">
-        <Button
-          secondary
-          className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-        >
-          Fabric
-        </Button>
-        <Button
-          secondary
-          className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-        >
-          Yarn
-        </Button>
-        <Button
-          secondary
-          className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-        >
-          Washing
-        </Button>
-        <Button
-          secondary
-          className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-        >
-          Printing
-        </Button>
-        <Button
-          secondary
-          className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-        >
-          Washin
-        </Button>
-      </CardContent>
+        {data?.compliances.map((compliance) => (
+            <Button
+                secondary
+                className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
+                key={compliance.id}
+            >
+              {compliance?.name}
+            </Button>
+            ))}
+      </CardContent>}
       {/* 1st btn end */}
 
       {/* peragraph start */}
       <CardContent className="flex gap-x-2">
         <p className="text-gray-500 text-md font-normal leading-6">
-          It is a long established fact that a reader will be distracted by the
-          readable content of a page when looking at its layout.{" "}
+          {data?.about}
         </p>
       </CardContent>
       {/* peragraph end */}
@@ -97,18 +77,19 @@ const CompanyCard = () => {
             <span className="mr-1">202</span> reviews
           </p>
         </div>
+        {data?.location &&
         <div className="flex">
           <MarkerPinIcon stroke="#101828" width={20} />
           <span className="text-md font-medium text-gray-900 leading-6 ml-1">
-            Singapore
+            {data?.location?.name}
           </span>
-        </div>
+        </div>}
       </CardContent>
       {/* ----------- */}
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href="/profile" secondary>
+        <Button TagName={Link} href={`/companies/${data?.slug}`} secondary>
           View Profile
         </Button>
         <Button type="button" primaryOutline>
