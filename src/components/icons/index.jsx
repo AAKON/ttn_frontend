@@ -47,3 +47,5 @@ export { CheckMarkIcon } from "./check-mark";
 export { ViewAs } from "./view-as";
 export { EditIcon } from "./edit";
 export { DeleteIcon } from "./delete";
+export {StarIcon} from './star'
+export {LoveIcon} from './love'

@@ -2,6 +2,7 @@
 import Button from "../ui/button";
 import { useEffect, useRef, useState } from "react";
 import { Bars, Cross } from "@/components/icons";
+import user_pic from "@/assets/user_pic.png";
 import HeroForm from "@/components/hero/hero-form";
 
 import {
@@ -12,6 +13,17 @@ import {
 } from "@/components/ui/accordion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOutIcon } from "lucide-react";
 
 const menuItems = [
   { id: 1, label: "Business", path: "/business" },
@@ -23,6 +35,7 @@ const menuItems = [
 
 export const Nav = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const [login, setLogin] = useState(true);
   const nav = useRef(null);
   const pathname = usePathname();
 
@@ -104,17 +117,49 @@ export const Nav = () => {
             </div>
 
             <div className="flex justify-end items-center gap-3 md:gap-4 ">
-              <Button
-                TagName={Link}
-                href="/login"
-                secondary
-                className="!text-gray-900"
-              >
-                Login
-              </Button>
-              <Button TagName={Link} href="/register" icon>
+              <Button TagName={Link} href="/companies" icon>
                 Add
               </Button>
+              {login ? (
+                <DropdownMenu className="left-auto right-0">
+                  <DropdownMenuTrigger className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
+                    <Image
+                      src={user_pic}
+                      width={48}
+                      height={48}
+                      alt="profile"
+                      className="rounded-full"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="right-0">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link href="/my-companies">My Companies</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setLogin(false)} className="cursor-pointer">
+                      Log out
+                      <LogOutIcon />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                // <div>
+                //   <div className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center">
+                //   </div>
+                // </div>
+                <Button
+                  TagName={Link}
+                  href="/login"
+                  secondary
+                  className="!text-gray-900"
+                >
+                  Login
+                </Button>
+              )}
               <button
                 onClick={() => setShowMobileNav(!showMobileNav)}
                 className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center"
