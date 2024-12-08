@@ -13,7 +13,7 @@ import {Blocks, LogOutIcon, User} from "lucide-react";
 import {useToast} from "@/hooks/use-toast";
 import {signOut} from "next-auth/react";
 import {showErrorToast, showSuccessToast} from "@/utils/toast";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation';
 
 function AuthNavDropdown({userInfo}) {
     const {toast} = useToast();
