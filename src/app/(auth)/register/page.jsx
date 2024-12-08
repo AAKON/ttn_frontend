@@ -80,7 +80,7 @@ export default function Register() {
                         <div className="pt-2.5 text-center">
                             <p className="frm_cr">Already have an account? <Link
                                 className="text-primary text-base font-semibold"
-                                href="/sign-up">Log in</Link></p>
+                                href="/register">Log in</Link></p>
                         </div>
                     </div>
                 </div>

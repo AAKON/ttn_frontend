@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOutIcon } from "lucide-react";
-import AuthNavbar from "@/components/shared/authNavbar";
+import AuthNavbar from "@/components/shared/authNavbar/authNavbar";
 
 const menuItems = [
   { id: 1, label: "Business", path: "/business" },
@@ -33,10 +33,9 @@ const menuItems = [
   { id: 5, label: "Contact", path: "/contact" },
 ];
 
-export const Nav = ({hasToken, userInfo}) => {
+export const Nav = () => {
 
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const [login, setLogin] = useState(true);
   const nav = useRef(null);
   const pathname = usePathname();
 
@@ -116,34 +115,7 @@ export const Nav = ({hasToken, userInfo}) => {
                 ))}
               </ul>
             </div>
-
-            <div className="flex justify-end items-center gap-3 md:gap-4 ">
-              <Button TagName={Link} href="/myaccount/company/add" icon>
-                Add
-              </Button>
-              {hasToken ? (
-                <AuthNavbar userInfo={userInfo} />
-              ) : (
-                // <div>
-                //   <div className="size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center">
-                //   </div>
-                // </div>
-                <Button
-                  TagName={Link}
-                  href="/login"
-                  secondary
-                  className="!text-gray-900"
-                >
-                  Login
-                </Button>
-              )}
-              <button
-                onClick={() => setShowMobileNav(!showMobileNav)}
-                className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center"
-              >
-                {showMobileNav ? <Cross /> : <Bars />}
-              </button>
-            </div>
+            <AuthNavbar showMobileNav={showMobileNav} />
           </div>
         </div>
       </nav>
