@@ -5,7 +5,6 @@ import {getMyCompanies} from "@/services/company";
 
 export default async function Companies(){
     const myCompanies = await getMyCompanies();
-    console.log(myCompanies, 'get myCompanies')
   return (
     <Section>
       <div className="pb-10">
