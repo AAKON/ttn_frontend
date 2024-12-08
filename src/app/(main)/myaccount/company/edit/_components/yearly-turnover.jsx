@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Button from "@/components/ui/button";
 import { DropdownSelect } from "./dropdown-select";
-import { DeleteIcon } from "@/components/icons";
+import { DeleteIcon } from "@/icons";
 import {
   BarChart,
   Bar,

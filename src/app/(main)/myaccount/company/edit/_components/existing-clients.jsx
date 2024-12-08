@@ -1,4 +1,4 @@
-import { DeleteIcon } from "@/components/icons";
+import { DeleteIcon } from "@/icons";
 import Button from "@/components/ui/button";
 import Image from "next/image";
 
