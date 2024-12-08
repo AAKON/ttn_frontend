@@ -18,6 +18,8 @@ import {
     FormMessage
 } from "@/components/ui/form"
 import {signIn} from "next-auth/react";
+import {showErrorToast, showSuccessToast} from "@/utils/toast";
+import {useToast} from "@/hooks/use-toast";
 
 const formSchema = z.object({
     email: z.string().min(3,{ message: 'Must have at least 3 character' }).email({
@@ -32,6 +34,7 @@ const formSchema = z.object({
 export default function Login() {
 
     const router = useRouter();
+    const {toast} = useToast();
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -51,14 +54,15 @@ export default function Login() {
                 callbackUrl: '/'
             }).then((res) => {
                 if (res?.error) {
-                    console.log(res, 'Something went wrong.')
+                    showErrorToast(toast, 'Something went wrong, Try again');
                 } else {
+                    showSuccessToast(toast, 'Sign in successful!');
                     router.push('/');
                 }
             })
         }
         catch (error) {
-            console.log("login error");
+            showErrorToast(toast, 'Sign in faild, Try again');
         }
     }
 
