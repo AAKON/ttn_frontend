@@ -53,7 +53,7 @@ export default function Login() {
                 if (res?.error) {
                     console.log(res, 'Something went wrong.')
                 } else {
-                    router.push('/myaccount');
+                    router.push('/');
                 }
             })
         }

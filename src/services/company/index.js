@@ -1,7 +1,7 @@
 // services/company/index.js
 import {apiRequest} from "@/utils/api";
 import { getSession } from "next-auth/react";
-import {getServerToken} from "@/utils/getAccessToken";
+import {getServerToken} from "@/utils/getServerToken";
 
 export async function getDataPreBasic() {
 
@@ -19,13 +19,11 @@ export async function companyBasicReq(data, toast) {
     const session = await getSession();
     const token = session?.accessToken;
 
-    console.log("passed token: ", token);
-
     const endpoint = 'my/company/store';
     const options = {
         method: 'POST',
         body: data,
-        isFormData: false,
+        isMultipart: false
     };
     return await apiRequest(endpoint, options, toast, token);
 }

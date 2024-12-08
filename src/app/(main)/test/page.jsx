@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/input"
 
 import {
     Form,
@@ -18,6 +19,7 @@ const formSchema = z.object({
     compliances: z
         .array(z.number())
         .min(1, { message: "Please add at least one compliance." }),
+    file: z.any().optional(),
 });
 
 const tagOptions = [
@@ -33,7 +35,7 @@ export default function FormWithDropdown() {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            compliances: [],
+            compliances: []
         },
     });
 
@@ -67,6 +69,20 @@ export default function FormWithDropdown() {
                         </FormItem>
                     )}
                 />
+                <FormField
+                    control={control}
+                    name="profile_pic"
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Compliance</FormLabel>
+                            <FormControl>
+                                <Input id="picture" type="file" {...field} />
+                            </FormControl>
+                            <FormMessage>{errors.compliances?.message}</FormMessage>
+                        </FormItem>
+                    )}
+                />
+
                 <button
                     type="submit"
                     className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
