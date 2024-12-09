@@ -2,7 +2,7 @@
 import { Cross, DeleteIcon, GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import Button from "@/components/ui/button";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 // Static Icon
@@ -22,6 +22,7 @@ import {
 import HeroForm from "@/components/hero/hero-form";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
 import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
+import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
 
 const country = [
   "Afganisthan",
@@ -37,10 +38,10 @@ const Business = () => {
   const [loading, setLoading] = useState(false);
 
   const initialFilters = {
-      locationIds: [],
-      manpower: [],
-      complianceIds: [],
-      businessCategoryIds: []
+    locationIds: [],
+    manpower: [],
+    complianceIds: [],
+    businessCategoryIds: [],
   };
   const [filters, setFilters] = useState(initialFilters);
 
@@ -58,34 +59,37 @@ const Business = () => {
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
+        );
         const data = await response.json();
         setFilterOptions(data.data);
       } catch (error) {
-        console.error('Error fetching filter options:', error);
+        console.error("Error fetching filter options:", error);
       }
     };
 
     fetchFilterOptions();
   }, []);
 
-
   // Fetch companies when filters change
   useEffect(() => {
     const fetchCompanies = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(filters),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/company/list`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(filters),
+          }
+        );
         const data = await response.json();
         setCompanies(data?.data?.data || []);
       } catch (error) {
-        console.error('Error fetching companies:', error);
-      }
-      finally {
+        console.error("Error fetching companies:", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -124,14 +128,20 @@ const Business = () => {
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-[336px_1fr] gap-8">
           {/* Left Side Bar */}
-          {filterOptions && (
-              <FilterAccordion
+          <div className="relative">
+            {loading ? (
+              <AccordionSkeleton />
+            ) : (
+              filterOptions && (
+                <FilterAccordion
                   filterOptions={filterOptions}
                   filters={filters}
                   onFilterChange={handleFilterChange}
                   onResetFilter={resetFilterSelection}
-              />
-          )}
+                />
+              )
+            )}
+          </div>
 
           {/* Right Side */}
           <div>
@@ -260,16 +270,16 @@ const Business = () => {
               } gap-8`}
             >
               {loading ? (
-                      <FilterCardSkeleton />
-                  ) :
-                  companies && Array.isArray(companies) && companies.length > 0 ? (
-                      companies.map((company) => (
-                          <CompanyCardFilter key={company.id} company={company} />
-                      ))
-                  ) : (
-                      <p className="text-center text-gray-500">No results found</p>
-                  )
-              }
+                <FilterCardSkeleton />
+              ) : companies &&
+                Array.isArray(companies) &&
+                companies.length > 0 ? (
+                companies.map((company) => (
+                  <CompanyCardFilter key={company.id} company={company} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No results found</p>
+              )}
             </div>
           </div>
         </div>
