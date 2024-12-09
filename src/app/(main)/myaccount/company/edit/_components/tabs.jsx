@@ -44,11 +44,12 @@ import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import { Label } from "@/components/ui/label";
 import BusinessContactForm from "./business-contact-form";
 import DecisionMakersForm from "./decision-makers";
+import FaqForm from "./faq-form";
 
 function EditTabs() {
   return (
     <div>
-      <Tabs defaultValue="profile" className="edit-tabs w-full overflow-hidden">
+      <Tabs defaultValue="faq" className="edit-tabs w-full overflow-hidden">
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden gap-6 xl:gap-x-12">
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
@@ -180,6 +181,7 @@ function EditTabs() {
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Frequently asked questions
             </h3>
+            <FaqForm />
           </div>
         </TabsContent>
       </Tabs>
