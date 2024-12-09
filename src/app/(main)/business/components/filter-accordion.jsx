@@ -5,173 +5,144 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
+import React, { useState } from 'react';
+import Button from "@/components/ui/button";
+import {DeleteIcon} from "@/icons";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
-export default function FilterAccordion() {
-  const byCategory = [
-    "All category",
-    "Manufacturing",
-    "Retail",
-    "Machinery",
-    "Dyeing",
-    "Trading/Buying",
-    "Advisor/Consultant",
-    "Media/Publications",
-    "Certifications",
-    "Trading/Buying",
-    "Advisor/Consultant",
-    "Media/Publications",
-    "Certifications",
-    "Solution",
-    "Others",
-  ];
-  const byType = [
-    "All Types",
-    "Raw",
-    "Yarn",
-    "Fabric",
-    "Dyeing",
-    "Washing",
-    "Apparel",
-    "Printing",
-    "Embroidery",
-    "Trims & Accessories",
-    "Knitting",
-    "Chemical",
-    "Outwear",
-    "Sportswear",
-    "Nightwear",
-    "Sweater",
-    "Jacket",
-    "Cap",
-    "Woven",
-    "Denim",
-    "Home Textile",
-  ];
-  const byCertifications = [
-    "Small (Below 1000 Manpower)",
-    "Medium (1000-10000 Manpower)",
-    "Large (Above 10000 Manpower)",
-  ];
-  const byCompliance = [
-    "Sedex",
-    "Eokotex",
-    "Leed Gold",
-    "Leed Platinum",
-    "Green",
-    "Disney",
-    "Bluesign",
-    "ZDHC",
-    "REACH",
-    "OCS",
-    "FWF",
-    "RCS",
-    "C2C",
-    "ISO",
-    "RDS",
-    "Higg",
-    "WRAP",
-  ];
+export default function FilterAccordion({ filterOptions, filters, onFilterChange, onResetFilter }) {
+
   return (
-    <Accordion type="single" collapsible>
-      {/* By Category start */}
-      <AccordionItem value="category" className="py-5 px-6">
-        <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
-          By Category
-        </AccordionTrigger>
-        <AccordionContent className="space-y-4">
-          {byCategory.map((item, idx) => {
-            return (
-              <div className="grid grid-cols-1" key={idx}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id={item.replace(/\s+/g, "_").toLowerCase()} className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500" />
-                  <label
-                    htmlFor={item.replace(/\s+/g, "_").toLowerCase()}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
+      <div>
+          <div className="border border-gray-200 rounded-[8px]">
+              <div className="flex items-center justify-between py-4 px-6">
+                  <strong className="text-gray-900 text-lg font-semibold leading-7">
+                      Filter
+                  </strong>
+                  <Button secondary className="!border-0 !text-[#F04438]"
+                          onClick={onResetFilter}
                   >
-                    {item}
-                  </label>
-                </div>
+                      <DeleteIcon stroke="#F04438" width={15} height={17}/>
+                      <span>Clear all</span>
+                  </Button>
               </div>
-            );
-          })}
-        </AccordionContent>
-      </AccordionItem>
-      {/* By Category end */}
+              <div className="h-[1px] bg-gray-200"></div>
+              <div className="py-5 px-6">
+                  <p className="text-sm font-semibold text-gray-900 leading-5 mb-3">
+                      By Country
+                  </p>
+                  <Select onValueChange={(value) => onFilterChange('locationIds', value, true)}>
+                      <SelectTrigger
+                          className=" bg-gray-50 text-black font-semibold py-3 px-[18px] outline-none rounded-[8px] border-gray-200 focus:outline-none focus:ring-0 focus:ring-offset-0">
+                          <SelectValue placeholder="Anywhere"/>
+                      </SelectTrigger>
+                      <SelectContent className="text-gray-500">
+                          {filterOptions?.locations.map((location) => (
+                                  <SelectItem key={location.id} value={location.id} >
+                                      {location.name}
+                                  </SelectItem>
+                            ))}
+                      </SelectContent>
+                  </Select>
+              </div>
+              <div className="h-[1px] bg-gray-200"></div>
+              <Accordion type="single" collapsible>
+                  {/* By Category start */}
+                  <AccordionItem value="category" className="py-5 px-6">
+                      <AccordionTrigger
+                          className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
+                          By Category
+                      </AccordionTrigger>
+                      <AccordionContent className="space-y-4">
+                          {filterOptions?.categories.map((category) => (
+                              <div className="grid grid-cols-1" key={category.id}>
+                                  <div className="flex items-center space-x-2">
+                                      <Checkbox
+                                          id={`category-${category.id}`}
+                                          className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
+                                          checked={filters.businessCategoryIds.includes(category.id)}
+                                          onCheckedChange={(isChecked) =>
+                                              onFilterChange('businessCategoryIds', category.id, isChecked)
+                                          }
+                                      />
+                                      <label
+                                          htmlFor={`category-${category.id}`}
+                                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
+                                      >
+                                          {category.name}
+                                      </label>
+                                  </div>
+                              </div>
+                          ))}
+                      </AccordionContent>
+                  </AccordionItem>
+                  {/* By Category end */}
 
-      {/* By Type start */}
-      <AccordionItem value="type" className="py-5 px-6">
-        <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
-          By Type
-        </AccordionTrigger>
-        <AccordionContent className="space-y-4">
-          {byType.map((item, idx) => {
-            return (
-              <div className="grid grid-cols-1" key={idx}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id={item.replace(/\s+/g, "_").toLowerCase()} className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500" />
-                  <label
-                    htmlFor={item.replace(/\s+/g, "_").toLowerCase()}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
-                  >
-                    {item}
-                  </label>
-                </div>
-              </div>
-            );
-          })}
-        </AccordionContent>
-      </AccordionItem>
-      {/* By Type end */}
+                  {/* By Type start */}
+                  <AccordionItem value="type" className="py-5 px-6">
+                      <AccordionTrigger
+                          className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
+                          By Compliances
+                      </AccordionTrigger>
+                      <AccordionContent className="space-y-4">
+                          {filterOptions?.compliances.map((compliance) => (
+                              <div className="grid grid-cols-1" key={compliance.id}>
+                                  <div className="flex items-center space-x-2">
+                                      <Checkbox
+                                          id={`compliance-${compliance.id}`}
+                                          className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
+                                          checked={filters.complianceIds.includes(compliance.id)}
+                                          onCheckedChange={(isChecked) =>
+                                              onFilterChange('complianceIds', compliance.id, isChecked)
+                                          }
+                                      />
+                                      <label
+                                          htmlFor={`compliance-${compliance.id}`}
+                                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
+                                      >
+                                          {compliance.name}
+                                      </label>
+                                  </div>
+                              </div>
+                          ))}
+                      </AccordionContent>
+                  </AccordionItem>
+                  {/* By Type end */}
 
-      {/* By Certifications start */}
-      <AccordionItem value="certifications" className="py-5 px-6">
-        <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
-        By Certifications
-        </AccordionTrigger>
-        <AccordionContent className="space-y-4">
-          {byCertifications.map((item, idx) => {
-            return (
-              <div className="grid grid-cols-1" key={idx}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id={item.replace(/\s+/g, "_").toLowerCase()} className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500" />
-                  <label
-                    htmlFor={item.replace(/\s+/g, "_").toLowerCase()}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
-                  >
-                    {item}
-                  </label>
-                </div>
-              </div>
-            );
-          })}
-        </AccordionContent>
-      </AccordionItem>
-      {/* By Certifications end */}
+                  {/* By Size start */}
+                  <AccordionItem value="manpower" className="py-5 px-6">
+                      <AccordionTrigger
+                          className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0"
+                      >
+                          By Size
+                      </AccordionTrigger>
+                      <AccordionContent className="space-y-4">
+                          {filterOptions?.size.map((size, index) => (
+                              <div className="grid grid-cols-1" key={index}>
+                                  <div className="flex items-center space-x-2">
+                                      <Checkbox
+                                          id={`size-${index}`}
+                                          className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
+                                          checked={filters.manpower.includes(size)}
+                                          onCheckedChange={(isChecked) =>
+                                              onFilterChange('manpower', size, isChecked)
+                                          }
+                                      />
+                                      <label
+                                          htmlFor={`size-${index}`}
+                                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
+                                      >
+                                          {size}
+                                      </label>
+                                  </div>
+                              </div>
+                          ))}
+                      </AccordionContent>
+                  </AccordionItem>
+                  {/* By Size end */}
 
-      {/* By Compliance start */}
-      <AccordionItem value="compliance" className="py-5 px-6">
-        <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
-        By Certifications
-        </AccordionTrigger>
-        <AccordionContent className="space-y-4">
-          {byCompliance.map((item, idx) => {
-            return (
-              <div className="grid grid-cols-1" key={idx}>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id={item.replace(/\s+/g, "_").toLowerCase()} className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500" />
-                  <label
-                    htmlFor={item.replace(/\s+/g, "_").toLowerCase()}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
-                  >
-                    {item}
-                  </label>
-                </div>
-              </div>
-            );
-          })}
-        </AccordionContent>
-      </AccordionItem>
-      {/* By Compliance end */}
-    </Accordion>
+              </Accordion>
+          </div>
+      </div>
   );
 }

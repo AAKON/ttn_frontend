@@ -1,9 +1,8 @@
 "use client";
-import CompanyCard from "@/components/cards/company-card";
 import { Cross, DeleteIcon, GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import Button from "@/components/ui/button";
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 
 // Static Icon
@@ -21,6 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import HeroForm from "@/components/hero/hero-form";
+import CompanyCardFilter from "@/components/cards/company-card-filter";
+import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 
 const country = [
   "Afganisthan",
@@ -33,6 +34,83 @@ const country = [
 
 const Business = () => {
   const [view, setView] = useState("grid");
+  const [loading, setLoading] = useState(false);
+
+  const initialFilters = {
+      locationIds: [],
+      manpower: [],
+      complianceIds: [],
+      businessCategoryIds: []
+  };
+  const [filters, setFilters] = useState(initialFilters);
+
+  // const [filters, setFilters] = useState({
+  //   locationIds: [],
+  //   manpower: [],
+  //   complianceIds: [],
+  //   businessCategoryIds: []
+  // });
+
+  const [companies, setCompanies] = useState([]);
+  const [filterOptions, setFilterOptions] = useState(null);
+
+  // Fetch filter options on load
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`);
+        const data = await response.json();
+        setFilterOptions(data.data);
+      } catch (error) {
+        console.error('Error fetching filter options:', error);
+      }
+    };
+
+    fetchFilterOptions();
+  }, []);
+
+
+  // Fetch companies when filters change
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(filters),
+        });
+        const data = await response.json();
+        setCompanies(data?.data?.data || []);
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+  }, [filters]);
+
+  const handleFilterChange = (key, id, isChecked) => {
+    setFilters((prev) => {
+      const updatedFilters = { ...prev };
+      if (isChecked) {
+        updatedFilters[key] = [...(updatedFilters[key] || []), id];
+      } else {
+        updatedFilters[key] = updatedFilters[key].filter((item) => item !== id);
+      }
+      return updatedFilters;
+    });
+  };
+
+  const resultsCount = companies.length;
+
+  const resetFilterSelection = () => {
+    setFilters(initialFilters);
+  };
+
   return (
     <>
       <Section>
@@ -46,47 +124,20 @@ const Business = () => {
       <Section>
         <div className="grid grid-cols-1 md:grid-cols-[336px_1fr] gap-8">
           {/* Left Side Bar */}
-          <div>
-            <div className="border border-gray-200 rounded-[8px]">
-              <div className="flex items-center justify-between py-4 px-6">
-                <strong className="text-gray-900 text-lg font-semibold leading-7">
-                  Filter
-                </strong>
-                <Button secondary className="!border-0 !text-[#F04438]">
-                  <DeleteIcon stroke="#F04438" width={15} height={17} />
-                  <span>Clear all</span>
-                </Button>
-              </div>
-              <div className="h-[1px] bg-gray-200"></div>
-              <div className="py-5 px-6">
-                <p className="text-sm font-semibold text-gray-900 leading-5 mb-3">
-                  By Country
-                </p>
-                <Select>
-                  <SelectTrigger className=" bg-gray-50 text-black font-semibold py-3 px-[18px] outline-none rounded-[8px] border-gray-200 focus:outline-none focus:ring-0 focus:ring-offset-0">
-                    <SelectValue placeholder="Anywhere" />
-                  </SelectTrigger>
-                  <SelectContent className="text-gray-500">
-                    {country.map((el, idx) => {
-                      return (
-                        <SelectItem key={idx} value={el}>
-                          {el}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="h-[1px] bg-gray-200"></div>
-              <FilterAccordion />
-            </div>
-          </div>
+          {filterOptions && (
+              <FilterAccordion
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={handleFilterChange}
+                  onResetFilter={resetFilterSelection}
+              />
+          )}
 
           {/* Right Side */}
           <div>
             <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
               <h3 className="text-gray-900 text-xl font-semibold">
-                T-shirt manufactures: <span>{66}</span> Results
+                T-shirt manufactures: <span>{resultsCount}</span> Results
               </h3>
               <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
                 <span
@@ -208,12 +259,17 @@ const Business = () => {
                 view === "list" ? "grid-cols-1" : "grid-cols-2"
               } gap-8`}
             >
-              <CompanyCard />
-              <CompanyCard />
-              <CompanyCard />
-              <CompanyCard />
-              <CompanyCard />
-              <CompanyCard />
+              {loading ? (
+                      <FilterCardSkeleton />
+                  ) :
+                  companies && Array.isArray(companies) && companies.length > 0 ? (
+                      companies.map((company) => (
+                          <CompanyCardFilter key={company.id} company={company} />
+                      ))
+                  ) : (
+                      <p className="text-center text-gray-500">No results found</p>
+                  )
+              }
             </div>
           </div>
         </div>
