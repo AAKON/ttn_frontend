@@ -88,15 +88,44 @@ const CompanyForm = ({preData, basic}) => {
 
     console.log(fileData, 'set file data')
 
+    const handleImageChange = ({ file }) => {
+        setFileData((prev) => ({ ...prev, imageFile: file }));
+    };
+
     // Function to handle form submission
     const onSubmit = async (data) => {
+        const {
+            name,
+            moto,
+            business_category_id,
+            compliances,
+            tags,
+            company_website,
+            location_id,
+            manpower,
+            about,
+        } = data;
+        const formData = new FormData();
 
-        const formData = {
-            ...data,
-            profile_pic: fileData
-        };
+        formData.append('name', name);
+        formData.append('moto', moto);
+        formData.append('business_category_id', business_category_id);
+        compliances.forEach((item, index) => {
+            formData.append(`compliances[${index}]`, item);
+        });
+        formData.append('tags', tags);
+        formData.append('company_website', company_website);
+        formData.append('location_id', location_id);
+        formData.append('manpower', manpower);
+        formData.append('about', about);
+        if (fileData?.imageFile) {
+            formData.append('profile_pic', fileData.imageFile);
+        }
 
-        console.log(formData, 'sending file');
+        // const formData = {
+        //     ...data,
+        //     profile_pic: fileData?.imageFile
+        // };
 
         setLoading(true);
         try {
@@ -142,9 +171,8 @@ const CompanyForm = ({preData, basic}) => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex justify-start">
                     <FileUploadPreview
-                        onImageChange={({ file }) => {
-                            setFileData(file);
-                        }}
+                        initialImage="https://ttn.technostupid.com/storage/10/conversions/banner-1-thumbnail.jpg"
+                        onImageChange={handleImageChange}
                     />
                 </div>
                 <div className="grid grid-cols-1 gap-3 lg:gap-3">
