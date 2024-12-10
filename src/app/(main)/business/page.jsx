@@ -62,8 +62,7 @@ const Business = () => {
         setFilterOptions(data.data);
       } catch (error) {
         console.error("Error fetching filter options:", error);
-      }
-      finally {
+      } finally {
         setFilterOptionLoading(false);
       }
     };
@@ -121,7 +120,7 @@ const Business = () => {
           <h3 className="text-gray-900   font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
             Find Your Apparel Needs
           </h3>
-          <HeroForm isAnywhereDropdown={false} />
+          <HeroForm isAnywhereDropdown={false} isCategoryDropdown={false} isFilterIcon={true}  />
         </div>
       </Section>
       <Section>
@@ -145,7 +144,7 @@ const Business = () => {
           {/* Right Side */}
           <div>
             <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
-              <h3 className="text-gray-900 text-xl font-semibold">
+              <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
                 T-shirt manufactures: <span>{resultsCount}</span> Results
               </h3>
               <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
@@ -181,9 +180,9 @@ const Business = () => {
             {/* end display selected tags */}
 
             <div
-              className={`mt-8 grid ${
-                view === "list" ? "grid-cols-1" : "grid-cols-2"
-              } gap-8`}
+              className={`mt-8 grid gap-3 lg:gap-8 ${
+                view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+              }`}
             >
               {loading ? (
                 <FilterCardSkeleton />
