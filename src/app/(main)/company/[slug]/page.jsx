@@ -13,7 +13,6 @@ import ContactWithBusinessOwner from "@/components/company/contact-with-business
 
 const CompanyDetails = async ({params: { slug }}) => {
 
-
     try {
         const basicPromise = getCompanyBasic(slug);
         const basic = await basicPromise;
