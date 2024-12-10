@@ -13,25 +13,26 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { MarkerPinIcon, StarIcon, LoveIcon } from "@/icons";
 import Link from "next/link";
 
-const CompanyCard = ({data}) => {
+const CompanyCard = ({ data }) => {
   return (
     <Card>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
         <div className="flex items-center gap-3">
-          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center p-2 border border-gray-500">
+          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
             <Image
               src={data?.thumbnail_url ? data?.thumbnail_url : Profile_pic}
               width={64}
               height={64}
               alt="Profile_pic"
-              className="object-cover"
+              className="object-cover w-full h-full rounded-full"
             />
           </div>
           <div className="flex-1">
-            {data?.businessCategory &&
-            <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
-              {data?.businessCategory?.name}
-            </CardTitle>}
+            {data?.businessCategory && (
+              <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
+                {data?.businessCategory?.name}
+              </CardTitle>
+            )}
             <CardDescription className="font-semibold text-md sm:text-2xl sm:leading-8 text-gray-900">
               {data?.name}
             </CardDescription>
@@ -46,18 +47,21 @@ const CompanyCard = ({data}) => {
       </CardHeader>
 
       {/* 1st btn start */}
-      {data?.compliances && Array.isArray(data?.compliances) && data?.compliances.length > 0 &&
-      <CardContent className="flex gap-x-2 mr-2 w-full">
-        {data?.compliances.map((compliance) => (
-            <Button
+      {data?.compliances &&
+        Array.isArray(data?.compliances) &&
+        data?.compliances.length > 0 && (
+          <CardContent className="flex gap-x-2 mr-2 w-full">
+            {data?.compliances.map((compliance) => (
+              <Button
                 secondary
                 className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
                 key={compliance.id}
-            >
-              {compliance?.name}
-            </Button>
+              >
+                {compliance?.name}
+              </Button>
             ))}
-      </CardContent>}
+          </CardContent>
+        )}
       {/* 1st btn end */}
 
       {/* peragraph start */}
@@ -77,13 +81,14 @@ const CompanyCard = ({data}) => {
             <span className="mr-1">202</span> reviews
           </p>
         </div>
-        {data?.location &&
-        <div className="flex">
-          <MarkerPinIcon stroke="#101828" width={20} />
-          <span className="text-md font-medium text-gray-900 leading-6 ml-1">
-            {data?.location?.name}
-          </span>
-        </div>}
+        {data?.location && (
+          <div className="flex">
+            <MarkerPinIcon stroke="#101828" width={20} />
+            <span className="text-md font-medium text-gray-900 leading-6 ml-1">
+              {data?.location?.name}
+            </span>
+          </div>
+        )}
       </CardContent>
       {/* ----------- */}
 
