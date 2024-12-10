@@ -50,3 +50,4 @@ export { DeleteIcon } from "./delete";
 export { StarIcon } from "./star";
 export { LoveIcon } from "./love";
 export { ListIcon } from "./list";
+export { FilterIcon } from "./filter";

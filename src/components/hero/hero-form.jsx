@@ -1,15 +1,24 @@
 import React from "react";
 import Button from "@/components/ui/button";
 import { Categories, Country } from "@/components/hero/hero";
-import Counter from "@/components/counter/counter";
+import { FilterIcon } from "@/icons";
 
 const style = {
   boxShadow: "0px 4px 12px 0px rgba(0,0,0,0.04)",
 };
 
-function HeroForm({ isAnywhereDropdown = true }) {
+function HeroForm({
+  isAnywhereDropdown = true,
+  isCategoryDropdown = true,
+  isFilterIcon = false,
+}) {
   return (
-    <div className={`${isAnywhereDropdown ? "bg-white" : "bg-gray-50"} p-3 rounded-xl mt-4`} style={style}>
+    <div
+      className={`${
+        isAnywhereDropdown ? "bg-white" : "bg-gray-50"
+      } p-3 rounded-xl mt-4`}
+      style={style}
+    >
       <form
         action=""
         className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap md:flex-nowrap"
@@ -38,24 +47,46 @@ function HeroForm({ isAnywhereDropdown = true }) {
             placeholder="T-shirt manufacturer"
           />
         </div>
-        <div className="md:order-1 lg:border-r lg:border-r-gray-300">
-          <Categories />
-        </div>
+        {isCategoryDropdown ? (
+          <div className="md:order-1 lg:border-r lg:border-r-gray-300">
+            <Categories />
+          </div>
+        ) : (
+          <div className="hidden md:block md:order-1 lg:border-r lg:border-r-gray-300">
+            <Categories />
+          </div>
+        )}
         {isAnywhereDropdown && (
           <div className="md:order-3">
             <Country />
           </div>
         )}
         <div className="flex-1 md:order-4">
-          {isAnywhereDropdown ? (
-            <Button className="w-full md:w-[210px]" type="submit">
-              Search
-            </Button>
-          ) : (
-            <Button primaryOutline className="w-full md:w-[210px]" type="submit">
-              Search
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {isAnywhereDropdown ? (
+              <Button className="w-full md:w-[210px]" type="submit">
+                Search
+              </Button>
+            ) : (
+              <Button
+                primaryOutline
+                className="w-full md:w-[210px]"
+                type="submit"
+              >
+                Search
+              </Button>
+            )}
+
+            {isFilterIcon && (
+              <Button
+                secondary
+                type="button"
+                className="md:hidden !p-1 !w-10 !h-10 !min-w-10 !border-brand-300"
+              >
+                <FilterIcon stroke="#C67618" />
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </div>
