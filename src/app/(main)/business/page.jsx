@@ -23,6 +23,7 @@ import HeroForm from "@/components/hero/hero-form";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
 import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
+import SelectedOptions from "@/app/(main)/business/components/selectedOptions";
 
 const country = [
   "Afganisthan",
@@ -35,7 +36,8 @@ const country = [
 
 const Business = () => {
   const [view, setView] = useState("grid");
-  const [loading, setLoading] = useState(false);
+  const [filterOptionLoading, setFilterOptionLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const initialFilters = {
     locationIds: [],
@@ -43,21 +45,15 @@ const Business = () => {
     complianceIds: [],
     businessCategoryIds: [],
   };
+
   const [filters, setFilters] = useState(initialFilters);
-
-  // const [filters, setFilters] = useState({
-  //   locationIds: [],
-  //   manpower: [],
-  //   complianceIds: [],
-  //   businessCategoryIds: []
-  // });
-
   const [companies, setCompanies] = useState([]);
   const [filterOptions, setFilterOptions] = useState(null);
 
   // Fetch filter options on load
   useEffect(() => {
     const fetchFilterOptions = async () => {
+      setFilterOptionLoading(true);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
@@ -66,6 +62,9 @@ const Business = () => {
         setFilterOptions(data.data);
       } catch (error) {
         console.error("Error fetching filter options:", error);
+      }
+      finally {
+        setFilterOptionLoading(false);
       }
     };
 
@@ -129,7 +128,7 @@ const Business = () => {
         <div className="grid grid-cols-1 md:grid-cols-[336px_1fr] gap-8">
           {/* Left Side Bar */}
           <div className="relative">
-            {loading ? (
+            {filterOptionLoading ? (
               <AccordionSkeleton />
             ) : (
               filterOptions && (
@@ -177,92 +176,9 @@ const Business = () => {
               </div>
             </div>
 
-            <div className="mt-4">
-              <div className="flex gap-x-5 mt-8">
-                <div className="flex items-center gap-x-2">
-                  <Button
-                    type="button"
-                    secondary
-                    className="h-9 items-center leading-none text-sm text-gray-700 !font-normal gap-[6px] !px-3 rounded-full"
-                  >
-                    <Image
-                      src={countryIcon}
-                      alt="Country Icon"
-                      width={16}
-                      height={16}
-                    />
-                    Bangladesh
-                    <span className="cursor-pointer size-4 flex items-center justify-center ml-[10px]">
-                      <Cross strokeColor="#D0D5DD" width={8} height={8} />
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    secondary
-                    className="h-9 items-center leading-none text-sm text-gray-700 !font-normal gap-[6px] !px-3 rounded-full"
-                  >
-                    <Image
-                      src={grid_icon}
-                      alt="Country Icon"
-                      width={16}
-                      height={16}
-                    />
-                    Machinery
-                    <span className="cursor-pointer size-4 flex items-center justify-center ml-[10px]">
-                      <Cross strokeColor="#D0D5DD" width={8} height={8} />
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    secondary
-                    className="h-9 items-center leading-none text-sm text-gray-700 !font-normal gap-[6px] !px-3 rounded-full"
-                  >
-                    <Image
-                      src={layer_icon}
-                      alt="Country Icon"
-                      width={16}
-                      height={16}
-                    />
-                    Yarn
-                    <span className="cursor-pointer size-4 flex items-center justify-center ml-[10px]">
-                      <Cross strokeColor="#D0D5DD" width={8} height={8} />
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    secondary
-                    className="h-9 items-center leading-none text-sm text-gray-700 !font-normal gap-[6px] !px-3 rounded-full"
-                  >
-                    <Image
-                      src={user_icon}
-                      alt="Country Icon"
-                      width={16}
-                      height={16}
-                    />
-                    Small
-                    <span className="cursor-pointer size-4 flex items-center justify-center ml-[10px]">
-                      <Cross strokeColor="#D0D5DD" width={8} height={8} />
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    secondary
-                    className="h-9 items-center leading-none text-sm text-gray-700 !font-normal gap-[6px] !px-3 rounded-full"
-                  >
-                    <Image
-                      src={batch_icon}
-                      alt="Country Icon"
-                      width={16}
-                      height={16}
-                    />
-                    Lead Platinum
-                    <span className="cursor-pointer size-4 flex items-center justify-center ml-[10px]">
-                      <Cross strokeColor="#D0D5DD" width={8} height={8} />
-                    </span>
-                  </Button>
-                </div>
-              </div>
-            </div>
+            {/*selected tags */}
+            {/*<SelectedOptions />*/}
+            {/* end display selected tags */}
 
             <div
               className={`mt-8 grid ${
