@@ -20,7 +20,7 @@ const CompanyCard = ({data}) => {
         <div className="flex items-center gap-3">
           <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center p-2 border border-gray-500">
             <Image
-              src={Profile_pic}
+              src={data?.thumbnail_url ? data?.thumbnail_url : Profile_pic}
               width={64}
               height={64}
               alt="Profile_pic"

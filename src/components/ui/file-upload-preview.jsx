@@ -1,8 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const FileUploadPreview = ({ onImageChange }) => {
-    const [image, setImage] = useState(null); // For preview
+const FileUploadPreview = ({ onImageChange, initialImage }) => {
+    const [image, setImage] = useState(initialImage || null); // For preview
+
+    useEffect(() => {
+        // Update the preview if the initial image changes
+        setImage(initialImage);
+    }, [initialImage]);
 
     const handleFileProcessing = (selectedFile) => {
         if (selectedFile && selectedFile.type.startsWith("image/")) {

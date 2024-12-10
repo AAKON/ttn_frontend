@@ -46,7 +46,8 @@ export async function companyBasicReq(data, toast) {
     const options = {
         method: 'POST',
         body: data,
-        isMultipart: false
+        isFormData: true,
+        isMultipart: true,
     };
     return await apiRequest(endpoint, options, toast, token);
 }
