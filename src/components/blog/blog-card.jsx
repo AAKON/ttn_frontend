@@ -2,6 +2,7 @@ import Image from "next/image";
 import blog_1 from "@/assets/blog-1.jpg";
 import {Calender, UserEdit} from "@/icons";
 import Link from "next/link";
+import DateFormatter from "@/utils/dateFormatter";
 
 const BlogCard = ({ item }) => {
     const {id, title, thumbnail, short_description, slug, featured, publish_date, blog_topics } = item;
@@ -39,7 +40,9 @@ const BlogCard = ({ item }) => {
                     </div>
                     <div className="flex items-center gap-2">
                         <Calender />
-                        <h2 className="text-sm font-semibold text-gray-600">{publish_date}</h2>
+                        <h2 className="text-sm font-semibold text-gray-600">
+                            <DateFormatter publishDate={publish_date} />
+                        </h2>
                     </div>
                 </div>
             </div>
