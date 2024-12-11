@@ -18,13 +18,13 @@ const CompanyCardFilter = ({company}) => {
     <Card>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
         <div className="flex items-center gap-3">
-          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center p-2 border border-gray-500">
+          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
             <Image
               src={Profile_pic}
               width={64}
               height={64}
               alt="Profile_pic"
-              className="object-cover"
+              className="object-cover w-full h-full rounded-full"
             />
           </div>
           <div className="flex-1">
