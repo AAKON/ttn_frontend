@@ -38,7 +38,7 @@ export default async function Page({params: { slug }}){
                 </Button>
               </div>
               <div className="pt-4">
-                  <CompanyForm basic={basic} preData={preDataBasic} />
+                  <CompanyForm slug={slug} basic={basic} preData={preDataBasic} />
               </div>
             </div>
 

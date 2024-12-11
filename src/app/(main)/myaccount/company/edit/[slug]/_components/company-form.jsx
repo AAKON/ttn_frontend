@@ -26,9 +26,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
-import {companyBasicReq} from "@/services/company";
-import TagsInput from "@/components/ui/tagsInput";
-import CustomSelectTags from "@/components/ui/customSelectTags";
+import {companyBasicUpdateReq} from "@/services/company";
 import DropDownTags from "@/components/ui/dropDownTags";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
 
@@ -54,14 +52,40 @@ const formSchema = z.object({
     profile_pic: z.string().optional(),
 });
 
-const CompanyForm = ({preData, basic}) => {
+const CompanyForm = ({slug, preData, basic}) => {
 
     const [fileData, setFileData] = useState(null); // File object
 
     const [loading, setLoading] = useState(false);
     const {toast} = useToast();
 
+    // Options for the select dropdown
+    const tagOptions = preData?.compliances?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) || [];
 
+    const initialCompliances = basic?.compliances && Array.isArray(basic?.compliances) && basic?.compliances.length > 0 &&
+        basic?.compliances?.map(item => ({
+            label: item.name,
+            value: item.id
+        })) || [];
+
+    useEffect(() => {
+        if (basic) {
+            setValue("name", basic?.name || "");
+            setValue("moto", basic?.moto || "");
+            setValue("tags", basic?.tags || "");
+            setValue("manpower", basic?.manpower || "");
+            setValue("about", basic?.about || "");
+            setValue("compliances", initialCompliances || []);
+            setValue("company_website", basic?.company_website || "");
+            setValue("about", basic?.about || "");
+        }
+    }, [basic, setValue]);
+
+
+    // Function to handle form submission
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -85,11 +109,10 @@ const CompanyForm = ({preData, basic}) => {
         setValue,
     } = form;
 
-    const handleImageChange = ({ file }) => {
-        setFileData((prev) => ({ ...prev, imageFile: file }));
+    const handleImageChange = ({file}) => {
+        setFileData((prev) => ({...prev, imageFile: file}));
     };
 
-    // Function to handle form submission
     const onSubmit = async (data) => {
         const {
             name,
@@ -119,53 +142,22 @@ const CompanyForm = ({preData, basic}) => {
             formData.append('profile_pic', fileData.imageFile);
         }
 
-        // const formData = {
-        //     ...data,
-        //     profile_pic: fileData?.imageFile
-        // };
-
         setLoading(true);
         try {
-          const result = await companyBasicReq(formData, toast);
-          if (result.status && result.code === 200) {
-            //form reset
-          }
+            const result = await companyBasicUpdateReq(slug, formData, toast);
+            if (result.status && result.code === 200) {
+                //form reset
+            }
         } catch (error) {
-          console.log("Error in submitting:", error.message);
+            console.log("Error in submitting:", error.message);
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-
     };
 
-    // Options for the select dropdown
-    const tagOptions = preData?.compliances?.map(item => ({
-        label: item.name,
-        value: item.id
-    })) || [];
-
-    const initialCompliances = basic?.compliances && Array.isArray(basic?.compliances) && basic?.compliances.length > 0 &&
-        basic?.compliances?.map(item => ({
-        label: item.name,
-        value: item.id
-    })) || [];
-
-    useEffect(() => {
-        if (basic) {
-            setValue("name", basic?.name || "");
-            setValue("moto", basic?.moto || "");
-            setValue("tags", basic?.tags || "");
-            setValue("manpower", basic?.manpower || "");
-            setValue("about", basic?.about || "");
-            setValue("compliances", initialCompliances || []);
-            setValue("company_website", basic?.company_website || "");
-            setValue("about", basic?.about || "");
-        }
-    }, [basic, setValue]);
-
-            return (
+    return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex justify-start">
                     <FileUploadPreview
                         initialImage="https://ttn.technostupid.com/storage/10/conversions/banner-1-thumbnail.jpg"
@@ -236,7 +228,8 @@ const CompanyForm = ({preData, basic}) => {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel className={labelStyle}>Category</FormLabel>
-                                    <Select defaultValue={basic?.businessCategory?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                    <Select defaultValue={basic?.businessCategory?.id?.toString()}
+                                            onValueChange={(value) => field.onChange(Number(value))}>
                                         <FormControl>
                                             <SelectTrigger
                                                 className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
@@ -300,7 +293,8 @@ const CompanyForm = ({preData, basic}) => {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel className={labelStyle}>Location</FormLabel>
-                                    <Select defaultValue={basic?.location?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                    <Select defaultValue={basic?.location?.id?.toString()}
+                                            onValueChange={(value) => field.onChange(Number(value))}>
                                         <FormControl>
                                             <SelectTrigger
                                                 className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}

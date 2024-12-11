@@ -51,6 +51,20 @@ export async function companyBasicReq(data, toast) {
     return await apiRequest(endpoint, options, toast, token);
 }
 
+export async function companyBasicUpdateReq(slug, data, toast) {
+
+    const session = await getSession(slug);
+    const token = session?.accessToken;
+
+    const endpoint = `/my/company/update/${slug}`;
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
 export async function companyOverviewReq(slug, data, toast) {
 
     const session = await getSession();
