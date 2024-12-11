@@ -26,9 +26,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {Textarea} from "@/components/ui/textarea";
-import {companyBasicReq} from "@/services/company";
-import TagsInput from "@/components/ui/tagsInput";
-import CustomSelectTags from "@/components/ui/customSelectTags";
+import {companyBasicUpdateReq} from "@/services/company";
 import DropDownTags from "@/components/ui/dropDownTags";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
 
@@ -44,7 +42,7 @@ const formSchema = z.object({
         required_error: "Please select an category.",
     }),
     compliances: z
-        .array(z.number())
+        .array(z.any())
         .min(1, {message: "Please add at least one compliance."}),
     tags: z.string().optional(),
     company_website: z.string().optional(),
@@ -54,14 +52,26 @@ const formSchema = z.object({
     profile_pic: z.string().optional(),
 });
 
-const CompanyForm = ({preData, basic}) => {
-
-    const [fileData, setFileData] = useState(null); // File object
+const CompanyForm = ({slug, preData, basic}) => {
 
     const [loading, setLoading] = useState(false);
     const {toast} = useToast();
+    const [fileData, setFileData] = useState(null); // File object
+    const [initialImage, setInitialImage] = useState("");
 
+    // Options for the select dropdown
+    const tagOptions = preData?.compliances?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) || [];
 
+    const initialCompliances = basic?.compliances && Array.isArray(basic?.compliances) && basic?.compliances.length > 0 &&
+        basic?.compliances?.map(item => ({
+            label: item.name,
+            value: item.id
+        })) || [];
+
+    // Function to handle form submission
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -77,7 +87,6 @@ const CompanyForm = ({preData, basic}) => {
             profile_pic: ""
         },
     });
-
     const {
         control,
         handleSubmit,
@@ -85,12 +94,36 @@ const CompanyForm = ({preData, basic}) => {
         setValue,
     } = form;
 
-    const handleImageChange = ({ file }) => {
-        setFileData((prev) => ({ ...prev, imageFile: file }));
+    useEffect(() => {
+        if (basic) {
+            setValue("name", basic?.name || "");
+            setValue("moto", basic?.moto || "");
+            setValue("tags", basic?.tags || "");
+            setValue("manpower", basic?.manpower || "");
+            setValue("about", basic?.about || "");
+            if (basic?.compliances) {
+                setValue("compliances", initialCompliances || []);
+            }
+            setValue("company_website", basic?.company_website || "");
+            setValue("about", basic?.about || "");
+            setValue("business_category_id", basic?.businessCategory?.id || "");
+            setValue("location_id", basic?.location?.id || "");
+
+            setInitialImage(basic?.thumbnail_url || "");
+        }
+    }, [basic, setValue]);
+
+    console.log(initialImage, 'ggg initialImage')
+
+
+    const handleImageChange = ({file}) => {
+        setFileData((prev) => ({...prev, imageFile: file}));
     };
 
-    // Function to handle form submission
     const onSubmit = async (data) => {
+
+        console.log(data, 'get ddd');
+
         const {
             name,
             moto,
@@ -104,71 +137,58 @@ const CompanyForm = ({preData, basic}) => {
         } = data;
         const formData = new FormData();
 
+        // Normalize the data to extract values
+        const normalizedCompliances = compliances.map(item =>
+            typeof item === "object" ? item.value : item
+        );
+
         formData.append('name', name);
-        formData.append('moto', moto);
+        if (moto.trim() !== "") {
+            formData.append('moto', moto);
+        }
         formData.append('business_category_id', business_category_id);
-        compliances.forEach((item, index) => {
-            formData.append(`compliances[${index}]`, item);
+
+        normalizedCompliances.forEach((value, index) => {
+            formData.append(`compliances[${index}]`, value);
         });
-        formData.append('tags', tags);
-        formData.append('company_website', company_website);
+
+        if (tags.trim() !== "") {
+            formData.append('tags', tags);
+        }
+        if (company_website.trim() !== "") {
+            formData.append('company_website', company_website);
+        }
         formData.append('location_id', location_id);
         formData.append('manpower', manpower);
-        formData.append('about', about);
-        if (fileData?.imageFile) {
+        if (about.trim() !== "") {
+            formData.append('about', about);
+        }
+        if (fileData?.imageFile && fileData?.imageFile.trim() !== "") {
             formData.append('profile_pic', fileData.imageFile);
         }
 
-        // const formData = {
-        //     ...data,
-        //     profile_pic: fileData?.imageFile
-        // };
-
         setLoading(true);
-        try {
-          const result = await companyBasicReq(formData, toast);
-          if (result.status && result.code === 200) {
-            //form reset
-          }
-        } catch (error) {
-          console.log("Error in submitting:", error.message);
-        } finally {
-          setLoading(false);
-        }
 
+        try {
+
+            const result = await companyBasicUpdateReq(slug, formData, toast);
+            if (result.status && result.code === 200) {
+                //form reset
+            }
+
+        } catch (error) {
+            console.log("Error in submitting:", error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    // Options for the select dropdown
-    const tagOptions = preData?.compliances?.map(item => ({
-        label: item.name,
-        value: item.id
-    })) || [];
-
-    const initialCompliances = basic?.compliances && Array.isArray(basic?.compliances) && basic?.compliances.length > 0 &&
-        basic?.compliances?.map(item => ({
-        label: item.name,
-        value: item.id
-    })) || [];
-
-    useEffect(() => {
-        if (basic) {
-            setValue("name", basic?.name || "");
-            setValue("moto", basic?.moto || "");
-            setValue("tags", basic?.tags || "");
-            setValue("manpower", basic?.manpower || "");
-            setValue("about", basic?.about || "");
-            setValue("compliances", initialCompliances || []);
-            setValue("company_website", basic?.company_website || "");
-            setValue("about", basic?.about || "");
-        }
-    }, [basic, setValue]);
-
-            return (
+    return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex justify-start">
                     <FileUploadPreview
-                        initialImage="https://ttn.technostupid.com/storage/10/conversions/banner-1-thumbnail.jpg"
+                        initialImage={initialImage}
                         onImageChange={handleImageChange}
                     />
                 </div>
@@ -236,7 +256,8 @@ const CompanyForm = ({preData, basic}) => {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel className={labelStyle}>Category</FormLabel>
-                                    <Select defaultValue={basic?.businessCategory?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                    <Select defaultValue={basic?.businessCategory?.id?.toString()}
+                                            onValueChange={(value) => field.onChange(Number(value))}>
                                         <FormControl>
                                             <SelectTrigger
                                                 className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
@@ -300,7 +321,8 @@ const CompanyForm = ({preData, basic}) => {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel className={labelStyle}>Location</FormLabel>
-                                    <Select defaultValue={basic?.location?.id?.toString()} onValueChange={(value) => field.onChange(Number(value))}>
+                                    <Select defaultValue={basic?.location?.id?.toString()}
+                                            onValueChange={(value) => field.onChange(Number(value))}>
                                         <FormControl>
                                             <SelectTrigger
                                                 className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
@@ -341,8 +363,8 @@ const CompanyForm = ({preData, basic}) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="1000-10000">1000-10000</SelectItem>
-                                            <SelectItem value="10000-20000">10000-20000</SelectItem>
+                                            <SelectItem value="Medium (1000-10000 Manpower)">Medium (1000-10000 Manpower)</SelectItem>
+                                            <SelectItem value="Large (1000-20000 Manpower)">Large (1000-20000 Manpower)</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>

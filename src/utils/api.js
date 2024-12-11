@@ -14,10 +14,6 @@ async function apiRequest(endpoint, options = {}, toast, token) {
 
     // Handle FormData if needed
     if (isFormData && body) {
-        // const formData = new FormData();
-        // Object.entries(body).forEach(([key, value]) => {
-        //     formData.append(key, value);
-        // });
         config.body = body;
     } else if (body) {
         config.body = JSON.stringify(body);
