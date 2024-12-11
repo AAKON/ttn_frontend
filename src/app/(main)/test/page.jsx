@@ -1,10 +1,10 @@
-"use client";
-
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input"
-
+'use client'
+import React from 'react';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from "@/components/ui/input";
+import Button from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -13,83 +13,131 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import DropDownTags from "@/components/ui/dropDownTags";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { formLabelClasses, inputClasses } from "@/utils/input-style";
 
-const formSchema = z.object({
-    compliances: z
-        .array(z.number())
-        .min(1, { message: "Please add at least one compliance." }),
-    file: z.any().optional(),
+// Define Zod Schema
+const schema = z.object({
+    groups: z.array(
+        z.object({
+            select: z.string().min(1, 'Required'),
+            text: z.string().min(1, 'Required'),
+        })
+    ),
 });
 
-const tagOptions = [
-    { label: "JavaScript", value: 1 },
-    { label: "TypeScript", value: 2 },
-    { label: "React", value: 3 },
-    { label: "Next.js", value: 4 },
-    { label: "Vue.js", value: 5 },
-];
+const labelStyle = formLabelClasses;
+const inputStyle = inputClasses + " h-9 bg-gray-50";
 
-export default function FormWithDropdown() {
-
+const RepeatableInputGroup = () => {
     const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            compliances: []
-        },
+        defaultValues: { groups: [{ select: '', text: '' }] },
+        resolver: zodResolver(schema),
     });
 
-    const {
+    const { control, handleSubmit, formState } = form;
+    const { errors } = formState;
+
+    const { fields, append, remove } = useFieldArray({
         control,
-        handleSubmit,
-        formState: { errors },
-    } = form;
+        name: 'groups',
+    });
 
     const onSubmit = (data) => {
-        console.log("Form Data:", data);
+        console.log('Form Submitted:', data);
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                    control={control}
-                    name="compliances"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Compliance</FormLabel>
-                            <FormControl>
-                                <DropDownTags
-                                    value={field.value} // Sync with react-hook-form state
-                                    onChange={field.onChange} // Update state on change
-                                    options={tagOptions} // Pass the select options
-                                />
-                            </FormControl>
-                            <FormMessage>{errors.compliances?.message}</FormMessage>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="profile_pic"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel>Compliance</FormLabel>
-                            <FormControl>
-                                <Input id="picture" type="file" {...field} />
-                            </FormControl>
-                            <FormMessage>{errors.compliances?.message}</FormMessage>
-                        </FormItem>
-                    )}
-                />
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {fields.map((field, index) => (
+                    <div key={field.id} className="flex items-center space-x-4">
+                        {/* Select Input */}
+                        <FormField
+                            control={control}
+                            name={`groups.${index}.select`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Select</FormLabel>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(value)}
+                                        value={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className="focus:ring-0 focus:ring-offset-0 text-gray-900 h-9 font-normal bg-gray-50"
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select Option"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="option1">Option 1</SelectItem>
+                                            <SelectItem value="option2">Option 2</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage>
+                                        {errors.groups?.[index]?.select?.message}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
 
-                <button
-                    type="submit"
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                        {/* Text Input */}
+                        <FormField
+                            control={control}
+                            name={`groups.${index}.text`}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Text</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="Enter text"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage>
+                                        {errors.groups?.[index]?.text?.message}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Delete Button */}
+                        <Button variant="destructive" onClick={() => remove(index)}>
+                            Delete
+                        </Button>
+                    </div>
+                ))}
+
+                {/* Add New Group Button */}
+                <Button
+                    type="button"
+                    onClick={() =>
+                        append({
+                            select: '',
+                            text: '',
+                        })
+                    }
                 >
-                    Submit
-                </button>
+                    Add New Group
+                </Button>
+
+                {/* Submit Button */}
+                <Button type="submit">Submit</Button>
             </form>
         </Form>
     );
-}
+};
+
+export default RepeatableInputGroup;
