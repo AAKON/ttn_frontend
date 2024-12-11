@@ -101,7 +101,9 @@ const CompanyForm = ({slug, preData, basic}) => {
             setValue("tags", basic?.tags || "");
             setValue("manpower", basic?.manpower || "");
             setValue("about", basic?.about || "");
-            setValue("compliances", initialCompliances || []);
+            if (basic?.compliances) {
+                setValue("compliances", initialCompliances || []);
+            }
             setValue("company_website", basic?.company_website || "");
             setValue("about", basic?.about || "");
             setValue("business_category_id", basic?.businessCategory?.id || "");
@@ -120,6 +122,8 @@ const CompanyForm = ({slug, preData, basic}) => {
 
     const onSubmit = async (data) => {
 
+        console.log(data, 'get ddd');
+
         const {
             name,
             moto,
@@ -133,14 +137,21 @@ const CompanyForm = ({slug, preData, basic}) => {
         } = data;
         const formData = new FormData();
 
+        // Normalize the data to extract values
+        const normalizedCompliances = compliances.map(item =>
+            typeof item === "object" ? item.value : item
+        );
+
         formData.append('name', name);
         if (moto.trim() !== "") {
             formData.append('moto', moto);
         }
         formData.append('business_category_id', business_category_id);
-        compliances.forEach((item, index) => {
-            formData.append(`compliances[${index}]`, item);
+
+        normalizedCompliances.forEach((value, index) => {
+            formData.append(`compliances[${index}]`, value);
         });
+
         if (tags.trim() !== "") {
             formData.append('tags', tags);
         }
