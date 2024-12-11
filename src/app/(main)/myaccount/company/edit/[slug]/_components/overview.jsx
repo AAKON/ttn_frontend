@@ -15,8 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
+import {useToast} from "@/hooks/use-toast";
 
-import { companyBasicReq } from "@/services/company";
+import {companyOverviewReq} from "@/services/company";
+import {useState} from "react";
+import Button from "@/components/ui/button";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -46,8 +49,9 @@ const formSchema = z.object({
 
 });
 
-const OverviewForm = () => {
-
+const OverviewForm = ({slug}) => {
+    const [loading, setLoading] = useState(false);
+    const {toast} = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,7 +71,7 @@ const OverviewForm = () => {
     setLoading(true);
     console.log(data, "get fff data");
     try {
-      const result = await companyBasicReq(data, toast);
+      const result = await companyOverviewReq(slug, data, toast);
       if (result.status && result.code === 200) {
         //form reset
       }
@@ -216,6 +220,9 @@ const OverviewForm = () => {
               )}
             />
           </div>
+            <Button secondary className="h-9">
+                Save
+            </Button>
         </div>
       </form>
     </Form>
