@@ -42,7 +42,7 @@ const formSchema = z.object({
         required_error: "Please select an category.",
     }),
     compliances: z
-        .array(z.number())
+        .array(z.any())
         .min(1, {message: "Please add at least one compliance."}),
     tags: z.string().optional(),
     company_website: z.string().optional(),
@@ -54,10 +54,10 @@ const formSchema = z.object({
 
 const CompanyForm = ({slug, preData, basic}) => {
 
-    const [fileData, setFileData] = useState(null); // File object
-
     const [loading, setLoading] = useState(false);
     const {toast} = useToast();
+    const [fileData, setFileData] = useState(null); // File object
+    const [initialImage, setInitialImage] = useState("");
 
     // Options for the select dropdown
     const tagOptions = preData?.compliances?.map(item => ({
@@ -70,20 +70,6 @@ const CompanyForm = ({slug, preData, basic}) => {
             label: item.name,
             value: item.id
         })) || [];
-
-    useEffect(() => {
-        if (basic) {
-            setValue("name", basic?.name || "");
-            setValue("moto", basic?.moto || "");
-            setValue("tags", basic?.tags || "");
-            setValue("manpower", basic?.manpower || "");
-            setValue("about", basic?.about || "");
-            setValue("compliances", initialCompliances || []);
-            setValue("company_website", basic?.company_website || "");
-            setValue("about", basic?.about || "");
-        }
-    }, [basic, setValue]);
-
 
     // Function to handle form submission
     const form = useForm({
@@ -101,7 +87,6 @@ const CompanyForm = ({slug, preData, basic}) => {
             profile_pic: ""
         },
     });
-
     const {
         control,
         handleSubmit,
@@ -109,11 +94,32 @@ const CompanyForm = ({slug, preData, basic}) => {
         setValue,
     } = form;
 
+    useEffect(() => {
+        if (basic) {
+            setValue("name", basic?.name || "");
+            setValue("moto", basic?.moto || "");
+            setValue("tags", basic?.tags || "");
+            setValue("manpower", basic?.manpower || "");
+            setValue("about", basic?.about || "");
+            setValue("compliances", initialCompliances || []);
+            setValue("company_website", basic?.company_website || "");
+            setValue("about", basic?.about || "");
+            setValue("business_category_id", basic?.businessCategory?.id || "");
+            setValue("location_id", basic?.location?.id || "");
+
+            setInitialImage(basic?.thumbnail_url || "");
+        }
+    }, [basic, setValue]);
+
+    console.log(initialImage, 'ggg initialImage')
+
+
     const handleImageChange = ({file}) => {
         setFileData((prev) => ({...prev, imageFile: file}));
     };
 
     const onSubmit = async (data) => {
+
         const {
             name,
             moto,
@@ -128,26 +134,37 @@ const CompanyForm = ({slug, preData, basic}) => {
         const formData = new FormData();
 
         formData.append('name', name);
-        formData.append('moto', moto);
+        if (moto.trim() !== "") {
+            formData.append('moto', moto);
+        }
         formData.append('business_category_id', business_category_id);
         compliances.forEach((item, index) => {
             formData.append(`compliances[${index}]`, item);
         });
-        formData.append('tags', tags);
-        formData.append('company_website', company_website);
+        if (tags.trim() !== "") {
+            formData.append('tags', tags);
+        }
+        if (company_website.trim() !== "") {
+            formData.append('company_website', company_website);
+        }
         formData.append('location_id', location_id);
         formData.append('manpower', manpower);
-        formData.append('about', about);
-        if (fileData?.imageFile) {
+        if (about.trim() !== "") {
+            formData.append('about', about);
+        }
+        if (fileData?.imageFile && fileData?.imageFile.trim() !== "") {
             formData.append('profile_pic', fileData.imageFile);
         }
 
         setLoading(true);
+
         try {
+
             const result = await companyBasicUpdateReq(slug, formData, toast);
             if (result.status && result.code === 200) {
                 //form reset
             }
+
         } catch (error) {
             console.log("Error in submitting:", error.message);
         } finally {
@@ -160,7 +177,7 @@ const CompanyForm = ({slug, preData, basic}) => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex justify-start">
                     <FileUploadPreview
-                        initialImage="https://ttn.technostupid.com/storage/10/conversions/banner-1-thumbnail.jpg"
+                        initialImage={initialImage}
                         onImageChange={handleImageChange}
                     />
                 </div>
@@ -335,8 +352,8 @@ const CompanyForm = ({slug, preData, basic}) => {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="1000-10000">1000-10000</SelectItem>
-                                            <SelectItem value="10000-20000">10000-20000</SelectItem>
+                                            <SelectItem value="Medium (1000-10000 Manpower)">Medium (1000-10000 Manpower)</SelectItem>
+                                            <SelectItem value="Large (1000-20000 Manpower)">Large (1000-20000 Manpower)</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>

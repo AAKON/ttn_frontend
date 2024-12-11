@@ -89,7 +89,6 @@ const CompanyForm = ({preData}) => {
             profile_pic: ""
         },
     });
-
     const {
         control,
         handleSubmit,

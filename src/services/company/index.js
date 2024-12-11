@@ -53,10 +53,10 @@ export async function companyBasicReq(data, toast) {
 
 export async function companyBasicUpdateReq(slug, data, toast) {
 
-    const session = await getSession(slug);
+    const session = await getSession();
     const token = session?.accessToken;
 
-    const endpoint = `/my/company/update/${slug}`;
+    const endpoint = `my/company/update/${slug}`;
     const options = {
         method: 'POST',
         body: data,
