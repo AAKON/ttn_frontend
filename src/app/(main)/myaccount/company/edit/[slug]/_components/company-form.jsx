@@ -59,7 +59,6 @@ const CompanyForm = ({preData, basic}) => {
     const [fileData, setFileData] = useState(null); // File object
 
     const [loading, setLoading] = useState(false);
-    const [tags, setTags] = useState([]);
     const {toast} = useToast();
 
 
@@ -85,8 +84,6 @@ const CompanyForm = ({preData, basic}) => {
         formState: {errors},
         setValue,
     } = form;
-
-    console.log(fileData, 'set file data')
 
     const handleImageChange = ({ file }) => {
         setFileData((prev) => ({ ...prev, imageFile: file }));

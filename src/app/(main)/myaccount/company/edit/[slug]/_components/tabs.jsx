@@ -48,11 +48,11 @@ import { Label } from "@/components/ui/label";
 import BusinessContactForm from "./business-contact-form";
 import DecisionMakersForm from "./decision-makers";
 
-function EditTabs() {
+function EditTabs({slug}) {
   return (
     <div>
       <Tabs
-        defaultValue="contacts"
+        defaultValue="profile"
         className="edit-tabs w-full overflow-hidden"
       >
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden gap-6 xl:gap-x-12">
@@ -95,7 +95,7 @@ function EditTabs() {
                 Overview
               </h3>
               <div>
-                <OverviewForm />
+                <OverviewForm slug={slug} />
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">

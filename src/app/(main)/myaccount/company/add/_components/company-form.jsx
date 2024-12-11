@@ -31,6 +31,7 @@ import TagsInput from "@/components/ui/tagsInput";
 import CustomSelectTags from "@/components/ui/customSelectTags";
 import DropDownTags from "@/components/ui/dropDownTags";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
+import {useRouter} from "next/navigation";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -56,11 +57,22 @@ const formSchema = z.object({
 
 const CompanyForm = ({preData}) => {
 
-    const [fileData, setFileData] = useState(null); // File object
-
-    const [loading, setLoading] = useState(false);
-    const [tags, setTags] = useState([]);
+    const router = useRouter();
     const {toast} = useToast();
+
+    const [fileData, setFileData] = useState(null); // File object
+    const [loading, setLoading] = useState(false);
+
+
+    // Options for the select dropdown
+    const tagOptions = preData?.compliances?.map(item => ({
+        label: item.name,
+        value: item.id
+    })) || [];
+
+    const handleImageChange = ({ file }) => {
+        setFileData((prev) => ({ ...prev, imageFile: file }));
+    };
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -82,25 +94,45 @@ const CompanyForm = ({preData}) => {
         control,
         handleSubmit,
         formState: {errors},
+        reset
     } = form;
-
-    console.log(fileData, 'set file data')
 
     // Function to handle form submission
     const onSubmit = async (data) => {
+        const {
+            name,
+            moto,
+            business_category_id,
+            compliances,
+            tags,
+            company_website,
+            location_id,
+            manpower,
+            about,
+        } = data;
+        const formData = new FormData();
 
-        const formData = {
-            ...data,
-            profile_pic: fileData
-        };
-
-        console.log(formData, 'sending file');
+        formData.append('name', name);
+        formData.append('moto', moto);
+        formData.append('business_category_id', business_category_id);
+        compliances.forEach((item, index) => {
+            formData.append(`compliances[${index}]`, item);
+        });
+        formData.append('tags', tags);
+        formData.append('company_website', company_website);
+        formData.append('location_id', location_id);
+        formData.append('manpower', manpower);
+        formData.append('about', about);
+        if (fileData?.imageFile) {
+            formData.append('profile_pic', fileData.imageFile);
+        }
 
         setLoading(true);
         try {
           const result = await companyBasicReq(formData, toast);
           if (result.status && result.code === 200) {
-            //form reset
+              reset();
+              router.push("/myaccount/company");
           }
         } catch (error) {
           console.log("Error in submitting:", error.message);
@@ -110,20 +142,12 @@ const CompanyForm = ({preData}) => {
 
     };
 
-    // Options for the select dropdown
-    const tagOptions = preData?.compliances?.map(item => ({
-        label: item.name,
-        value: item.id
-    })) || [];
-
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="flex justify-start">
                     <FileUploadPreview
-                        onImageChange={({ file }) => {
-                            setFileData(file);
-                        }}
+                        onImageChange={handleImageChange}
                     />
                 </div>
                 <div className="grid grid-cols-1 gap-3 lg:gap-3">

@@ -53,7 +53,7 @@ export default async function Page({params: { slug }}){
                 <ContactWithBusinessOwner />
               </div>
               <div>
-                <EditTabs />
+                <EditTabs slug={slug} />
               </div>
             </div>
           </Container>
