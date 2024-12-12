@@ -13,6 +13,7 @@ const Blog = async () => {
 
     try {
         blogData = await getBlogs();
+        console.log(blogData, 'get blogdd');
     } catch (error) {
         console.error('Error fetching videos:', error);
         blogData = [];

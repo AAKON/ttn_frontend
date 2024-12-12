@@ -1,8 +1,7 @@
 import "./tabs.css";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Image from "next/image";
-import marketShare from "@/assets/marketShare.svg";
+
 // Clients items
 import clients_1 from "@/assets/company1.jpg";
 import clients_2 from "@/assets/company2.jpg";
@@ -38,8 +37,6 @@ const allClientsCertifications = [
 import PhotoUploadBox from "./photo-upload-box";
 import Button from "@/components/ui/button";
 import OverviewForm from "./overview";
-import BusinessInsightForm from "./business-insight";
-import YearlyTurnover from "./yearly-turnover";
 import ExistingClients from "./existing-clients";
 import ExistingClientsCertifications from "./existing-clients-certifications";
 import { Input } from "@/components/ui/input";
@@ -47,14 +44,12 @@ import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import { Label } from "@/components/ui/label";
 import BusinessContactForm from "./business-contact-form";
 import DecisionMakersForm from "./decision-makers";
+import FaqForm from "./faq-form";
 
 function EditTabs({slug}) {
   return (
     <div>
-      <Tabs
-        defaultValue="profile"
-        className="edit-tabs w-full overflow-hidden"
-      >
+      <Tabs defaultValue="faq" className="edit-tabs w-full overflow-hidden">
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden gap-6 xl:gap-x-12">
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
@@ -90,39 +85,7 @@ function EditTabs({slug}) {
 
         <TabsContent value="profile">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
-              <h3 className="text-base font-semibold text-gray-900">
-                Overview
-              </h3>
-              <div>
-                <OverviewForm slug={slug} />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
-              <h3 className="text-base font-semibold text-gray-900">
-                Business Insight
-              </h3>
-              <div>
-                <p className="text-gray-500 text-sm pb-6">Market Share</p>
-                <BusinessInsightForm />
-              </div>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8">
-              <div></div>
-              <div>
-                <div className="border rounded-[16px] mt-3">
-                  <Image
-                    src={marketShare}
-                    alt="marketShare"
-                    className="w-full"
-                  />
-                </div>
-                <div className="border-t border-t-gray-200 pt-6 mt-6">
-                  <p className="text-gray-500 text-sm pb-6">Yearly Turnover</p>
-                  <YearlyTurnover />
-                </div>
-              </div>
-            </div>
+            <OverviewForm slug={slug} />
           </div>
         </TabsContent>
 
@@ -218,6 +181,7 @@ function EditTabs({slug}) {
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Frequently asked questions
             </h3>
+            <FaqForm />
           </div>
         </TabsContent>
       </Tabs>
