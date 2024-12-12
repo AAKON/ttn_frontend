@@ -77,4 +77,14 @@ export async function companyOverviewReq(slug, data, toast) {
     };
     return await apiRequest(endpoint, options, toast, token);
 }
+// fetch company overview
+export async function getCompanyOverview(slug) {
+    const token = await getSSToken();
+    const endpoint = `my/company/${slug}/overview`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}
 
