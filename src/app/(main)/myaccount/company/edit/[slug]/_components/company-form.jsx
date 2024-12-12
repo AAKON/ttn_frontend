@@ -163,7 +163,7 @@ const CompanyForm = ({slug, preData, basic}) => {
         if (about.trim() !== "") {
             formData.append('about', about);
         }
-        if (fileData?.imageFile && fileData?.imageFile.trim() !== "") {
+        if (fileData?.imageFile && fileData?.imageFile !== "") {
             formData.append('profile_pic', fileData.imageFile);
         }
 

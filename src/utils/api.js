@@ -7,6 +7,7 @@ async function apiRequest(endpoint, options = {}, toast, token) {
     const config = {
         ...restOptions,
         headers: {
+            ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             ...restOptions.headers,
             ...(token && { Authorization: `Bearer ${token}` }),
         },

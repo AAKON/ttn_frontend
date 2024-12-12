@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import {useToast} from "@/hooks/use-toast";
+import React, { useState } from "react";
 
 import Button from "@/components/ui/button";
 import {
@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { companyBasicReq } from "@/services/company";
+import {companyBasicReq, companyBusinessContactReq} from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
 import { Link } from "@/icons";
 import { LinkIcon } from "@/components/icons/linkIcon";
@@ -36,25 +36,26 @@ const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
-  image: z.string().optional(),
-  name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+
+   address: z.string().min(2, {
+    message: "Required.",
   }),
-  moto: z.string().optional(),
-  business_category_id: z.string({
-    required_error: "Please select an category.",
-  }),
-  compliance: z
-    .array(z.string())
-    .min(1, { message: "Please add at least one compliance." }),
-  tags: z.string().optional(),
-  company_website: z.string().optional(),
-  location_id: z.string({ required_error: "Please select location." }),
-  manpower: z.string().optional(),
-  about: z.string().optional(),
+    email: z
+        .string()
+        .min(3, { message: "Must have at least 3 character" })
+        .email({
+            message: "Must be a valid email",
+        }),
+    whatsapp: z.string().optional(),
+    phone: z.string().min(3, { message: "Enter a phone number" }),
+    website: z.string().optional(),
+    location: z.string().optional(),
+
+
 });
 
-const BusinessContactForm = () => {
+const BusinessContactForm = ({slug}) => {
+
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const { toast } = useToast();
@@ -62,11 +63,11 @@ const BusinessContactForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      address: "",
-      email: "",
-      whatsapp: "",
-      phone: "",
-      website: "",
+        address: "",
+        email: "",
+        whatsapp: "",
+        phone: "",
+        website: "",
       location: "",
     },
   });
@@ -80,14 +81,24 @@ const BusinessContactForm = () => {
   // Function to handle form submission
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log(data, "get fff data");
+    const formData = {
+        address: data?.address,
+        email: data?.email,
+        whatsapp: data?.whatsapp,
+        phone: data?.phone,
+        website: data?.website,
+        location: {
+            "lat":"23.34554334",
+            "lng":"93.2234736"
+        }
+    }
     try {
-      const result = await companyBasicReq(data, toast);
+      const result = await companyBusinessContactReq(slug, formData, toast);
       if (result.status && result.code === 200) {
         //form reset
       }
     } catch (error) {
-      console.log("Error in registration:", error.message);
+      console.log("Error in submitting:", error.message);
     } finally {
       setLoading(false);
     }
@@ -95,7 +106,7 @@ const BusinessContactForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 gap-3 lg:gap-3">
           <div className="grid grid-cols-1">
             <FormField
@@ -202,9 +213,21 @@ const BusinessContactForm = () => {
           <div className="grid grid-cols-1">
             <LocationPicker form={form} labelStyle={labelStyle} />
           </div>
-          <Button secondary className="h-9">
-            Save
-          </Button>
+            <Button
+                type="submit"
+                secondary
+                disabled={loading}
+                className="h-9"
+            >
+                {loading ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                        Please wait
+                    </>
+                ) : (
+                    "Submit"
+                )}
+            </Button>
         </div>
       </form>
     </Form>
