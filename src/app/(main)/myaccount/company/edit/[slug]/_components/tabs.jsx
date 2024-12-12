@@ -42,9 +42,9 @@ import ExistingClientsCertifications from "./existing-clients-certifications";
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import { Label } from "@/components/ui/label";
-import BusinessContactForm from "./business-contact-form";
 import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
+import BusinessContactForm from "./business-contact-form";
 
 function EditTabs({slug}) {
   return (
@@ -162,7 +162,7 @@ function EditTabs({slug}) {
                 Business Contact
               </h3>
               <div>
-                <BusinessContactForm />
+                <BusinessContactForm slug={slug} />
               </div>
             </div>
 

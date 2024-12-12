@@ -88,3 +88,17 @@ export async function getCompanyOverview(slug) {
     return result?.data;
 }
 
+// business contact
+export async function companyBusinessContactReq(slug, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/contact/store-or-update`;
+    const options = {
+        method: 'POST',
+        body: data
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
