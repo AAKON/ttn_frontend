@@ -46,7 +46,7 @@ import BusinessContactForm from "./business-contact-form";
 import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
 
-function EditTabs() {
+function EditTabs({slug}) {
   return (
     <div>
       <Tabs defaultValue="faq" className="edit-tabs w-full overflow-hidden">
@@ -85,7 +85,7 @@ function EditTabs() {
 
         <TabsContent value="profile">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
-            <OverviewForm />
+            <OverviewForm slug={slug} />
           </div>
         </TabsContent>
 

@@ -15,10 +15,9 @@ import {
 import {Input} from "@/components/ui/input";
 import {formLabelClasses, inputClasses} from "@/utils/input-style";
 
-import {companyBasicReq} from "@/services/company";
+import {companyOverviewReq} from "@/services/company";
 import Button from "@/components/ui/button";
 import {DeleteIcon} from "@/components/icons";
-import {DropdownSelect} from "./dropdown-select";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -37,7 +36,9 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import React from "react";
+import React, {useState} from "react";
+import {useToast} from "@/hooks/use-toast";
+import {Loader2} from "lucide-react";
 
 const formSchema = z.object({
 
@@ -47,7 +48,7 @@ const formSchema = z.object({
     production_capacity: z.string().min(1, {
         message: "Production capacity is required",
     }),
-    no_of_machines: z.string().min(1, {
+    total_units: z.string().min(1, {
         message: "Number of machines is required",
     }),
     moq: z.string().min(1, {
@@ -56,60 +57,45 @@ const formSchema = z.object({
     lead_time: z.string().min(1, {
         message: "Lead time is required",
     }),
-    delivery_terms: z.string().min(1, {
+    shipment_term: z.string().min(1, {
         message: "Delivery terms is required",
     }),
     payment_policy: z.string().min(1, {
         message: "Payment policy is required",
     }),
 
-    groupOne: z.array(
+    market_share: z.array(
         z.object({
-            select: z.string().min(1, 'Required'),
-            text: z.string().min(1, 'Required'),
+            location_id: z.string().min(1, 'Required'),
+            percentage: z.string().min(1, 'Required'),
         })
     ),
-    groupTwo: z.array(
+    yearly_turnover: z.array(
         z.object({
-            name: z.string().min(1, 'Required'),
-            email: z.string().min(1, 'Required'),
+            year: z.string().min(1, 'Required'),
+            turnover: z.string().min(1, 'Required'),
         })
     ),
-
-    // countries: z
-    //   .array(
-    //     z.object({
-    //       country: z.string().min(2, { message: "Select a country." }),
-    //       percentage: z.string().min(2, { message: "Enter a percentage." }),
-    //     })
-    //   )
-    //   .min(1, { message: "At least one row is required." }),
-
-    // turnoverData: z.array(
-    //   z.object({
-    //     year: z.string().min(1, { message: "Year is required" }),
-    //     turnover: z.string().min(1, { message: "Turnover is required" }),
-    //   })
-    // ),
 
 });
 
-const OverviewForm = () => {
-
+const OverviewForm = ({slug}) => {
+    const [loading, setLoading] = useState(false);
+    const {toast} = useToast();
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             manpower: "",
             production_capacity: "",
-            no_of_machines: "",
+            total_units: "",
             moq: "",
             lead_time: "",
-            delivery_terms: "",
+            shipment_term: "",
             payment_policy: "",
             countries: [{country: "", percentage: ""}],
             turnoverData: [{year: "", turnover: ""}],
-            groupOne: [{ select: '', text: '' }],
-            groupTwo: [{ name: '', email: '' }],
+            market_share: [{ location_id: '', percentage: '' }],
+            yearly_turnover: [{ year: '', turnover: '' }],
         },
     });
 
@@ -122,46 +108,49 @@ const OverviewForm = () => {
         remove: removeTurnover,
     } = useFieldArray({
         control: form.control,
-        name: "turnoverData",
+        name: "yearly_turnover",
     });
 
     // Watch for changes in turnoverData
-    const watchedData = form.watch("turnoverData");
+    const watchedData = form.watch("yearly_turnover");
 
     const groupOneFieldArray = useFieldArray({
         control,
-        name: 'groupOne',
+        name: 'market_share',
     });
 
     const groupTwoFieldArray = useFieldArray({
         control,
-        name: 'groupTwo',
+        name: 'yearly_turnover',
     });
 
 
 
     // Function to handle form submission
     const onSubmit = async (data) => {
+        const {moq, lead_time, shipment_term, payment_policy, total_units, production_capacity, market_share, yearly_turnover} = data;
 
-        console.log(data, 'overview data!!!===');
+        const formData = {
+            shipment_term, payment_policy, total_units, production_capacity, market_share, yearly_turnover
+        }
 
-        // setLoading(true);
-        // console.log(data, "get fff data");
-        // try {
-        //   const result = await companyBasicReq(data, toast);
-        //   if (result.status && result.code === 200) {
-        //     //form reset
-        //   }
-        // } catch (error) {
-        //   console.log("Error in registration:", error.message);
-        // } finally {
-        //   setLoading(false);
-        // }
+        setLoading(true);
+
+        try {
+          const result = await companyOverviewReq(slug, data, toast);
+          if (result.status && result.code === 200) {
+            //form reset
+          }
+        } catch (error) {
+          console.log("Error in Overview Update:", error.message);
+        } finally {
+          setLoading(false);
+        }
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
                     <h3 className="text-base font-semibold text-gray-900">Overview</h3>
                     <div className="grid grid-cols-1 gap-3 lg:gap-3">
@@ -208,7 +197,7 @@ const OverviewForm = () => {
                         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                             <FormField
                                 control={form.control}
-                                name="no_of_machines"
+                                name="total_units"
                                 render={({field}) => (
                                     <FormItem>
                                         <FormLabel className={labelStyle}>No of machines</FormLabel>
@@ -264,7 +253,7 @@ const OverviewForm = () => {
                             />
                             <FormField
                                 control={form.control}
-                                name="delivery_terms"
+                                name="shipment_term"
                                 render={({field}) => (
                                     <FormItem>
                                         <FormLabel className={labelStyle}>delivery terms</FormLabel>
@@ -319,11 +308,11 @@ const OverviewForm = () => {
                                     className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr_36px]"
                                 >
                                     <Controller
-                                        name={`groupOne.${index}.select`}
+                                        name={`market_share.${index}.location_id`}
                                         control={control}
                                         render={({field}) => (
                                             <FormItem>
-                                                <FormLabel className={labelStyle}>Select</FormLabel>
+                                                <FormLabel className={labelStyle}>Select Country</FormLabel>
                                                 <Select
                                                     onValueChange={(value) => field.onChange(value)}
                                                     value={field.value}
@@ -333,22 +322,25 @@ const OverviewForm = () => {
                                                             className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
                                                         >
                                                             <SelectValue
-                                                                placeholder="Select Category"
+                                                                placeholder="Select Country"
                                                                 className="text-gray-400 font-normal text-sm"
                                                             />
                                                         </SelectTrigger>
                                                     </FormControl>
                                                     <SelectContent>
-                                                        <SelectItem value="select1">
-                                                            Select 1
+                                                        <SelectItem value="1">
+                                                            Bangladesh
                                                         </SelectItem>
-                                                        <SelectItem value="select2">
-                                                            Select 2
+                                                        <SelectItem value="2">
+                                                            Indonesia
+                                                        </SelectItem>
+                                                        <SelectItem value="3">
+                                                            Srilanka
                                                         </SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage>
-                                                    {errors.groupOne?.[index]?.select?.message}
+                                                    {errors.market_share?.[index]?.location_id?.message}
                                                 </FormMessage>
                                             </FormItem>
                                         )}
@@ -356,10 +348,10 @@ const OverviewForm = () => {
 
                                     <FormField
                                         control={form.control}
-                                        name={`groupOne.${index}.text`}
+                                        name={`market_share.${index}.percentage`}
                                         render={({field}) => (
                                             <FormItem>
-                                                <FormLabel className={labelStyle}>Text</FormLabel>
+                                                <FormLabel className={labelStyle}>Percentage</FormLabel>
                                                 <FormControl>
                                                     <Input
                                                         className={inputStyle}
@@ -369,7 +361,7 @@ const OverviewForm = () => {
                                                     />
                                                 </FormControl>
                                                 <FormMessage>
-                                                    {errors.groupOne?.[index]?.text?.message}
+                                                    {errors.market_share?.[index]?.percentage?.message}
                                                 </FormMessage>
                                             </FormItem>
                                         )}
@@ -395,8 +387,8 @@ const OverviewForm = () => {
                                 className="h-9 w-full mt-3"
                                 onClick={() =>
                                     groupOneFieldArray.append({
-                                        select: '',
-                                        text: '',
+                                        location_id: '',
+                                        percentage: '',
                                     })
                                 }
                             >
@@ -419,11 +411,11 @@ const OverviewForm = () => {
                                             className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr_36px]"
                                         >
                                             <Controller
-                                                name={`groupTwo.${index}.name`}
+                                                name={`yearly_turnover.${index}.year`}
                                                 control={control}
                                                 render={({field}) => (
                                                     <FormItem>
-                                                        <FormLabel className={labelStyle}>Select</FormLabel>
+                                                        <FormLabel className={labelStyle}>Select Year</FormLabel>
                                                         <Select
                                                             onValueChange={(value) => field.onChange(value)}
                                                             value={field.value}
@@ -433,22 +425,43 @@ const OverviewForm = () => {
                                                                     className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
                                                                 >
                                                                     <SelectValue
-                                                                        placeholder="Select Category"
+                                                                        placeholder="Select Year"
                                                                         className="text-gray-400 font-normal text-sm"
                                                                     />
                                                                 </SelectTrigger>
                                                             </FormControl>
                                                             <SelectContent>
-                                                                <SelectItem value="select1">
-                                                                    Select 1
+                                                                <SelectItem value="2016">
+                                                                    2016
                                                                 </SelectItem>
-                                                                <SelectItem value="select2">
-                                                                    Select 2
+                                                                <SelectItem value="2017">
+                                                                    2017
+                                                                </SelectItem>
+                                                                <SelectItem value="2018">
+                                                                    2018
+                                                                </SelectItem>
+                                                                <SelectItem value="2019">
+                                                                    2019
+                                                                </SelectItem>
+                                                                <SelectItem value="2020">
+                                                                    2020
+                                                                </SelectItem>
+                                                                <SelectItem value="2021">
+                                                                    2021
+                                                                </SelectItem>
+                                                                <SelectItem value="2022">
+                                                                    2022
+                                                                </SelectItem>
+                                                                <SelectItem value="2023">
+                                                                    2023
+                                                                </SelectItem>
+                                                                <SelectItem value="2024">
+                                                                    2024
                                                                 </SelectItem>
                                                             </SelectContent>
                                                         </Select>
                                                         <FormMessage>
-                                                            {errors.groupTwo?.[index]?.name?.message}
+                                                            {errors.yearly_turnover?.[index]?.year?.message}
                                                         </FormMessage>
                                                     </FormItem>
                                                 )}
@@ -456,10 +469,10 @@ const OverviewForm = () => {
 
                                             <FormField
                                                 control={form.control}
-                                                name={`groupTwo.${index}.email`}
+                                                name={`yearly_turnover.${index}.turnover`}
                                                 render={({field}) => (
                                                     <FormItem>
-                                                        <FormLabel className={labelStyle}>Text</FormLabel>
+                                                        <FormLabel className={labelStyle}>Turnover</FormLabel>
                                                         <FormControl>
                                                             <Input
                                                                 className={inputStyle}
@@ -469,7 +482,7 @@ const OverviewForm = () => {
                                                             />
                                                         </FormControl>
                                                         <FormMessage>
-                                                            {errors.groupTwo?.[index]?.email?.message}
+                                                            {errors.yearly_turnover?.[index]?.turnover?.message}
                                                         </FormMessage>
                                                     </FormItem>
                                                 )}
@@ -494,12 +507,12 @@ const OverviewForm = () => {
                                         className="h-9 w-full"
                                         onClick={() =>
                                             groupTwoFieldArray.append({
-                                                name: '',
-                                                email: '',
+                                                year: '',
+                                                turnover: '',
                                             })
                                         }
                                     >
-                                        Add new Country
+                                        Add new Turnover
                                     </Button>
                                 </div>
                             </div>
@@ -534,8 +547,19 @@ const OverviewForm = () => {
                                 </ResponsiveContainer>
                             </div>
 
-                            <Button type="submit" className="h-9 w-full">
-                                Submit
+                            <Button
+                                type="submit"
+                                disabled={loading}
+                                className="h-9 w-full"
+                            >
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                                        Please wait
+                                    </>
+                                ) : (
+                                    "Submit"
+                                )}
                             </Button>
                         </div>
                     </div>
