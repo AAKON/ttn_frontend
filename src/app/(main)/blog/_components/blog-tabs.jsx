@@ -1,6 +1,7 @@
 'use client'
 import React, {Suspense, useEffect, useState} from 'react';
 import BlogCard from "@/components/blog/blog-card";
+import { debounce } from "lodash";
 import RecommendedTopics from "@/components/blog/recommended-topics";
 import {Empty, Error, Section} from "@/shared";
 import {Tabs, TabsList, TabsTrigger, TabsContent} from "@/components/ui/tabs";
@@ -21,6 +22,10 @@ function BlogTabs({ ttnsData }) {
     const [activeTab, setActiveTab] = useState(null);
     const [isLoadingBlogTypes, setIsLoadingBlogTypes] = useState(true);
     const [isLoadingBlogData, setIsLoadingBlogData] = useState(true);
+    const [isBlogTypesEmpty, setIsBlogTypesEmpty] = useState(false);
+    const [isBlogDataEmpty, setIsBlogDataEmpty] = useState(false);
+    const [searchKeyword, setSearchKeyword] = useState("");
+    const [debouncedKeyword, setDebouncedKeyword] = useState("");
 
     useEffect(() => {
         async function fetchBlogTypes() {
@@ -36,6 +41,7 @@ function BlogTabs({ ttnsData }) {
                 }
             } catch (err) {
                 setError(err);
+                setIsBlogTypesEmpty(true);
             }finally {
                 setIsLoadingBlogTypes(false);
             }
@@ -44,29 +50,47 @@ function BlogTabs({ ttnsData }) {
         fetchBlogTypes();
     }, []);
 
-    const fetchBlogs = async (key) => {
+    const fetchBlogs = async (key, keyword = "") => {
         try {
             setIsLoadingBlogData(true);
-            const blogs = await getBlogs(key);
+            const blogs = await getBlogs(key, keyword);
             console.log(blogs, "get blogs");
             setBlogData(blogs);
+            setIsBlogDataEmpty(!blogs?.data || blogs.data.length === 0);
         } catch (err) {
             setError(err);
+            setIsBlogDataEmpty(true);
         }finally {
             setIsLoadingBlogData(false);
         }
     };
 
     const handleTabChange = (key) => {
-        setActiveTab(key);
-        fetchBlogs(key); // Fetch blogs when the active tab changes
+        setActiveTab(key); // Update active tab
+        setSearchKeyword(""); // Reset search keyword
+        setDebouncedKeyword(""); // Reset debounced keyword
+        fetchBlogs(key); // Fetch blogs for the selected tab
     };
+
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        setSearchKeyword(e.target.value);
+    };
+
+// Debounce search keyword
+    useEffect(() => {
+        // if (searchKeyword !== "") {
+            const handler = setTimeout(() => {
+                setDebouncedKeyword(searchKeyword);
+                if (activeTab) fetchBlogs(activeTab, searchKeyword); // Fetch blogs with debounced keyword
+            }, 1000);
+
+            return () => clearTimeout(handler); // Cleanup on unmount or re-render
+        // }
+    }, [searchKeyword]); // Only depend on searchKeyword
 
     if (error) {
         return <Error error={error} />;
-    }
-    if (!blogTypes?.blog_topics || blogTypes?.blog_topics.length === 0) {
-        return <Empty message="No blog types found." />;
     }
 
 
@@ -74,7 +98,7 @@ function BlogTabs({ ttnsData }) {
         <>
             <Section className={'pt-6 md:pb-12'}>
                 <div className="items-center flex justify-center">
-                    <Search />
+                    <Search handleSearchChange={handleSearchChange} />
                 </div>
             </Section>
             <Section noDefaultStyle className="pt-0 pb-10 lg:pb-20">
@@ -84,6 +108,10 @@ function BlogTabs({ ttnsData }) {
                             <TabsList className="w-full h-auto p-0 rounded-none bg-transparent flex justify-start flex-wrap gap-1 border-b border-gray-200">
                                 {isLoadingBlogTypes ? (
                                     <SkeletonBlogTypes />
+                                ) : error ? (
+                                    <Error message={error.message || "Failed to load blog types."} />
+                                ) : isBlogTypesEmpty ? (
+                                    <Empty message="No blog types found." />
                                 ) : (
                                 blogTypes?.blog_topics.map((type) => (
                                     <TabsTrigger
@@ -98,6 +126,10 @@ function BlogTabs({ ttnsData }) {
                             </TabsList>
                             {isLoadingBlogData ? (
                                 <SkeletonBlogData />
+                            ) : error ? (
+                                <Error message={error.message || "Failed to load blogs."} />
+                            ) : isBlogDataEmpty ? (
+                                <Empty message="No blogs available for this category." />
                             ) : (
                             blogTypes?.blog_topics.map((type) => (
                                 <TabsContent key={type.id} value={type.id}>
