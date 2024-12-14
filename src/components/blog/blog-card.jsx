@@ -3,6 +3,7 @@ import blog_1 from "@/assets/blog-1.jpg";
 import { Calender, UserEdit } from "@/icons";
 import Link from "next/link";
 import DateFormatter from "@/utils/dateFormatter";
+import {saveRecentlyViewedBlog} from "@/utils/recentlyViewedBlogs";
 
 const BlogCard = ({ item }) => {
   const {
@@ -15,6 +16,16 @@ const BlogCard = ({ item }) => {
     publish_date,
     blog_topics
   } = item;
+
+    const handleLinkClick = () => {
+        saveRecentlyViewedBlog({
+            id,
+            blog_topics,
+            slug,
+            short_description,
+            publish_date
+        });
+    };
 
   return (
     <div className="grid grid-cols-1 items-center md:grid-cols-2 gap-5">
@@ -44,10 +55,11 @@ const BlogCard = ({ item }) => {
             <Link
             href={`/blog/${slug}`}
           className="font-semibold cursor-pointer hover:underline min-[1300px]:text-2xl text-base lg:text-xl text-gray-900"
+            onClick={handleLinkClick}
           >
             {title}
           </Link>
-          <Link href={`/blog/${slug}`}>
+          <Link href={`/blog/${slug}`} onClick={handleLinkClick}>
           <svg
                 width={24}
                 height={24}

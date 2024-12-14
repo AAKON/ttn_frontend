@@ -1,10 +1,9 @@
 import React from 'react';
 import RecommendedTopics from "@/components/blog/recommended-topics";
 import Link from "next/link";
+import RecentlyViewed from "@/app/(main)/blog/_components/recently-viewed";
 
 function SidebarBlogs({ ttnsData, recomended }) {
-
-    console.log(ttnsData, 'ggt { ttnsData }' )
 
     return (
         <div className="max-w-[356px] w-[356px]">
@@ -36,23 +35,7 @@ function SidebarBlogs({ ttnsData, recomended }) {
                 </div>
 
                 {/* Recently viewed */}
-                <div className="sticky top-[120px]">
-                    <h3 className="pt-12 pb-6 text-xl font-semibold text-gray-700">
-                        Recently viewed
-                    </h3>
-                    <div className="flex flex-col gap-y-8">
-                        <div>
-                            <p className="text-md lg:text-lg font-semibold text-gray-900 leading-[1.2]">
-                                Bangladesh’s apparel industry is revolutionising the
-                                fashion world by making a circular economy!
-                            </p>
-                            <span className="text-gray-500 font-semibold text-sm pt-2">
-                            Textile Network • June 12, 2024{" "}
-                            </span>
-                        </div>
-
-                    </div>
-                </div>
+                <RecentlyViewed />
             </div>
         </div>
     );
