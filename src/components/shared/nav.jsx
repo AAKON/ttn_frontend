@@ -1,5 +1,5 @@
 "use client";
-import Button from "../ui/button";
+import Button from "@/components/shared/button";
 import { useEffect, useRef, useState } from "react";
 import { Bars, Cross } from "@/components/icons";
 import HeroForm from "@/components/hero/hero-form";
@@ -34,7 +34,6 @@ const menuItems = [
 ];
 
 export const Nav = () => {
-
   const [showMobileNav, setShowMobileNav] = useState(false);
   const nav = useRef(null);
   const pathname = usePathname();

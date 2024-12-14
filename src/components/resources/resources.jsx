@@ -1,9 +1,8 @@
-
 import { Section } from "@/shared";
 import ResourceCard from "@/ui/resource-card";
 import blog1 from "@/assets/blog1.jpg";
 import avatar from "@/assets/avatar.png";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
 const Resources = () => {
   const blogs = [
@@ -59,9 +58,7 @@ const Resources = () => {
           ))}
         </div>
         <div className="flex items-center justify-center">
-          <Button className="xl:mt-[64px] mt-[32px]">
-            View all Resources
-          </Button>
+          <Button className="xl:mt-[64px] mt-[32px]">View all Resources</Button>
         </div>
       </div>
     </Section>

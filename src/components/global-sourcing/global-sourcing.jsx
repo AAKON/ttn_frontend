@@ -1,7 +1,7 @@
 import React from "react";
 import { Section } from "@/shared";
 import Count from "@/ui/count-item";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import Option from "@/ui/option";
 import option1 from "@/assets/option1.png";
 import option from "@/assets/option.svg";

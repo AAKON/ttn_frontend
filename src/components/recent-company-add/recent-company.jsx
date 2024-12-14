@@ -4,7 +4,7 @@ import CompanyCard from "./company-card";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import "@/styles/companySlider.css";
-import Button from "../ui/button";
+import Button from "@/components/shared/button";
 
 import businessLogo_1 from "@/assets/business-logo-2.png";
 

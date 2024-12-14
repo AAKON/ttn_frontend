@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import Link from "next/link";
 import { AuthHeader } from "@/shared";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
 import React from "react";
 import { useRouter } from "next/navigation";
@@ -124,7 +124,12 @@ export default function Login() {
                   </Button>
                   <p className="text-gray-500 text-md text-center">or</p>
                   <Button secondary className="w-full" type="button">
-                    <Image src="/icons/google-icon.svg" width={20} height={20} alt="google icon" />
+                    <Image
+                      src="/icons/google-icon.svg"
+                      width={20}
+                      height={20}
+                      alt="google icon"
+                    />
                     <span>Sign up with Google</span>
                   </Button>
                 </div>

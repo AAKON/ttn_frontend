@@ -5,7 +5,7 @@ import detailsImg2 from "@/assets/detailsImg2.jpg";
 import detailsImg3 from "@/assets/detailsImg3.jpg";
 import { CalendarIcon } from "lucide-react";
 import { CopyIcon, Facebook, Link, Twiter, UserEdit } from "@/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
 const BlogDetails = async ({ blog }) => {
   return (

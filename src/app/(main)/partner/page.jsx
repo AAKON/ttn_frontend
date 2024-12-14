@@ -1,6 +1,6 @@
 import { Container } from "@/shared";
 import Image from "next/image";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import business1 from "@/assets/partner-1.png";
 import business2 from "@/assets/partner-2.png";
 import business3 from "@/assets/partner-3.png";
@@ -64,8 +64,7 @@ const PartnerPage = () => {
               }
             />
             {/* company logo */}
-            <div
-              className="pt-10 grid grid-cols-2 gap-6 justify-center sm:grid-cols-3 lg:grid-cols-6">
+            <div className="pt-10 grid grid-cols-2 gap-6 justify-center sm:grid-cols-3 lg:grid-cols-6">
               {EventPartnerLogo?.map((item, index) => (
                 <CompanyPartnerCard key={index} image={item} />
               ))}

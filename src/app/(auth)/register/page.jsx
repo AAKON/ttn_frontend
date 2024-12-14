@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { AuthHeader } from "@/shared";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
