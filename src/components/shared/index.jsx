@@ -6,3 +6,5 @@ export { Nav } from "./nav";
 export { Footer } from "./footer";
 export { AuthHeader } from "./authHeader";
 export {TopBar} from "./top-bar";
+export {Empty} from "./empty";
+export {Error} from "./error";

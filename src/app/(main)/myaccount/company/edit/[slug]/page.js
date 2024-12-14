@@ -14,8 +14,7 @@ import CompanyForm from "./_components/company-form";
 export default async function Page({params: { slug }}){
 
   try {
-    const preDataBasic = await getDataPreBasic();
-
+      const preDataBasic = await getDataPreBasic();
       const basicPromise = getCompanyBasic(slug);
       const basic = await basicPromise;
 

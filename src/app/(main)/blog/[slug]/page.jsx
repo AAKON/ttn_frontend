@@ -1,5 +1,5 @@
 import BlogDetails from "@/components/blog/blog-details";
-import {getBlogDetails} from "@/services/blogs/details";
+import {getBlogDetails} from "@/services/blogs";
 
 /**
  * Page component that renders the details of a specific blog post.
