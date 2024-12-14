@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkmark } from "@/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import Link from "next/link";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";

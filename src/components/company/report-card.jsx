@@ -10,7 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { X } from "lucide-react";
 
 const ReportCard = ({ setreport }) => {

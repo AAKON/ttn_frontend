@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import {
   Form,
   FormControl,
@@ -60,12 +60,12 @@ const FaqForm = () => {
   // Add new card to existing questions
   const handleDone = () => {
     const data = form.getValues("questionAnswers");
-  
+
     // Check if all fields have valid values
     const isValid = data.every(
       (item) => item.question.trim() !== "" && item.answer.trim() !== ""
     );
-  
+
     if (!isValid) {
       toast({
         description: "Please fill in all questions and answers before adding.",
@@ -73,7 +73,7 @@ const FaqForm = () => {
       });
       return;
     }
-  
+
     // Add valid data to the existing questions list
     setExistingQuestions((prev) => [...prev, ...data]);
     form.reset({ questionAnswers: [{ question: "", answer: "" }] });
@@ -148,12 +148,7 @@ const FaqForm = () => {
           >
             Add new question
           </Button>
-          <Button
-            secondary
-            className="h-9"
-            type="button"
-            onClick={handleDone}
-          >
+          <Button secondary className="h-9" type="button" onClick={handleDone}>
             Done
           </Button>
         </div>

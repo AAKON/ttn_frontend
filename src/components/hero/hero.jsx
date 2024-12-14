@@ -39,17 +39,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Button from "../ui/button";
-import {WorldMap} from "@/icons";
+import Button from "@/components/shared/button";
+import { WorldMap } from "@/icons";
 
-const country = [
-    'Anywhere',
-    "Africa",
-    "Bangladesh",
-    "india",
-    "nepal",
-    "chin",
-];
+const country = ["Anywhere", "Africa", "Bangladesh", "india", "nepal", "chin"];
 const categories = [
   "All category",
   "Manufacturingory",
@@ -60,48 +53,24 @@ const categories = [
   "Solution",
 ];
 
-export function Categories({ className = "", }) {
-  return (
-      <Select className={className}>
-        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
-          <SelectValue
-              placeholder="All Categories"
-              className="text_16 text-red-400"
-          />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel className="flex gap-2 items-center">
-              All Categories
-            </SelectLabel>
-            {categories?.map((category) => (
-                <SelectItem key={category} value={category}>{category}</SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-  );
-}
-
-export function Country({ className = ""  }) {
+export function Categories({ className = "" }) {
   return (
     <Select className={className}>
-      <SelectTrigger className={`text-gray-700 font-semibold text-sm leading-5 w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}>
-        <span className="absolute top-0 translate-y-1/2  left-[18px] z-20">
-          <WorldMap/>
-        </span>
+      <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
         <SelectValue
-          placeholder="Anywhere"
+          placeholder="All Categories"
           className="text_16 text-red-400"
         />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel className="flex gap-2 items-center">
-            Anywhere
+            All Categories
           </SelectLabel>
-          {country?.map((country) => (
-              <SelectItem key={country} value={country}>{country}</SelectItem>
+          {categories?.map((category) => (
+            <SelectItem key={category} value={category}>
+              {category}
+            </SelectItem>
           ))}
         </SelectGroup>
       </SelectContent>
@@ -109,12 +78,37 @@ export function Country({ className = ""  }) {
   );
 }
 
-
+export function Country({ className = "" }) {
+  return (
+    <Select className={className}>
+      <SelectTrigger
+        className={`text-gray-700 font-semibold text-sm leading-5 w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
+      >
+        <span className="absolute top-0 translate-y-1/2  left-[18px] z-20">
+          <WorldMap />
+        </span>
+        <SelectValue placeholder="Anywhere" className="text_16 text-red-400" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel className="flex gap-2 items-center">
+            Anywhere
+          </SelectLabel>
+          {country?.map((country) => (
+            <SelectItem key={country} value={country}>
+              {country}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}
 
 // Form Design
 
 // label text
-export function Tags({tagText}) {
+export function Tags({ tagText }) {
   return (
     <div className="flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20">
       <span>

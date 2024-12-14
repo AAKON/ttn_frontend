@@ -6,7 +6,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import {
   Form,
   FormControl,
@@ -46,7 +46,7 @@ const ProductsForm = () => {
       tag: "",
       product_card_image: "",
       product_name: "",
-      product_price: ""
+      product_price: "",
     },
   });
 
@@ -75,32 +75,34 @@ const ProductsForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <p className="font-semibold leading-7 text-xl text-gray-900 pb-4">Products/Services</p>
+        <p className="font-semibold leading-7 text-xl text-gray-900 pb-4">
+          Products/Services
+        </p>
         <FormField
-            control={control}
-            name="categories"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Categories</FormLabel>
-                <TagsInput
-                  value={field.value} // Controlled value
-                  onChange={field.onChange} // Update state on change
-                />
-                <FormMessage>{errors.categories?.message}</FormMessage>
-              </FormItem>
-            )}
-          />
-          
+          control={control}
+          name="categories"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Categories</FormLabel>
+              <TagsInput
+                value={field.value} // Controlled value
+                onChange={field.onChange} // Update state on change
+              />
+              <FormMessage>{errors.categories?.message}</FormMessage>
+            </FormItem>
+          )}
+        />
+
         <FormField
-            control={control}
-            name="product_card_image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Product Card</FormLabel>
-                <PhotoUploadBox handleFileChange={field.onChange} />
-              </FormItem>
-            )}
-          />
+          control={control}
+          name="product_card_image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Product Card</FormLabel>
+              <PhotoUploadBox handleFileChange={field.onChange} />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -156,7 +158,6 @@ const ProductsForm = () => {
             </FormItem>
           )}
         />
-        
 
         {/* Buttons */}
         <div className="grid grid-cols-2 gap-3">
@@ -167,19 +168,13 @@ const ProductsForm = () => {
             type="button"
             className="h-9"
             onClick={(e) => {
-              console.log("Add new Product")
-              ;
+              console.log("Add new Product");
             }}
           >
             Add new Product
           </Button>
           {/* Submit Button */}
-          <Button
-            secondary
-            type="submit"
-            disabled={loading}
-            className="h-9"
-          >
+          <Button secondary type="submit" disabled={loading} className="h-9">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

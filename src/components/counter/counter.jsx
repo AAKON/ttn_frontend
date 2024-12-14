@@ -1,8 +1,8 @@
 import { Section } from "@/components/shared";
 import Count from "./count";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
-const  Counter = () => {
+const Counter = () => {
   return (
     <Section>
       <div className="flex items-center justify-center flex-col md:flex-row md:justify-between">

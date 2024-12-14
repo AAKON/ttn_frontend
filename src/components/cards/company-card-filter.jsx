@@ -7,13 +7,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
 import Profile_pic from "@/assets/CodeBlue.svg";
 import { MarkerPinIcon, StarIcon, LoveIcon } from "@/icons";
 import Link from "next/link";
 
-const CompanyCardFilter = ({company}) => {
+const CompanyCardFilter = ({ company }) => {
   return (
     <Card>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
@@ -28,10 +28,11 @@ const CompanyCardFilter = ({company}) => {
             />
           </div>
           <div className="flex-1">
-            {company?.businessCategory &&
-            <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
-              {company?.businessCategory}
-            </CardTitle>}
+            {company?.businessCategory && (
+              <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
+                {company?.businessCategory}
+              </CardTitle>
+            )}
             <CardDescription className="font-semibold text-md sm:text-2xl sm:leading-8 text-gray-900">
               {company?.name}
             </CardDescription>
@@ -46,18 +47,21 @@ const CompanyCardFilter = ({company}) => {
       </CardHeader>
 
       {/* 1st btn start */}
-      {company?.compliances && Array.isArray(company?.compliances) && company?.compliances.length > 0 &&
-      <CardContent className="flex gap-x-2 mr-2 w-full">
-        {company?.compliances.map((compliance) => (
-            <Button
+      {company?.compliances &&
+        Array.isArray(company?.compliances) &&
+        company?.compliances.length > 0 && (
+          <CardContent className="flex gap-x-2 mr-2 w-full">
+            {company?.compliances.map((compliance) => (
+              <Button
                 secondary
                 className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
                 key={compliance.id}
-            >
-              {compliance?.name}
-            </Button>
+              >
+                {compliance?.name}
+              </Button>
             ))}
-      </CardContent>}
+          </CardContent>
+        )}
       {/* 1st btn end */}
 
       {/* peragraph start */}
@@ -77,13 +81,14 @@ const CompanyCardFilter = ({company}) => {
             <span className="mr-1">202</span> reviews
           </p>
         </div>
-        {company?.location &&
-        <div className="flex">
-          <MarkerPinIcon stroke="#101828" width={20} />
-          <span className="text-md font-medium text-gray-900 leading-6 ml-1">
-            {company?.location}
-          </span>
-        </div>}
+        {company?.location && (
+          <div className="flex">
+            <MarkerPinIcon stroke="#101828" width={20} />
+            <span className="text-md font-medium text-gray-900 leading-6 ml-1">
+              {company?.location}
+            </span>
+          </div>
+        )}
       </CardContent>
       {/* ----------- */}
 

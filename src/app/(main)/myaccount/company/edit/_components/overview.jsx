@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 
 import { companyBasicReq } from "@/services/company";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { DeleteIcon } from "@/components/icons";
 import { DropdownSelect } from "./dropdown-select";
 

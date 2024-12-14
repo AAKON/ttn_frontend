@@ -1,27 +1,26 @@
 import { EditIcon, ViewAs } from "@/icons";
 import { Container } from "@/shared";
-import Button from "@/components/ui/button";
-import React, {Suspense } from "react";
+import Button from "@/components/shared/button";
+import React, { Suspense } from "react";
 import profile_pic from "@/assets/profile-pic.png";
 import ProductsForm from "./_components/products-form";
 import ContactWithBusinessOwner from "./_components/contact-with-business-owner";
 import AvailableProducts from "./_components/available-products";
 import EditTabs from "./_components/tabs";
-import {getCompanyBasic, getDataPreBasic} from "@/services/company";
+import { getCompanyBasic, getDataPreBasic } from "@/services/company";
 import ErrorMessage from "@/components/shared/errormessage";
 import CompanyForm from "./_components/company-form";
 
-export default async function Page({params: { slug }}){
-
+export default async function Page({ params: { slug } }) {
   try {
-      const preDataBasic = await getDataPreBasic();
-      const basicPromise = getCompanyBasic(slug);
-      const basic = await basicPromise;
+    const preDataBasic = await getDataPreBasic();
+    const basicPromise = getCompanyBasic(slug);
+    const basic = await basicPromise;
 
-    console.log(basic, '===basic');
+    console.log(basic, "===basic");
 
     return (
-        <Suspense fallback={<div>Loading ...</div>}>
+      <Suspense fallback={<div>Loading ...</div>}>
         <div className="bg-gray-50">
           <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full"></div>
           <Container>
@@ -37,7 +36,7 @@ export default async function Page({params: { slug }}){
                 </Button>
               </div>
               <div className="pt-4">
-                  <CompanyForm slug={slug} basic={basic} preData={preDataBasic} />
+                <CompanyForm slug={slug} basic={basic} preData={preDataBasic} />
               </div>
             </div>
 
@@ -57,12 +56,9 @@ export default async function Page({params: { slug }}){
             </div>
           </Container>
         </div>
-        </Suspense>
+      </Suspense>
     );
-
-  }catch (error) {
-    return (
-        <ErrorMessage message={error?.message}/>
-    );
+  } catch (error) {
+    return <ErrorMessage message={error?.message} />;
   }
-};
+}

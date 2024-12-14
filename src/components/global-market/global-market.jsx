@@ -1,6 +1,6 @@
 import { Container, Section } from "@/shared";
 import Count from "@/ui/count-item";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import Option from "@/ui/option";
 import option1 from "@/assets/marketing1.png";
 import option from "@/assets/marketing2.png";

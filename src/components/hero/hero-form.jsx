@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { Categories, Country } from "@/components/hero/hero";
 import { FilterIcon } from "@/icons";
 
