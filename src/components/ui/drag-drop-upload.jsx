@@ -38,14 +38,14 @@ const DragDropUploadImage = ({ onImageChange, initialImage }) => {
                 onDragOver={(e) => e.preventDefault()}
                 onClick={() => document.getElementById("dragInput").click()}
                 className={`bg-orange-100 flex items-center justify-center ${
-                    image ? "p-8 rounded-lg" : "rounded-full"
+                    image ? "p-8 bg-transparent rounded-lg" : "rounded-full"
                 }`}
             >
                 {image ? (
                     <img
                         src={image}
                         alt="Preview"
-                        className="w-full h-full rounded-full object-cover"
+                        className={`w-full object-cover h-[130px] ${image ? "rounded-lg" : "rounded-full"}`}
                     />
                 ) : (
                     <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
