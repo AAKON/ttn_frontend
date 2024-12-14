@@ -42,7 +42,7 @@ const formSchema = z.object({
   image: z.string().optional(),
 });
 
-const ProductsForm = ({ preData }) => {
+const ProductsForm = ({ preData, slug }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const [fileData, setFileData] = useState(null); // File object
@@ -83,7 +83,7 @@ const ProductsForm = ({ preData }) => {
     }
 
     try {
-      const result = await uploadProductReq(formData, toast);
+      const result = await uploadProductReq(slug, formData, toast);
       if (result.status && result.code === 200) {
         //form reset
       }
