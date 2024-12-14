@@ -115,7 +115,7 @@ function BlogTabs({ ttnsData }) {
                         </Tabs>
                     </div>
                     {/* Right Sidebar */}
-                    <SidebarBlogs ttnsData={ttnsData} />
+                    <SidebarBlogs ttnsData={ttnsData} recomended={blogTypes} />
                 </div>
 
                 Pagination

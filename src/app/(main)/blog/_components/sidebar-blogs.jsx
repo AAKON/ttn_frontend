@@ -2,7 +2,7 @@ import React from 'react';
 import RecommendedTopics from "@/components/blog/recommended-topics";
 import Link from "next/link";
 
-function SidebarBlogs({ ttnsData }) {
+function SidebarBlogs({ ttnsData, recomended }) {
 
     console.log(ttnsData, 'ggt { ttnsData }' )
 
@@ -14,13 +14,12 @@ function SidebarBlogs({ ttnsData }) {
                 <div className="pt-6">
                     <div className="flex flex-col gap-y-8">
                         {ttnsData && ttnsData?.TNN_picks.map((item, index) => (
-                                <Link key={index} href="#" className="block">
+                                <Link key={index} href={`/blog/${item?.slug}`} className="block">
                                     <h4 className="text-sm font-medium text-gray-500 pb-2">
-                                        {item.title}
+                                        {item?.title}
                                     </h4>
-                                    <p className="text-md lg:text-lg font-semibold text-gray-900 leading-[1.2]">
-                                        Bangladesh’s apparel industry is revolutionising the fashion
-                                        world by making a circular economy!
+                                    <p className="text-md lg:text-lg font-semibold text-gray-900 leading-[1.2] line-clamp-3">
+                                        {item?.short_description}
                                     </p>
                                 </Link>
                             ))}
@@ -33,7 +32,7 @@ function SidebarBlogs({ ttnsData }) {
                 </h3>
                 {/* topics */}
                 <div className="flex gap-4 items-center flex-wrap">
-                    <RecommendedTopics/>
+                    <RecommendedTopics recomended={recomended}/>
                 </div>
 
                 {/* Recently viewed */}
