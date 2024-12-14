@@ -1,17 +1,17 @@
 import {apiRequest} from "@/utils/api";
 
-export async function getBlogs(key, title) {
+export async function getBlogs(key, keyword, page=1) {
 
     let endpoint;
 
-    if (!key && !title) {
+    if (!key && !keyword) {
         endpoint = `blog`;
-    } else if (!title) {
-        endpoint = `blog?blog_type_id=${key}`;
+    } else if (!keyword) {
+        endpoint = `blog?blog_type_id=${key}&page=${page}`;
     } else if (!key) {
-        endpoint = `blog?title=${encodeURIComponent(title)}`;
+        endpoint = `blog?title=${encodeURIComponent(keyword)}&page=${page}`;
     } else {
-        endpoint = `blog?title=${encodeURIComponent(title)}&blog_type_id=${key}`;
+        endpoint = `blog?title=${encodeURIComponent(keyword)}&blog_type_id=${key}&page=${page}`;
     }
 
     const options = {

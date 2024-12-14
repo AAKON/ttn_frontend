@@ -7,12 +7,10 @@ import {Empty, Error, Section} from "@/shared";
 import {Tabs, TabsList, TabsTrigger, TabsContent} from "@/components/ui/tabs";
 import Search from "@/components/blog/search";
 import {getBlogs, getBlogTypes} from "@/services/blogs";
-import {log} from "next/dist/server/typescript/utils";
 import SkeletonBlogTypes from "@/components/shared/skelton/SkeletonBlogTypes";
 import SkeletonBlogData from "@/components/shared/skelton/SkeletonBlogData";
 import SidebarBlogs from "@/app/(main)/blog/_components/sidebar-blogs";
 import PaginationBlog from '@/components/blog/pagination';
-
 
 
 function BlogTabs({ ttnsData }) {
@@ -27,13 +25,14 @@ function BlogTabs({ ttnsData }) {
     const [isBlogDataEmpty, setIsBlogDataEmpty] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
     const [debouncedKeyword, setDebouncedKeyword] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
         async function fetchBlogTypes() {
             try {
                 setIsLoadingBlogTypes(true);
                 const data = await getBlogTypes();
-                console.log(data, "get blogTypes");
                 setBlogTypes(data);
                 if (data?.blog_topics.length > 0) {
                     const firstTabKey = data.blog_topics[0].id;
@@ -51,12 +50,14 @@ function BlogTabs({ ttnsData }) {
         fetchBlogTypes();
     }, []);
 
-    const fetchBlogs = async (key, keyword = "") => {
+    const fetchBlogs = async (key, keyword = "", page = 1) => {
         try {
             setIsLoadingBlogData(true);
-            const blogs = await getBlogs(key, keyword);
-            console.log(blogs, "get blogs");
-            setBlogData(blogs);
+            const blogs = await getBlogs(key, keyword, page);
+            console.log(blogs, 'get pagi vall');
+            setBlogData(blogs?.data || []);
+            setCurrentPage(blogs?.current_page || 1);
+            setTotalPages(blogs?.last_page || 1);
             setIsBlogDataEmpty(!blogs?.data || blogs.data.length === 0);
         } catch (err) {
             setError(err);
@@ -70,7 +71,8 @@ function BlogTabs({ ttnsData }) {
         setActiveTab(key); // Update active tab
         setSearchKeyword(""); // Reset search keyword
         setDebouncedKeyword(""); // Reset debounced keyword
-        fetchBlogs(key); // Fetch blogs for the selected tab
+        // fetchBlogs(key);
+        fetchBlogs(key, "", 1);
     };
 
     // Handle search input change
@@ -83,16 +85,24 @@ function BlogTabs({ ttnsData }) {
         // if (searchKeyword !== "") {
             const handler = setTimeout(() => {
                 setDebouncedKeyword(searchKeyword);
-                if (activeTab) fetchBlogs(activeTab, searchKeyword); // Fetch blogs with debounced keyword
+                if (activeTab) fetchBlogs(activeTab, searchKeyword, 1); // Fetch blogs with debounced keyword
             }, 1000);
 
             return () => clearTimeout(handler); // Cleanup on unmount or re-render
         // }
     }, [searchKeyword]); // Only depend on searchKeyword
 
+    const handlePageChange = (page) => {
+        if (page !== currentPage) {
+            fetchBlogs(activeTab, debouncedKeyword, page);
+        }
+    };
+
     if (error) {
         return <Error error={error} />;
     }
+
+    console.log(blogData, 'get blogData')
 
 
     return (
@@ -135,10 +145,10 @@ function BlogTabs({ ttnsData }) {
                             blogTypes?.blog_topics.map((type) => (
                                 <TabsContent key={type.id} value={type.id}>
                                     <div className="pt-8 flex flex-col gap-8">
-                                        {blogData?.data &&
-                                            Array.isArray(blogData?.data) &&
-                                            blogData?.data.length > 0 &&
-                                            blogData?.data.map((item, index) => (
+                                        {blogData &&
+                                            Array.isArray(blogData) &&
+                                            blogData.length > 0 &&
+                                            blogData.map((item, index) => (
                                                 <BlogCard key={index} item={item}/>
                                             ))}
                                     </div>
@@ -150,9 +160,11 @@ function BlogTabs({ ttnsData }) {
                     {/* Right Sidebar */}
                     <SidebarBlogs ttnsData={ttnsData} recomended={blogTypes} />
                 </div>
-
-                {/*<PaginationBlog />*/}
-                <PaginationBlog />
+                <PaginationBlog
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </Section>
         </>
     );
