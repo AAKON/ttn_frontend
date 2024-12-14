@@ -2,8 +2,6 @@ import Link from "next/link";
 
 const RecommendedTopics = ({recomended}) => {
 
-  console.log(recomended, 'recomended========');
-
   return (
     <>
       {recomended && recomended?.blog_topics && recomended?.blog_topics?.map((item, index) => (

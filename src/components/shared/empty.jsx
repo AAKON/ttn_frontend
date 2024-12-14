@@ -2,5 +2,5 @@
 import React from "react";
 
 export const Empty = ({ message }) => {
-    return <div className="py-6 empty-state">{message || "No data available."}</div>;
+    return <div className="empty-state py-6 text-red-600">{message || "No data available."}</div>;
 }
