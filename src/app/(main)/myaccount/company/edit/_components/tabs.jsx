@@ -35,7 +35,7 @@ const allClientsCertifications = [
 ];
 
 import PhotoUploadBox from "./photo-upload-box";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import OverviewForm from "./overview";
 import ExistingClients from "./existing-clients";
 import ExistingClientsCertifications from "./existing-clients-certifications";

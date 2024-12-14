@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import {
   Form,
   FormControl,

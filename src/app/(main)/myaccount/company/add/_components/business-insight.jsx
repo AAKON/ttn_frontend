@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { DeleteIcon } from "@/icons";
 import { DropdownSelect } from "./dropdown-select";
 

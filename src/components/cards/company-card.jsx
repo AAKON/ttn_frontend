@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
 import Profile_pic from "@/assets/CodeBlue.svg";
 import { MarkerPinIcon, StarIcon, LoveIcon } from "@/icons";

@@ -35,7 +35,7 @@ const allClientsCertifications = [
 ];
 
 import PhotoUploadBox from "./photo-upload-box";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import OverviewForm from "./overview";
 import ExistingClients from "./existing-clients";
 import ExistingClientsCertifications from "./existing-clients-certifications";
@@ -46,7 +46,7 @@ import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
 import BusinessContactForm from "./business-contact-form";
 
-function EditTabs({slug}) {
+function EditTabs({ slug }) {
   return (
     <div>
       <Tabs defaultValue="faq" className="edit-tabs w-full overflow-hidden">

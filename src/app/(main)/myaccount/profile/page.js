@@ -5,7 +5,7 @@ import codeBlue from "@/assets/CodeBlue.svg";
 
 import CountCard from "./count-card";
 import TabComponents from "./tab-component";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { EditIcon, UserUpArrowIcon } from "@/icons";
 import Image from "next/image";
 
@@ -86,7 +86,7 @@ const BusinessProfile = () => {
               <span>Edit profile</span>
             </Button>
             <Button primaryOutline className="gap-2">
-              <UserUpArrowIcon stroke="#F7931E"  />
+              <UserUpArrowIcon stroke="#F7931E" />
               <span>Upgrade plan</span>
             </Button>
           </div>

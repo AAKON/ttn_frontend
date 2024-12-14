@@ -3,10 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {useToast} from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import React, { useState } from "react";
 
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import {
   Form,
   FormControl,
@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {companyBasicReq, companyBusinessContactReq} from "@/services/company";
+import { companyBasicReq, companyBusinessContactReq } from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
 import { Link } from "@/icons";
 import { LinkIcon } from "@/components/icons/linkIcon";
@@ -36,26 +36,22 @@ const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
-
-   address: z.string().min(2, {
+  address: z.string().min(2, {
     message: "Required.",
   }),
-    email: z
-        .string()
-        .min(3, { message: "Must have at least 3 character" })
-        .email({
-            message: "Must be a valid email",
-        }),
-    whatsapp: z.string().optional(),
-    phone: z.string().min(3, { message: "Enter a phone number" }),
-    website: z.string().optional(),
-    location: z.string().optional(),
-
-
+  email: z
+    .string()
+    .min(3, { message: "Must have at least 3 character" })
+    .email({
+      message: "Must be a valid email",
+    }),
+  whatsapp: z.string().optional(),
+  phone: z.string().min(3, { message: "Enter a phone number" }),
+  website: z.string().optional(),
+  location: z.string().optional(),
 });
 
-const BusinessContactForm = ({slug}) => {
-
+const BusinessContactForm = ({ slug }) => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const { toast } = useToast();
@@ -63,11 +59,11 @@ const BusinessContactForm = ({slug}) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-        address: "",
-        email: "",
-        whatsapp: "",
-        phone: "",
-        website: "",
+      address: "",
+      email: "",
+      whatsapp: "",
+      phone: "",
+      website: "",
       location: "",
     },
   });
@@ -82,16 +78,16 @@ const BusinessContactForm = ({slug}) => {
   const onSubmit = async (data) => {
     setLoading(true);
     const formData = {
-        address: data?.address,
-        email: data?.email,
-        whatsapp: data?.whatsapp,
-        phone: data?.phone,
-        website: data?.website,
-        location: {
-            "lat":"23.34554334",
-            "lng":"93.2234736"
-        }
-    }
+      address: data?.address,
+      email: data?.email,
+      whatsapp: data?.whatsapp,
+      phone: data?.phone,
+      website: data?.website,
+      location: {
+        lat: "23.34554334",
+        lng: "93.2234736",
+      },
+    };
     try {
       const result = await companyBusinessContactReq(slug, formData, toast);
       if (result.status && result.code === 200) {
@@ -213,21 +209,16 @@ const BusinessContactForm = ({slug}) => {
           <div className="grid grid-cols-1">
             <LocationPicker form={form} labelStyle={labelStyle} />
           </div>
-            <Button
-                type="submit"
-                secondary
-                disabled={loading}
-                className="h-9"
-            >
-                {loading ? (
-                    <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                        Please wait
-                    </>
-                ) : (
-                    "Submit"
-                )}
-            </Button>
+          <Button type="submit" secondary disabled={loading} className="h-9">
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Submit"
+            )}
+          </Button>
         </div>
       </form>
     </Form>

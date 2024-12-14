@@ -36,7 +36,7 @@ const allClientsCertifications = [
 ];
 
 import PhotoUploadBox from "./photo-upload-box";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import OverviewForm from "./overview";
 import BusinessInsightForm from "./business-insight";
 import YearlyTurnover from "./yearly-turnover";

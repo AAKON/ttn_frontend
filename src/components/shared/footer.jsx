@@ -1,15 +1,15 @@
 import { Container } from "@/shared";
-import Button from "../ui/button";
+import Button from "@/components/shared/button";
 import Link from "next/link";
 import Image from "next/image";
 import NewsletterForm from "@/ui/newsletter-form";
 const footerLink = [
-  {title: "Membership", link: "/" },
-  {title: "Blog", link: "/" },
-  {title: "About us", link: "/" },
-  {title: "Jobs", link: "/" },
-  {title: "Influencers", link: "/" },
-  {title: "Privacy", link: "/privacy-policy" },
+  { title: "Membership", link: "/" },
+  { title: "Blog", link: "/" },
+  { title: "About us", link: "/" },
+  { title: "Jobs", link: "/" },
+  { title: "Influencers", link: "/" },
+  { title: "Privacy", link: "/privacy-policy" },
 ];
 
 export const Footer = () => {
@@ -99,9 +99,7 @@ function FooterCopyright() {
   return (
     <div className="mt-3 lg:mt-12 md:mt-5 border-t border-[#eaecf0] py-4 md:py-8 flex flex-col lg:flex-row justify-between gap-4 md:gap-5 items-center">
       <p className="mt-7">
-        © {new Date().getFullYear()}.{" "}
-        Textile Network. All Rights
-        Reserved.
+        © {new Date().getFullYear()}. Textile Network. All Rights Reserved.
       </p>
       <ul className="flex gap-[30px] items-center mt-7">
         <li>

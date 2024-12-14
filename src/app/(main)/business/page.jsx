@@ -1,7 +1,7 @@
 "use client";
 import { Cross, DeleteIcon, GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -120,7 +120,11 @@ const Business = () => {
           <h3 className="text-gray-900   font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
             Find Your Apparel Needs
           </h3>
-          <HeroForm isAnywhereDropdown={false} isCategoryDropdown={false} isFilterIcon={true}  />
+          <HeroForm
+            isAnywhereDropdown={false}
+            isCategoryDropdown={false}
+            isFilterIcon={true}
+          />
         </div>
       </Section>
       <Section>

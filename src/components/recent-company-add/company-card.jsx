@@ -1,19 +1,19 @@
 import Image from "next/image";
 import profilePIc from "@/assets/Profilepic.png";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import loc from "@/assets/loc.svg";
 import tag from "@/assets/tag.svg";
 
 const CompanyCard = ({ item }) => {
-  const { image,name, location, category } = item;
+  const { image, name, location, category } = item;
   return (
     <div className="py-10 px-6 text-center flex items-center flex-col justify-center vg-white rounded-2xl shadow-xl">
       <div className="size-[140px] rounded-full overflow-hidden flex items-center justify-center p-1 border-4 border-brand-500">
-          <Image
-              className="max-w-full object-cover"
-              src={image}
-              alt="Company Logo"
-          />
+        <Image
+          className="max-w-full object-cover"
+          src={image}
+          alt="Company Logo"
+        />
       </div>
       <h4 className="pt-8 font-semibold text-xl text-gray-900 pb-2">{name}</h4>
 

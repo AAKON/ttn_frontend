@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import bottomIcon from "@/assets/bottom-icon.svg";
 import { Checkbox } from "@/components/ui/checkbox";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import Image from "next/image";
 import {
   Select,

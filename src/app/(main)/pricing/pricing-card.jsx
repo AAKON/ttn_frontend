@@ -5,7 +5,7 @@ import {
   UserUpArrowIcon,
   CheckMarkIcon,
 } from "@/components/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { useState } from "react";
 
 const PricingCard = () => {

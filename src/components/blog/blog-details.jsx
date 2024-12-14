@@ -5,12 +5,12 @@ import detailsImg2 from "@/assets/detailsImg2.jpg";
 import detailsImg3 from "@/assets/detailsImg3.jpg";
 import { CalendarIcon } from "lucide-react";
 import { CopyIcon, Facebook, Link, Twiter, UserEdit } from "@/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 
 const BlogDetails = async ({ blog }) => {
   return (
-    <div>
-      <div className="lg:w-[1024px] w-container mx-auto">
+    <div className="pb-8 lg:pb-20">
+      <div className="lg:w-[1024px] container w-container mx-auto">
         <h1 className="lg:w-[770px] lg:text-[48px]  w-container text-[36px] font-semibold text-gray-900 pt-[70px] mx-auto text-center">
           {blog.title}
         </h1>
@@ -39,8 +39,8 @@ const BlogDetails = async ({ blog }) => {
           )}
         </div>
 
-        <div className="mt-16 px-4">
-          <div className="lg:w-[1024px] lg:h-[560px] w-container mx-auto">
+        <div className="mt-16 pb-8">
+          <div className="lg:max-w-[1024px] lg:h-[560px] w-container mx-auto">
             <Image
               src={blog?.featured_image ? blog.featured_image : detailsImg1}
               width={0}
@@ -56,13 +56,14 @@ const BlogDetails = async ({ blog }) => {
           />
         </div>
 
-        <div className="flex lg:flex-row flex-col justify-between lg:gap-0 gap-6 lg:mt-[114px] mt-[90px]">
+        <div className="flex lg:flex-row flex-col justify-between lg:gap-0 gap-6 border-t border-t-gray-200 pt-6 lg:pt-8">
           <div className="flex gap-2 items-center">
             {blog?.blog_types &&
               blog?.blog_types?.map((blogType) => (
                 <Button
+                  secondary
                   key={blogType?.id}
-                  className="bg-transparent bg-opacity-15 border-opacity-[60%] border-2 py-0 px-2 text-sm border-brand-200 rounded-[16px] text-brand-700"
+                  className="!h-6 !text-sm !font-medium !leading-5 rounded-full !py-[2px] !px-[10px] !text-brand-700 !bg-brand-50 !border-brand-200"
                 >
                   {blogType?.name}
                 </Button>
@@ -70,20 +71,20 @@ const BlogDetails = async ({ blog }) => {
           </div>
 
           <div className="flex gap-4">
-            <Button className="bg-transparent text-gray-700 border border-gray-200">
+            <Button secondary className="h-10">
               <CopyIcon />
               Copy link
             </Button>
 
-            <Button className="bg-transparent text-gray-700 border border-gray-200 p-[10px]">
+            <Button secondary className="!size-10 !p-1">
               <Twiter />
             </Button>
 
-            <Button className="bg-transparent text-gray-700 border border-gray-200 p-[10px]">
+            <Button secondary className="!size-10 !p-1">
               <Facebook />
             </Button>
 
-            <Button className="bg-transparent text-gray-700 border border-gray-200 p-[10px]">
+            <Button secondary className="!size-10 !p-1">
               <Link />
             </Button>
           </div>

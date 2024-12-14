@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { Container } from "@/shared";
 import shield_tick from "@/assets/shield-tick.png";
 import AU from "@/assets/AU.png";

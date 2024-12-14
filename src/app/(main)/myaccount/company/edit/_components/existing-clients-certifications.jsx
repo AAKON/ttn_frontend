@@ -1,5 +1,5 @@
 import { DeleteIcon } from "@/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import Image from "next/image";
 
 function ExistingClientsCertifications({ certification }) {
