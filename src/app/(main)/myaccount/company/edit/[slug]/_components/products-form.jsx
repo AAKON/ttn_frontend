@@ -135,8 +135,7 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
         <div className="flex flex-col">
           <FormLabel className={`${labelStyle} mb-3`}>Product Image</FormLabel>
           <DragDropFile
-              name="file" control={control} label="Upload an Image"
-              initialFile={'https://ttn.technostupid.com/storage/13/conversions/Castorino-Nutria-And-Montone-Sheepskin-thumbnail.jpg'}
+              name="file" control={control}
           />
         </div>
 

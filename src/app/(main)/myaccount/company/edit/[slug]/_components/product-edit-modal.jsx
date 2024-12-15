@@ -34,6 +34,7 @@ import {ScrollArea} from "@/components/ui/scroll-area"
 import {uploadProductReq} from "@/services/product";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import DragDropUploadImage from "@/components/ui/drag-drop-upload";
+import DragDropFile from "@/components/shared/DragDropFile";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -158,7 +159,11 @@ const ProductUpdateForm = ({slug, preData}) => {
                 />
                 <div className="flex flex-col">
                     <FormLabel className={`${labelStyle} mb-3`}>Product Image</FormLabel>
-                    <DragDropUploadImage onImageChange={handleImageChange}/>
+                    <DragDropFile
+                        name="file"
+                        control={control}
+                        initialFile={'https://ttn.technostupid.com/storage/13/conversions/Castorino-Nutria-And-Montone-Sheepskin-thumbnail.jpg'}
+                    />
                 </div>
 
                 <FormField
@@ -218,20 +223,6 @@ const ProductUpdateForm = ({slug, preData}) => {
 
                 {/* Buttons */}
                 <div className="grid grid-cols-2 gap-3">
-                    {/* Add new button */}
-                    <Button
-                        secondary
-                        icon
-                        type="button"
-                        className="h-9"
-                        onClick={(e) => {
-                            console.log("Add new Product");
-                        }}
-                        disabled
-                    >
-                        Add new Product
-                    </Button>
-                    {/* Submit Button */}
                     <Button secondary type="submit" disabled={loading} className="h-9">
                         {loading ? (
                             <>
