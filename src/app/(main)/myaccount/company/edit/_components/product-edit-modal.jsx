@@ -54,7 +54,7 @@ const ProductEditModal = ({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[1000px] z-[9999] overflow-scroll">
+      <DialogContent className="sm:max-w-[600px] z-[9999]">
         <DialogHeader>
           <DialogTitle>Edit product</DialogTitle>
           <DialogDescription>

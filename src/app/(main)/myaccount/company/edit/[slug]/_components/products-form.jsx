@@ -28,6 +28,7 @@ import {
 import DragDropUploadImage from "@/components/ui/drag-drop-upload";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
 import { uploadProductReq } from "@/services/product";
+import DragDropFile from "@/components/shared/DragDropFile";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -39,51 +40,48 @@ const formSchema = z.object({
   tag: z.string().optional(),
   name: z.string().optional(),
   price_range: z.string().optional(),
-  image: z.string().optional(),
+  file: z.any().optional(),
 });
 
-const ProductsForm = ({ preData }) => {
+const ProductsForm = ({ preData, slug }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const [fileData, setFileData] = useState(null); // File object
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       product_category_id: "",
       tag: "",
-      image: "",
+      file: [],
       name: "",
       price_range: "",
     },
   });
 
-  const handleImageChange = ({ file }) => {
-    console.log("on file");
-    setFileData((prev) => ({ ...prev, imageFile: file }));
-  };
-
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = form;
 
   // Function to handle form submission
   const onSubmit = async (data) => {
     const { name, product_category_id, price_range } = data;
-    console.log(data, "get fff data");
+    console.log(data?.file, "get fff data");
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("product_category_id", product_category_id);
     formData.append("price_range", price_range);
-    if (fileData) {
-      formData.append("image", fileData.imageFile);
+    if (data.file && data.file.length > 0) {
+      formData.append('image', data.file[0]);
     }
 
+      console.log(...formData, 'formData')
+
     try {
-      const result = await uploadProductReq(formData, toast);
+      const result = await uploadProductReq(slug, formData, toast);
       if (result.status && result.code === 200) {
         //form reset
       }
@@ -92,9 +90,9 @@ const ProductsForm = ({ preData }) => {
     } finally {
       setLoading(false);
     }
-  };
 
-  console.log(fileData, "gt fileData");
+
+  };
 
   return (
     <Form {...form}>
@@ -133,7 +131,10 @@ const ProductsForm = ({ preData }) => {
         />
         <div className="flex flex-col">
           <FormLabel className={`${labelStyle} mb-3`}>Product Image</FormLabel>
-          <DragDropUploadImage onImageChange={handleImageChange} />
+          <DragDropFile
+              name="file" control={control} label="Upload an Image"
+              initialFile={'https://ttn.technostupid.com/storage/13/conversions/Castorino-Nutria-And-Montone-Sheepskin-thumbnail.jpg'}
+          />
         </div>
 
         <FormField

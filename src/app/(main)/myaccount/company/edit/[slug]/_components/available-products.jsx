@@ -1,19 +1,34 @@
 "use client";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import React, { useEffect, useState } from 'react';
 
-const AvailableProducts = () => {
-  let data = [
-    Array.from({ length: 7 }, () => ({ name: "cap" })),
-    Array.from({ length: 6 }, () => ({ name: "Yarn" })),
-    Array.from({ length: 7 }, () => ({ name: "T-shirt" })),
-    Array.from({ length: 8 }, () => ({ name: "Jacket" })),
-    Array.from({ length: 9 }, () => ({ name: "Women" })),
-    Array.from({ length: 5 }, () => ({ name: "Ladies" })),
-    Array.from({ length: 6 }, () => ({ name: "Sweater" })),
-    Array.from({ length: 3 }, () => ({ name: "Pant" })),
-  ].flat();
-  // product part end
+const AvailableProducts = ({slug, preData}) => {
+
+    const [productData, setProductData] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const data = [];
+
+    useEffect(() => {
+
+        const fetchProductData = async () => {
+            try {
+                const response = await getCompanyProducts(slug);
+                console.log(response, '==========data get');
+                setProductData(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProductData();
+    }, []);
+
+    console.log(productData, 'get productData')
 
   const sliderOptions = {
     perPage: 4,
@@ -46,7 +61,7 @@ const AvailableProducts = () => {
           {data.map((product, idx) => {
             return (
               <SplideSlide key={idx}>
-                <AvailableProductsCard product={product} />
+                <AvailableProductsCard product={product} slug={slug} preData={preData} />
               </SplideSlide>
             );
           })}
@@ -61,7 +76,10 @@ import Image from "next/image";
 import ShowCase1 from "@/assets/ShowCase1.png";
 import Button from "@/components/shared/button";
 import { DeleteIcon, EditIcon } from "@/icons";
-function AvailableProductsCard({ product }) {
+import ProductEditModal from "@/app/(main)/myaccount/company/edit/[slug]/_components/product-edit-modal";
+import {getSSToken} from "@/utils/getSSToken";
+import {getCompanyProducts} from "@/services/product";
+function AvailableProductsCard({ product, slug, preData }) {
   const description = "Wholesale custom OEM retro checkerboard shoes slip on";
 
   return (
@@ -83,9 +101,10 @@ function AvailableProductsCard({ product }) {
           Delete
           <DeleteIcon stroke="#F04438" />
         </Button>
-        <Button secondary type="button">
-          <EditIcon stroke="#667085" />
-        </Button>
+        {/*<Button secondary type="button">*/}
+        {/*  <EditIcon stroke="#667085" />*/}
+        {/*</Button>*/}
+        <ProductEditModal slug={slug} preData={preData} />
       </div>
     </div>
   );
