@@ -107,7 +107,7 @@ body {
 /*Company page slider css*/
 .splide__arrow.splide__arrow--prev,
 .splide__arrow.splide__arrow--next {
-  z-index: 1000;
+  z-index: 30;
 }
 
 .pricing-accordion .lucide-chevron-down {

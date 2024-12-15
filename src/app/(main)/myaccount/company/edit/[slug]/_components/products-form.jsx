@@ -67,6 +67,9 @@ const ProductsForm = ({ preData, slug }) => {
 
   // Function to handle form submission
   const onSubmit = async (data) => {
+
+    setLoading(true);
+
     const { name, product_category_id, price_range } = data;
     console.log(data?.file, "get fff data");
 
