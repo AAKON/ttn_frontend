@@ -12,8 +12,8 @@ const Counter = () => {
             Explore Your Business Needs{" "}
           </h3>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
-            <Button secondary>Get quote</Button>
-            <Button>Add Company</Button>
+            <Button secondary className="hidden md:flex">Get quote</Button>
+            <Button icon>Add Company</Button>
           </div>
         </div>
         {/* right */}

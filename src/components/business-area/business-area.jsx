@@ -26,6 +26,7 @@ import Denim from "../../assets/Denim.svg";
 import Composite from "../../assets/Composite.svg";
 import {getBusinessArea} from "@/services/home";
 import {useEffect, useState} from "react";
+import Button from "@/components/shared/button";
 
 const BusinessArea = () => {
 
@@ -100,6 +101,9 @@ const BusinessArea = () => {
                     </SplideSlide>
                     ))}
                 </Splide>
+            </div>
+            <div className="mt-12 flex justify-center">
+                <Button icon>Add Business</Button>
             </div>
         </Section>
     );

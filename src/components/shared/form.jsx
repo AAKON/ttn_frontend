@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+
 const Forms = () => {
   const [code, setcode] = useState("");
   const [listOpen, setlistOpen] = useState(false);
@@ -57,7 +58,7 @@ const Forms = () => {
       className="w-full md:w-[474px] lg:w-[630px] xl:w-[685px]"
       onSubmit={HandleForm}
     >
-      <div className="bg-white lg:mt-0 mt-16 flex flex-col gap-y-4 w-full shadow-xl p-4 xl:p-8 rounded-2xl">
+      <div className="bg-white lg:mt-0 mt-16 flex flex-col gap-y-4 w-full shadow-card-shadow p-4 xl:p-8 rounded-2xl">
         <h4 className="font-semibold text-2xl xl:text-4xl text-gray-900 md:pb-3 xl:pb-6 pb-6 text-center">
           Get in touch
         </h4>

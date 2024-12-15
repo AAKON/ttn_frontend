@@ -35,7 +35,7 @@ const ResourceCard = ({ item }) => {
         <p className="font-normal text-gray-700 text-sm lg:text-base pt-2 leading-6">
           {description.slice(0, 90) + "..."}
         </p>
-        <div className="flex items-center pt-6 gap-x-3">
+        <div className="flex items-center pt-6 gap-3">
           <div className="w-[40px] h-[40px] rounded-full overflow-hidden">
             <Image
               src={userImage ? userImage : avatar}

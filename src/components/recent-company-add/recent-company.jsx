@@ -65,21 +65,21 @@ const RecentCompany = () => {
     breakpoints: {
       1024: {
         perPage: 3,
-        padding: "3rem",
+        padding: "5",
       },
       768: {
         perPage: 2,
-        padding: "2rem",
+        padding: "4.5",
       },
       640: {
         perPage: 1,
-        padding: "1rem",
+        padding: "3.5rem",
       },
     },
   };
 
   return (
-    <Section id={"company-slider"}>
+    <Section id={"company-slider"} className={"bg-gray-50"}>
       {/* heading */}
       <SectionHeading
         heading={"Recently Added"}
@@ -98,7 +98,7 @@ const RecentCompany = () => {
           ))}
         </Splide>
       </div>
-      <div className="flex items-center justify-center pt-12">
+      <div className="flex items-center justify-center pt-6 md:pt-12">
         <Button icon primaryOutline>
           Add Company for Free
         </Button>

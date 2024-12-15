@@ -16,7 +16,7 @@ function HeroForm({
     <div
       className={`${
         isAnywhereDropdown ? "bg-white" : "bg-gray-50"
-      } p-3 rounded-xl mt-4`}
+      } p-3 rounded-xl`}
       style={style}
     >
       <form

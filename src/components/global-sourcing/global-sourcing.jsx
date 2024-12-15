@@ -39,7 +39,7 @@ const GlobalSourcing = () => {
   ];
 
   return (
-    <Section className="bg-gray-50">
+    <Section>
       <div className="flex flex-col gap-x-6 xl:gap-x-[170px] gap-y-10 lg:flex-row">
         {/* left */}
         <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[582px]">
