@@ -20,7 +20,7 @@ const Button = ({
   }
   return (
     <TagName
-      className={`group transition-all flex items-center gap-2 justify-center rounded-[8px] px-4 py-[10px] leading-normal font-semibold ${className} ${dynamicClasses}`}
+      className={`group transition-all flex items-center gap-2 justify-center rounded-[8px] px-4 py-[9px] text-md leading-[24px] font-semibold ${className} ${dynamicClasses}`}
       {...props}
     >
       {icon && (

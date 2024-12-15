@@ -7,8 +7,8 @@ import tag from "@/assets/tag.svg";
 const CompanyCard = ({ item }) => {
   const { image, name, location, category } = item;
   return (
-    <div className="py-10 px-6 text-center flex items-center flex-col justify-center vg-white rounded-2xl shadow-xl">
-      <div className="size-[140px] rounded-full overflow-hidden flex items-center justify-center p-1 border-4 border-brand-500">
+    <div className="h-full py-10 px-6 text-center flex items-center flex-col justify-center vg-white rounded-2xl shadow-card-shadow">
+      <div className="size-[100px] md:size-[140px] rounded-full overflow-hidden flex items-center justify-center p-1 border-4 border-brand-500">
         <Image
           className="max-w-full object-cover"
           src={image}

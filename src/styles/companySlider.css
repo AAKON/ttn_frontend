@@ -1,9 +1,15 @@
 .company-slider .splide__list {
-  height: 422px;
+  height: inherit;
 }
-#company-slider  {
+#company-slider {
   overflow-x: hidden;
 }
 #company-slider .splide__track {
   overflow: visible !important;
 }
+
+/* @media (max-width: 768px) {
+  .company-slider .splide__list {
+    height: 328px;
+  }
+} */
