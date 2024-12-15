@@ -1,3 +1,4 @@
+
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
@@ -7,7 +8,6 @@ import AuthNavDropdown from "@/components/shared/authNavbar/authNavDropdown";
 
 function AuthNavbar({ userInfo, showMobileNav }) {
   const { data, status } = useSession();
-
   return (
     <div className="flex justify-end items-center gap-3 md:gap-4 ">
       <Button TagName={Link} href="/myaccount/company/add" icon>

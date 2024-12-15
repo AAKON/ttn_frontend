@@ -5,16 +5,18 @@ import HeroForm from "./hero-form";
 
 const Hero = () => {
   return (
-    <section className="pt-[116px] pb-10 md:pt-[216px] md:pb[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
+    <section className="pt-[88px] md:pt-[208px] md:pb-[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
       <Container>
-        <div>
-          <div className="text-center md:py-10 md:px-[160px]">
-            <h5 className="heading_5">Textile & Apparel B2B Network</h5>
-            <h1 className="pt-1 pb-3">Find Your Business Needs</h1>
-            <p className="text_18">
-              The all-in-one platform connecting apparel & textile companies
-              with global buyers for endless opportunities
-            </p>
+        <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
+          <div className="text-center pb-4 md:pb-10">
+            <h1 className="text-2xl md:text-[48px]">
+              Find Your{" "}
+              <TextAnimator
+                className={"text-primary"}
+                cursorColor={"text-brand-600"}
+              />{" "}
+              Needs
+            </h1>
           </div>
           <HeroForm />
           <div className="mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
@@ -41,6 +43,7 @@ import {
 } from "@/components/ui/select";
 import Button from "@/components/shared/button";
 import { WorldMap } from "@/icons";
+import TextAnimator from "./text-animatior";
 
 const country = ["Anywhere", "Africa", "Bangladesh", "india", "nepal", "chin"];
 const categories = [
@@ -110,19 +113,19 @@ export function Country({ className = "" }) {
 // label text
 export function Tags({ tagText }) {
   return (
-    <div className="flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20">
+    <div className="text-sm flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20">
       <span>
         <svg
-          width={24}
-          height={24}
-          viewBox="0 0 24 24"
+          width={17}
+          height={18}
+          viewBox="0 0 17 18"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
-            stroke="#D0D5DD"
-            strokeWidth={2}
+            d="M16 16.5L12.375 12.875M14.3333 8.16667C14.3333 11.8486 11.3486 14.8333 7.66667 14.8333C3.98477 14.8333 1 11.8486 1 8.16667C1 4.48477 3.98477 1.5 7.66667 1.5C11.3486 1.5 14.3333 4.48477 14.3333 8.16667Z"
+            stroke="white"
+            strokeWidth="1.66667"
             strokeLinecap="round"
             strokeLinejoin="round"
           />

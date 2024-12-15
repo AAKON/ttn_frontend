@@ -28,10 +28,10 @@ const GlobalMarket = () => {
   ];
   return (
     <>
-      <Section className="bg-gray-50">
+      <Section>
         <div className="flex lg:flex-row-reverse gap-y-10 flex-col gap-x-6 xl:gap-x-[170px]">
           {/* left */}
-          <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[582px]">
+          <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[600px]">
             <h4 className="text-gray-900 hidden lg:block pb-[10px] font-semibold text-4xl capitalize">
               Global Marketing Partner Benefits
             </h4>

@@ -1,4 +1,4 @@
-"use client"
+
 import Hero from "@/components/hero/hero";
 import Counter from "@/components/counter/counter";
 import SocialSlider from "@/components/social-slider/social-slider";
@@ -30,7 +30,7 @@ export default function Home() {
           </Fragment>
           <RecentCompany/>
           <BusinessArea/>
-          <Section>
+          <Section className="bg-gray-50">
               <h3 className="pb-8 font-medium text-gray-900 uppercase text-xl text-center">
                   We’ve worked with some great Companies
               </h3>

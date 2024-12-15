@@ -10,7 +10,7 @@ import slider3 from "@/assets/slide-3.jpg";
 
 const SocialSlider = () => {
   return (
-    <Section noDefaultStyle className="hidden md:block py-8 lg:py-10">
+    <Section noDefaultStyle className="social-slider py-8 lg:py-10">
       <Splide
         options={{
           perPage: 3,
@@ -35,34 +35,70 @@ const SocialSlider = () => {
           arrows: false,
         }}
       >
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] rounded-xl overflow-hidden">
-            <Image src={slider1} alt={"image"} />
+            <Image
+              src={slider1}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
+            <Image
+              src={slider2}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider3} alt={"image"} />
+            <Image
+              src={slider3}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
+            <Image
+              src={slider2}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
+            <Image
+              src={slider2}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
-        <SplideSlide>
+        <SplideSlide className="h-[120px]">
           <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
+            <Image
+              src={slider2}
+              height={120}
+              width={445}
+              className="w-full h-full object-cover"
+              alt={"image"}
+            />
           </div>
         </SplideSlide>
       </Splide>
