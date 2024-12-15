@@ -19,11 +19,14 @@ export async function uploadProductReq(slug, data, toast) {
 
 // fetch company overview
 export async function getCompanyProducts(slug) {
-    const token = await getSSToken();
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
     const endpoint = `my/company/${slug}/product`;
     const options = {
         method: 'GET'
     };
     const result = await apiRequest(endpoint, options, null, token);
-    return result?.data;
+    return result;
 }

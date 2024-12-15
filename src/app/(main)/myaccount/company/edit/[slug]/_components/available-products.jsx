@@ -12,18 +12,11 @@ const AvailableProducts = ({slug, preData}) => {
     const data = [];
 
     useEffect(() => {
-        const fetchProductData = async () => {
 
+        const fetchProductData = async () => {
             try {
                 const response = await getCompanyProducts(slug);
-
-                console.log(response, 'get');
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch product data');
-                }
-
-                const data = await response.json();
+                console.log(response, '==========data get');
                 setProductData(data);
             } catch (err) {
                 setError(err.message);
