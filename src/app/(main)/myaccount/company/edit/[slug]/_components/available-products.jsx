@@ -2,31 +2,9 @@
 import {Splide, SplideSlide} from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import React, {useEffect, useState} from 'react';
-import { useToast } from "@/hooks/use-toast";
+import {useToast} from "@/hooks/use-toast";
 
-const AvailableProducts = ({slug, preData}) => {
-    const [productData, setProductData] = useState(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-
-        const fetchProductData = async () => {
-            try {
-                const response = await getCompanyProducts(slug);
-                const data = response?.products;
-                setProductData(data);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProductData();
-    }, []);
-
-    console.log(productData, 'get productData');
+const AvailableProducts = ({slug, productData, preData, onDeleteSuccess}) => {
 
     const sliderOptions = {
         perPage: 4,
@@ -50,24 +28,29 @@ const AvailableProducts = ({slug, preData}) => {
     };
 
     return (
-        <div className="mt-4">
-            <label
-                className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
-                Available Products
-            </label>
-            {productData && Array.isArray(productData) && productData.length > 0 && (
-                <div
-                className="mt-3 relative before:absolute before:content-[''] before:h-full before:w-[6%] before:bg-gradient-to-r from-white to-transparent before:top-0 before:left-0 before:z-[3] after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0">
-                <Splide options={sliderOptions}>
-                    {productData?.map((product) => {
-                        return (
-                            <SplideSlide key={product?.id}>
-                                <AvailableProductsCard product={product} slug={slug} preData={preData}/>
-                            </SplideSlide>
-                        );
-                    })}
-                </Splide>
-            </div>)}
+        <div className="max-w-[932px]">
+            <div className="mt-4">
+                <label
+                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
+                    Available Products
+                </label>
+                {productData && Array.isArray(productData) && productData.length > 0 && (
+                    <div
+                        className="mt-3 relative before:absolute before:content-[''] before:h-full before:w-[6%] before:bg-gradient-to-r from-white to-transparent before:top-0 before:left-0 before:z-[3] after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0">
+                        <Splide options={sliderOptions}>
+                            {productData?.map((product) => {
+                                return (
+                                    <SplideSlide key={product?.id}>
+                                        <AvailableProductsCard
+                                            product={product}
+                                            slug={slug} preData={preData}
+                                            onDeleteSuccess={onDeleteSuccess} />
+                                    </SplideSlide>
+                                );
+                            })}
+                        </Splide>
+                    </div>)}
+            </div>
         </div>
     );
 };
@@ -82,8 +65,8 @@ import {getSSToken} from "@/utils/getSSToken";
 import {delCompanyProduct, getCompanyProducts} from "@/services/product";
 import ConfirmDeleteDialog from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialog";
 
-function AvailableProductsCard({product, slug, preData}) {
-    const { toast } = useToast();
+function AvailableProductsCard({product, slug, preData, onDeleteSuccess}) {
+    const {toast} = useToast();
     const [isDeleting, setIsDeleting] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [error, setError] = useState(null);
@@ -94,6 +77,7 @@ function AvailableProductsCard({product, slug, preData}) {
             const response = await delCompanyProduct(id, slug, toast);
             if (response) {
                 setOpenDialog(false);
+                onDeleteSuccess();
             }
         } catch (err) {
             setError(err.message);

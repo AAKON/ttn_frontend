@@ -52,7 +52,7 @@ const formSchema = z.object({
   profile_pic: z.string().optional(),
 });
 
-const CompanyForm = ({ slug, preData, basic }) => {
+const CompanyBasicForm = ({ slug, preData, basic }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const [fileData, setFileData] = useState(null); // File object
@@ -433,4 +433,4 @@ const CompanyForm = ({ slug, preData, basic }) => {
   );
 };
 
-export default CompanyForm;
+export default CompanyBasicForm;

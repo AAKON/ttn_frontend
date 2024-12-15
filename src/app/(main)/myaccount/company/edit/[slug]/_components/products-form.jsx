@@ -43,7 +43,7 @@ const formSchema = z.object({
   file: z.any().optional(),
 });
 
-const ProductsForm = ({ preData, slug }) => {
+const ProductsForm = ({ preData, slug, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -86,7 +86,7 @@ const ProductsForm = ({ preData, slug }) => {
     try {
       const result = await uploadProductReq(slug, formData, toast);
       if (result.status && result.code === 200) {
-        //form reset
+        onSuccess();
       }
     } catch (error) {
       console.log("Error in product create:", error.message);
