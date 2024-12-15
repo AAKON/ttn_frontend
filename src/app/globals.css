@@ -125,3 +125,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   height: 18px;
   cursor: pointer;
 }
+
+@media (min-width: 1024px) {
+  .Partner_Benefits p {
+    font-size: 24px;
+  }
+  .Partner_Benefits p.active  {
+    font-size: 30px;
+  }
+}
