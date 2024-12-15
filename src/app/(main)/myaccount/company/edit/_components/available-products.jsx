@@ -84,9 +84,6 @@ function AvailableProductsCard({ product }) {
           Delete
           <DeleteIcon stroke="#F04438" />
         </Button>
-        {/* <Button secondary type="button">
-          <EditIcon stroke="#667085" />
-        </Button> */}
         <ProductEditModal />
       </div>
     </div>
