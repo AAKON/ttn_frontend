@@ -9,15 +9,18 @@ import AvailableProducts from "./_components/available-products";
 import EditTabs from "./_components/tabs";
 import { getCompanyBasic, getDataPreBasic } from "@/services/company";
 import ErrorMessage from "@/components/shared/errormessage";
-import CompanyForm from "./_components/company-form";
+import CompanyBasicForm from "./_components/company-form";
+import CompanyForms from "@/app/(main)/myaccount/company/edit/[slug]/_components/company-forms";
 
 export default async function Page({ params: { slug } }) {
+
   try {
     const preDataBasic = await getDataPreBasic();
     const basicPromise = getCompanyBasic(slug);
     const basic = await basicPromise;
 
-    console.log(basic, "===basic");
+    console.log(basic, preDataBasic, 'get value')
+
 
     return (
       <Suspense fallback={<div>Loading ...</div>}>
@@ -36,24 +39,10 @@ export default async function Page({ params: { slug } }) {
                 </Button>
               </div>
               <div className="pt-4">
-                <CompanyForm slug={slug} basic={basic} preData={preDataBasic} />
+                <CompanyBasicForm slug={slug} basic={basic} preData={preDataBasic} />
               </div>
             </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-x-12 xl:gap-y-8">
-              <div className="bg-white border border-gray-100 p-6 rounded-2xl">
-                <ProductsForm slug={slug} preData={preDataBasic} />
-                <div className="max-w-[932px]">
-                  <AvailableProducts slug={slug} preData={preDataBasic} />
-                </div>
-              </div>
-              <div>
-                <ContactWithBusinessOwner />
-              </div>
-              <div>
-                <EditTabs slug={slug} />
-              </div>
-            </div>
+            <CompanyForms slug={slug} preData={preDataBasic} />
           </Container>
         </div>
       </Suspense>
