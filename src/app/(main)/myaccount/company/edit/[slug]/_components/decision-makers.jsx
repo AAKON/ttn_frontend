@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import Button from "@/components/shared/button";
 import {
@@ -25,10 +25,16 @@ import {
   PhoneIcon,
   WhatsAppIcon,
 } from "@/icons";
-import {companyDecissionMakerReq, getDecissionMakers} from "@/services/company";
+import {
+    companyDecissionMakerReq,
+    delDecissionMaker,
+    getDecissionMakers,
+    updateDecissionMakerReq
+} from "@/services/company";
 import {Loader2} from "lucide-react";
-import {getCompanyProducts} from "@/services/product";
+import {delCompanyProduct, getCompanyProducts} from "@/services/product";
 import DecissionMakerSkeleton from "@/components/shared/skelton/decissionMakerSkeleton";
+import ConfirmDeleteDialog from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialog";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -42,11 +48,12 @@ const formSchema = z.object({
 });
 
 const DecisionMakersForm = ({slug}) => {
-  const [cards, setCards] = useState([]); // State to store cards for preview
-  const [editIndex, setEditIndex] = useState(null); // Index of the card being edited
     const [loading, setLoading] = useState(true);
+    const [editId, setEditId] = useState(null);
     const [dmData, setDmData] = useState(null);
     const [error, setError] = useState(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
   const { toast } = useToast();
 
   const form = useForm({
@@ -87,9 +94,16 @@ const DecisionMakersForm = ({slug}) => {
       formData.append("whatsapp", whatsapp);
 
       try {
-          const result = await companyDecissionMakerReq(slug, formData, toast);
+          let result;
+          if (editId) {
+              result = await updateDecissionMakerReq(slug, editId, formData, toast);
+          }else{
+              result = await companyDecissionMakerReq(slug, formData, toast);
+          }
+
           if (result.status && result.code === 200) {
               reset();
+              setEditId(null);
               fetchDecissionMakers();
           }
       } catch (error) {
@@ -100,21 +114,29 @@ const DecisionMakersForm = ({slug}) => {
 
   };
 
-  const deleteCard = (index) => {
-    setCards((prev) => prev.filter((_, i) => i !== index));
-    toast({
-      title: "Contact Deleted!",
-      description: "The contact has been successfully removed.",
-    });
+  const editDecissionMaker = (card) => {
+      setEditId(card.id); // Set the ID of the decision maker being edited
+      setValue("name", card.name);
+      setValue("designation", card.designation);
+      setValue("email", card.email);
+      setValue("phone", card.phone);
+      setValue("whatsapp", card.whatsapp_link); // Update form fields
   };
 
-  const editCard = (index) => {
-    setEditIndex(index);
-    const cardToEdit = cards[index];
-    reset({ contacts: [cardToEdit] }); // Populate form with card data
-  };
-
-    console.log(dmData, 'get decission data')
+    const handleDelete = async (id) => {
+        setIsDeleting(true);
+        try {
+            const response = await delDecissionMaker(id, slug, toast);
+            if (response) {
+                setOpenDialog(false);
+                fetchDecissionMakers();
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
 
   return (
     <div className="space-y-6">
@@ -202,7 +224,7 @@ const DecisionMakersForm = ({slug}) => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className={labelStyle}>
-                        Whatsapp link
+                        Whatsapp
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
@@ -229,7 +251,7 @@ const DecisionMakersForm = ({slug}) => {
                         Please wait
                     </>
                 ) : (
-                    "Done"
+                    editId ? "Update" : "Done"
                 )}
             </Button>
           </div>
@@ -245,7 +267,7 @@ const DecisionMakersForm = ({slug}) => {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
                         {dmData.map((card) => (
                             <div className="" key={card?.id}>
-                                <p className="text-gray-500 text-sm leading-[20px]">
+                                <p className="text-gray-500 text-sm leading-[20px] mb-2">
                                     Contact {card?.id}
                                 </p>
                                 {card?.name && (
@@ -276,17 +298,16 @@ const DecisionMakersForm = ({slug}) => {
                                         </li>)}
                                 </ul>
                                 <div className="flex gap-3 h-10 mt-2">
-                                    <Button
-                                        className="flex-1 text-red-[#F04438]"
-                                        secondary
-                                        onClick={() => deleteCard(card?.id)}
-                                    >
-                                        Delete <DeleteIcon stroke="#F04438" />
-                                    </Button>
+                                    <ConfirmDeleteDialog
+                                        open={openDialog}
+                                        setOpen={setOpenDialog}
+                                        onConfirm={() => handleDelete(card?.id)}
+                                        isDeleting={isDeleting}
+                                    />
                                     <Button
                                         className="w-10 !p-1"
                                         secondary
-                                        onClick={() => editCard(card?.id)}
+                                        onClick={() => editDecissionMaker(card)}
                                     >
                                         <EditIcon stroke="#667085" />
                                     </Button>

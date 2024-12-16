@@ -22,7 +22,7 @@ function ConfirmDeleteDialog({ open, setOpen, onConfirm, isDeleting }) {
 
 
     return (
-        <AlertDialog className="z-50" open={open} onOpenChange={setOpen}>
+        <AlertDialog className="z-50" onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 <Button secondary type="button" className="flex-1 text-[#F04438]">
                     Delete

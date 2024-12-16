@@ -132,3 +132,31 @@ export async function getDecissionMakers(slug) {
     return result?.data;
 }
 
+
+export async function delDecissionMaker(id, slug, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/decision-maker/${id}/delete`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
+
+
+export async function updateDecissionMakerReq(slug, id, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/decision-maker/${id}/update`;
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
