@@ -28,6 +28,7 @@ import {
 import {companyDecissionMakerReq, getDecissionMakers} from "@/services/company";
 import {Loader2} from "lucide-react";
 import {getCompanyProducts} from "@/services/product";
+import DecissionMakerSkeleton from "@/components/shared/skelton/decissionMakerSkeleton";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -43,7 +44,7 @@ const formSchema = z.object({
 const DecisionMakersForm = ({slug}) => {
   const [cards, setCards] = useState([]); // State to store cards for preview
   const [editIndex, setEditIndex] = useState(null); // Index of the card being edited
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [dmData, setDmData] = useState(null);
     const [error, setError] = useState(null);
   const { toast } = useToast();
@@ -237,59 +238,66 @@ const DecisionMakersForm = ({slug}) => {
       </Form>
 
       {/* Preview Cards */}
-        {dmData && Array.isArray(dmData) && dmData.length > 0 && (
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
-        {dmData.map((card) => (
-          <div className="" key={card?.id}>
-            <p className="text-gray-500 text-sm leading-[20px]">
-              Contact {card?.id}
-            </p>
-              {card?.name && (
-                  <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
-                      {card?.name}
-                  </h5>
-              )}
-              {card?.designation && (
-                  <p className="text-gray-500 text-sm leading-[20px]">
-                      {card?.designation}
-                  </p>
-              )}
-              <ul className="grid gap-2 grid-cols-1 mt-2">
-                  {card?.email && (
-                      <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-                <EmailIcon width={20} height={20} stroke="#F7931E" />
-                <span>{card?.email}</span>
-              </li>)}
-                {card?.phone && (
-              <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-                <PhoneIcon width={20} height={20} stroke="#F7931E" />
-                <span>{card?.phone}</span>
-              </li>)}
-                {card?.whatsapp_link && (
-              <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-                <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
-                <span>{card?.whatsapp_link}</span>
-              </li>)}
-            </ul>
-            <div className="flex gap-3 h-10 mt-2">
-              <Button
-                className="flex-1 text-red-[#F04438]"
-                secondary
-                onClick={() => deleteCard(card?.id)}
-              >
-                Delete <DeleteIcon stroke="#F04438" />
-              </Button>
-              <Button
-                className="w-10 !p-1"
-                secondary
-                onClick={() => editCard(card?.id)}
-              >
-                <EditIcon stroke="#667085" />
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>)}
+        {loading ? (
+            <DecissionMakerSkeleton />
+        ) : (
+            <>
+                {dmData && Array.isArray(dmData) && dmData.length > 0 && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
+                        {dmData.map((card) => (
+                            <div className="" key={card?.id}>
+                                <p className="text-gray-500 text-sm leading-[20px]">
+                                    Contact {card?.id}
+                                </p>
+                                {card?.name && (
+                                    <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
+                                        {card?.name}
+                                    </h5>
+                                )}
+                                {card?.designation && (
+                                    <p className="text-gray-500 text-sm leading-[20px]">
+                                        {card?.designation}
+                                    </p>
+                                )}
+                                <ul className="grid gap-2 grid-cols-1 mt-2">
+                                    {card?.email && (
+                                        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+                                            <EmailIcon width={20} height={20} stroke="#F7931E" />
+                                            <span>{card?.email}</span>
+                                        </li>)}
+                                    {card?.phone && (
+                                        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+                                            <PhoneIcon width={20} height={20} stroke="#F7931E" />
+                                            <span>{card?.phone}</span>
+                                        </li>)}
+                                    {card?.whatsapp_link && (
+                                        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+                                            <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
+                                            <span>{card?.whatsapp_link}</span>
+                                        </li>)}
+                                </ul>
+                                <div className="flex gap-3 h-10 mt-2">
+                                    <Button
+                                        className="flex-1 text-red-[#F04438]"
+                                        secondary
+                                        onClick={() => deleteCard(card?.id)}
+                                    >
+                                        Delete <DeleteIcon stroke="#F04438" />
+                                    </Button>
+                                    <Button
+                                        className="w-10 !p-1"
+                                        secondary
+                                        onClick={() => editCard(card?.id)}
+                                    >
+                                        <EditIcon stroke="#667085" />
+                                    </Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </>
+        )}
     </div>
   );
 };
