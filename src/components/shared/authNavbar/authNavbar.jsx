@@ -6,11 +6,11 @@ import Button from "@/components/shared/button";
 import { Bars, Cross } from "@/icons";
 import AuthNavDropdown from "@/components/shared/authNavbar/authNavDropdown";
 
-function AuthNavbar({ userInfo, showMobileNav }) {
+function AuthNavbar({ userInfo, showMobileNav, setShowMobileNav }) {
   const { data, status } = useSession();
   return (
     <div className="flex justify-end items-center gap-3 md:gap-4 ">
-      <Button TagName={Link} href="/myaccount/company/add" icon>
+      <Button TagName={Link} href="/myaccount/company/add" icon className="h-9 lg:h-11">
         Add
       </Button>
       {status === "authenticated" ? (
@@ -27,7 +27,7 @@ function AuthNavbar({ userInfo, showMobileNav }) {
       )}
       <button
         onClick={() => setShowMobileNav(!showMobileNav)}
-        className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center"
+        className="lg:hidden size-9 lg:size-10 bg-transparent p-2 flex items-center justify-center"
       >
         {showMobileNav ? <Cross /> : <Bars />}
       </button>

@@ -87,7 +87,7 @@ export function Country({ className = "" }) {
       <SelectTrigger
         className={`text-gray-700 font-semibold text-sm leading-5 w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
       >
-        <span className="absolute top-0 translate-y-1/2  left-[18px] z-20">
+        <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
           <WorldMap />
         </span>
         <SelectValue placeholder="Anywhere" className="text_16 text-red-400" />
