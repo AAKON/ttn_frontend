@@ -5,7 +5,7 @@ import {useController} from 'react-hook-form';
 const DragDropFile = ({
                           name,
                           control,
-                          label = 'Drag and drop a file or click to select',
+                          label = '',
                           accept = { 'image/*': [] },
                           maxSize = 5 * 1024 * 1024, // Default: 5MB
                           initialFile = null, // For previewing an initial file

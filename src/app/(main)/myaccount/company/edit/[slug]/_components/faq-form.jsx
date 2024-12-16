@@ -138,17 +138,8 @@ const FaqForm = () => {
         </div>
 
         {/* Add and Done Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          <Button
-            secondary
-            icon
-            className="h-9"
-            type="button"
-            onClick={() => append({ question: "", answer: "" })}
-          >
-            Add new question
-          </Button>
-          <Button secondary className="h-9" type="button" onClick={handleDone}>
+        <div className="flex justify-end">
+          <Button secondary className="h-9 w-[200px]" type="button" onClick={handleDone}>
             Done
           </Button>
         </div>
@@ -178,15 +169,6 @@ const FaqForm = () => {
           </ul>
         </div>
 
-        {/* Save and Cancel Buttons */}
-        <div className="grid gap-3 grid-cols-1">
-          <Button className="h-12" type="submit">
-            Save
-          </Button>
-          <Button secondary className="h-12" type="reset">
-            Cancel
-          </Button>
-        </div>
       </form>
     </Form>
   );
