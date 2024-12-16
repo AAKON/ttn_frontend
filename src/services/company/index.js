@@ -129,6 +129,6 @@ export async function getDecissionMakers(slug) {
         method: 'GET'
     };
     const result = await apiRequest(endpoint, options, null, token);
-    return result?.message;
+    return result?.data;
 }
 

@@ -62,8 +62,7 @@ const DecisionMakersForm = ({slug}) => {
         try {
             setLoading(true);
             const response = await getDecissionMakers(slug);
-            const data = response?.decisionMakers;
-            setDmData(data);
+            setDmData(response);
         } catch (err) {
             setError(err.message);
         } finally {
