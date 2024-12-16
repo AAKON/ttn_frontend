@@ -188,7 +188,7 @@ export async function getCompanyFaqs(slug) {
         method: 'GET'
     };
     const result = await apiRequest(endpoint, options, null, token);
-    return result?.message?.faqs;
+    return result?.data;
 }
 
 export async function delCompanyFaq(id, slug, toast) {

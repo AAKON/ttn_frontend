@@ -55,7 +55,7 @@ const FaqForm = ({slug}) => {
         try {
             setLoading(true);
             const response = await getCompanyFaqs(slug);
-            setFaqData(response);
+            setFaqData(response?.faqs);
         } catch (err) {
             setError(err.message);
         } finally {
