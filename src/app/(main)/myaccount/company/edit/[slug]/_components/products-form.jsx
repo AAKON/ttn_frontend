@@ -135,8 +135,7 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
         <div className="flex flex-col">
           <FormLabel className={`${labelStyle} mb-3`}>Product Image</FormLabel>
           <DragDropFile
-              name="file" control={control} label="Upload an Image"
-              initialFile={'https://ttn.technostupid.com/storage/13/conversions/Castorino-Nutria-And-Montone-Sheepskin-thumbnail.jpg'}
+              name="file" control={control}
           />
         </div>
 
@@ -196,22 +195,9 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
         />
 
         {/* Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Add new button */}
-          <Button
-            secondary
-            icon
-            type="button"
-            className="h-9"
-            onClick={(e) => {
-              console.log("Add new Product");
-            }}
-            disabled
-          >
-            Add new Product
-          </Button>
+        <div className="flex justify-end">
           {/* Submit Button */}
-          <Button secondary type="submit" disabled={loading} className="h-9">
+          <Button secondary type="submit" disabled={loading} className="h-9 w-[200px]">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
