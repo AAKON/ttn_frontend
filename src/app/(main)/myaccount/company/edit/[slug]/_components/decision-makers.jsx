@@ -206,17 +206,8 @@ const DecisionMakersForm = () => {
               </div>
             </div>
           ))}
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              type="button"
-              secondary
-              icon
-              className="h-9"
-              onClick={addNewContact}
-            >
-              Add new contact
-            </Button>
-            <Button type="submit" secondary className="h-9">
+          <div className="flex justify-end">
+            <Button type="submit" secondary className="h-9 w-[200px]">
               {editIndex !== null ? "Update" : "Save"}
             </Button>
           </div>

@@ -195,22 +195,9 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
         />
 
         {/* Buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          {/* Add new button */}
-          <Button
-            secondary
-            icon
-            type="button"
-            className="h-9"
-            onClick={(e) => {
-              console.log("Add new Product");
-            }}
-            disabled
-          >
-            Add new Product
-          </Button>
+        <div className="flex justify-end">
           {/* Submit Button */}
-          <Button secondary type="submit" disabled={loading} className="h-9">
+          <Button secondary type="submit" disabled={loading} className="h-9 w-[200px]">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
