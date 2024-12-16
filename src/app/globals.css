@@ -98,6 +98,9 @@ body {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+  .header_style {
+    @apply bg-white border-b border-b-gray-100 z-[9999];
+  }
 }
 
 .active-nav-item {
@@ -130,7 +133,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .Partner_Benefits p {
     font-size: 24px;
   }
-  .Partner_Benefits p.active  {
+  .Partner_Benefits p.active {
     font-size: 30px;
   }
 }

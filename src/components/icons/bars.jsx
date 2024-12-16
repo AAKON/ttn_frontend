@@ -1,20 +1,19 @@
-
-export function Bars(props) {
-    return (
-        <svg
-            width={24}
-            height={24}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M3 12H21M3 6H21M9 18H21"
-                stroke="#EAECF0"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
+export function Bars({width=20, height=14, stroke="#667085"}) {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 20 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 7H19M1 1H19M7 13H19"
+        stroke={stroke}
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }

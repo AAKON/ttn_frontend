@@ -61,7 +61,7 @@ function HeroForm({
             <Country />
           </div>
         )}
-        <div className="flex-1 md:order-4">
+        <div className="md:flex-1 md:order-4 w-full md:w-auto">
           <div className="flex gap-2">
             {isAnywhereDropdown ? (
               <Button className="w-full md:w-[210px]" type="submit">
