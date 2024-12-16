@@ -171,7 +171,7 @@ function EditTabs({ slug }) {
                 Decision Makers
               </h3>
               <div>
-                <DecisionMakersForm />
+                <DecisionMakersForm slug={slug} />
               </div>
             </div>
           </div>

@@ -102,3 +102,33 @@ export async function companyBusinessContactReq(slug, data, toast) {
     return await apiRequest(endpoint, options, toast, token);
 }
 
+// Decission maker create
+export async function companyDecissionMakerReq(slug, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/decision-maker/store`;
+
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
+// fetch company getDecissionMakers
+export async function getDecissionMakers(slug) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/decision-maker`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.message;
+}
+
