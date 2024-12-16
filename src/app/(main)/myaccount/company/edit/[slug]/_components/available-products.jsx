@@ -110,7 +110,7 @@ function AvailableProductsCard({product, slug, preData, onDeleteSuccess}) {
                     onConfirm={() => handleDelete(product?.id)}
                     isDeleting={isDeleting}
                 />
-                <ProductEditModal slug={slug} preData={preData}/>
+                <ProductEditModal preData={preData} slug={slug} data={product} onSuccess={onDeleteSuccess} />
             </div>
         </div>
     );

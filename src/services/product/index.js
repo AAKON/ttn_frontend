@@ -17,6 +17,20 @@ export async function uploadProductReq(slug, data, toast) {
     return await apiRequest(endpoint, options, toast, token);
 }
 
+export async function updateProductReq(slug, id, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/product/${id}/update`;
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
 // fetch company products
 export async function getCompanyProducts(slug) {
 
