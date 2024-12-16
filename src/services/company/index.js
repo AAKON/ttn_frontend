@@ -160,3 +160,46 @@ export async function updateDecissionMakerReq(slug, id, data, toast) {
     };
     return await apiRequest(endpoint, options, toast, token);
 }
+
+
+// faq create
+export async function companyFaqReq(slug, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/faq/store`;
+
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
+export async function getCompanyFaqs(slug) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/faq`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.message?.faqs;
+}
+
+export async function delCompanyFaq(id, slug, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/faq/${id}/delete`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
