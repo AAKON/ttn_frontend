@@ -203,3 +203,32 @@ export async function delCompanyFaq(id, slug, toast) {
     const result = await apiRequest(endpoint, options, toast, token);
     return result?.status && result?.code === 200;
 }
+
+// client create
+export async function companyClientReq(slug, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/client/store`;
+
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
+export async function getCompanyClients(slug) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/client`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}

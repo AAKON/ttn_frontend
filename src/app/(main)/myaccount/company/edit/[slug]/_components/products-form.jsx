@@ -40,7 +40,7 @@ const formSchema = z.object({
   tag: z.string().optional(),
   name: z.string().optional(),
   price_range: z.string().optional(),
-  file: z.any().optional(),
+  file: z.any().refine(val => val.length > 0, "Product image is required")
 });
 
 const ProductsForm = ({ preData, slug, onSuccess }) => {
@@ -61,7 +61,7 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
   const {
     control,
     handleSubmit,
-    setValue,
+    reset,
     formState: { errors },
   } = form;
 
@@ -86,6 +86,7 @@ const ProductsForm = ({ preData, slug, onSuccess }) => {
     try {
       const result = await uploadProductReq(slug, formData, toast);
       if (result.status && result.code === 200) {
+        reset();
         onSuccess();
       }
     } catch (error) {
