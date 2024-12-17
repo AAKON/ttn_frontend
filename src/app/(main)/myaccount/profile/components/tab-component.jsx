@@ -1,8 +1,7 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "./profile-tabs.css";
 import ProfileInfoForm from "./profile-info-form";
-import MyCompany from "./my-company";
+import MyCompanies from "./my-companies";
 
 const TabComponents = () => {
   return (
@@ -33,17 +32,15 @@ const TabComponents = () => {
         </TabsList>
 
         <TabsContent value="profile-info">
-          <div className="bg-white shadow-sm rounded-2xl p-6">
+          <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
             <ProfileInfoForm />
           </div>
         </TabsContent>
         <TabsContent value="my-companies">
-          <div className="bg-white shadow-sm rounded-2xl p-6">
-            <MyCompany />
-          </div>
+          <MyCompanies />
         </TabsContent>
         <TabsContent value="danger-zone">
-          <div className="bg-white shadow-sm rounded-2xl p-6">
+          <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
             <h3 className="text-sm md:text-lg font-semibold text-gray-900">
               Danger Zone
             </h3>
