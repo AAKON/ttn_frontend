@@ -9,6 +9,7 @@ const DragDropFile = ({
                           accept = { 'image/*': [] },
                           maxSize = 5 * 1024 * 1024, // Default: 5MB
                           initialFile = null, // For previewing an initial file
+                          defaultValue = null
                       }) => {
     const {
         field: {onChange, value},
@@ -35,6 +36,14 @@ const DragDropFile = ({
         maxSize,
         multiple: false,
     });
+
+    // Reset preview when defaultValue changes
+    useEffect(() => {
+        if (defaultValue === null) {
+            setPreview(null);
+            onChange([]);
+        }
+    }, [defaultValue, onChange]);
 
     // Cleanup the preview URL when the component unmounts
     useEffect(() => {

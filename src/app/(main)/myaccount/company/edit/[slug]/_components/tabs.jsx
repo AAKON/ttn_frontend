@@ -45,6 +45,7 @@ import { Label } from "@/components/ui/label";
 import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
 import BusinessContactForm from "./business-contact-form";
+import MyClients from "@/app/(main)/myaccount/company/edit/_components/client";
 
 function EditTabs({ slug }) {
   return (
@@ -63,12 +64,12 @@ function EditTabs({ slug }) {
           >
             Clients
           </TabsTrigger>
-          <TabsTrigger
-            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
-            value="certifications"
-          >
-            Certifications
-          </TabsTrigger>
+          {/*<TabsTrigger*/}
+          {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
+          {/*  value="certifications"*/}
+          {/*>*/}
+          {/*  Certifications*/}
+          {/*</TabsTrigger>*/}
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"
@@ -90,63 +91,45 @@ function EditTabs({ slug }) {
         </TabsContent>
 
         <TabsContent value="clients">
-          <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-900 mb-8">
-              Clients
-            </h3>
-            <p className="text-sm text-gray-900 mb-2">Client logo</p>
-            <PhotoUploadBox />
-            <Button secondary className="mt-4 w-full h-9">
-              Done
-            </Button>
-
-            <div className="mt-5">
-              <p className="text-sm text-gray-900 mb-2">Existing Clients</p>
-              <div className="grid grid-cols-1 gap-4">
-                {allClients?.map((image, index) => (
-                  <ExistingClients key={index} image={image} />
-                ))}
-              </div>
-            </div>
-          </div>
+          <MyClients slug={slug} allClients={allClients} />
         </TabsContent>
 
-        <TabsContent value="certifications">
-          <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
-            <h3 className="text-xl font-semibold text-gray-900 mb-8">
-              Certifications
-            </h3>
-            <p className="text-sm text-gray-900 mb-2">Client logo</p>
-            <PhotoUploadBox />
-            <div className="pt-5">
-              <Label htmlFor="certificationName" className={formLabelClasses}>
-                Certification Name
-              </Label>
-              <Input
-                id="certificationName"
-                type="text"
-                name="certificationName"
-                placeholder="Certification Name"
-                className={`${inputClasses} h-9 bg-gray-50`}
-              />
-            </div>
-            <Button secondary className="mt-4 w-full h-9">
-              Done
-            </Button>
+        {/*<TabsContent value="certifications">*/}
+        {/*  <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">*/}
+        {/*    <h3 className="text-xl font-semibold text-gray-900 mb-8">*/}
+        {/*      Certifications*/}
+        {/*    </h3>*/}
+        {/*    <p className="text-sm text-gray-900 mb-2">Client logo</p>*/}
+        {/*    <PhotoUploadBox />*/}
+        {/*    <div className="pt-5">*/}
+        {/*      <Label htmlFor="certificationName" className={formLabelClasses}>*/}
+        {/*        Certification Name*/}
+        {/*      </Label>*/}
+        {/*      <Input*/}
+        {/*        id="certificationName"*/}
+        {/*        type="text"*/}
+        {/*        name="certificationName"*/}
+        {/*        placeholder="Certification Name"*/}
+        {/*        className={`${inputClasses} h-9 bg-gray-50`}*/}
+        {/*      />*/}
+        {/*    </div>*/}
+        {/*    <Button secondary className="mt-4 w-full h-9">*/}
+        {/*      Done*/}
+        {/*    </Button>*/}
 
-            <div className="mt-5">
-              <p className="text-sm text-gray-900 mb-2">Existing Clients</p>
-              <div className="grid grid-cols-1 gap-4">
-                {allClientsCertifications?.map((certification, index) => (
-                  <ExistingClientsCertifications
-                    key={index}
-                    certification={certification}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
+        {/*    <div className="mt-5">*/}
+        {/*      <p className="text-sm text-gray-900 mb-2">Existing Clients</p>*/}
+        {/*      <div className="grid grid-cols-1 gap-4">*/}
+        {/*        {allClientsCertifications?.map((certification, index) => (*/}
+        {/*          <ExistingClientsCertifications*/}
+        {/*            key={index}*/}
+        {/*            certification={certification}*/}
+        {/*          />*/}
+        {/*        ))}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</TabsContent>*/}
 
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
