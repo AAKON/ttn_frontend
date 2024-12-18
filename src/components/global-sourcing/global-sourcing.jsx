@@ -9,6 +9,7 @@ import option3 from "@/assets/option3.png";
 import option4 from "@/assets/option4.png";
 import option5 from "@/assets/option5.png";
 import option6 from "@/assets/option6.png";
+import Link from "next/link";
 
 const GlobalSourcing = () => {
   const benefit = [
@@ -44,7 +45,7 @@ const GlobalSourcing = () => {
         {/* left */}
         <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[582px]">
           <h4 className="text-gray-900 pb-[10px] font-semibold text-[20px] md:text-4xl capitalize">
-            Global Sourcing Partner Benefits
+            Sourcing Partner Benefits
           </h4>
           <p className="font-normal hidden md:block text-gray-700 text-sm md:text-xl max-w-[305px] md:max-w-[399px]">
             We bridge the gap between you and your business partners
@@ -54,8 +55,8 @@ const GlobalSourcing = () => {
             Services.{" "}
           </p>
           <div className="flex items-center gap-x-4 pt-6 md:pt-12">
-            <Button secondary>Get a quote</Button>
-            <Button>See Partnership Plan</Button>
+            <Button secondary TagName={Link} href="/contact">Get a quote</Button>
+            <Button TagName={Link} href="/partner">See Partnership Plan</Button>
           </div>
         </div>
         {/* right */}

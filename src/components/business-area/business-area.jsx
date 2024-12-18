@@ -27,6 +27,7 @@ import Composite from "../../assets/Composite.svg";
 import {getBusinessArea} from "@/services/home";
 import {useEffect, useState} from "react";
 import Button from "@/components/shared/button";
+import Link from "next/link";
 
 const BusinessArea = () => {
 
@@ -104,7 +105,7 @@ const BusinessArea = () => {
                 </Splide>
             </div>
             <div className="mt-12 flex justify-center">
-                <Button icon>Add Business</Button>
+                <Button icon TagName={Link} href="/company/add">Add Business</Button>
             </div>
         </Section>
     );
