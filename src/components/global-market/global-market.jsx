@@ -6,6 +6,7 @@ import option1 from "@/assets/marketing1.png";
 import option from "@/assets/marketing2.png";
 import option3 from "@/assets/marketing3.png";
 import option4 from "@/assets/marketing4.png";
+import Link from "next/link";
 
 const GlobalMarket = () => {
   const benefit = [
@@ -33,7 +34,7 @@ const GlobalMarket = () => {
           {/* left */}
           <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[600px]">
             <h4 className="text-gray-900 pb-[10px] font-semibold text-[20px] md:text-4xl capitalize">
-              Global Marketing Partner Benefits
+              Marketing Partner Benefits
             </h4>
             <p className="font-normal hidden md:block text-gray-700 text-sm md:text-xl max-w-[305px] md:max-w-[399px]">
               We bridge the gap between you and your business partners
@@ -43,8 +44,8 @@ const GlobalMarket = () => {
               Services.{" "}
             </p>
             <div className="flex items-center gap-x-4 pt-6 md:pt-12">
-              <Button secondary>Get a quote</Button>
-              <Button>See Partnership Plan</Button>
+              <Button secondary TagName={Link} href="/contact">Get a quote</Button>
+              <Button TagName={Link} href="/partner">See Partnership Plan</Button>
             </div>
           </div>
           {/* right */}

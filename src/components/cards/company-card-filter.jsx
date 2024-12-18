@@ -20,7 +20,7 @@ const CompanyCardFilter = ({ company }) => {
         <div className="flex items-center gap-3">
           <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
             <Image
-              src={Profile_pic}
+              src={company?.profile_pic ? company?.profile_pic : Profile_pic}
               width={64}
               height={64}
               alt="Profile_pic"
@@ -74,15 +74,15 @@ const CompanyCardFilter = ({ company }) => {
 
       {/* -------- */}
       <CardContent className="flex justify-between">
-        <div className="flex gap-2 items-center">
-          <StarIcon stroke="#FDB022" />
-          <span className="text-gray-900 font-medium">4.9</span>
-          <p className="text-gray-500 text-sm">
-            <span className="mr-1">202</span> reviews
-          </p>
-        </div>
+        {/*<div className="flex gap-2 items-center">*/}
+        {/*  <StarIcon stroke="#FDB022" />*/}
+        {/*  <span className="text-gray-900 font-medium">4.9</span>*/}
+        {/*  <p className="text-gray-500 text-sm">*/}
+        {/*    <span className="mr-1">202</span> reviews*/}
+        {/*  </p>*/}
+        {/*</div>*/}
         {company?.location && (
-          <div className="flex">
+          <div className="flex ml-auto">
             <MarkerPinIcon stroke="#101828" width={20} />
             <span className="text-md font-medium text-gray-900 leading-6 ml-1">
               {company?.location}
@@ -97,7 +97,7 @@ const CompanyCardFilter = ({ company }) => {
         <Button TagName={Link} href={`/company/${company?.slug}`} secondary>
           View Profile
         </Button>
-        <Button type="button" primaryOutline>
+        <Button TagName={Link} href="/contact" type="button" primaryOutline>
           Contact supplier
         </Button>
       </CardFooter>

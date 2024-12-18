@@ -1,6 +1,7 @@
 import { Section } from "@/components/shared";
 import Count from "./count";
 import Button from "@/components/shared/button";
+import Link from "next/link";
 
 const Counter = () => {
   return (
@@ -12,8 +13,8 @@ const Counter = () => {
             Explore Your Business Needs{" "}
           </h3>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
-            <Button secondary className="hidden md:flex">Get quote</Button>
-            <Button icon>Add Company</Button>
+            <Button TagName={Link} href="/contact" secondary className="hidden md:flex">Get quote</Button>
+            <Button TagName={Link} href="/company/add" icon>Add Company</Button>
           </div>
         </div>
         {/* right */}

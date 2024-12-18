@@ -6,6 +6,7 @@ import "@splidejs/react-splide/css";
 import "@/styles/companySlider.css";
 import Button from "@/components/shared/button";
 import businessLogo_1 from "@/assets/business-logo-2.png";
+import Link from "next/link";
 
 const RecentCompany = ({data}) => {
 
@@ -55,7 +56,7 @@ const RecentCompany = ({data}) => {
         </Splide>
       </div>)}
       <div className="flex items-center justify-center pt-6 md:pt-12">
-        <Button icon primaryOutline>
+        <Button TagName={Link} href="/company/add" icon primaryOutline>
           Add Company for Free
         </Button>
       </div>

@@ -22,7 +22,7 @@ function AuthNavDropdown({ userInfo }) {
 
   const handleSignout = () => {
     try {
-      signOut({ callbackUrl: "/" });
+      signOut({ callbackUrl: "/", redirect:true });
       // Clear session cookies explicitly
       document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
       document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
