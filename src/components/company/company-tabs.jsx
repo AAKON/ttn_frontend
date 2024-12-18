@@ -80,12 +80,12 @@ function CompanyTabs({faqs, clients}) {
           >
             Awards
           </TabsTrigger>
-          <TabsTrigger
-            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
-            value="certifications"
-          >
-            Certifications
-          </TabsTrigger>
+          {/*<TabsTrigger*/}
+          {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
+          {/*  value="certifications"*/}
+          {/*>*/}
+          {/*  Certifications*/}
+          {/*</TabsTrigger>*/}
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"
@@ -153,15 +153,15 @@ function CompanyTabs({faqs, clients}) {
             <AwardsSlider />
           </div>
         </TabsContent>
-        <TabsContent
-          className="bg-white rounded-2xl p-6"
-          value="certifications"
-        >
-          <h3 className="text-xl font-semibold text-gray-900 mb-8">
-            Certifications
-          </h3>
-          <MarqueeSlider slideItems={allCertifications} className="mr-8" />
-        </TabsContent>
+        {/*<TabsContent*/}
+        {/*  className="bg-white rounded-2xl p-6"*/}
+        {/*  value="certifications"*/}
+        {/*>*/}
+        {/*  <h3 className="text-xl font-semibold text-gray-900 mb-8">*/}
+        {/*    Certifications*/}
+        {/*  </h3>*/}
+        {/*  <MarqueeSlider slideItems={allCertifications} className="mr-8" />*/}
+        {/*</TabsContent>*/}
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6">
             {/* Business Contact start */}

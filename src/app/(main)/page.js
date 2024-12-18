@@ -26,7 +26,7 @@ export default async function Home() {
         const detailsPromise = getHomeDetails();
         const details = await detailsPromise;
 
-        const companies = await details?.companies;
+        const recentCompanies = await details?.companies;
 
   return (
       <>
@@ -35,7 +35,7 @@ export default async function Home() {
           <Fragment>
               <SocialSlider/>
           </Fragment>
-          <RecentCompany/>
+          <RecentCompany data={recentCompanies}/>
           <BusinessArea/>
           <Section className="bg-gray-50">
               <h3 className="pb-8 font-medium text-gray-900 uppercase text-xl text-center">
