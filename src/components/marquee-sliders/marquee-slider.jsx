@@ -14,7 +14,7 @@ const MarqueeSlider = ({slideItems, className="mr-20", ...props}) => {
         >
           {slideItems?.map((item) => (
               <div key={item?.id} className={`cursor-pointer ${className}`} {...props}>
-                <Image width={148} height={48} src={item?.image_url} className="object-contain" alt={"company image"}/>
+                <Image width={148} height={48} src={item?.image_url ? item?.image_url : ''} className="object-contain" alt={"company image"}/>
               </div>
           ))}
         </Marquee>

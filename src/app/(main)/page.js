@@ -9,7 +9,7 @@ import GlobalSourcing from "@/components/global-sourcing/global-sourcing";
 import GlobalMarket from "@/components/global-market/global-market";
 import Resources from "@/components/resources/resources";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
-import {Fragment} from "react";
+import React, {Fragment} from "react";
 import { Section } from "@/shared";
 
 // company Slide items
@@ -17,9 +17,16 @@ import compnany1 from "@/assets/company1.jpg";
 import compnany2 from "@/assets/company2.jpg";
 import compnany3 from "@/assets/company3.jpg";
 import compnany4 from "@/assets/company4.jpg";
-const allCompany = [compnany1, compnany2, compnany3, compnany4];
+import ErrorMessage from "@/components/shared/errormessage";
+import {getHomeDetails} from "@/services/home";
+const allCompany = [];
 
-export default function Home() {
+export default async function Home() {
+    try {
+        const detailsPromise = getHomeDetails();
+        const details = await detailsPromise;
+
+        const companies = await details?.companies;
 
   return (
       <>
@@ -42,4 +49,10 @@ export default function Home() {
           <GetInTouch/>
       </>
   );
+
+    } catch (error) {
+            return (
+                <ErrorMessage message={error?.message}/>
+            );
+        }
 }

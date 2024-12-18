@@ -25,7 +25,7 @@ const Frame = ({ headerData, className }) => {
   return (
     <div className={`relative ${className}`}>
       <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full" style={
-        {backgroundImage: `url(${bannerImage})`}
+        {backgroundImage: `url(${bannerImage ? bannerImage : ''})`}
       }></div>
 
       <Container>
