@@ -3,43 +3,12 @@ import ResourceCard from "@/ui/resource-card";
 import blog1 from "@/assets/blog1.jpg";
 import avatar from "@/assets/avatar.png";
 import Button from "@/components/shared/button";
+import Link from "next/link";
 
-const Resources = () => {
-  const blogs = [
-    {
-      id: 1,
-      image: blog1,
-      source: "Tech Today",
-      heading: "The Future of AI in Everyday Life",
-      description:
-        "Explore how AI is becoming an integral part of our daily routines and what the future holds for this transformative technology.",
-      userImage: avatar,
-      userName: "Alice Johnson",
-      date: "2024-11-05",
-    },
-    {
-      id: 2,
-      image: blog1,
-      source: "Health Hub",
-      heading: "5 Tips for a Healthier Lifestyle",
-      description:
-        "Learn simple yet effective strategies to improve your physical and mental well-being in today’s fast-paced world.",
-      userImage: avatar,
-      userName: "Michael Lee",
-      date: "2024-11-08",
-    },
-    {
-      id: 3,
-      image: blog1,
-      source: "Travel Guide",
-      heading: "Top Destinations to Visit in 2024",
-      description:
-        "A comprehensive list of the must-visit places around the world for your 2024 travel bucket list.",
-      userImage: avatar,
-      userName: "Sophia Martinez",
-      date: "2024-10-30",
-    },
-  ];
+const Resources = async ({blogsPromise}) => {
+  const homeBlogs = await blogsPromise;
+
+  console.log(homeBlogs, 'homeBlogs=====');
 
   return (
     <Section>
@@ -51,14 +20,14 @@ const Resources = () => {
           Lastest blog posts
         </p>
         {/* all card */}
-
+        {homeBlogs && Array.isArray(homeBlogs?.TNN_picks) && homeBlogs?.TNN_picks.length > 0 && (
         <div className="flex gap-x-4 flex-col md:flex-row gap-y-6 items-center justify-between">
-          {blogs?.map((item, index) => (
-            <ResourceCard key={index} item={item} />
+          {homeBlogs?.TNN_picks.map((item) => (
+            <ResourceCard key={item?.id} item={item} />
           ))}
-        </div>
+        </div>)}
         <div className="flex items-center justify-center">
-          <Button className="xl:mt-[64px] mt-[32px]">View all Resources</Button>
+          <Button TagName={Link} href={'/blog'} className="xl:mt-[64px] mt-[32px]">View all Resources</Button>
         </div>
       </div>
     </Section>

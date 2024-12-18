@@ -19,14 +19,17 @@ import compnany3 from "@/assets/company3.jpg";
 import compnany4 from "@/assets/company4.jpg";
 import ErrorMessage from "@/components/shared/errormessage";
 import {getHomeDetails} from "@/services/home";
+import {getBlogTTNS} from "@/services/blogs";
 const allCompany = [];
 
 export default async function Home() {
     try {
+        const blogsPromise =  getBlogTTNS();
         const detailsPromise = getHomeDetails();
         const details = await detailsPromise;
 
         const recentCompanies = await details?.companies;
+
 
   return (
       <>
@@ -45,7 +48,7 @@ export default async function Home() {
           </Section>
           <GlobalSourcing/>
           <GlobalMarket/>
-          <Resources/>
+          <Resources blogsPromise={blogsPromise} />
           <GetInTouch/>
       </>
   );
