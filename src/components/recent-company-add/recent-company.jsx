@@ -5,55 +5,10 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import "@/styles/companySlider.css";
 import Button from "@/components/shared/button";
-
 import businessLogo_1 from "@/assets/business-logo-2.png";
 
-const RecentCompany = () => {
-  // all company data is here
-  const data = [
-    {
-      id: 1,
-      name: "Central Park",
-      image: businessLogo_1,
-      location: "New York, USA",
-      category: "Park",
-    },
-    {
-      id: 2,
-      name: "Eiffel Tower",
-      image: businessLogo_1,
-      location: "Paris, France",
-      category: "Landmark",
-    },
-    {
-      id: 3,
-      name: "Tokyo Tower",
-      image: businessLogo_1,
-      location: "Tokyo, Japan",
-      category: "Landmark",
-    },
-    {
-      id: 4,
-      name: "Sydney Opera House",
-      image: businessLogo_1,
-      location: "Sydney, Australia",
-      category: "Theater",
-    },
-    {
-      id: 5,
-      name: "Great Wall of China",
-      image: businessLogo_1,
-      location: "Beijing, China",
-      category: "Historical Site",
-    },
-    {
-      id: 6,
-      name: "Mount Fuji",
-      image: businessLogo_1,
-      location: "Honshu, Japan",
-      category: "Mountain",
-    },
-  ];
+const RecentCompany = ({data}) => {
+
   const options = {
     type: "loop",
     perPage: 3,
@@ -89,6 +44,7 @@ const RecentCompany = () => {
       />
 
       {/* all company */}
+      {data && Array.isArray(data) && data.length > 0 && (
       <div className="pt-12">
         <Splide className="company-slider" options={options}>
           {data?.map((item) => (
@@ -97,7 +53,7 @@ const RecentCompany = () => {
             </SplideSlide>
           ))}
         </Splide>
-      </div>
+      </div>)}
       <div className="flex items-center justify-center pt-6 md:pt-12">
         <Button icon primaryOutline>
           Add Company for Free

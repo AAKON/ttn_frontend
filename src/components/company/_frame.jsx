@@ -8,7 +8,7 @@ import CodeBlue from "@/assets/CodeBlue.svg";
 import {
   BookmarkIcon,
   BuildingOneIcon,
-  BuildingTwoIcon,
+  BuildingTwoIcon, EditIcon,
   EyeIcon,
   GridIcon,
   MarkerPinIcon,
@@ -17,8 +17,9 @@ import {
 } from "@/icons";
 import ShareModal from "./share-modal";
 import DateFormatter from "@/utils/dateFormatter";
+import Link from "next/link";
 
-const Frame = ({ headerData, className }) => {
+const Frame = ({ slug, headerData, className }) => {
 
   const {bannerImage, profileImage, moto, tags, name, viewCount, location, category, companySize, created, canEdit, canClaim} =headerData;
 
@@ -68,15 +69,24 @@ const Frame = ({ headerData, className }) => {
               <>
                 <ShareModal />
               </>
+              {canClaim && (
               <Button
                 secondary
                 className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
               >
                 Claim this Business
-              </Button>
+              </Button>)}
+              {canEdit && (
+              <Button
+                  className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9"
+                  TagName={Link}
+                  href={`/myaccount/company/edit/${slug}`}
+              >
+                <EditIcon stroke="#ffffff"/>
+                <span className="max-sm:hidden sm:hidden md:block">Edit Profile</span>
+              </Button>)}
               <Button className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9">
                 <BookmarkIcon stroke="#ffffff" />
-                <span className="max-sm:hidden sm:hidden md:block">Save</span>
               </Button>
             </div>
           </div>

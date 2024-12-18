@@ -40,7 +40,7 @@ const CompanyDetails = async ({params: { slug }}) => {
         return (
             <div className="bg-gray-50 pb-8 md:pb-10 lg:pb-16 xl:pb-20">
                 <div className="relative">
-                    <Frame headerData={headerData} />
+                    <Frame slug={slug} headerData={headerData} />
                     <Container>
                         <div
                             className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-12 relative mt-4 xl:mt-10">
