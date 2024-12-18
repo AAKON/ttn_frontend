@@ -41,9 +41,9 @@ const formSchema = z.object({
   business_category_id: z.number({
     required_error: "Please select an category.",
   }),
-  compliances: z
+    certificates: z
     .array(z.any())
-    .min(1, { message: "Please add at least one compliance." }),
+    .min(1, { message: "Please add at least one certificates." }),
   tags: z.string().optional(),
   company_website: z.string().optional(),
   location_id: z.number({ required_error: "Please select location." }),
@@ -60,16 +60,16 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
 
   // Options for the select dropdown
   const tagOptions =
-    preData?.compliances?.map((item) => ({
+    preData?.certificates?.map((item) => ({
       label: item.name,
       value: item.id,
     })) || [];
 
   const initialCompliances =
-    (basic?.compliances &&
-      Array.isArray(basic?.compliances) &&
-      basic?.compliances.length > 0 &&
-      basic?.compliances?.map((item) => ({
+    (basic?.certificates &&
+      Array.isArray(basic?.certificates) &&
+      basic?.certificates.length > 0 &&
+      basic?.certificates?.map((item) => ({
         label: item.name,
         value: item.id,
       }))) ||
@@ -83,7 +83,7 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
       moto: "",
       business_category_id: "",
       tags: "",
-      compliances: [],
+        certificates: [],
       company_website: "",
       location_id: "",
       manpower: "",
@@ -105,8 +105,8 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
       setValue("tags", basic?.tags || "");
       setValue("manpower", basic?.manpower || "");
       setValue("about", basic?.about || "");
-      if (basic?.compliances) {
-        setValue("compliances", initialCompliances || []);
+      if (basic?.certificates) {
+        setValue("certificates", initialCompliances || []);
       }
       setValue("company_website", basic?.company_website || "");
       setValue("about", basic?.about || "");
@@ -130,7 +130,7 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
       name,
       moto,
       business_category_id,
-      compliances,
+        certificates,
       tags,
       company_website,
       location_id,
@@ -140,7 +140,7 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
     const formData = new FormData();
 
     // Normalize the data to extract values
-    const normalizedCompliances = compliances.map((item) =>
+    const normalizedCompliances = certificates.map((item) =>
       typeof item === "object" ? item.value : item
     );
 
@@ -151,7 +151,7 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
     formData.append("business_category_id", business_category_id);
 
     normalizedCompliances.forEach((value, index) => {
-      formData.append(`compliances[${index}]`, value);
+      formData.append(`certificates[${index}]`, value);
     });
 
     if (tags.trim() !== "") {
@@ -288,10 +288,10 @@ const CompanyBasicForm = ({ slug, preData, basic }) => {
           </div>
           <FormField
             control={control}
-            name="compliances"
+            name="certificates"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Compliance</FormLabel>
+                <FormLabel>Certificates</FormLabel>
                 <DropDownTags
                   value={field.value}
                   onChange={field.onChange}

@@ -44,9 +44,9 @@ const formSchema = z.object({
   business_category_id: z.number({
     required_error: "Please select an category.",
   }),
-  compliances: z
+    certificates: z
     .array(z.number())
-    .min(1, { message: "Please add at least one compliance." }),
+    .min(1, { message: "Please add at least one certificates." }),
   tags: z.string().optional(),
   company_website: z.string().optional(),
   location_id: z.number({ required_error: "Please select location." }),
@@ -64,7 +64,7 @@ const CompanyForm = ({ preData }) => {
 
   // Options for the select dropdown
   const tagOptions =
-    preData?.compliances?.map((item) => ({
+    preData?.certificates?.map((item) => ({
       label: item.name,
       value: item.id,
     })) || [];
@@ -80,7 +80,7 @@ const CompanyForm = ({ preData }) => {
       moto: "",
       business_category_id: "",
       tags: "",
-      compliances: [],
+        certificates: [],
       company_website: "",
       location_id: "",
       manpower: "",
@@ -101,7 +101,7 @@ const CompanyForm = ({ preData }) => {
       name,
       moto,
       business_category_id,
-      compliances,
+        certificates,
       tags,
       company_website,
       location_id,
@@ -113,8 +113,8 @@ const CompanyForm = ({ preData }) => {
     formData.append("name", name);
     formData.append("moto", moto);
     formData.append("business_category_id", business_category_id);
-    compliances.forEach((item, index) => {
-      formData.append(`compliances[${index}]`, item);
+      certificates.forEach((item, index) => {
+      formData.append(`certificates[${index}]`, item);
     });
     formData.append("tags", tags);
     formData.append("company_website", company_website);
@@ -240,10 +240,10 @@ const CompanyForm = ({ preData }) => {
           </div>
           <FormField
             control={control}
-            name="compliances"
+            name="certificates"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Compliance</FormLabel>
+                <FormLabel>Certificates</FormLabel>
                 <DropDownTags
                   value={field.value}
                   onChange={field.onChange}
