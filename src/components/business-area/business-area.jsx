@@ -39,6 +39,7 @@ const BusinessArea = () => {
             setLoading(true);
             try {
                 const data = await getBusinessArea();
+                console.log(data, 'get business data')
                 setBusinessAreas(data?.business_categories || []);
             } catch (error) {
                 console.error("Failed to fetch business areas:", error);
@@ -95,7 +96,9 @@ const BusinessArea = () => {
                     <SplideSlide key={chunkIndex}>
                         <div className="grid grid-cols-3 lg:grid-cols-9 gap-4 lg:gap-7 md:px-10 lg:px-[91px]">
                             {chunk.map((item, index) => (
+                                item?.image ?
                                 <BusinessAreaCard key={index} item={item} />
+                                    : null
                             ))}
                         </div>
                     </SplideSlide>
