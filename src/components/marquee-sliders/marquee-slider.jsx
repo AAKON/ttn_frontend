@@ -12,9 +12,9 @@ const MarqueeSlider = ({slideItems, className="mr-20", ...props}) => {
             gradient={true}
             pauseOnHover={true}
         >
-          {slideItems?.map((item, index) => (
-              <div key={index} className={`cursor-pointer ${className}`} {...props}>
-                <Image src={item} className="" alt={"company image"}/>
+          {slideItems?.map((item) => (
+              <div key={item?.id} className={`cursor-pointer ${className}`} {...props}>
+                <Image width={148} height={48} src={item?.image_url} className="object-contain" alt={"company image"}/>
               </div>
           ))}
         </Marquee>
