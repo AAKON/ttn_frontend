@@ -1,6 +1,7 @@
 
 import Marquee from "react-fast-marquee";
 import Image from "next/image";
+import Link from "next/link";
 
 const MarqueeSlider = ({slideItems, className="mr-20", ...props}) => {
   return (
@@ -13,9 +14,9 @@ const MarqueeSlider = ({slideItems, className="mr-20", ...props}) => {
             pauseOnHover={true}
         >
           {slideItems?.map((item) => (
-              <div key={item?.id} className={`cursor-pointer ${className}`} {...props}>
-                <Image width={148} height={48} src={item?.image_url ? item?.image_url : ''} className="object-contain" alt={"company image"}/>
-              </div>
+              <Link href={item?.link} key={item?.id} className={`cursor-pointer ${className}`} {...props}>
+                <Image width={148} height={48} src={item?.image ? item?.image : ''} className="object-contain" alt={"company image"}/>
+              </Link>
           ))}
         </Marquee>
       </>

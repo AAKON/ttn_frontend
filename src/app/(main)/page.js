@@ -28,7 +28,10 @@ export default async function Home() {
         const detailsPromise = getHomeDetails();
         const details = await detailsPromise;
 
-        const recentCompanies = await details?.companies;
+        const recentCompanies = await details?.companies || [];
+        const partners = await details?.partners || [];
+
+        console.log(details, 'get detailsPromise')
 
 
   return (
@@ -44,7 +47,7 @@ export default async function Home() {
               <h3 className="pb-8 font-medium text-gray-900 uppercase text-xl text-center">
                   We’ve worked with some great Companies
               </h3>
-                <CompanySlider slideItems={allCompany}/>
+                <CompanySlider slideItems={partners}/>
           </Section>
           <GlobalSourcing/>
           <GlobalMarket/>
