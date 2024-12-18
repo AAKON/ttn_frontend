@@ -91,10 +91,10 @@ const CompanyCardProfile = ({ data }) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/myaccount/company/${data?.slug}`} secondary>
+        <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>
-        <Button TagName={Link} href={`/myaccount/company/${data?.slug}`} type="button" primaryOutline className="group">
+        <Button TagName={Link} href={`/myaccount/company/edit/${data?.slug}`} type="button" primaryOutline className="group">
           <EditIcon className="group-hover:!stroke-white !stroke-brand-600 transition-all" />
           Edit
         </Button>

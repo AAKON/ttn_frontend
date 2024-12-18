@@ -5,75 +5,9 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-const data = [
-  {
-    id: 1,
-    thumbnail_url: Profile_pic,
-    businessCategory: {
-      id: 1,
-      name: "Media & Marketing",
-    },
-    name: "Caseworks Pte Ltd",
-    about:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    compliances: [
-      { id: 1, name: "Fabric" },
-      { id: 2, name: "Yarn" },
-      { id: 3, name: "Washing" },
-      { id: 4, name: "Printing" },
-    ],
-    location: {
-      id: 1,
-      name: "Singapore",
-    },
-  },
-  {
-    id: 2,
-    thumbnail_url: Profile_pic,
-    businessCategory: {
-      id: 1,
-      name: "Media & Marketing",
-    },
-    name: "Caseworks Pte Ltd",
-    about:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    compliances: [
-      { id: 1, name: "Fabric" },
-      { id: 2, name: "Yarn" },
-      { id: 3, name: "Washing" },
-      { id: 4, name: "Printing" },
-    ],
-    location: {
-      id: 1,
-      name: "New York",
-    },
-  },
-  {
-    id: 3,
-    thumbnail_url: Profile_pic,
-    businessCategory: {
-      id: 1,
-      name: "Media & Marketing",
-    },
-    name: "Caseworks Pte Ltd",
-    about:
-      "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. ",
-    compliances: [
-      { id: 1, name: "Fabric" },
-      { id: 2, name: "Yarn" },
-      { id: 3, name: "Washing" },
-      { id: 4, name: "Printing" },
-    ],
-    location: {
-      id: 1,
-      name: "Bangalore",
-    },
-  },
-];
-
 const options = {
   type: "loop",
-  perPage: data.length > 3 ? 3 : data.length || 0,
+  perPage: 3.3,
   perMove: 1,
   gap: "1rem",
   pagination: false,
@@ -81,21 +15,22 @@ const options = {
   padding: "4rem",
   breakpoints: {
     1024: {
-      perPage: 3,
+      perPage: 3.3,
       padding: "3rem",
     },
     768: {
-      perPage: 2,
+      perPage: 2.5,
       padding: "1rem",
     },
     640: {
-      perPage: 1,
+      perPage: 1.5,
       padding: "0",
     },
   },
 };
 
-const MyCompany = () => {
+const MyCompany = ({companies}) => {
+
   let splideRef = null;
   const handlePrev = () => {
     if (splideRef) splideRef.go("<");
@@ -104,11 +39,13 @@ const MyCompany = () => {
   const handleNext = () => {
     if (splideRef) splideRef.go(">");
   };
+
+
   return (
     <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
       <div className="flex items-center justify-between gap-5 pb-9">
         <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-          My Companies (<span>23</span>)
+          My Companies (<span>20</span>)
         </h3>
         <div className="flex justify-end gap-3">
           <button
@@ -153,17 +90,18 @@ const MyCompany = () => {
           </button>
         </div>
       </div>
+      {companies && Array.isArray(companies) && companies.length > 0 && (
       <Splide
         className="company-slider"
         options={options}
         ref={(splide) => (splideRef = splide)}
       >
-        {data?.map((company) => (
+        {companies?.map((company) => (
           <SplideSlide key={company.id}>
             <CompanyCardProfile data={company} />
           </SplideSlide>
         ))}
-      </Splide>
+      </Splide>)}
       {/* <CompanyCardProfile key={company.id} data={company} /> */}
     </div>
   );

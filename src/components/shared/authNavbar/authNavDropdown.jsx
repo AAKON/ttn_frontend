@@ -63,15 +63,6 @@ function AuthNavDropdown({ userInfo }) {
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link
-              className="flex items-center gap-1 text-gray-500"
-              href="/myaccount/company"
-            >
-              <Blocks />
-              <span>My Companies</span>
-            </Link>
-          </DropdownMenuItem>
           <DropdownMenuSeparator className="bg-gray-200" />
           <DropdownMenuItem
             className="flex items-center gap-1 text-gray-700 cursor-pointer"
