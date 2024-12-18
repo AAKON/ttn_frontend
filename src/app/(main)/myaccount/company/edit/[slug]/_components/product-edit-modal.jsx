@@ -168,6 +168,7 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
                         name="image"
                         control={control}
                         initialFile={data?.image_url}
+                        defaultValue={data?.image_url}
                     />
                 </div>
 

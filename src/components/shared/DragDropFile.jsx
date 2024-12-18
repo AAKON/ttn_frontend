@@ -41,9 +41,12 @@ const DragDropFile = ({
     useEffect(() => {
         if (defaultValue === null) {
             setPreview(null);
-            onChange([]);
+            onChange([]); // Clear the value
+        } else if (initialFile && !preview) {
+            // Preview the initial file if available and no preview is set
+            setPreview(initialFile);
         }
-    }, [defaultValue, onChange]);
+    }, [defaultValue, initialFile, onChange, preview]);
 
     // Cleanup the preview URL when the component unmounts
     useEffect(() => {
