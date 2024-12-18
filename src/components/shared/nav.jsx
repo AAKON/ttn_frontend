@@ -40,7 +40,7 @@ const menuItems = [
 ];
 const moreItems = [
   { id: 1, label: "About Us", path: "/about" },
-  { id: 2, label: "Partners", path: "/partner" },
+  { id: 2, label: "Partner", path: "/partner" },
   { id: 3, label: "Contact Us", path: "/contact" },
 ];
 
@@ -114,7 +114,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                 <DropdownMenuTrigger asChild>
                   <span
                     className={`text-base font-semibold flex gap-2 items-center ${
-                      pathname === "/partners" ||
+                      pathname === "/partner" ||
                       pathname === "/about" ||
                       pathname === "/contact"
                         ? "active-nav-item"
@@ -144,12 +144,12 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                       <Link
                         href="/partner"
                         className={`text-base font-semibold ${
-                          pathname === "/partners" ? "active-nav-item" : ""
+                          pathname === "/partner" ? "active-nav-item" : ""
                         } ${
                           pathname === "/" ? "text-gray-200" : "text-gray-900"
                         }`}
                       >
-                        Partners
+                        Partner
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
