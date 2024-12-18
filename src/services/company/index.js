@@ -40,7 +40,8 @@ export async function getCompanyBasic(slug) {
 
 // own company list
 export async function getMyCompanies() {
-    const token = await getSSToken();
+    const session = await getSession();
+    const token = session?.accessToken;
     const endpoint = `my/company/list`;
     const options = {
         method: 'GET'
