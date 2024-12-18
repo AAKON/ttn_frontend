@@ -18,16 +18,16 @@ export default async function Page() {
       <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full"></div>
       <Container>
         <div className="bg-white border border-gray-100 p-8 mb-8 rounded-2xl -mt-[140px]">
-          <div className="flex justify-end gap-3">
-            <Button secondary>
-              <ViewAs stroke="#000000" />
-              View as
-            </Button>
-            <Button>
-              <EditIcon stroke="#ffffff" />
-              Edit My Profile
-            </Button>
-          </div>
+          {/*<div className="flex justify-end gap-3">*/}
+          {/*  <Button secondary>*/}
+          {/*    <ViewAs stroke="#000000" />*/}
+          {/*    View as*/}
+          {/*  </Button>*/}
+          {/*  <Button>*/}
+          {/*    <EditIcon stroke="#ffffff" />*/}
+          {/*    Edit My Profile*/}
+          {/*  </Button>*/}
+          {/*</div>*/}
           <div className="pt-4">
             <Suspense fallback={<div>Loading ...</div>}>
               <CompanyForm preData={preDataBasic} />

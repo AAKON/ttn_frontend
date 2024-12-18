@@ -130,7 +130,7 @@ const CompanyForm = ({ preData }) => {
       const result = await companyBasicReq(formData, toast);
       if (result.status && result.code === 200) {
         reset();
-        router.push("/myaccount/company");
+        router.push("/myaccount/profile#my-companies");
       }
     } catch (error) {
       console.log("Error in submitting:", error.message);

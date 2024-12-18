@@ -1,13 +1,41 @@
+'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "./profile-tabs.css";
 import ProfileInfoForm from "./profile-info-form";
 import MyCompanies from "./my-companies";
+import {useEffect, useState} from "react";
 
 const TabComponents = () => {
+
+  const [currentTab, setCurrentTab] = useState('profile-info');
+
+  useEffect(() => {
+    // Function to update the current tab based on the URL hash
+    const updateTabFromHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      setCurrentTab(hash || 'profile-info');
+    };
+
+    // Update tab on initial render
+    updateTabFromHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', updateTabFromHash);
+
+    // Cleanup on component unmount
+    return () => {
+      window.removeEventListener('hashchange', updateTabFromHash);
+    };
+  }, []);
+
   return (
     <>
       <Tabs
-        defaultValue="profile-info"
+          value={currentTab}
+          onValueChange={(value) => {
+            setCurrentTab(value);
+            window.location.hash = value; // Update the URL hash when a tab is clicked
+          }}
         className="profile-tabs w-full overflow-hidden"
       >
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
