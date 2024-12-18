@@ -13,7 +13,7 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { MarkerPinIcon, StarIcon, EditIcon, ViewAs } from "@/icons";
 import Link from "next/link";
 
-const CompanyCardProfile = ({ data }) => {
+const CompanyCardSaved = ({ data }) => {
   return (
     <Card>
       <CardHeader className="grid grid-cols-[1fr_auto] gap-2">
@@ -91,12 +91,11 @@ const CompanyCardProfile = ({ data }) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/myaccount/company/${data?.slug}`} secondary>
+        <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>
-        <Button TagName={Link} href={`/myaccount/company/${data?.slug}`} type="button" primaryOutline className="group">
-          <EditIcon className="group-hover:!stroke-white !stroke-brand-600 transition-all" />
-          Edit
+        <Button TagName={Link} href={`/company/${data?.slug}`} type="button" primaryOutline>
+          Contact supplier
         </Button>
       </CardFooter>
       {/* last btn end */}
@@ -104,4 +103,4 @@ const CompanyCardProfile = ({ data }) => {
   );
 };
 
-export default CompanyCardProfile;
+export default CompanyCardSaved;

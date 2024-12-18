@@ -1,9 +1,9 @@
 "use client";
-import CompanyCardProfile from "./company-card-profile";
 import Profile_pic from "@/assets/CodeBlue.svg";
 
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import CompanyCardSaved from "./company-card-saved";
 
 const data = [
   {
@@ -95,7 +95,7 @@ const options = {
   },
 };
 
-const MyCompany = () => {
+const Saved = () => {
   let splideRef = null;
   const handlePrev = () => {
     if (splideRef) splideRef.go("<");
@@ -108,7 +108,7 @@ const MyCompany = () => {
     <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
       <div className="flex items-center justify-between gap-5 pb-9">
         <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-          My Companies (<span>23</span>)
+          Saved (<span>0</span>)
         </h3>
         <div className="flex justify-end gap-3">
           <button
@@ -160,7 +160,7 @@ const MyCompany = () => {
       >
         {data?.map((company) => (
           <SplideSlide key={company.id}>
-            <CompanyCardProfile data={company} />
+            <CompanyCardSaved data={company} />
           </SplideSlide>
         ))}
       </Splide>
@@ -169,4 +169,4 @@ const MyCompany = () => {
   );
 };
 
-export default MyCompany;
+export default Saved;
