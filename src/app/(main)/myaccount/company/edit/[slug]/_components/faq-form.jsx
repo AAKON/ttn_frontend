@@ -35,7 +35,7 @@ const formSchema = z.object({
 });
 
 const FaqForm = ({slug}) => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [faqData, setFaqData] = useState(null);
     const [error, setError] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);

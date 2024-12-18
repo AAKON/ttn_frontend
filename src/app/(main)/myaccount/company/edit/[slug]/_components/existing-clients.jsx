@@ -3,7 +3,6 @@ import Button from "@/components/shared/button";
 import Image from "next/image";
 
 function ExistingClients({ item }) {
-    console.log(item, 'img path')
   return (
     <div className="flex justify-between gap-6 h-10">
         {item?.image_url && (

@@ -232,3 +232,16 @@ export async function getCompanyClients(slug) {
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
 }
+
+export async function delCompanyClient(id, slug, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/${slug}/client/${id}/delete`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
