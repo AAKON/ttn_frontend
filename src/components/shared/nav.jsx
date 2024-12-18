@@ -48,6 +48,19 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
   const pathname = usePathname();
   console.log(isSticky);
 
+  function arrowColor() {
+    if (isSticky) {
+      return "#000000";
+    }
+    if (pathname === "/") {
+      return "#ffffff";
+    }
+    return "#000000";
+  }
+  useEffect(() => {
+    arrowColor();
+  }, []);
+
   return (
     <>
       <nav>
@@ -113,7 +126,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
               <DropdownMenu className="hidden lg:block">
                 <DropdownMenuTrigger asChild>
                   <span
-                    className={`text-base font-semibold flex gap-2 items-center ${
+                    className={`text-base font-semibold flex gap-2 items-center cursor-pointer ${
                       pathname === "/partner" ||
                       pathname === "/about" ||
                       pathname === "/contact"
@@ -125,28 +138,17 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                   >
                     More
                     <span className="rotate-180">
-                      <ChevronDownIcon
-                        stroke={
-                          pathname === "/partner" ||
-                          pathname === "/about" ||
-                          pathname === "/contact" ||
-                          !isSticky
-                            ? "white"
-                            : "black"
-                        }
-                      />
+                      <ChevronDownIcon stroke={arrowColor()} />
                     </span>
                   </span>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
+                <DropdownMenuContent className="w-56 z-[10000]">
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       <Link
                         href="/partner"
-                        className={`text-base font-semibold ${
+                        className={`text-base font-semibold text-gray-900 ${
                           pathname === "/partner" ? "active-nav-item" : ""
-                        } ${
-                          pathname === "/" ? "text-gray-200" : "text-gray-900"
                         }`}
                       >
                         Partner
@@ -155,10 +157,8 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <DropdownMenuItem>
                       <Link
                         href="/about"
-                        className={`text-base font-semibold ${
+                        className={`text-base font-semibold text-gray-900 ${
                           pathname === "/about" ? "active-nav-item" : ""
-                        } ${
-                          pathname === "/" ? "text-gray-200" : "text-gray-900"
                         }`}
                       >
                         About Us
@@ -167,10 +167,8 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <DropdownMenuItem>
                       <Link
                         href="/contact"
-                        className={`text-base font-semibold ${
+                        className={`text-base font-semibold text-gray-900 ${
                           pathname === "/contact" ? "active-nav-item" : ""
-                        } ${
-                          pathname === "/" ? "text-gray-200" : "text-gray-900"
                         }`}
                       >
                         Contact Us
