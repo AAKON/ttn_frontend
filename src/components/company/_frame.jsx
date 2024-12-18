@@ -16,11 +16,17 @@ import {
   TagsIcon,
 } from "@/icons";
 import ShareModal from "./share-modal";
+import DateFormatter from "@/utils/dateFormatter";
 
-const Frame = ({ className }) => {
+const Frame = ({ headerData, className }) => {
+
+  const {bannerImage, profileImage, moto, tags, name, viewCount, location, category, companySize, created, canEdit, canClaim} =headerData;
+
   return (
     <div className={`relative ${className}`}>
-      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full"></div>
+      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full" style={
+        {backgroundImage: `url(${bannerImage})`}
+      }></div>
 
       <Container>
         <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px] grid grid-cols-1 gap-8 xl:gap-12">
@@ -28,15 +34,16 @@ const Frame = ({ className }) => {
             <div className="flex lg:flex-row flex-col lg:items-center gap-3.5">
               <Image
                 className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]"
-                src={CodeBlue}
-                alt="CodeBlue"
+                src={profileImage ? profileImage : ''}
+                width={70} height={70}
+                alt={name}
               />
               <div className="flex flex-col gap-[10px]">
                 <p className="text-brand-600 lg:text-sm lg:leading-sm lg:font-semibold text-[12px] font-bold leading-[18px] uppercase">
-                  Your company motto goes here
+                  {moto}
                 </p>
                 <h3 className="text-gray-900 flex gap-4 lg:text-3xl lg:leading-[38px] text-[20px] leading-[30px] font-semibold">
-                  CodeBlue Clothing Pvt Ltd{" "}
+                  {name}
                   <Image
                     src={shield_tick}
                     alt="CompanyIcon"
@@ -46,11 +53,11 @@ const Frame = ({ className }) => {
                 <div className="flex flex-wrap lg:flex-row flex-col lg:gap-6 gap-[10px]">
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
                     <TagsIcon />
-                    Used Clothes/Used Shoes/Used Bags
+                    {tags}
                     <span className="max-sm:hidden lg:block">/Mixed Rags</span>
                   </h6>
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
-                    <BuildingOneIcon /> Joined: January 2023
+                    <BuildingOneIcon /> Joined: <DateFormatter publishDate={created} />
                   </h6>
                 </div>
               </div>
@@ -78,23 +85,23 @@ const Frame = ({ className }) => {
             <LdtCard
               icon={<GridIcon />}
               text={"Category"}
-              title={"Manufacturing"}
+              title={category}
             />
             <LdtCard
               icon={<BuildingTwoIcon />}
               text={"Company size"}
-              title={"1000-10000 Manpower"}
+              title={companySize}
             />
             <LdtCard
               icon={<MarkerPinIcon />}
               text={"Location"}
               ExtSrc={AU}
-              title={"Australia"}
+              title={location}
             />
             <LdtCard
               icon={<EyeIcon />}
               text={"Monthly Visitor"}
-              title={"2343"}
+              title={viewCount}
             />
           </div>
         </div>

@@ -54,7 +54,7 @@ import {
   GlobeIcon,
 } from "@/icons";
 
-function CompanyTabs() {
+function CompanyTabs({faqs, clients}) {
   return (
     <div>
       <Tabs
@@ -145,7 +145,7 @@ function CompanyTabs() {
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Clients
             </h3>
-            <MarqueeSlider slideItems={allClients} className="mr-10" />
+            <MarqueeSlider slideItems={clients} className="mr-10" />
           </div>
         </TabsContent>
         <TabsContent value="awards">
@@ -281,7 +281,7 @@ function CompanyTabs() {
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Frequently asked questions
             </h3>
-            <FrequentlyAskedQuestions />
+            <FrequentlyAskedQuestions faqs={faqs} />
           </div>
         </TabsContent>
       </Tabs>
