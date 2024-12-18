@@ -33,15 +33,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const menuItems = [
-  { id: 1, label: "Business", path: "/business" },
+  { id: 1, label: "Home", path: "/" },
   { id: 2, label: "Company", path: "/company" },
-  { id: 3, label: "Jobs", path: "/jobs" },
-  { id: 4, label: "Blog", path: "/blog" },
+  { id: 3, label: "Blog", path: "/blog" },
+  { id: 4, label: "Pricing", path: "/pricing" },
 ];
 const moreItems = [
-  { id: 1, label: "Partners", path: "/partners" },
-  { id: 2, label: "Contact Us", path: "/about" },
-  { id: 3, label: "About Us", path: "/contact" },
+  { id: 1, label: "About Us", path: "/about" },
+  { id: 2, label: "Partners", path: "/partner" },
+  { id: 3, label: "Contact Us", path: "/contact" },
 ];
 
 export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
@@ -127,7 +127,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <span className="rotate-180">
                       <ChevronDownIcon
                         stroke={
-                          pathname === "/partners" ||
+                          pathname === "/partner" ||
                           pathname === "/about" ||
                           pathname === "/contact" ||
                           !isSticky
@@ -142,7 +142,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                   <DropdownMenuGroup>
                     <DropdownMenuItem>
                       <Link
-                        href="/partners"
+                        href="/partner"
                         className={`text-base font-semibold ${
                           pathname === "/partners" ? "active-nav-item" : ""
                         } ${
