@@ -29,7 +29,7 @@ function AuthNavDropdown({ userInfo }) {
       document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
       document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
       showSuccessToast(toast, "Sign Out successful!");
-      router.replace(router.asPath);
+      // router.replace(router.asPath);
     } catch (error) {
       console.error("Sign-out error:", error);
       showErrorToast(toast, "Sign Out failed!");

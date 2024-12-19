@@ -53,8 +53,10 @@ import {
   PhoneIcon,
   GlobeIcon,
 } from "@/icons";
+import {Empty} from "@/shared";
+import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
 
-function CompanyTabs({faqs, clients}) {
+function CompanyTabs({faqs, clients, certificatesData}) {
   return (
     <div>
       <Tabs
@@ -74,18 +76,18 @@ function CompanyTabs({faqs, clients}) {
           >
             Clients
           </TabsTrigger>
-          <TabsTrigger
-            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
-            value="awards"
-          >
-            Awards
-          </TabsTrigger>
           {/*<TabsTrigger*/}
           {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
-          {/*  value="certifications"*/}
+          {/*  value="awards"*/}
           {/*>*/}
-          {/*  Certifications*/}
+          {/*  Awards*/}
           {/*</TabsTrigger>*/}
+          <TabsTrigger
+            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
+            value="certifications"
+          >
+            Certifications
+          </TabsTrigger>
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"
@@ -145,23 +147,28 @@ function CompanyTabs({faqs, clients}) {
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Clients
             </h3>
+            {clients && Array.isArray(clients) && clients.length > 0 ?
             <MarqueeSlider slideItems={clients} className="mr-10" />
+                : <Empty message="No clients found." />}
           </div>
         </TabsContent>
-        <TabsContent value="awards">
-          <div className="bg-white rounded-2xl p-4 lg:p-6">
-            <AwardsSlider />
-          </div>
-        </TabsContent>
-        {/*<TabsContent*/}
-        {/*  className="bg-white rounded-2xl p-6"*/}
-        {/*  value="certifications"*/}
-        {/*>*/}
-        {/*  <h3 className="text-xl font-semibold text-gray-900 mb-8">*/}
-        {/*    Certifications*/}
-        {/*  </h3>*/}
-        {/*  <MarqueeSlider slideItems={allCertifications} className="mr-8" />*/}
+        {/*<TabsContent value="awards">*/}
+        {/*  <div className="bg-white rounded-2xl p-4 lg:p-6">*/}
+        {/*    <AwardsSlider />*/}
+        {/*  </div>*/}
         {/*</TabsContent>*/}
+        <TabsContent
+          className="bg-white rounded-2xl p-6"
+          value="certifications"
+        >
+          <h3 className="text-xl font-semibold text-gray-900 mb-8">
+            Certifications
+          </h3>
+          {certificatesData && Array.isArray(certificatesData) && certificatesData.length > 0 ?
+
+          <CertificateSlider slideItems={allCertifications} className="mr-8" />
+              : <Empty message="No certificates found." />}
+        </TabsContent>
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6">
             {/* Business Contact start */}

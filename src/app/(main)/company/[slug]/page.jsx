@@ -33,6 +33,7 @@ const CompanyDetails = async ({params: { slug }}) => {
         }
         const faqData = details?.company?.faqs;
         const clientsData = details?.company?.clients;
+        const certificatesData = details?.company?.certificates;
 
 
         console.log(details, 'get c details')
@@ -54,7 +55,7 @@ const CompanyDetails = async ({params: { slug }}) => {
                                     {/* AboutCompany part end */}
                                 </div>
                                 <div className="mt-8">
-                                    <CompanyTabs faqs={faqData} clients={clientsData} />
+                                    <CompanyTabs faqs={faqData} clients={clientsData} certificatesData={certificatesData} />
                                 </div>
                             </div>
 
