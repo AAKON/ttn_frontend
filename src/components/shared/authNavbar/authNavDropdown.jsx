@@ -20,6 +20,8 @@ function AuthNavDropdown({ userInfo }) {
   const { toast } = useToast();
   const router = useRouter();
 
+  console.log(userInfo, 'userInfo ==============');
+
   const handleSignout = () => {
     try {
       signOut({ callbackUrl: "/", redirect:true });
@@ -39,7 +41,7 @@ function AuthNavDropdown({ userInfo }) {
       <DropdownMenu className="left-auto right-0">
         <DropdownMenuTrigger className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
           <Image
-            src={user_pic}
+            src={userInfo?.profile_image ? userInfo?.profile_image : user_pic}
             width={48}
             height={48}
             alt="profile"
@@ -51,7 +53,7 @@ function AuthNavDropdown({ userInfo }) {
             {userInfo?.user_name}
           </DropdownMenuLabel>
           <DropdownMenuLabel className="font-normal text-xs pt-0 text-gray-500">
-            jhon@gmail.com
+            {userInfo?.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-200" />
           <DropdownMenuItem>
