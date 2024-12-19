@@ -4,11 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import NewsletterForm from "@/ui/newsletter-form";
 const footerLink = [
-  { title: "Membership", link: "/" },
-  { title: "Blog", link: "/" },
-  { title: "About us", link: "/" },
-  { title: "Jobs", link: "/" },
-  { title: "Influencers", link: "/" },
+  { title: "Company", link: "/company" },
+  { title: "Blog", link: "/blog" },
+  { title: "About us", link: "/about" },
+  { title: "Services", link: "/" },
+  { title: "Contact Us", link: "/contact" },
+  { title: "Partner", link: "/partner" },
   { title: "Privacy", link: "/privacy-policy" },
 ];
 
