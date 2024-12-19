@@ -83,7 +83,7 @@ module.exports = {
         },
       },
       backgroundImage: {
-        "hero-image": "url('../assets/Hero.jpg')",
+        "hero-image": "url('../assets/Hero.webp')",
         "footer-bg-image": "url('../assets/footer-bg.png')",
         detailBennar: "url('../assets/detailBennar.jpg')",
       },
@@ -120,20 +120,21 @@ module.exports = {
         blink: "blink 1s step-start infinite",
       },
       boxShadow: {
-        'card-shadow': '0px 8px 24px -4px rgba(16, 24, 40, 0.05), 0px 4px 8px -4px rgba(16, 24, 40, 0.02)',
-      }
+        "card-shadow":
+          "0px 8px 24px -4px rgba(16, 24, 40, 0.05), 0px 4px 8px -4px rgba(16, 24, 40, 0.02)",
+      },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
     function ({ addUtilities }) {
       addUtilities({
-        '.scrollbar-hidden': {
+        ".scrollbar-hidden": {
           /* Hide scrollbar for all browsers */
-          '-ms-overflow-style': 'none', // IE and Edge
-          'scrollbar-width': 'none',   // Firefox
-          '&::-webkit-scrollbar': {
-            display: 'none',          // Chrome, Safari, Opera
+          "-ms-overflow-style": "none", // IE and Edge
+          "scrollbar-width": "none", // Firefox
+          "&::-webkit-scrollbar": {
+            display: "none", // Chrome, Safari, Opera
           },
         },
       });
