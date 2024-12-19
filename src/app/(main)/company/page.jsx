@@ -21,10 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import HeroForm from "@/components/hero/hero-form";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
 import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
+import HeroCompanyForm from "@/components/hero/hero-company";
 
 const BusinessContent = () => {
   const [view, setView] = useState("grid");
@@ -70,6 +70,10 @@ const BusinessContent = () => {
     fetchFilterOptions();
   }, []);
 
+  const categories = filterOptions?.categories || [];
+  const locations = filterOptions?.locations || [];
+
+
   // Fetch companies when filters change
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -107,6 +111,15 @@ const BusinessContent = () => {
     });
   };
 
+  const handleSearchSubmit = (data) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...data,
+      businessCategoryIds: data.businessCategoryIds ? [data.businessCategoryIds] : prevFilters.businessCategoryIds,
+      keyword: data.keyword || prevFilters.keyword,
+    }));
+  };
+
   const resultsCount = companies.length;
 
   const resetFilterSelection = () => {
@@ -120,10 +133,10 @@ const BusinessContent = () => {
             <h3 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
               Find Your Apparel Needs
             </h3>
-            <HeroForm
-                isAnywhereDropdown={false}
-                isCategoryDropdown={false}
+            <HeroCompanyForm
                 isFilterIcon={true}
+                categories={categories}
+                onSearchSubmit={handleSearchSubmit}
             />
           </div>
         </Section>
