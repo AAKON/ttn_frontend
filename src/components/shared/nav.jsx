@@ -147,7 +147,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <DropdownMenuItem>
                       <Link
                         href="/partner"
-                        className={`text-base font-semibold text-gray-900 ${
+                        className={`block w-full text-base font-semibold text-gray-900 ${
                           pathname === "/partner" ? "active-nav-item" : ""
                         }`}
                       >
@@ -157,7 +157,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <DropdownMenuItem>
                       <Link
                         href="/about"
-                        className={`text-base font-semibold text-gray-900 ${
+                        className={`block w-full text-base font-semibold text-gray-900 ${
                           pathname === "/about" ? "active-nav-item" : ""
                         }`}
                       >
@@ -167,7 +167,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                     <DropdownMenuItem>
                       <Link
                         href="/contact"
-                        className={`text-base font-semibold text-gray-900 ${
+                        className={`block w-full text-base font-semibold text-gray-900 ${
                           pathname === "/contact" ? "active-nav-item" : ""
                         }`}
                       >
