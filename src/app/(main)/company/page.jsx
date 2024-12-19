@@ -3,6 +3,7 @@ import { Cross, DeleteIcon, GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import Button from "@/components/shared/button";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 // Static Icon
@@ -23,27 +24,25 @@ import HeroForm from "@/components/hero/hero-form";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
 import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
-import SelectedOptions from "@/app/(main)/business/components/selectedOptions";
-
-const country = [
-  "Afganisthan",
-  "Africa",
-  "Bangladesh",
-  "india",
-  "nepal",
-  "chin",
-];
 
 const Business = () => {
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
+  const searchParams = useSearchParams();
+
+  // Extract query parameters
+  const businessCategoryIds = searchParams.get("businessCategoryIds");
+  const locationIds = searchParams.get("locationIds");
+  const keyword = searchParams.get("keyword");
+
   const initialFilters = {
-    locationIds: [],
+    locationIds: locationIds ? [parseInt(locationIds, 10)] : [],
     manpower: [],
     complianceIds: [],
-    businessCategoryIds: [],
+    businessCategoryIds: businessCategoryIds ? [parseInt(businessCategoryIds, 10)] : [],
+    keyword: keyword ? keyword : ''
   };
 
   const [filters, setFilters] = useState(initialFilters);

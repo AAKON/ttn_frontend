@@ -1,6 +1,7 @@
 import React from "react";
 import Button from "@/components/shared/button";
 import {FilterIcon, WorldMap} from "@/icons";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -21,15 +22,16 @@ import {
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
+import {Input} from "@/components/ui/input";
 
 const style = {
   boxShadow: "0px 4px 12px 0px rgba(0,0,0,0.04)",
 };
 
 const formSchema = z.object({
-  business_category_id: z.number({
-    required_error: "Please select an category.",
-  }),
+  businessCategoryIds: z.any().optional(),
+  locationIds: z.any().optional(),
+  keyword: z.string().optional(),
 });
 
 function HeroForm({
@@ -40,11 +42,14 @@ function HeroForm({
                     className = ""
 }) {
 
+  const router = useRouter();
   // Function to handle form submission
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      business_category_id: "",
+      businessCategoryIds: "",
+      locationIds: "",
+      keyword: ""
     },
   });
 
@@ -56,7 +61,9 @@ function HeroForm({
 
 
   const onSubmit = async (data) => {
-    console.log(data, 'form val');
+    const queryString = new URLSearchParams(data).toString();
+    console.log(queryString, 'form queryString');
+    router.push(`/company?${queryString}`);
   }
 
   return (
@@ -71,7 +78,7 @@ function HeroForm({
           onSubmit={handleSubmit(onSubmit)}
         className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap md:flex-nowrap"
       >
-        <div className="flex w-full items-center gap-2 rounded-lg py-3 px-6 md:order-2">
+        <div className="flex w-full items-center gap-2 rounded-lg py-1 px-6 md:order-2">
           <span>
             <svg
               width={24}
@@ -89,18 +96,24 @@ function HeroForm({
               />
             </svg>
           </span>
-          <input
-            className="w-full flex-1 placeholder:text-gray-300 focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent focus:border-none"
-            type="search"
-            placeholder="T-shirt manufacturer"
-          />
+          <FormField
+              control={form.control}
+              name="keyword"
+              render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input className="w-full border-0 !shadow-none flex-1 placeholder:text-gray-300 focus:outline-none focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                                 placeholder="Search ..." {...field} />
+                        </FormControl>
+                      </FormItem>
+                )} />
         </div>
         {isCategoryDropdown ? (
                 categories && Array.isArray(categories) && categories?.length > 0 && (
           <div className="md:order-1 lg:border-r lg:border-r-gray-300">
             <FormField
                 control={form.control}
-                name="business_category_id"
+                name="businessCategoryIds"
                 render={({ field }) => (
                     <FormItem>
                       <Select className={className}
@@ -115,8 +128,8 @@ function HeroForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {categories?.map((category) => (
-                              <SelectItem key={category?.id} value={String(category.id)}>
+                          {categories?.map((category, index) => (
+                              <SelectItem key={index} value={String(category.id)}>
                                 {category?.name}
                               </SelectItem>
                           ))}
@@ -140,8 +153,8 @@ function HeroForm({
                   <SelectLabel className="flex gap-2 items-center">
                     All Categories
                   </SelectLabel>
-                  {categories?.map((category) => (
-                      <SelectItem key={category?.id} value={category?.id}>
+                  {categories?.map((category, index) => (
+                      <SelectItem key={index} value={String(category.id)}>
                         {category?.name}
                       </SelectItem>
                   ))}
@@ -152,10 +165,10 @@ function HeroForm({
         )}
         {isAnywhereDropdown && (
           <div className="md:order-3">
-            {categories && Array.isArray(categories) && categories?.length > 0 && (
+            {locations && Array.isArray(locations) && locations?.length > 0 && (
                 <FormField
                     control={form.control}
-                    name="country_id"
+                    name="locationIds"
                     render={({ field }) => (
                         <FormItem>
                           <Select className={className} onValueChange={(value) => field.onChange(Number(value))}>
@@ -173,7 +186,7 @@ function HeroForm({
                                   Anywhere
                                 </SelectLabel>
                                 {locations?.map((country) => (
-                                    <SelectItem key={country?.id} value={String(country.id)} >
+                                    <SelectItem key={country?.id} value={String(country?.id)} >
                                       {country?.name}
                                     </SelectItem>
                                 ))}
