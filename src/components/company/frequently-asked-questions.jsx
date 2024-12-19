@@ -7,6 +7,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Plus, Minus } from '@/icons'
+import {Empty} from "@/shared";
 
 
 const FrequentlyAskedQuestions = ({faqs}) => {
@@ -18,7 +19,7 @@ const FrequentlyAskedQuestions = ({faqs}) => {
 
     return (
         <div>
-            {faqs && Array.isArray(faqs) && faqs.length > 0 && (
+            {faqs && Array.isArray(faqs) && faqs.length > 0 ?
                 <Accordion type="single" collapsible>
                     {
                         faqs.map((el) => (
@@ -39,7 +40,7 @@ const FrequentlyAskedQuestions = ({faqs}) => {
                         ))
                     }
                 </Accordion>
-                )}
+                : <Empty message={'No Faq found'} />}
         </div >
     )
 }

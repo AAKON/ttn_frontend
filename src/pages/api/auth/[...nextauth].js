@@ -46,7 +46,6 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                console.log('get access callback');
                 token.accessToken = user.accessToken;
                 token.exp = user.exp;
                 token.name = user.name;
@@ -66,6 +65,11 @@ export const authOptions = {
             session.accessToken = token.accessToken;
             return session;
         },
+        callbacks: {
+            async redirect({url, baseUrl}) {
+                return baseUrl + '/';
+            }
+        }
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
