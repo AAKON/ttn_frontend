@@ -14,7 +14,7 @@ const Counter = () => {
           </h3>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
             <Button TagName={Link} href="/contact" secondary className="hidden md:flex">Get quote</Button>
-            <Button TagName={Link} href="/company/add" icon>Add Company</Button>
+            <Button TagName={Link} href="/myaccount/company/add" icon>Add Company</Button>
           </div>
         </div>
         {/* right */}

@@ -28,15 +28,17 @@ export default async function Home() {
         const detailsPromise = getHomeDetails();
         const details = await detailsPromise;
 
-        const recentCompanies = await details?.companies || [];
-        const partners = await details?.partners || [];
+        const recentCompanies = details?.companies || [];
+        const partners = details?.partners || [];
+        const categories = details?.categories || [];
+        const locations = details?.locations || [];
 
         console.log(details, 'get detailsPromise')
 
 
   return (
       <>
-          <Hero/>
+          <Hero categories={categories} locations={locations} />
           <Counter/>
           <Fragment>
               <SocialSlider/>

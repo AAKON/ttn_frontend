@@ -29,7 +29,6 @@ export const authOptions = {
 
                 if (res.ok && user.data) {
                     const tokenPayload = JSON.parse(atob( user?.data?.access_token.split('.')[1]));
-                    console.log(tokenPayload, 'get access user');
                     return{
                         accessToken: user?.data?.access_token,
                         exp: tokenPayload.exp,

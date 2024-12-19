@@ -105,7 +105,7 @@ const BusinessArea = () => {
                 </Splide>
             </div>
             <div className="mt-12 flex justify-center">
-                <Button icon TagName={Link} href="/company/add">Add Business</Button>
+                <Button icon TagName={Link} href="/myaccount/company/add">Add Business</Button>
             </div>
         </Section>
     );
