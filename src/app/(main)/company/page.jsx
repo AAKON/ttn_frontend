@@ -111,6 +111,15 @@ const BusinessContent = () => {
     });
   };
 
+  const handleSearchSubmit = (data) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      ...data,
+      businessCategoryIds: data.businessCategoryIds ? [data.businessCategoryIds] : prevFilters.businessCategoryIds,
+      keyword: data.keyword || prevFilters.keyword,
+    }));
+  };
+
   const resultsCount = companies.length;
 
   const resetFilterSelection = () => {
@@ -125,10 +134,9 @@ const BusinessContent = () => {
               Find Your Apparel Needs
             </h3>
             <HeroCompanyForm
-                isAnywhereDropdown={false}
-                isCategoryDropdown={false}
                 isFilterIcon={true}
-                categories={categories} locations={locations}
+                categories={categories}
+                onSearchSubmit={handleSearchSubmit}
             />
           </div>
         </Section>
