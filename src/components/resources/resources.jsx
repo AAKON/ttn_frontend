@@ -5,10 +5,10 @@ import avatar from "@/assets/avatar.png";
 import Button from "@/components/shared/button";
 import Link from "next/link";
 
-const Resources = async ({blogsPromise}) => {
+const Resources = async ({ blogsPromise }) => {
   const homeBlogs = await blogsPromise;
 
-  console.log(homeBlogs, 'homeBlogs=====');
+  console.log(homeBlogs, "homeBlogs=====");
 
   return (
     <Section>
@@ -20,14 +20,23 @@ const Resources = async ({blogsPromise}) => {
           Lastest blog posts
         </p>
         {/* all card */}
-        {homeBlogs && Array.isArray(homeBlogs?.TNN_picks) && homeBlogs?.TNN_picks.length > 0 && (
-        <div className="flex gap-x-4 flex-col md:flex-row gap-y-6 items-center justify-between">
-          {homeBlogs?.TNN_picks.map((item) => (
-            <ResourceCard key={item?.id} item={item} />
-          ))}
-        </div>)}
+        {homeBlogs &&
+          Array.isArray(homeBlogs?.TNN_picks) &&
+          homeBlogs?.TNN_picks.length > 0 && (
+            <div className="flex gap-x-4 flex-col md:flex-row gap-y-6 items-center justify-between">
+              {homeBlogs?.TNN_picks.map((item) => (
+                <ResourceCard key={item?.id} item={item} />
+              ))}
+            </div>
+          )}
         <div className="flex items-center justify-center">
-          <Button TagName={Link} href={'/blog'} className="xl:mt-[64px] mt-[32px]">View all Resources</Button>
+          <Button
+            TagName={Link}
+            href={"/blog"}
+            className="xl:mt-[64px] mt-[32px]"
+          >
+            View all Resources
+          </Button>
         </div>
       </div>
     </Section>
