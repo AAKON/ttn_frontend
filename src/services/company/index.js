@@ -258,3 +258,4 @@ export async function delCompanyClient(id, slug, toast) {
     const result = await apiRequest(endpoint, options, toast, token);
     return result?.status && result?.code === 200;
 }
+

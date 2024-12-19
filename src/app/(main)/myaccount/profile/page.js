@@ -1,13 +1,11 @@
 
 import { Container } from "@/shared";
-import codeBlue from "@/assets/CodeBlue.svg";
-
 import TabComponents from "./components/tab-component";
-import Button from "@/components/shared/button";
-import { EditIcon, UserUpArrowIcon } from "@/icons";
-import Image from "next/image";
+
+import { getProfile } from "@/services/auth/auth";
 
 const BusinessProfile = () => {
+
   return (
     <section className="bg-gray-50 py-20">
       <Container>
