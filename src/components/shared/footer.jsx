@@ -38,10 +38,10 @@ function FooterBanner() {
           Add your business for free. Forever.
         </p>
         <div className="flex gap-3 mt-6 justify-center md:justify-start">
-          <Button secondary type="button">
+          <Button TagName={Link} href={"/contact"} secondary type="button">
             Get a quote
           </Button>
-          <Button type="button" icon>
+          <Button TagName={Link} href={"/myaccount/company/add"} type="button" icon>
             Add Business
           </Button>
         </div>

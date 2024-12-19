@@ -3,7 +3,7 @@ import React from "react";
 import { Container } from "@/shared";
 import HeroForm from "./hero-form";
 
-const Hero = () => {
+const Hero = ({categories, locations}) => {
   return (
     <section className="pt-[88px] md:pt-[208px] md:pb-[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
       <Container>
@@ -18,7 +18,7 @@ const Hero = () => {
               Needs
             </h1>
           </div>
-          <HeroForm />
+          <HeroForm categories={categories} locations={locations} />
           <div className="mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
             <Tags tagText="Sports Wear" />
             <Tags tagText="Hoodie" />
@@ -31,82 +31,8 @@ const Hero = () => {
   );
 };
 
-// SELECT ITEM COMPONENT
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import Button from "@/components/shared/button";
-import { WorldMap } from "@/icons";
 import TextAnimator from "./text-animatior";
 
-const country = ["Anywhere", "Africa", "Bangladesh", "india", "nepal", "chin"];
-const categories = [
-  "All category",
-  "Manufacturingory",
-  "Machinery",
-  "Trading/Buying",
-  "Advisor/Consultant",
-  "Certifications",
-  "Solution",
-];
-
-export function Categories({ className = "" }) {
-  return (
-    <Select className={className}>
-      <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
-        <SelectValue
-          placeholder="All Categories"
-          className="text_16 text-red-400"
-        />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel className="flex gap-2 items-center">
-            All Categories
-          </SelectLabel>
-          {categories?.map((category) => (
-            <SelectItem key={category} value={category}>
-              {category}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  );
-}
-
-export function Country({ className = "" }) {
-  return (
-    <Select className={className}>
-      <SelectTrigger
-        className={`text-gray-700 font-semibold text-sm leading-5 w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
-      >
-        <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
-          <WorldMap />
-        </span>
-        <SelectValue placeholder="Anywhere" className="text_16 text-red-400" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel className="flex gap-2 items-center">
-            Anywhere
-          </SelectLabel>
-          {country?.map((country) => (
-            <SelectItem key={country} value={country}>
-              {country}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-  );
-}
 
 // Form Design
 

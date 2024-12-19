@@ -27,7 +27,7 @@ const CompanyCard = ({ item }) => {
         <Image className="w-[16px]" src={loc} alt="Location Icon" />
         <span className="font-normal text-md text-gray-600ra">{location?.name}</span>
       </div>
-      <Button TagName={Link} href={`/company/${slug}`} className="w-full mt-4 hover:bg-brand-500">View Profile</Button>
+      <Button TagName={Link} href={`/company/${slug}`} className="w-full mt-4 hover:bg-brand-500" >View Profile</Button>
     </div>
   );
 };

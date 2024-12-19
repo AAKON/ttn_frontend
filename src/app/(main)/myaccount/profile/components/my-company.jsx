@@ -12,18 +12,21 @@ const options = {
   drag   : 'free',
   pagination: false,
   arrows: false,
+  gap       : 32,
   padding: "140px",
   breakpoints: {
     768: {
       perPage: 2,
+      gap       : 18,
       padding: "5rem",
     },
-    768: {
-      perPage: 1,
-      padding: "3rem",
-    },
+    // 768: {
+    //   perPage: 1,
+    //   padding: "3rem",
+    // },
     640: {
       perPage: 1,
+      gap       : 0,
       padding: "0",
     },
   },

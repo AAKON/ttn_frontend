@@ -71,13 +71,14 @@ const CompanyCardProfile = ({ data }) => {
 
       {/* -------- */}
       <CardContent className="flex justify-between">
-        <div className="flex gap-2 items-center">
-          <StarIcon stroke="#FDB022" />
-          <span className="text-gray-900 font-medium">4.9</span>
-          <p className="text-gray-500 text-sm">
-            <span className="mr-1">202</span> reviews
-          </p>
-        </div>
+          <div></div>
+        {/*<div className="flex gap-2 items-center">*/}
+        {/*  <StarIcon stroke="#FDB022" />*/}
+        {/*  <span className="text-gray-900 font-medium">4.9</span>*/}
+        {/*  <p className="text-gray-500 text-sm">*/}
+        {/*    <span className="mr-1">202</span> reviews*/}
+        {/*  </p>*/}
+        {/*</div>*/}
         {data?.location && (
           <div className="flex">
             <MarkerPinIcon stroke="#101828" width={20} />

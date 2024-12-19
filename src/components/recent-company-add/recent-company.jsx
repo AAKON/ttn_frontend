@@ -56,7 +56,7 @@ const RecentCompany = ({data}) => {
         </Splide>
       </div>)}
       <div className="flex items-center justify-center pt-6 md:pt-12">
-        <Button TagName={Link} href="/company/add" icon primaryOutline>
+        <Button TagName={Link} href="/myaccount/company/add" icon primaryOutline>
           Add Company for Free
         </Button>
       </div>

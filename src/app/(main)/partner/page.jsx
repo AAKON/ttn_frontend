@@ -7,6 +7,7 @@ import business3 from "@/assets/partner-3.png";
 import business4 from "@/assets/partner-4.png";
 import business5 from "@/assets/partner-5.png";
 import business6 from "@/assets/partner-6.png";
+import Link from "next/link";
 
 const PartnerPage = () => {
   const businessPartnerLogo = [
@@ -37,7 +38,7 @@ const PartnerPage = () => {
             industry? Join our dynamic team as a valued partner and unlock a
             world of opportunities.
           </p>
-          <Button primaryOutline>Join as a partner</Button>
+          <Button TagName={Link} href={'/contact'} primaryOutline>Join as a partner</Button>
         </div>
         <div className="lg:py-[80px] py-8">
           {/* Business Partner */}
