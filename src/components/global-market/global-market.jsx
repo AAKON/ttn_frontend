@@ -45,7 +45,7 @@ const GlobalMarket = () => {
             </p>
             <div className="flex items-center gap-x-4 pt-6 md:pt-12">
               <Button secondary TagName={Link} href="/contact">Get a quote</Button>
-              <Button TagName={Link} href="/partner">See Partnership Plan</Button>
+              <Button TagName={Link} href="/pricing">See Partnership Plan</Button>
             </div>
           </div>
           {/* right */}
