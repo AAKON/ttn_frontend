@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/shared";
-import Count from "@/components/counter/count";
 import AboutMap from "@/assets/aboutmap.jpg";
+import CounterUp from "@/components/counter/counter-up";
 
 const About = () => {
   return (
@@ -23,11 +23,11 @@ const About = () => {
           </p>
           <div className="mt-28">
             <div className="grid grid-cols-3 gap-[15px] md:items-center md:grid-cols-5 md:gap-8 ">
-              <Count value={"10+"} role={"Partners"} />
-              <Count value={"6+"} role={"Countries"} />
-              <Count value={"70k+"} role={"Listed Business"} />
-              <Count value={"10k+"} role={"Factory People"} />
-              <Count value={"300k+"} role={"Global Audiences"} />
+            <CounterUp endValue={10} duration={2000} role={"Partners"} endfix={"+"} />
+            <CounterUp endValue={6} duration={2000} role={"Countries"} endfix={"+"} />
+            <CounterUp endValue={70} duration={2000} role={"Listed Business"} endfix={"+"} />
+            <CounterUp endValue={10} duration={2000} role={"Factory People"} endfix={"k+"} />
+            <CounterUp endValue={300} duration={2000} role={"Global Audiences"} endfix={"k+"} />
             </div>
           </div>
           <div className="mt-11 pb-20">

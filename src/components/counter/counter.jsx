@@ -1,7 +1,7 @@
 import { Section } from "@/components/shared";
-import Count from "./count";
 import Button from "@/components/shared/button";
 import Link from "next/link";
+import CounterUp from "./counter-up";
 
 const Counter = () => {
   return (
@@ -13,17 +13,51 @@ const Counter = () => {
             Explore Your Business Needs{" "}
           </h3>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
-            <Button TagName={Link} href="/contact" secondary className="hidden md:flex">Get quote</Button>
-            <Button TagName={Link} href="/myaccount/company/add" icon>Add Company</Button>
+            <Button
+              TagName={Link}
+              href="/contact"
+              secondary
+              className="hidden md:flex"
+            >
+              Get quote
+            </Button>
+            <Button TagName={Link} href="/myaccount/company/add" icon>
+              Add Company
+            </Button>
           </div>
         </div>
         {/* right */}
         <div className="grid grid-cols-3 mt-8 md:items-center md:max-w-[692px] gap-[15px]">
-          <Count value={"12+"} role={"Partners"} />
-          <Count value={"7+"} role={"Countries"} />
-          <Count value={"9000+"} role={"Professionals Connected"} />
-          <Count value={"300,000+"} role={"Global Audiences"} />
-          <Count value={"80+"} role={"Business"} />
+          <CounterUp
+            endValue={12}
+            duration={2000}
+            role={"Partners"}
+            endfix={"+"}
+          />
+          <CounterUp
+            endValue={7}
+            duration={2000}
+            role={"Countries"}
+            endfix={"+"}
+          />
+          <CounterUp
+            endValue={9000}
+            duration={2000}
+            role={"Professionals Connected"}
+            endfix={"+"}
+          />
+          <CounterUp
+            endValue={300000}
+            duration={2000}
+            role={"Global Audiences"}
+            endfix={"+"}
+          />
+          <CounterUp
+            endValue={80}
+            duration={2000}
+            role={"Business"}
+            endfix={"+"}
+          />
         </div>
       </div>
     </Section>
