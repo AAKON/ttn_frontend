@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 
-import { getProfile } from "@/services/auth/auth";
+import {getProfile, updateUserProfileReq} from "@/services/auth/auth";
 
 import Button from "@/components/shared/button";
 import {
@@ -19,12 +19,15 @@ import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
+import {toast} from "@/hooks/use-toast";
+import {uploadProductReq} from "@/services/product";
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   email: z.string().email("Invalid email address"),
+  phone: z.string().optional(),
 });
 
 const ProfileInfoForm = () => {
@@ -35,21 +38,13 @@ const ProfileInfoForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: profile?.name ? profile?.name : "",
+      email: profile?.email ? profile?.email : "",
+      phone: profile?.phone ? profile?.phone : ""
     },
   });
 
   const { reset } = form; // Destructure the `reset` function
-
-  // Function to handle form submission
-  const onSubmit = async (data) => {
-    const formData = {
-      ...data,
-      profile_pic: fileData,
-    };
-    console.log(formData);
-  };
 
   // Get profile data
   const getProfileData = async () => {
@@ -61,6 +56,7 @@ const ProfileInfoForm = () => {
       reset({
         name: result.name || "",
         email: result.email || "",
+        phone: result.phone || "",
       });
     } catch (error) {
       console.log(error);
@@ -71,6 +67,29 @@ const ProfileInfoForm = () => {
     getProfileData();
   }, []);
 
+  // Function to handle form submission
+  const onSubmit = async (data) => {
+    const {name, email, phone} = data;
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    if (fileData) {
+      formData.append('image', fileData);
+    }
+    try {
+      const result = await updateUserProfileReq(formData, toast);
+      if (result.status && result.code === 200) {
+        getProfileData();
+      }
+    }catch (error) {
+      console.log("Error in profile update:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -79,6 +98,7 @@ const ProfileInfoForm = () => {
             onImageChange={({ file }) => {
               setFileData(file);
             }}
+            initialImage={profile?.profile_picture}
           />
         </div>
 
@@ -127,7 +147,7 @@ const ProfileInfoForm = () => {
               />
               <FormField
                 control={form.control}
-                name="new_password"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={formLabelClasses}>Phone</FormLabel>

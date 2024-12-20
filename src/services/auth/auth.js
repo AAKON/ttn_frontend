@@ -43,3 +43,20 @@ export async function getProfile() {
   const result = await apiRequest(endpoint, options, null, token);
   return result?.data;
 }
+
+
+// update profile
+export async function updateUserProfileReq(data, toast) {
+
+  const session = await getSession();
+  const token = session?.accessToken;
+
+  const endpoint = `auth/user`;
+
+  const options = {
+    method: 'POST',
+    body: data,
+    isFormData: true
+  };
+  return await apiRequest(endpoint, options, toast, token);
+}
