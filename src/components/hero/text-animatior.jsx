@@ -38,10 +38,8 @@ const TextAnimator = ({ className, cursorColor}) => {
 
   return (
     <span className={`relative ${className}`}>
-      {currentWord}
-      <span className={`absolute -right-3 transition-all ${cursorColor} animate-blink`}>
-        |
-      </span>
+      {currentWord + ' '}
+      <span className={`absolute -right-2 w-10 transition-all ${cursorColor} animate-blink`}>&nbsp;|</span>
     </span>
   );
 };

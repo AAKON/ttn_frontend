@@ -9,13 +9,13 @@ const Hero = ({categories, locations}) => {
       <Container>
         <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
           <div className="text-center pb-4 md:pb-10">
-            <h1 className="text-2xl md:text-[48px]">
+            <h1 className="text-2xl md:text-[44px]">
               Find Your{" "}
               <TextAnimator
                 className={"text-primary"}
                 cursorColor={"text-brand-600"}
-              />{" "}
-              Needs
+              />
+              Business Needs
             </h1>
           </div>
           <HeroForm categories={categories} locations={locations} />
