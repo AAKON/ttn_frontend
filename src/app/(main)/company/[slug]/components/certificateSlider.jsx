@@ -60,7 +60,7 @@ const CertificateSlider = ({ slideItems, direction = "ltr", ...props }) => {
                 alt={item?.name || "image"}
               />
             </div>
-            <span className="text-gray-500 text-sm">Oeko Text</span>
+            <span className="text-gray-500 text-sm">{item?.name}</span>
           </div>
         </SplideSlide>
       ))}
