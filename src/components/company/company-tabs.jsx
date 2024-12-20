@@ -4,8 +4,6 @@ import "./company-tabs.css";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
 import marketShare from "@/assets/marketShare.svg";
-
-import MarqueeSlider from "@/components/marquee-sliders/marquee-slider";
 // Clients Slide items
 import clients_1 from "@/assets/company1.jpg";
 import clients_2 from "@/assets/company2.jpg";
@@ -41,8 +39,6 @@ const allCertifications = [
   certification_3,
   certification_4,
 ];
-
-import AwardsSlider from "./awards-slider";
 import ChartYearly from "./chart-yearly";
 
 // icons
@@ -55,6 +51,7 @@ import {
 } from "@/icons";
 import { Empty } from "@/shared";
 import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
+import ClientSlider from "../marquee-sliders/client-slider";
 
 function CompanyTabs({ faqs, clients, certificatesData }) {
   return (
@@ -148,7 +145,7 @@ function CompanyTabs({ faqs, clients, certificatesData }) {
               Clients
             </h3>
             {clients && Array.isArray(clients) && clients.length > 0 ? (
-              <MarqueeSlider slideItems={clients} className="mr-10" />
+              <ClientSlider slideItems={clients} />
             ) : (
               <Empty message="No clients found." />
             )}
