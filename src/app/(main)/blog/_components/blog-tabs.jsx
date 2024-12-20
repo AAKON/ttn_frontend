@@ -18,7 +18,7 @@ function BlogTabs({ ttnsData }) {
     const [blogTypes, setBlogTypes] = useState(null);
     const [blogData, setBlogData] = useState(null);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState(null);
+    const [activeTab, setActiveTab] = useState('all');
     const [isLoadingBlogTypes, setIsLoadingBlogTypes] = useState(true);
     const [isLoadingBlogData, setIsLoadingBlogData] = useState(true);
     const [isBlogTypesEmpty, setIsBlogTypesEmpty] = useState(false);
@@ -33,12 +33,16 @@ function BlogTabs({ ttnsData }) {
             try {
                 setIsLoadingBlogTypes(true);
                 const data = await getBlogTypes();
-                setBlogTypes(data);
-                if (data?.blog_topics.length > 0) {
-                    const firstTabKey = data.blog_topics[0].id;
-                    setActiveTab(firstTabKey); // Set the first tab as active initially
-                    fetchBlogs(firstTabKey); // Fetch blogs for the first tab
-                }
+                const allTab = { id: 'all', name: 'All' }; // Add "All" tab
+                setBlogTypes({
+                    blog_topics: [allTab, ...data.blog_topics],
+                });
+                fetchBlogs('all');
+                // if (data?.blog_topics.length > 0) {
+                //     const firstTabKey = data.blog_topics[0].id;
+                //     setActiveTab(firstTabKey); // Set the first tab as active initially
+                //     fetchBlogs(firstTabKey); // Fetch blogs for the first tab
+                // }
             } catch (err) {
                 setError(err);
                 setIsBlogTypesEmpty(true);
@@ -53,8 +57,7 @@ function BlogTabs({ ttnsData }) {
     const fetchBlogs = async (key, keyword = "", page = 1) => {
         try {
             setIsLoadingBlogData(true);
-            const blogs = await getBlogs(key, keyword, page);
-            console.log(blogs, 'get pagi vall');
+            const blogs = await getBlogs(key === 'all' ? null : key, keyword, page);
             setBlogData(blogs?.data || []);
             setCurrentPage(blogs?.current_page || 1);
             setTotalPages(blogs?.last_page || 1);
