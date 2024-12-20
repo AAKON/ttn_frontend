@@ -51,8 +51,6 @@ const BlogDetailsPage = async ({ params }) => {
   const blogPromise = await getBlogDetails(slug);
   const details = await blogPromise;
 
-  console.log(details, 'blog details');
-
   // Find the blog post with the corresponding ID
 
   // Check if the blog exists, if not display 'Blog not found'
