@@ -35,7 +35,7 @@ const Frame = ({ slug, headerData, className }) => {
             <div className="flex lg:flex-row flex-col lg:items-center gap-3.5">
               <Image
                 className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]"
-                src={profileImage ? profileImage : ''}
+                src={profileImage ? profileImage : CodeBlue}
                 width={70} height={70}
                 alt={name}
               />
