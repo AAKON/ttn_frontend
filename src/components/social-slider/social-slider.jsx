@@ -17,6 +17,8 @@ const SocialSlider = ({webAds}) => {
           perPage: 3,
           // perMove: 1,
           gap: 30,
+          autoplay: true,
+          type   : 'loop',
           omitEnd: true,
           focus: 0,
           breakpoints: {
