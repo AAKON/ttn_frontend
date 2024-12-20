@@ -10,7 +10,7 @@ import GlobalMarket from "@/components/global-market/global-market";
 import Resources from "@/components/resources/resources";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import React, {Fragment} from "react";
-import { Section } from "@/shared";
+import {Empty, Section} from "@/shared";
 
 // company Slide items
 import compnany1 from "@/assets/company1.jpg";
@@ -32,6 +32,7 @@ export default async function Home() {
         const partners = details?.partners || [];
         const categories = details?.categories || [];
         const locations = details?.locations || [];
+        const webAds = details?.webAds || [];
 
         console.log(details, 'get detailsPromise')
 
@@ -41,7 +42,10 @@ export default async function Home() {
           <Hero categories={categories} locations={locations} />
           <Counter/>
           <Fragment>
-              <SocialSlider/>
+              {webAds && Array.isArray(webAds) && webAds.length > 0 ? (
+                  <SocialSlider webAds={webAds} />
+              ) : <Empty message="No webAds found." />}
+
           </Fragment>
           <RecentCompany data={recentCompanies}/>
           <BusinessArea />
