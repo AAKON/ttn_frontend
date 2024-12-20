@@ -1,32 +1,17 @@
 "use client";
-
-import { Cross, DeleteIcon, GridIcon, ListIcon } from "@/components/icons";
+import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
-import Button from "@/components/shared/button";
 import React, { Suspense, useEffect, useState } from "react";
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 
-// Static Icon
-import countryIcon from "@/assets/country_icon.svg";
-import grid_icon from "@/assets/grid.svg";
-import layer_icon from "@/assets/layer_icon.svg";
-import user_icon from "@/assets/user_icon.svg";
-import batch_icon from "@/assets/batch_icon.svg";
 import FilterAccordion from "./components/filter-accordion";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
 import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
 import HeroCompanyForm from "@/components/hero/hero-company";
+import SelectedOptions from "@/app/(main)/company/components/selectedOptions";
 
-const BusinessContent = () => {
+const CompanyList = () => {
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -71,7 +56,6 @@ const BusinessContent = () => {
   }, []);
 
   const categories = filterOptions?.categories || [];
-  const locations = filterOptions?.locations || [];
 
 
   // Fetch companies when filters change
@@ -102,10 +86,14 @@ const BusinessContent = () => {
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
-      if (isChecked) {
-        updatedFilters[key] = [...(updatedFilters[key] || []), id];
-      } else {
-        updatedFilters[key] = updatedFilters[key].filter((item) => item !== id);
+      if (key === "locationIds") {
+        updatedFilters[key] = isChecked ? [id] : [];
+      }else {
+        if (isChecked) {
+          updatedFilters[key] = [...(updatedFilters[key] || []), id];
+        } else {
+          updatedFilters[key] = updatedFilters[key].filter((item) => item !== id);
+        }
       }
       return updatedFilters;
     });
@@ -119,6 +107,82 @@ const BusinessContent = () => {
       keyword: data.keyword || prevFilters.keyword,
     }));
   };
+
+  // display selected options functions
+
+  const getSelectedOptions = () => {
+    const selected = [];
+
+    // Map businessCategoryIds
+    if (filters.businessCategoryIds.length > 0) {
+      const selectedCategories = filters.businessCategoryIds.map((id) => {
+        const category = filterOptions?.categories?.find((cat) => cat.id === id);
+        return category ? { id, name: category.name } : null;
+      }).filter(Boolean);
+
+      selected.push(...selectedCategories.map(({ id, name }) => ({
+        key: "businessCategoryIds",
+        id,
+        name,
+      })));
+    }
+
+    // Map locationIds
+    if (filters.locationIds.length > 0) {
+      const selectedLocations = filters.locationIds.map((id) => {
+        const location = filterOptions?.locations?.find((loc) => loc.id === id);
+        return location ? { id, name: location.name } : null;
+      }).filter(Boolean);
+
+      selected.push(...selectedLocations.map(({ id, name }) => ({
+        key: "locationIds",
+        id,
+        name,
+      })));
+    }
+
+    // Map complianceIds
+    if (filters.complianceIds.length > 0) {
+      const selectedCompliance = filters.complianceIds.map((id) => {
+        const compliance = filterOptions?.compliances?.find((comp) => comp.id === id);
+        return compliance ? { id, name: compliance.name } : null;
+      }).filter(Boolean);
+
+      selected.push(...selectedCompliance.map(({ id, name }) => ({
+        key: "complianceIds",
+        id,
+        name,
+      })));
+    }
+
+    // Map manpower (no ID, direct values)
+    if (filters.manpower.length > 0) {
+      selected.push(...filters.manpower.map((value) => ({
+        key: "manpower",
+        id: value,
+        name: value,
+      })));
+    }
+
+    return selected;
+  };
+
+  // remove selected tags
+  const handleRemoveFilter = (key, id) => {
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
+
+      if (key === "manpower") {
+        updatedFilters[key] = updatedFilters[key].filter((value) => value !== id);
+      } else {
+        updatedFilters[key] = updatedFilters[key].filter((itemId) => itemId !== id);
+      }
+
+      return updatedFilters;
+    });
+  };
+
+
 
   const resultsCount = companies.length;
 
@@ -159,7 +223,7 @@ const BusinessContent = () => {
             <div>
               <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
                 <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
-                  T-shirt manufactures: <span>{resultsCount}</span> Results
+                  Search Results: <span>{resultsCount}</span> Results found
                 </h3>
                 <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
                 <span
@@ -188,7 +252,12 @@ const BusinessContent = () => {
                 </span>
                 </div>
               </div>
-
+              {/*selected options */}
+              <SelectedOptions
+                  selectedOptions={getSelectedOptions()}
+                  onRemove={handleRemoveFilter}
+              />
+              {/* end display selected options */}
               <div
                   className={`mt-8 grid gap-3 lg:gap-8 ${
                       view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
@@ -213,10 +282,10 @@ const BusinessContent = () => {
   );
 };
 
-const Business = () => (
+const Company = () => (
     <Suspense fallback={<div>Loading...</div>}>
-      <BusinessContent />
+      <CompanyList />
     </Suspense>
 );
 
-export default Business;
+export default Company;
