@@ -25,9 +25,7 @@ const Frame = ({ slug, headerData, className }) => {
 
   return (
     <div className={`relative ${className}`}>
-      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full" style={
-        {backgroundImage: `url(${bannerImage ? bannerImage : ''})`}
-      }></div>
+      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover h-[42.667vw] lg:h-[275px] w-full"></div>
 
       <Container>
         <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px] grid grid-cols-1 gap-8 xl:gap-12">

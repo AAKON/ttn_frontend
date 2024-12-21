@@ -118,7 +118,9 @@ body {
 .splide__arrow.splide__arrow--next {
   z-index: 30;
 }
-
+.bg-detailBennar{
+  background-color: rgba(254, 244, 232, .5);
+}
 .pricing-accordion .lucide-chevron-down {
   display: none !important;
 }
