@@ -5,33 +5,6 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-const options = {
-  type: "loop",
-  perPage: 2 ,
-  perMove: 1,
-  drag   : 'free',
-  pagination: false,
-  arrows: false,
-  gap       : 32,
-  padding: "140px",
-  breakpoints: {
-    768: {
-      perPage: 2,
-      gap       : 18,
-      padding: "5rem",
-    },
-    // 768: {
-    //   perPage: 1,
-    //   padding: "3rem",
-    // },
-    640: {
-      perPage: 1,
-      gap       : 0,
-      padding: "0",
-    },
-  },
-};
-
 const MyCompany = ({ companies }) => {
   let splideRef = null;
   const handlePrev = () => {
@@ -40,6 +13,30 @@ const MyCompany = ({ companies }) => {
 
   const handleNext = () => {
     if (splideRef) splideRef.go(">");
+  };
+
+  const options = {
+    // type: "slide",
+    perPage: 2,
+    perMove: 1,
+    drag   : 'free',
+    pagination: false,
+    arrows: false,
+    gap       : 32,
+    rewind: true,
+    padding: { left: 0, right: 240 },
+    breakpoints: {
+      768: {
+        perPage: 2,
+        gap       : 18,
+        padding: { left: 0, right: 80 }
+      },
+      640: {
+        perPage: 1,
+        gap       : 0,
+        padding: "0",
+      },
+    },
   };
 
   return (
@@ -59,6 +56,7 @@ const MyCompany = ({ companies }) => {
               viewBox="0 0 8 12"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="!pointer-events-none"
             >
               <path
                 d="M6.5 11L1.5 6L6.5 1"
@@ -79,6 +77,7 @@ const MyCompany = ({ companies }) => {
               viewBox="0 0 8 12"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              className="!pointer-events-none"
             >
               <path
                 d="M1.5 11L6.5 6L1.5 1"
@@ -93,7 +92,7 @@ const MyCompany = ({ companies }) => {
       </div>
       {companies && Array.isArray(companies) && companies.length > 0 && (
         <Splide
-          className="company-slider slider_both_side_shadow"
+          className="company-slider side_shadow_r"
           options={options}
           ref={(splide) => (splideRef = splide)}
         >

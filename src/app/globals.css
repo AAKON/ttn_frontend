@@ -91,6 +91,9 @@ body {
   .slider_both_side_shadow {
     @apply relative before:absolute before:content-[''] before:h-full before:w-[6%] before:bg-gradient-to-r from-white to-transparent before:top-0 before:left-0 before:z-[3] after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0;
   }
+  .side_shadow_r {
+    @apply relative from-white to-transparent after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0;
+  }
 }
 
 @layer utilities {
