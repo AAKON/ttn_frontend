@@ -55,25 +55,25 @@ const ContactWithBusinessOwner = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-[4px] items-center">
+        {/* <div className="flex flex-col gap-[4px] items-center">
           <h4 className="flex gap-[8px] text-xl text-gray-900 font-medium leading-[30px]">
-            <UsersCheckIcon /> 5
+            <UsersCheckIcon />
           </h4>
           <h4 className="flex gap-[8px] text-xs text-gray-400 font-medium leading-[30px]">
             Talents
           </h4>
-        </div>
+        </div> */}
 
         <Button
           onClick={emailClick}
-          className="lg:h-[60px] w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
+          className="w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
         >
           Email Us
         </Button>
 
         <Button
           secondary
-          className="lg:h-[60px] w-full text-center lg:text-lg mt-4 px-4 py-3 "
+          className="w-full text-center lg:text-lg mt-4 px-4 py-3 "
         >
           Send inquiry
         </Button>

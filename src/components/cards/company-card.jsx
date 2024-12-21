@@ -40,7 +40,7 @@ const CompanyCard = ({ data }) => {
         </div>
         <Button
           secondary
-          className="!border-brand-300 size-9 !py-[3px] !px-2 text-xs font-medium text-gray-500"
+          className="!border-brand-300 !size-9 !py-[3px] !px-2 text-xs font-medium text-gray-500"
         >
           <LoveIcon stroke="#C67618" />
         </Button>
@@ -93,7 +93,7 @@ const CompanyCard = ({ data }) => {
       {/* ----------- */}
 
       {/* last btn start */}
-      <CardFooter className="grid grid-cols-2 gap-2">
+      <CardFooter className="grid grid-cols-[auto_auto] md:grid-cols-2 gap-2">
         <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>

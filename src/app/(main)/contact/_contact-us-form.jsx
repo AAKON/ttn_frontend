@@ -105,7 +105,7 @@ function ContactUsForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 md:space-y-6 p-4 max-w-[620px] mx-auto"
+        className="space-y-4 md:space-y-6 p-4"
       >
         {/* Company Name */}
         <FormField
