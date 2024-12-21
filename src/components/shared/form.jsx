@@ -30,16 +30,17 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import {submitContactForm} from "@/services/contact/submitForm";
 
 // Define the schema with Zod
 const formSchema = z.object({
   company_name: z.string().min(2, { message: "Company Name is required." }),
-  name: z.string().optional(),
+  name: z.string().min(3, { message: "Name is required." }),
   designation: z.string().optional(),
   email: z.string().email({ message: "Invalid email address." }),
   countryCode: z.string().optional(),
   phoneNumber: z.string().optional(),
-  message: z.string().optional(),
+  message: z.string().min(10,{ message: "Message is required." }),
   terms: z.boolean().refine((value) => value, {
     message: "You must agree to the privacy policy.",
   }),
@@ -95,7 +96,6 @@ const Forms = () => {
     const modifiedFormData = modifyFormData(data);
 
     try {
-      console.log("Form Data:", modifiedFormData); // Log data
       const result = await submitContactForm(modifiedFormData, toast);
       if (result?.status && result?.code === 200) {
         toast({
@@ -172,6 +172,7 @@ const Forms = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -193,6 +194,7 @@ const Forms = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -215,6 +217,7 @@ const Forms = () => {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -305,6 +308,7 @@ const Forms = () => {
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
