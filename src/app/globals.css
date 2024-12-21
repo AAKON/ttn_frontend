@@ -98,7 +98,7 @@ body {
     @apply relative from-white to-transparent after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0;
   }
   .section_short_description {
-    @apply text-gray-600 text-sm leading-5 md:text-[20px] md:leading-[30px] ;
+    @apply text-gray-600 text-sm leading-5 md:text-[20px] md:leading-[30px];
   }
 }
 
@@ -112,6 +112,13 @@ body {
   }
   .header_style {
     @apply bg-white border-b border-b-gray-100 z-[9999];
+  }
+
+  body .input_style {
+    @apply bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-10 md:h-11 block w-full border border-gray-200 rounded-md px-[14px] py-[10px] focus-visible:ring-0 focus-visible:ring-offset-0;
+  }
+  .formLabelClasses {
+    @apply !text-sm !text-gray-900 !font-normal;
   }
 }
 
