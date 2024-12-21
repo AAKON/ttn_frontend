@@ -53,7 +53,7 @@ import { Empty } from "@/shared";
 import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
 import ClientSlider from "../marquee-sliders/client-slider";
 
-function CompanyTabs({ faqs, clients, certificatesData }) {
+function CompanyTabs({ faqs, clients, overview, contactData, certificatesData }) {
   return (
     <div>
       <Tabs
@@ -103,16 +103,30 @@ function CompanyTabs({ faqs, clients, certificatesData }) {
           <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 bg-white rounded-2xl p-4 lg:p-6">
             <h3 className="text-base font-semibold text-gray-900">Overview</h3>
             <div className="grid grid-cols-2 lg:gap-6 gap-[32px]">
+              <FeedBackList text={"Manpower"} text2={overview?.production_capacity || ''} />
+              <FeedBackList text={"Production capacity"} text2={overview?.production_capacity || ''} />
               <FeedBackList
-                text={"Available Selling Query"}
-                text2={"Lorem ipsum"}
+                text={"No of Machine"}
+                text2={overview?.total_units || ''}
+              />
+              <FeedBackList
+                  text={"MOQ"}
+                  text2={overview?.moq || ''}
+              />
+              <FeedBackList
+                  text={"Lead Time"}
+                  text2={overview?.lead_time || ''}
+              />
+              <FeedBackList
+                  text={"Delivery Terms"}
+                  text2={overview?.shipment_term || ''}
               />
               <FeedBackList
                 text={"Payment Policy"}
-                text2={"LC/TT/Bank Transfer"}
+                text2={overview?.payment_policy || ''}
               />
-              <FeedBackList text={"Total Units"} text2={"Lorem ipsum"} />
-              <FeedBackList text={"Manpower"} text2={"Lorem ipsum"} />
+
+
             </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
@@ -134,7 +148,7 @@ function CompanyTabs({ faqs, clients, certificatesData }) {
               </p>
 
               <div className="border border-gray-200 rounded-[16px] p-6 mt-3">
-                <ChartYearly />
+                <ChartYearly chartData={overview?.yearly_turnover} />
               </div>
             </div>
           </div>
@@ -188,31 +202,31 @@ function CompanyTabs({ faqs, clients, certificatesData }) {
                 <div className="grid grid-cols-2 gap-6">
                   <FeedBackList
                     text="Address"
-                    text2="Noida Road, D Block, Sector 11, Noida, Uttar Pradesh, India"
+                    text2={contactData?.address}
                     icon={
                       <MarkerPinIcon width={30} height={30} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Email"}
-                    text2={"contact@codeblueindia.com"}
+                    text2={contactData?.email}
                     icon={<EmailIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Whatsapp"}
-                    text2={"Contact via Whatsapp"}
+                    text2={contactData?.whatsapp}
                     icon={
                       <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Phone"}
-                    text2={"+919810211006"}
+                    text2={contactData?.phone}
                     icon={<PhoneIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Website"}
-                    text2={"www.abcdcompany.com"}
+                    text2={contactData?.website}
                     icon={<GlobeIcon width={20} height={20} stroke="#F7931E" />}
                   />
                 </div>
@@ -305,22 +319,24 @@ function CompanyTabs({ faqs, clients, certificatesData }) {
 
 export function FeedBackList({ text, text2, icon, className }) {
   return (
-    <div className={`lg:w-[335px] w-[165px] ${className}`}>
+    <div className={`${className}`}>
       <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
-      <h3 className="text-gray-900 text-base leading-[24px] font-medium mt-1 flex items-start  gap-3">
+      <div className="flex items-start gap-3 mt-1">
         {icon && icon}
-        <span>{text2}</span>
-      </h3>
+        <h3 className="text-gray-900 text-base leading-[24px] font-medium">
+          <span>{text2}</span>
+        </h3>
+      </div>
     </div>
   );
 }
 
 export function ContactCard({
-  contactId,
-  personName,
-  designation,
-  emailAddress,
-  phoneNumber,
+                              contactId,
+                              personName,
+                              designation,
+                              emailAddress,
+                              phoneNumber,
   whatsAppText,
   emailIcon,
   phoneIcon,

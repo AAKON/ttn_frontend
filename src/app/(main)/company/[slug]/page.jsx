@@ -32,6 +32,8 @@ const CompanyDetails = async ({ params: { slug } }) => {
     const clientsData = details?.company?.clients || [];
     const certificatesData = details?.company?.certificates || [];
     const productsData = details?.company?.products || [];
+    const overviewData = details?.company?.overview || null;
+    const contactData = details?.company?.contact || null;
 
     console.log(details, "get c details");
 
@@ -58,6 +60,8 @@ const CompanyDetails = async ({ params: { slug } }) => {
                     faqs={faqData}
                     clients={clientsData}
                     certificatesData={certificatesData}
+                    overview={overviewData}
+                    contactData={contactData}
                   />
                 </div>
               </div>
