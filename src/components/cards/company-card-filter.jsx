@@ -94,7 +94,7 @@ const CompanyCardFilter = ({ company }) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/company/${company?.slug}`} secondary>
+        <Button TagName={Link} href={`/company/${company?.slug}`} secondary prefetch={false}>
           View Profile
         </Button>
         <Button TagName={Link} href="/contact" type="button" primaryOutline>

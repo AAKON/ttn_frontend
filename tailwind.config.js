@@ -84,8 +84,7 @@ module.exports = {
       },
       backgroundImage: {
         "hero-image": "url('../assets/Hero.webp')",
-        "footer-bg-image": "url('../assets/footer-bg.png')",
-        detailBennar: "url('../assets/detailBennar.jpg')",
+        "footer-bg-image": "url('../assets/footer-bg.png')"
       },
       borderRadius: {
         lg: "var(--radius)",
