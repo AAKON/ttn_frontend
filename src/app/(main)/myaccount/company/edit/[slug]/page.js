@@ -25,7 +25,7 @@ export default async function Page({ params: { slug } }) {
     return (
       <Suspense fallback={<div>Loading ...</div>}>
         <div className="bg-gray-50">
-          <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[440px] h-[42.667vw] w-full"></div>
+          <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[275px] h-[42.667vw] w-full"></div>
           <Container>
             <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px]">
               <div className="flex justify-end gap-3">

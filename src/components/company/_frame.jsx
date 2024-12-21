@@ -67,7 +67,7 @@ const Frame = ({ slug, headerData, className }) => {
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
                     <TagsIcon />
                     {tags}
-                    <span className="max-sm:hidden lg:block">/Mixed Rags</span>
+                    {/*<span className="max-sm:hidden lg:block">/Mixed Rags</span>*/}
                   </h6>
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
                     <BuildingOneIcon /> Joined:{" "}

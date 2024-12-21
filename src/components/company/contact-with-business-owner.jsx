@@ -12,10 +12,12 @@ import {
   FileDownloadIcon,
 } from "@/icons";
 
-const ContactWithBusinessOwner = () => {
+const ContactWithBusinessOwner = ({headerData}) => {
   const [Owner, setOwner] = useState(false);
   const [email, setEmail] = useState(false);
   const [report, setReport] = useState(false);
+
+  const {name, profileImage, tags} =headerData;
 
   const emailClick = () => {
     setEmail(true);
@@ -40,17 +42,17 @@ const ContactWithBusinessOwner = () => {
         <div className="flex items-center mt-[32px] mb-4 gap-3.5">
           <Image
             className="border rounded-full object-cover"
-            src={CodeBlue}
+            src={profileImage ? profileImage : CodeBlue}
             alt="CodeBlue"
             width={40}
             height={40}
           />
           <div className="flex flex-col gap-[10px]">
             <h3 className="text-gray-900 text-base leading-base font-semibold">
-              CodeBlue Clothing Pvt Ltd
+              {name}
             </h3>
-            <h6 className="text-gray-600 text-sm leading-sm font-normal">
-              Used Clothes/Used Shoes...
+            <h6 className="text-gray-600 text-sm leading-sm font-normal line-clamp-1">
+              {tags}
             </h6>
           </div>
         </div>
