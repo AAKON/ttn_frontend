@@ -202,31 +202,31 @@ function CompanyTabs({ faqs, clients, overview, contactData, certificatesData })
                 <div className="grid grid-cols-2 gap-6">
                   <FeedBackList
                     text="Address"
-                    text2={contactData?.address}
+                    text2={contactData?.address || ''}
                     icon={
                       <MarkerPinIcon width={30} height={30} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Email"}
-                    text2={contactData?.email}
+                    text2={contactData?.email || ''}
                     icon={<EmailIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Whatsapp"}
-                    text2={contactData?.whatsapp}
+                    text2={contactData?.whatsapp || ''}
                     icon={
                       <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Phone"}
-                    text2={contactData?.phone}
+                    text2={contactData?.phone || ''}
                     icon={<PhoneIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Website"}
-                    text2={contactData?.website}
+                    text2={contactData?.website || ''}
                     icon={<GlobeIcon width={20} height={20} stroke="#F7931E" />}
                   />
                 </div>
