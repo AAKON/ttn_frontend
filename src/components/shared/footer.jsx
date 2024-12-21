@@ -32,7 +32,7 @@ function FooterBanner() {
   return (
     <div className="text-center md:text-left py-8 px-4 lg:py-12 lg:px-20 bg-footer-bg-image bg-no-repeat bg-right bg-cover border-gray-200 border bg-gray-50 rounded-2xl overflow-hidden">
       <div className="md:max-w-[768px]">
-        <h3 className="text-lg leading-normal lg:text-3xl lg:leading-[38px] font-semibold">
+        <h3 className="text-lg leading-normal lg:text-3xl lg:leading-[38px] font-semibold lg:pr-10">
           Leverage Our Platform Expertise for Your Business Growth
         </h3>
         <p className="text-gray-500 pt-2">

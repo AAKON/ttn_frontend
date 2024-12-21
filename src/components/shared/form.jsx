@@ -59,7 +59,7 @@ const Forms = () => {
       onSubmit={HandleForm}
     >
       <div className="bg-white lg:mt-0 mt-16 flex flex-col gap-y-4 w-full shadow-card-shadow p-4 xl:p-8 rounded-2xl">
-        <h4 className="font-semibold text-2xl xl:text-4xl text-gray-900 md:pb-3 xl:pb-6 pb-6 text-center">
+        <h4 className="font-semibold text-2xl xl:text-3xl text-gray-900 md:pb-3 xl:pb-6 pb-6 text-center">
           Get in touch
         </h4>
         {/* Business Category* */}

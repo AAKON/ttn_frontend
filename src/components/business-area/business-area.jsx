@@ -86,7 +86,8 @@ const BusinessArea = () => {
     return (
         <Section>
             {/* heading */}
-            <SectionHeading heading={"Business Area"} description={"Explore Our Extensive Range of Textile & Apparel Products &  Services."} />
+            <SectionHeading heading={"Business Area"}
+                            description={"Explore Our Extensive Range of Textile & Apparel Products &  Services."} />
             {/* slider */}
             <div className="relative mt-12">
                 <Splide

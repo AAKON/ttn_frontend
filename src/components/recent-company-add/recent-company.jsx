@@ -31,6 +31,12 @@ const RecentCompany = ({data}) => {
         perPage: 1,
         padding: "3.5rem",
       },
+      1300: {
+        padding: "3rem",
+      },
+      1600: {
+        padding: "9rem",
+      },
     },
   };
 

@@ -44,7 +44,7 @@ const GlobalSourcing = () => {
       <div className="flex flex-col gap-x-6 xl:gap-x-[170px] gap-y-10 lg:flex-row">
         {/* left */}
         <div className="flex flex-col md:items-start md:justify-start items-center justify-center text-center md:text-start xl:w-[582px]">
-          <h4 className="text-gray-900 pb-[10px] font-semibold text-[20px] md:text-4xl capitalize">
+          <h4 className="text-gray-900 pb-[10px] font-semibold text-[20px] md:text-3xl capitalize">
             Sourcing Partner Benefits
           </h4>
           <p className="font-normal hidden md:block text-gray-700 text-sm md:text-xl max-w-[305px] md:max-w-[399px]">
@@ -60,7 +60,7 @@ const GlobalSourcing = () => {
           </div>
         </div>
         {/* right */}
-        <div className="flex flex-col items-start gap-y-[14px] md:gap-y-8 xl:w-[648px]">
+        <div className="flex flex-col items-start gap-y-[14px] md:gap-y-6 xl:w-[648px]">
           {benefit?.map((item, index) => (
             <Option key={index} index={index} item={item} />
           ))}
