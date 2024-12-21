@@ -74,7 +74,10 @@ body {
     @apply px-3 py-2 md:px-4 md:py-[10px] rounded-sm md:rounded-[8px] text-sm md:text-base leading-5 md:leading-6 text-white bg-primary flex items-center gap-2 justify-center font-semibold md:font-bold;
   }
   h1 {
-    @apply text-4xl md:text-5xl font-semibold leading-[44px] md:leading-[60px] text-gray-100;
+    @apply text-3xl md:text-5xl font-semibold leading-[44px] md:leading-[60px] text-gray-900;
+  }
+  h2 {
+    @apply text-2xl md:text-4xl font-semibold md:leading-[44px] text-gray-900;
   }
   h5 {
     @apply text-xs md:text-sm font-bold leading-tight text-gray-100 tracking-[2px] uppercase;
@@ -93,6 +96,9 @@ body {
   }
   .side_shadow_r {
     @apply relative from-white to-transparent after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0;
+  }
+  .section_short_description {
+    @apply text-gray-600 text-sm leading-5 md:text-[20px] md:leading-[30px] ;
   }
 }
 
@@ -118,8 +124,8 @@ body {
 .splide__arrow.splide__arrow--next {
   z-index: 30;
 }
-.bg-detailBennar{
-  background-color: rgba(254, 244, 232, .5);
+.bg-detailBennar {
+  background-color: rgba(254, 244, 232, 0.5);
 }
 .pricing-accordion .lucide-chevron-down {
   display: none !important;

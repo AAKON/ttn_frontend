@@ -3,13 +3,13 @@ import React from "react";
 import { Container } from "@/shared";
 import HeroForm from "./hero-form";
 
-const Hero = ({categories, locations}) => {
+const Hero = ({ categories, locations }) => {
   return (
     <section className="pt-[88px] md:pt-[208px] md:pb-[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
       <Container>
         <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
           <div className="text-center pb-4 md:pb-10">
-            <h1 className="text-2xl md:text-[44px]">
+            <h1 className="text-2xl md:text-[44px] text-white">
               Find Your{" "}
               <TextAnimator
                 className={"text-primary"}
@@ -32,7 +32,6 @@ const Hero = ({categories, locations}) => {
 };
 
 import TextAnimator from "./text-animatior";
-
 
 // Form Design
 

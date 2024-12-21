@@ -26,10 +26,15 @@ const MyCompany = ({ companies }) => {
     rewind: true,
     padding: { left: 0, right: 240 },
     breakpoints: {
-      768: {
+      1040: {
         perPage: 2,
         gap       : 18,
-        padding: { left: 0, right: 80 }
+        padding: { left: 0, right: 40 }
+      },
+      768: {
+        perPage: 1,
+        gap       : 18,
+        padding: { left: 0, right: 40 }
       },
       640: {
         perPage: 1,

@@ -15,7 +15,8 @@ import Link from "next/link";
 
 const CompanyCardFilter = ({ company }) => {
   return (
-    <Card>
+    <Card className="flex flex-col justify-between">
+      <div>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
         <div className="flex items-center gap-3">
           <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
@@ -40,7 +41,7 @@ const CompanyCardFilter = ({ company }) => {
         </div>
         <Button
           secondary
-          className="!border-brand-300 size-9 !py-[3px] !px-2 text-xs font-medium text-gray-500"
+          className=" !border-brand-300 !size-9 !py-[3px] !px-2 text-xs font-medium text-gray-500"
         >
           <LoveIcon stroke="#C67618" />
         </Button>
@@ -66,12 +67,14 @@ const CompanyCardFilter = ({ company }) => {
 
       {/* peragraph start */}
       <CardContent className="flex gap-x-2">
-        <p className="text-gray-500 text-md font-normal leading-6">
+        <p className="text-gray-500 text-md font-normal leading-6 line-clamp-3">
           {company?.about}
         </p>
       </CardContent>
       {/* peragraph end */}
+      </div>
 
+      <div>
       {/* -------- */}
       <CardContent className="flex justify-between">
         {/*<div className="flex gap-2 items-center">*/}
@@ -94,7 +97,12 @@ const CompanyCardFilter = ({ company }) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/company/${company?.slug}`} secondary prefetch={false}>
+        <Button
+          TagName={Link}
+          href={`/company/${company?.slug}`}
+          secondary
+          prefetch={false}
+        >
           View Profile
         </Button>
         <Button TagName={Link} href="/contact" type="button" primaryOutline>
@@ -102,6 +110,7 @@ const CompanyCardFilter = ({ company }) => {
         </Button>
       </CardFooter>
       {/* last btn end */}
+      </div>
     </Card>
   );
 };

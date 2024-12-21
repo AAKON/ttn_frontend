@@ -8,7 +8,8 @@ import CodeBlue from "@/assets/CodeBlue.svg";
 import {
   BookmarkIcon,
   BuildingOneIcon,
-  BuildingTwoIcon, EditIcon,
+  BuildingTwoIcon,
+  EditIcon,
   EyeIcon,
   GridIcon,
   MarkerPinIcon,
@@ -20,8 +21,20 @@ import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 
 const Frame = ({ slug, headerData, className }) => {
-
-  const {bannerImage, profileImage, moto, tags, name, viewCount, location, category, companySize, created, canEdit, canClaim} =headerData;
+  const {
+    bannerImage,
+    profileImage,
+    moto,
+    tags,
+    name,
+    viewCount,
+    location,
+    category,
+    companySize,
+    created,
+    canEdit,
+    canClaim,
+  } = headerData;
 
   return (
     <div className={`relative ${className}`}>
@@ -34,7 +47,8 @@ const Frame = ({ slug, headerData, className }) => {
               <Image
                 className="border rounded-full object-cover lg:w-[70px] lg:h-[70px] w-[64px] h-[64px]"
                 src={profileImage ? profileImage : CodeBlue}
-                width={70} height={70}
+                width={70}
+                height={70}
                 alt={name}
               />
               <div className="flex flex-col gap-[10px]">
@@ -43,11 +57,11 @@ const Frame = ({ slug, headerData, className }) => {
                 </p>
                 <h3 className="text-gray-900 flex gap-4 lg:text-3xl lg:leading-[38px] text-[20px] leading-[30px] font-semibold">
                   {name}
-                  <Image
+                  {/* <Image
                     src={shield_tick}
                     alt="CompanyIcon"
                     className="max-sm:w-6 max-sm:h-6"
-                  />
+                  /> */}
                 </h3>
                 <div className="flex flex-wrap lg:flex-row flex-col lg:gap-6 gap-[10px]">
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
@@ -56,7 +70,8 @@ const Frame = ({ slug, headerData, className }) => {
                     <span className="max-sm:hidden lg:block">/Mixed Rags</span>
                   </h6>
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
-                    <BuildingOneIcon /> Joined: <DateFormatter publishDate={created} />
+                    <BuildingOneIcon /> Joined:{" "}
+                    <DateFormatter publishDate={created} />
                   </h6>
                 </div>
               </div>
@@ -68,21 +83,25 @@ const Frame = ({ slug, headerData, className }) => {
                 <ShareModal />
               </>
               {canClaim && (
-              <Button
-                secondary
-                className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
-              >
-                Claim this Business
-              </Button>)}
+                <Button
+                  secondary
+                  className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
+                >
+                  Claim this Business
+                </Button>
+              )}
               {canEdit && (
-              <Button
+                <Button
                   className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9"
                   TagName={Link}
                   href={`/myaccount/company/edit/${slug}`}
-              >
-                <EditIcon stroke="#ffffff"/>
-                <span className="max-sm:hidden sm:hidden md:block">Edit Profile</span>
-              </Button>)}
+                >
+                  <EditIcon stroke="#ffffff" />
+                  <span className="max-sm:hidden sm:hidden md:block">
+                    Edit Profile
+                  </span>
+                </Button>
+              )}
               <Button className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9">
                 <BookmarkIcon stroke="#ffffff" />
               </Button>
@@ -90,11 +109,7 @@ const Frame = ({ slug, headerData, className }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <LdtCard
-              icon={<GridIcon />}
-              text={"Category"}
-              title={category}
-            />
+            <LdtCard icon={<GridIcon />} text={"Category"} title={category} />
             <LdtCard
               icon={<BuildingTwoIcon />}
               text={"Company size"}

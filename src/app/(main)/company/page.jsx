@@ -27,7 +27,9 @@ const CompanyList = () => {
     locationIds: locationIds ? [parseInt(locationIds, 10)] : [],
     manpower: [],
     complianceIds: [],
-    businessCategoryIds: businessCategoryIds ? [parseInt(businessCategoryIds, 10)] : [],
+    businessCategoryIds: businessCategoryIds
+      ? [parseInt(businessCategoryIds, 10)]
+      : [],
     keyword: keyword ? keyword : "",
   };
 
@@ -41,7 +43,7 @@ const CompanyList = () => {
       setFilterOptionLoading(true);
       try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
         );
         const data = await response.json();
         setFilterOptions(data.data);
@@ -57,19 +59,18 @@ const CompanyList = () => {
 
   const categories = filterOptions?.categories || [];
 
-
   // Fetch companies when filters change
   useEffect(() => {
     const fetchCompanies = async () => {
       setLoading(true);
       try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/company/list`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(filters),
-            }
+          `${process.env.NEXT_PUBLIC_API_URL}/company/list`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(filters),
+          }
         );
         const data = await response.json();
         setCompanies(data?.data?.data || []);
@@ -88,11 +89,13 @@ const CompanyList = () => {
       const updatedFilters = { ...prev };
       if (key === "locationIds") {
         updatedFilters[key] = isChecked ? [id] : [];
-      }else {
+      } else {
         if (isChecked) {
           updatedFilters[key] = [...(updatedFilters[key] || []), id];
         } else {
-          updatedFilters[key] = updatedFilters[key].filter((item) => item !== id);
+          updatedFilters[key] = updatedFilters[key].filter(
+            (item) => item !== id
+          );
         }
       }
       return updatedFilters;
@@ -103,7 +106,9 @@ const CompanyList = () => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...data,
-      businessCategoryIds: data.businessCategoryIds ? [data.businessCategoryIds] : prevFilters.businessCategoryIds,
+      businessCategoryIds: data.businessCategoryIds
+        ? [data.businessCategoryIds]
+        : prevFilters.businessCategoryIds,
       keyword: data.keyword || prevFilters.keyword,
     }));
   };
@@ -115,53 +120,73 @@ const CompanyList = () => {
 
     // Map businessCategoryIds
     if (filters.businessCategoryIds.length > 0) {
-      const selectedCategories = filters.businessCategoryIds.map((id) => {
-        const category = filterOptions?.categories?.find((cat) => cat.id === id);
-        return category ? { id, name: category.name } : null;
-      }).filter(Boolean);
+      const selectedCategories = filters.businessCategoryIds
+        .map((id) => {
+          const category = filterOptions?.categories?.find(
+            (cat) => cat.id === id
+          );
+          return category ? { id, name: category.name } : null;
+        })
+        .filter(Boolean);
 
-      selected.push(...selectedCategories.map(({ id, name }) => ({
-        key: "businessCategoryIds",
-        id,
-        name,
-      })));
+      selected.push(
+        ...selectedCategories.map(({ id, name }) => ({
+          key: "businessCategoryIds",
+          id,
+          name,
+        }))
+      );
     }
 
     // Map locationIds
     if (filters.locationIds.length > 0) {
-      const selectedLocations = filters.locationIds.map((id) => {
-        const location = filterOptions?.locations?.find((loc) => loc.id === id);
-        return location ? { id, name: location.name } : null;
-      }).filter(Boolean);
+      const selectedLocations = filters.locationIds
+        .map((id) => {
+          const location = filterOptions?.locations?.find(
+            (loc) => loc.id === id
+          );
+          return location ? { id, name: location.name } : null;
+        })
+        .filter(Boolean);
 
-      selected.push(...selectedLocations.map(({ id, name }) => ({
-        key: "locationIds",
-        id,
-        name,
-      })));
+      selected.push(
+        ...selectedLocations.map(({ id, name }) => ({
+          key: "locationIds",
+          id,
+          name,
+        }))
+      );
     }
 
     // Map complianceIds
     if (filters.complianceIds.length > 0) {
-      const selectedCompliance = filters.complianceIds.map((id) => {
-        const compliance = filterOptions?.compliances?.find((comp) => comp.id === id);
-        return compliance ? { id, name: compliance.name } : null;
-      }).filter(Boolean);
+      const selectedCompliance = filters.complianceIds
+        .map((id) => {
+          const compliance = filterOptions?.compliances?.find(
+            (comp) => comp.id === id
+          );
+          return compliance ? { id, name: compliance.name } : null;
+        })
+        .filter(Boolean);
 
-      selected.push(...selectedCompliance.map(({ id, name }) => ({
-        key: "complianceIds",
-        id,
-        name,
-      })));
+      selected.push(
+        ...selectedCompliance.map(({ id, name }) => ({
+          key: "complianceIds",
+          id,
+          name,
+        }))
+      );
     }
 
     // Map manpower (no ID, direct values)
     if (filters.manpower.length > 0) {
-      selected.push(...filters.manpower.map((value) => ({
-        key: "manpower",
-        id: value,
-        name: value,
-      })));
+      selected.push(
+        ...filters.manpower.map((value) => ({
+          key: "manpower",
+          id: value,
+          name: value,
+        }))
+      );
     }
 
     return selected;
@@ -173,16 +198,18 @@ const CompanyList = () => {
       const updatedFilters = { ...prevFilters };
 
       if (key === "manpower") {
-        updatedFilters[key] = updatedFilters[key].filter((value) => value !== id);
+        updatedFilters[key] = updatedFilters[key].filter(
+          (value) => value !== id
+        );
       } else {
-        updatedFilters[key] = updatedFilters[key].filter((itemId) => itemId !== id);
+        updatedFilters[key] = updatedFilters[key].filter(
+          (itemId) => itemId !== id
+        );
       }
 
       return updatedFilters;
     });
   };
-
-
 
   const resultsCount = companies.length;
 
@@ -191,101 +218,103 @@ const CompanyList = () => {
   };
 
   return (
-      <>
-        <Section>
-          <div className="mx-auto text-center">
-            <h3 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
-              Find Your Apparel Needs
-            </h3>
-            <HeroCompanyForm
-                isFilterIcon={true}
-                categories={categories}
-                onSearchSubmit={handleSearchSubmit}
-            />
+    <>
+      <Section className="bg-gray-50">
+        <div className="mx-auto text-center">
+          <h3 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
+            Find Your Apparel Needs
+          </h3>
+          <HeroCompanyForm
+            isFilterIcon={true}
+            categories={categories}
+            onSearchSubmit={handleSearchSubmit}
+          />
+        </div>
+      </Section>
+
+      <Section>
+        <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] xl:grid-cols-[336px_1fr] gap-8">
+          <div className="relative">
+            {filterOptionLoading ? (
+              <AccordionSkeleton />
+            ) : (
+              filterOptions && (
+                <FilterAccordion
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={handleFilterChange}
+                  onResetFilter={resetFilterSelection}
+                />
+              )
+            )}
           </div>
-        </Section>
-        <Section>
-          <div className="grid grid-cols-1 md:grid-cols-[336px_1fr] gap-8">
-            <div className="relative">
-              {filterOptionLoading ? (
-                  <AccordionSkeleton />
-              ) : (
-                  filterOptions && (
-                      <FilterAccordion
-                          filterOptions={filterOptions}
-                          filters={filters}
-                          onFilterChange={handleFilterChange}
-                          onResetFilter={resetFilterSelection}
-                      />
-                  )
-              )}
-            </div>
-            <div>
-              <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
-                <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
-                  Search Results: <span>{resultsCount}</span> Results found
-                </h3>
-                <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
+
+          <div>
+            <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
+              <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
+                Search Results: <span>{resultsCount}</span> Results found
+              </h3>
+              <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
                 <span
-                    className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                        view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
-                    }`}
-                    onClick={() => setView("list")}
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
+                    view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
+                  }`}
+                  onClick={() => setView("list")}
                 >
                   <ListIcon
-                      height={12}
-                      width={18}
-                      stroke={view === "list" ? "#475467" : "#98A2B3"}
+                    height={12}
+                    width={18}
+                    stroke={view === "list" ? "#475467" : "#98A2B3"}
                   />
                 </span>
-                  <span
-                      className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                          view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
-                      }`}
-                      onClick={() => setView("grid")}
-                  >
-                  <GridIcon
-                      height={18}
-                      width={18}
-                      stroke={view === "grid" ? "#475467" : "#98A2B3"}
-                  />
-                </span>
-                </div>
-              </div>
-              {/*selected options */}
-              <SelectedOptions
-                  selectedOptions={getSelectedOptions()}
-                  onRemove={handleRemoveFilter}
-              />
-              {/* end display selected options */}
-              <div
-                  className={`mt-8 grid gap-3 lg:gap-8 ${
-                      view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                <span
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
+                    view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
                   }`}
-              >
-                {loading ? (
-                    <FilterCardSkeleton />
-                ) : companies &&
-                Array.isArray(companies) &&
-                companies.length > 0 ? (
-                    companies.map((company) => (
-                        <CompanyCardFilter key={company.id} company={company} />
-                    ))
-                ) : (
-                    <p className="text-center text-gray-500">No results found</p>
-                )}
+                  onClick={() => setView("grid")}
+                >
+                  <GridIcon
+                    height={18}
+                    width={18}
+                    stroke={view === "grid" ? "#475467" : "#98A2B3"}
+                  />
+                </span>
               </div>
             </div>
+            {/*selected options */}
+            <SelectedOptions
+              selectedOptions={getSelectedOptions()}
+              onRemove={handleRemoveFilter}
+            />
+            {/* end display selected options */}
+            <div
+              className={`mt-8 grid gap-3 lg:gap-8 ${
+                view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+              }`}
+            >
+              {loading ? (
+                <FilterCardSkeleton />
+              ) : companies &&
+                Array.isArray(companies) &&
+                companies.length > 0 ? (
+                companies.map((company) => (
+                  <CompanyCardFilter key={company.id} company={company} />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No results found</p>
+              )}
+            </div>
           </div>
-        </Section>
-      </>
+        </div>
+      </Section>
+    </>
   );
 };
 
 const Company = () => (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CompanyList />
-    </Suspense>
+  <Suspense fallback={<div>Loading...</div>}>
+    <CompanyList />
+  </Suspense>
 );
 
 export default Company;
