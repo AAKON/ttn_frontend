@@ -22,13 +22,25 @@ const Contact = () => {
       </Section>
 
       <Section className="pt-0 lg:pt-20">
-        <div className="grid grid-cols-1 lg:gap-6 items-start lg:grid-cols-[2fr_3fr]">
+        <div className="grid grid-cols-1 gap-xl-6 gap-8 lg:gap-x-20 items-start lg:grid-cols-[3fr_2fr] xl:grid-cols-[4fr_2fr]">
+          <div>
+            <div className="md:pb-6 lg:pt-0">
+              <h2 className="text-center">
+                Get in touch
+              </h2>
+              <p className="section_short_description text-center pt-2 md:pt-3 lg:pt-5">
+                We’d love to hear from you. Please fill out this form.
+              </p>
+            </div>
+            <ContactUsForm />
+          </div>
+
           {/* Office Information section */}
-          <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-10 pb-8 lg:pb-0 bg-gray-50 lg:bg-white">
+          <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-10">
             <div className="flex gap-x-2">
               <Email />
               <div className="pl-[10px]">
-                <p className="text-gray-500 pt-6 md:pt-0">Email</p>
+                <p className="text-gray-500 ">Email</p>
                 <span className="font-semibold text-base text-gray-700">
                   info@thetexti lenetwork.com
                 </span>
@@ -38,7 +50,7 @@ const Contact = () => {
             <div className="flex gap-x-2">
               <Location />
               <div className="pl-[10px]">
-                <p className="text-gray-500 pt-6 md:pt-0">Office</p>
+                <p className="text-gray-500 ">Office</p>
                 <span className="font-semibold text-base text-gray-700">
                   18/7, Nikunja-2, Khilkhet, Dhaka,{" "}
                 </span>
@@ -51,24 +63,12 @@ const Contact = () => {
             <div className="flex gap-x-2">
               <Phone />
               <div className="pl-[10px]">
-                <p className="text-gray-500 pt-6 md:pt-0">Phone</p>
+                <p className="text-gray-500 ">Phone</p>
                 <span className="font-semibold text-base text-gray-700">
                   +88017835252434 (WhatsApp)
                 </span>
               </div>
             </div>
-          </div>
-
-          <div>
-            <div className="md:pb-10 lg:pb-[60px] pt-8 lg:pt-0">
-              <h2 className="text-center">
-                Get in touch
-              </h2>
-              <p className="section_short_description text-center pt-2 md:pt-3 lg:pt-5">
-                We’d love to hear from you. Please fill out this form.
-              </p>
-            </div>
-            <ContactUsForm />
           </div>
         </div>
       </Section>
