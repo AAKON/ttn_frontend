@@ -53,7 +53,7 @@ import { Empty } from "@/shared";
 import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
 import ClientSlider from "../marquee-sliders/client-slider";
 
-function CompanyTabs({ faqs, clients, overview, contactData, certificatesData }) {
+function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, certificatesData }) {
   return (
     <div>
       <Tabs
@@ -246,60 +246,31 @@ function CompanyTabs({ faqs, clients, overview, contactData, certificatesData })
               <h3 className="text-base font-semibold text-gray-900">
                 Decision Makers
               </h3>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
-                <ContactCard
-                  contactId="Contact 01"
-                  personName="Naim Bin Abdul"
-                  designation="Executive Sales"
-                  emailIcon={
-                    <EmailIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  phoneIcon={
-                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  whatsAppIcon={
-                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  emailAddress="contact@codeblueindia.com"
-                  phoneNumber="+919810211006"
-                  whatsAppText="Contact via Whatsapp"
-                />
-                <ContactCard
-                  contactId="Contact 02"
-                  personName="Naim Bin Abdul"
-                  designation="Executive Sales"
-                  emailIcon={
-                    <EmailIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  phoneIcon={
-                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  whatsAppIcon={
-                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  emailAddress="contact@codeblueindia.com"
-                  phoneNumber="+919810211006"
-                  whatsAppText="Contact via Whatsapp"
-                />
-                <ContactCard
-                  contactId="Contact 03"
-                  personName="Naim Bin Abdul"
-                  designation="Executive Sales"
-                  emailIcon={
-                    <EmailIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  phoneIcon={
-                    <PhoneIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  whatsAppIcon={
-                    <WhatsAppIcon width={16} height={16} stroke="#F7931E" />
-                  }
-                  emailAddress="contact@codeblueindia.com"
-                  phoneNumber="+919810211006"
-                  whatsAppText="Contact via Whatsapp"
-                />
-              </div>
+              {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
+                    {decissionMakers.map((item, index) => (
+                        <ContactCard
+                            key={item?.id}
+                            contactId={`Contact ${index+1}`}
+                            personName={item?.name}
+                            designation={item?.designation}
+                            emailIcon={
+                              <EmailIcon width={16} height={16} stroke="#F7931E"/>
+                            }
+                            phoneIcon={
+                              <PhoneIcon width={16} height={16} stroke="#F7931E"/>
+                            }
+                            whatsAppIcon={
+                              <WhatsAppIcon width={16} height={16} stroke="#F7931E"/>
+                            }
+                            emailAddress={item?.email}
+                            phoneNumber={item?.phone}
+                            whatsAppText={item?.whatsapp}
+                        />
+                        )
+                    )}
+                  </div>
+              )}
             </div>
             {/* Decision Makers end */}
           </div>
@@ -309,7 +280,7 @@ function CompanyTabs({ faqs, clients, overview, contactData, certificatesData })
             <h3 className="text-xl font-semibold text-gray-900 mb-8">
               Frequently asked questions
             </h3>
-            <FrequentlyAskedQuestions faqs={faqs} />
+            <FrequentlyAskedQuestions faqs={faqs}/>
           </div>
         </TabsContent>
       </Tabs>
@@ -317,17 +288,17 @@ function CompanyTabs({ faqs, clients, overview, contactData, certificatesData })
   );
 }
 
-export function FeedBackList({ text, text2, icon, className }) {
+export function FeedBackList({text, text2, icon, className}) {
   return (
-    <div className={`${className}`}>
-      <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
-      <div className="flex items-start gap-3 mt-1">
-        {icon && icon}
-        <h3 className="text-gray-900 text-base leading-[24px] font-medium">
-          <span>{text2}</span>
-        </h3>
+      <div className={`${className}`}>
+        <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
+        <div className="flex items-start gap-3 mt-1">
+          {icon && icon}
+          <h3 className="text-gray-900 text-base leading-[24px] font-medium">
+            <span>{text2}</span>
+          </h3>
+        </div>
       </div>
-    </div>
   );
 }
 
@@ -337,33 +308,33 @@ export function ContactCard({
                               designation,
                               emailAddress,
                               phoneNumber,
-  whatsAppText,
-  emailIcon,
-  phoneIcon,
-  whatsAppIcon,
-}) {
+                              whatsAppText,
+                              emailIcon,
+                              phoneIcon,
+                              whatsAppIcon,
+                            }) {
   return (
-    <div className="">
-      <p className="text-gray-500 text-sm leading-[20px]">{contactId}</p>
-      <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
-        {personName}
-      </h5>
-      <p className="text-gray-500 text-sm leading-[20px]">{designation}</p>
-      <ul className="grid gap-2 grid-cols-1 mt-2">
-        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-          <span>{emailIcon}</span>
-          <span>{emailAddress}</span>
-        </li>
-        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-          <span>{phoneIcon}</span>
-          <span>{phoneNumber}</span>
-        </li>
-        <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
-          <span>{whatsAppIcon}</span>
-          <span>{whatsAppText}</span>
-        </li>
-      </ul>
-    </div>
+      <div className="">
+        <p className="text-gray-500 text-sm leading-[20px]">{contactId}</p>
+        <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
+          {personName}
+        </h5>
+        <p className="text-gray-500 text-sm leading-[20px]">{designation}</p>
+        <ul className="grid gap-2 grid-cols-1 mt-2">
+          <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+            <span>{emailIcon}</span>
+            <span>{emailAddress}</span>
+          </li>
+          <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+            <span>{phoneIcon}</span>
+            <span>{phoneNumber}</span>
+          </li>
+          <li className="text-gray-900 text-sm leading-[20px] flex items-center gap-2">
+            <span>{whatsAppIcon}</span>
+            <span>{whatsAppText}</span>
+          </li>
+        </ul>
+      </div>
   );
 }
 
