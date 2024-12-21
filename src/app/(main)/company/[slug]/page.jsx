@@ -34,6 +34,8 @@ const CompanyDetails = async ({ params: { slug } }) => {
     const productsData = details?.company?.products || [];
     const overviewData = details?.company?.overview || null;
     const contactData = details?.company?.contact || null;
+    const decissionMakersData = details?.company?.decision_makers || [];
+
 
     console.log(details, "get c details");
 
@@ -62,6 +64,7 @@ const CompanyDetails = async ({ params: { slug } }) => {
                     certificatesData={certificatesData}
                     overview={overviewData}
                     contactData={contactData}
+                    decissionMakers={decissionMakersData}
                   />
                 </div>
               </div>
