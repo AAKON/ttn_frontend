@@ -45,6 +45,7 @@ const ChartYearly = ({chartData}) => {
                     left: -18,
                     bottom: 0,
                   }}
+                  barCategoryGap={10}
               >
                 <CartesianGrid
                     stroke="#F2F4F7"
@@ -61,6 +62,7 @@ const ChartYearly = ({chartData}) => {
                     name="Turnover (Million USD)"
                     stackId="a"
                     fill="#F9A94B"
+                    barSize={40}
                     // radius={[10, 10, 0, 0]}
                 />
                 <Bar dataKey="uv" stackId="a" fill="#EAECF0"/>
