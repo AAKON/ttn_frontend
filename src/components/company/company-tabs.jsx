@@ -103,27 +103,27 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
           <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 bg-white rounded-2xl p-4 lg:p-6">
             <h3 className="text-base font-semibold text-gray-900">Overview</h3>
             <div className="grid grid-cols-2 lg:gap-6 gap-[32px]">
-              <FeedBackList text={"Manpower"} text2={overview?.production_capacity || ''} />
-              <FeedBackList text={"Production capacity"} text2={overview?.production_capacity || ''} />
+              <FeedBackList text={"Manpower"} text2={overview?.production_capacity || '...'} />
+              <FeedBackList text={"Production capacity"} text2={overview?.production_capacity || '...'} />
               <FeedBackList
                 text={"No of Machine"}
-                text2={overview?.total_units || ''}
+                text2={overview?.total_units || '...'}
               />
               <FeedBackList
                   text={"MOQ"}
-                  text2={overview?.moq || ''}
+                  text2={overview?.moq || '...'}
               />
               <FeedBackList
                   text={"Lead Time"}
-                  text2={overview?.lead_time || ''}
+                  text2={overview?.lead_time || '...'}
               />
               <FeedBackList
                   text={"Delivery Terms"}
-                  text2={overview?.shipment_term || ''}
+                  text2={overview?.shipment_term || '...'}
               />
               <FeedBackList
                 text={"Payment Policy"}
-                text2={overview?.payment_policy || ''}
+                text2={overview?.payment_policy || '...'}
               />
 
 
@@ -135,21 +135,24 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
             </h3>
 
             <div className="lg:mt-0 mt-6">
-              <p className="text-gray-500 text-sm leading-[20px]">
-                Market Share
-              </p>
-
-              <div className="border rounded-[16px] mt-3">
-                <Image src={marketShare} alt="marketShare" className="w-full" />
+              <div>
+                <p className="text-gray-500 text-sm leading-[20px]">
+                  Market Share
+                </p>
+                <div className="border rounded-[16px] mt-3">
+                  <Image src={marketShare} alt="marketShare" className="w-full"/>
+                </div>
               </div>
-
-              <p className="text-gray-500 text-sm leading-[20px] mt-6">
-                Yearly Turnover
-              </p>
-
-              <div className="border border-gray-200 rounded-[16px] p-6 mt-3">
-                <ChartYearly chartData={overview?.yearly_turnover} />
-              </div>
+              {overview?.yearly_turnover && Array.isArray(overview?.yearly_turnover) && overview?.yearly_turnover.length > 0 && (
+                  <div>
+                    <p className="text-gray-500 text-sm leading-[20px] mt-6">
+                      Yearly Turnover
+                    </p>
+                    <div className="border border-gray-200 rounded-[16px] p-6 mt-3">
+                      <ChartYearly chartData={overview?.yearly_turnover}/>
+                    </div>
+                  </div>
+              )}
             </div>
           </div>
         </TabsContent>
