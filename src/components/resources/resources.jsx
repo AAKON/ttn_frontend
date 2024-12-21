@@ -13,7 +13,7 @@ const Resources = async ({ blogsPromise }) => {
   return (
     <Section>
       <div>
-        <h5 className="font-semibold hidden lg:block text-center capitalize tracking-tight text-[48px] pb-[64px] text-gray-900">
+        <h5 className="font-semibold hidden lg:block text-center capitalize tracking-tight text-4xl pb-[64px] text-gray-900">
           Resources
         </h5>
         <p className="font-semibold text-center pb-8 lg:hidden text-2xl text-gray-900">

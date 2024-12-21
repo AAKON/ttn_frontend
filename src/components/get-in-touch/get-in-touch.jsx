@@ -9,7 +9,7 @@ import Forms from "@/components/shared/form";
 const GetInTouch = () => {
   return (
     <Section className="bg-gray-50">
-      <div className="flex flex-col md:flex-row relative items-center justify-between">
+      <div className="flex flex-col md:flex-row relative gap-x-8 items-center justify-between">
         {/* arrow */}
         <Image
           id="arrowImage"
@@ -19,7 +19,7 @@ const GetInTouch = () => {
         />
         {/* left */}
         <div>
-          <h3 className="text-2xl hidden lg:block xl:text-4xl font-normal max-w-[683px] text-gray-900 pb-4 max-[1432px]:!text-[30px] xl:pb-6">
+          <h3 className="text-2xl hidden lg:block xl:text-3xl font-normal max-w-[683px] text-gray-900 pb-4 max-[1432px]:!text-[30px] xl:pb-6">
             We empowering business networking that{" "}
             <span className="font-semibold">
               can help develop business growth.

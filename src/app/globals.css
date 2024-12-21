@@ -137,10 +137,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @media (min-width: 1024px) {
   .Partner_Benefits p {
-    font-size: 24px;
+    font-size: 22px;
   }
   .Partner_Benefits p.active {
-    font-size: 30px;
+    font-size: 24px;
   }
 }
 

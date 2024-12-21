@@ -19,7 +19,6 @@ import ErrorMessage from "@/components/shared/errormessage";
 import { getHomeDetails } from "@/services/home";
 import { getBlogTTNS } from "@/services/blogs";
 import MarqueeSlide from "@/components/marquee-sliders/marquee-slide";
-const allCompany = [];
 
 export default async function Home() {
   try {
