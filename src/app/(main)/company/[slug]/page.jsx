@@ -67,7 +67,7 @@ const CompanyDetails = async ({ params: { slug } }) => {
               </div>
 
               <div>
-                <ContactWithBusinessOwner />
+                <ContactWithBusinessOwner headerData={headerData} />
               </div>
             </div>
           </Container>
