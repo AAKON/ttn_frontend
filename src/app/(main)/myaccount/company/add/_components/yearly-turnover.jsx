@@ -165,6 +165,7 @@ const YearlyTurnover = () => {
             name="Turnover (Million USD)"
             stackId="a"
             fill="#F9A94B"
+            barSize={40}
           />
         </BarChart>
       </ResponsiveContainer>
