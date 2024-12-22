@@ -11,15 +11,18 @@ import { getCompanyBasic, getDataPreBasic } from "@/services/company";
 import ErrorMessage from "@/components/shared/errormessage";
 import CompanyBasicForm from "./_components/company-form";
 import CompanyForms from "@/app/(main)/myaccount/company/edit/[slug]/_components/company-forms";
+import Company404 from "@/app/(main)/company/[slug]/not-found";
+import Link from "next/link";
 
-export default async function Page({ params: { slug } }) {
-
+export default async function Page({ params }) {
+  const { slug } = await params;
   try {
+    const basic = await getCompanyBasic(slug);
     const preDataBasic = await getDataPreBasic();
-    const basicPromise = getCompanyBasic(slug);
-    const basic = await basicPromise;
 
-    console.log(basic, preDataBasic, 'get value')
+    if (!basic?.status && basic?.code === 404) {
+      return <Company404 />
+    }
 
 
     return (
@@ -29,17 +32,17 @@ export default async function Page({ params: { slug } }) {
           <Container>
             <div className="bg-white border border-gray-100 p-8 rounded-2xl -mt-[140px]">
               <div className="flex justify-end gap-3">
-                <Button secondary>
+                <Button TagName={Link} href={`/company/${slug}`} secondary>
                   <ViewAs stroke="#000000" />
                   View as
                 </Button>
-                <Button>
-                  <EditIcon stroke="#ffffff" />
-                  Edit My Profile
-                </Button>
+                {/*<Button>*/}
+                {/*  <EditIcon stroke="#ffffff" />*/}
+                {/*  Edit My Profile*/}
+                {/*</Button>*/}
               </div>
               <div className="pt-4">
-                <CompanyBasicForm slug={slug} basic={basic} preData={preDataBasic} />
+                <CompanyBasicForm slug={slug} basic={basic?.data} preData={preDataBasic} />
               </div>
             </div>
             <CompanyForms slug={slug} preData={preDataBasic} />

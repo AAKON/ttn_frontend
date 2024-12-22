@@ -1,6 +1,6 @@
 // services/company/index.js
 import {apiRequest} from "@/utils/api";
-import { getSession } from "next-auth/react";
+import {getSession} from "next-auth/react";
 import {getSSToken} from "@/utils/getSSToken";
 
 export async function getDataPreBasic() {
@@ -34,8 +34,7 @@ export async function getCompanyBasic(slug) {
     const options = {
         method: 'GET'
     };
-    const result = await apiRequest(endpoint, options, null, token);
-    return result?.data;
+    return await apiRequest(endpoint, options, null, token);
 }
 
 // own company list
@@ -92,7 +91,8 @@ export async function companyOverviewReq(slug, data, toast) {
 }
 // fetch company overview
 export async function getCompanyOverview(slug) {
-    const token = await getSSToken();
+    const session = await getSession();
+    const token = session?.accessToken;
     const endpoint = `my/company/${slug}/overview`;
     const options = {
         method: 'GET'

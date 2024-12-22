@@ -49,7 +49,7 @@ const Frame = ({ slug, headerData, className }) => {
                 src={profileImage ? profileImage : CodeBlue}
                 width={70}
                 height={70}
-                alt={name}
+                alt={name || 'profile image'}
               />
               <div className="flex flex-col gap-[10px]">
                 <p className="text-brand-600 lg:text-sm lg:leading-sm lg:font-semibold text-[12px] font-bold leading-[18px] uppercase">

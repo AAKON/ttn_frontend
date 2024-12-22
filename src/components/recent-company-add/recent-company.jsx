@@ -18,6 +18,8 @@ const RecentCompany = ({ data }) => {
     pagination: false,
     arrows: true,
     padding: "4rem",
+    drag: true,
+    snap: true,
     breakpoints: {
       1024: {
         perPage: 3,
