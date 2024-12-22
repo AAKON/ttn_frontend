@@ -1,0 +1,17 @@
+.company-slider .splide__arrow.splide__arrow--prev,
+.company-slider .splide__arrow.splide__arrow--next {
+  opacity: 0 !important;
+}
+.company-slider:hover .splide__arrow.splide__arrow--prev,
+.company-slider:hover .splide__arrow.splide__arrow--next {
+  opacity: 1 !important;
+}
+.company-slider .splide__arrow.splide__arrow--prev:hover,
+.company-slider .splide__arrow.splide__arrow--next:hover {
+  background: #f7931e !important;
+  background-color: #f7931e !important;
+}
+.company-slider .splide__arrow.splide__arrow--prev:hover svg path,
+.company-slider .splide__arrow.splide__arrow--next:hover svg path {
+  fill: #ffffff !important;
+}
