@@ -7,16 +7,16 @@ import "@/styles/companySlider.css";
 import Button from "@/components/shared/button";
 import businessLogo_1 from "@/assets/business-logo-2.png";
 import Link from "next/link";
+import "./company-slider.css"
 
-const RecentCompany = ({data}) => {
-
+const RecentCompany = ({ data }) => {
   const options = {
     type: "loop",
     perPage: 3,
     perMove: 1,
     gap: "1rem",
     pagination: false,
-    arrows: false,
+    arrows: true,
     padding: "4rem",
     breakpoints: {
       1024: {
@@ -52,17 +52,23 @@ const RecentCompany = ({data}) => {
 
       {/* all company */}
       {data && Array.isArray(data) && data.length > 0 && (
-      <div className="pt-12">
-        <Splide className="company-slider" options={options}>
-          {data?.map((item) => (
-            <SplideSlide key={item.id}>
-              <CompanyCard item={item} />
-            </SplideSlide>
-          ))}
-        </Splide>
-      </div>)}
+        <div className="pt-12">
+          <Splide className="company-slider" options={options}>
+            {data?.map((item) => (
+              <SplideSlide key={item.id}>
+                <CompanyCard item={item} />
+              </SplideSlide>
+            ))}
+          </Splide>
+        </div>
+      )}
       <div className="flex items-center justify-center pt-6 md:pt-12">
-        <Button TagName={Link} href="/myaccount/company/add" icon primaryOutline>
+        <Button
+          TagName={Link}
+          href="/myaccount/company/add"
+          icon
+          primaryOutline
+        >
           Add Company for Free
         </Button>
       </div>

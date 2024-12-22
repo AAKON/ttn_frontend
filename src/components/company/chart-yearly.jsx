@@ -62,7 +62,6 @@ const ChartYearly = ({chartData}) => {
                     name="Turnover (Million USD)"
                     stackId="a"
                     fill="#F9A94B"
-                    barSize={40}
                     // radius={[10, 10, 0, 0]}
                 />
                 <Bar dataKey="uv" stackId="a" fill="#EAECF0"/>
