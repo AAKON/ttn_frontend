@@ -90,13 +90,15 @@ function BusinessPartner({heading, summary}) {
     );
 }
 
-function CompanyPartnerCard({data}) {
+function CompanyPartnerCard({image}) {
     return (
         <div
             className="sm:h-[75px] sm:w-[200px] xl:h-[100px] flex items-center rounded-md border-2 border-gray-200 justify-center p-3 lg:p-6">
             <Image
-                src={data?.image ? data?.image : business1}
+                src={image?.image ? image?.image : business1}
                 alt="logo"
+                width={148}
+                height={32}
                 className="max-w-full max-h-full object-cover"
             />
         </div>
