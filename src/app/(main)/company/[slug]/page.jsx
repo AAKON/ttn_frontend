@@ -36,6 +36,7 @@ const CompanyDetails = async ({ params: { slug } }) => {
     const contactData = details?.company?.contact || null;
     const decissionMakersData = details?.company?.decision_makers || [];
 
+    console.log(overviewData);
 
     console.log(details, "get c details");
 
@@ -50,10 +51,13 @@ const CompanyDetails = async ({ params: { slug } }) => {
                   {/* AboutCompany part start */}
                   <div className="lg:mb-[32px] relative grid grid-cols-1 gap-6 xl:gap-8">
                     <AboutCompany aboutData={details?.company?.about} />
-                    {productsData && Array.isArray(productsData) && productsData.length > 0 ? (
-                    <ProductShowcase products={productsData}/>) : (
-                        <ErrorMessage message={'No products available'} />
-                      )}
+                    {productsData &&
+                    Array.isArray(productsData) &&
+                    productsData.length > 0 ? (
+                      <ProductShowcase products={productsData} />
+                    ) : (
+                      <ErrorMessage message={"No products available"} />
+                    )}
                   </div>
                   {/* AboutCompany part end */}
                 </div>

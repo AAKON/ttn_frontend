@@ -45,6 +45,7 @@ const ChartYearly = ({chartData}) => {
                     left: -18,
                     bottom: 0,
                   }}
+                  barCategoryGap={10}
               >
                 <CartesianGrid
                     stroke="#F2F4F7"
