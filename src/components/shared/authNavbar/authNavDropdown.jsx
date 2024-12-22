@@ -8,13 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from "next/image";
-import user_pic from "@/assets/user_pic.png";
 import Link from "next/link";
 import { Blocks, LogOutIcon, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { signOut } from "next-auth/react";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
+import {UserIcon} from "@/icons";
 
 function AuthNavDropdown({ userInfo }) {
   const { toast } = useToast();
@@ -41,7 +41,7 @@ function AuthNavDropdown({ userInfo }) {
       <DropdownMenu className="left-auto right-0">
         <DropdownMenuTrigger className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
           <Image
-            src={userInfo?.profile_image ? userInfo?.profile_image : user_pic}
+            src={userInfo?.profile_image ? userInfo?.profile_image : <UserIcon />}
             width={48}
             height={48}
             alt="profile"

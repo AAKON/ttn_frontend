@@ -15,12 +15,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 
-import { companyOverviewReq } from "@/services/company";
+import {companyOverviewReq, getCompanyOverview} from "@/services/company";
 import Button from "@/components/shared/button";
 import { DeleteIcon } from "@/components/icons";
 
 const labelStyle = formLabelClasses;
-const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
+const inputStyle = inputClasses + " " + "h-10 bg-gray-50";
 
 import Image from "next/image";
 import marketShare from "@/assets/marketShare.svg";
@@ -42,9 +42,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import {getCompanyProducts} from "@/services/product";
 
 const formSchema = z.object({
   manpower: z.string().min(1, {
@@ -72,19 +73,37 @@ const formSchema = z.object({
   market_share: z.array(
     z.object({
       location_id: z.string().min(1, "Required"),
-      percentage: z.string().min(1, "Required"),
+      percentage: z.string()
+          .min(1, "Market share is required")
+          .refine(
+              (value) => !isNaN(parseFloat(value)),
+              {
+                message: "Market share must be a valid number",
+              }
+          )
+          .transform((value) => parseFloat(value)),
     })
   ),
   yearly_turnover: z.array(
     z.object({
       year: z.string().min(1, "Required"),
-      turnover: z.string().min(1, "Required"),
+      turnover: z.string()
+          .min(1, "Turnover is required")
+          .refine(
+              (value) => !isNaN(parseFloat(value)),
+              {
+                message: "Turnover must be a valid number",
+              }
+          )
+          .transform((value) => parseFloat(value)),
     })
   ),
 });
 
 const OverviewForm = ({ slug }) => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [overviewData, setOverviewData] = useState(null);
   const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -103,7 +122,7 @@ const OverviewForm = ({ slug }) => {
     },
   });
 
-  const { control, handleSubmit, formState } = form;
+  const { control, reset, handleSubmit, formState } = form;
   const { errors } = formState;
 
   const {
@@ -127,6 +146,51 @@ const OverviewForm = ({ slug }) => {
     control,
     name: "yearly_turnover",
   });
+
+  const fetchOverviewData = async () => {
+    try {
+      setLoading(true); // Optional: Show loading when refetching
+      const response = await getCompanyOverview(slug);
+      setOverviewData(response);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOverviewData();
+  }, [slug]);
+
+  useEffect(() => {
+    if (overviewData) {
+      const {
+        moq,
+        lead_time,
+        shipment_term,
+        payment_policy,
+        total_units,
+        production_capacity,
+        market_share,
+        yearly_turnover,
+      } = overviewData;
+
+      // Reset all form fields with the data
+      reset({
+        moq,
+        lead_time,
+        shipment_term,
+        payment_policy,
+        total_units,
+        production_capacity,
+        market_share,
+        yearly_turnover,
+      });
+    }
+  }, [overviewData, reset]);
+
+  console.log(overviewData, 'get overviewData')
 
   // Function to handle form submission
   const onSubmit = async (data) => {
@@ -180,7 +244,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Lorem ipsum"
+                        placeholder="Enter manpower"
                         type="text"
                         {...field}
                       />
@@ -200,7 +264,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="02 tons"
+                        placeholder="Enter production capacity"
                         type="text"
                         {...field}
                       />
@@ -220,7 +284,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Lorem ipsum"
+                        placeholder="Enter total units"
                         type="text"
                         {...field}
                       />
@@ -238,7 +302,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="500 Piece/Pieces (Min. Order)"
+                        placeholder="Enter Min. Order"
                         type="text"
                         {...field}
                       />
@@ -258,7 +322,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="90 Days"
+                        placeholder="Enter lead time"
                         type="text"
                         {...field}
                       />
@@ -337,7 +401,7 @@ const OverviewForm = ({ slug }) => {
                         >
                           <FormControl>
                             <SelectTrigger
-                              className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                              className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-10 font-normal bg-gray-50`}
                             >
                               <SelectValue
                                 placeholder="Select Country"
@@ -367,7 +431,7 @@ const OverviewForm = ({ slug }) => {
                         <FormControl>
                           <Input
                             className={inputStyle}
-                            placeholder="CodeBlue Clothing Pvt Ltd"
+                            placeholder="Enter market share"
                             type="text"
                             {...field}
                           />
@@ -383,7 +447,7 @@ const OverviewForm = ({ slug }) => {
                     secondary
                     type="button"
                     onClick={() => groupOneFieldArray.remove(index)}
-                    className="size-9 gap-0 !p-1 mt-[32px]"
+                    className="size-10 gap-0 !p-1 mt-[32px] !h-10"
                   >
                     <DeleteIcon stroke="#F04438" />
                   </Button>
@@ -395,7 +459,7 @@ const OverviewForm = ({ slug }) => {
                 secondary
                 icon
                 type="button"
-                className="h-9 w-full mt-3"
+                className="h-9 w-full mt-3 text-sm"
                 onClick={() =>
                   groupOneFieldArray.append({
                     location_id: "",
@@ -434,7 +498,7 @@ const OverviewForm = ({ slug }) => {
                             >
                               <FormControl>
                                 <SelectTrigger
-                                  className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                  className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-10 font-normal bg-gray-50`}
                                 >
                                   <SelectValue
                                     placeholder="Select Year"
@@ -472,7 +536,7 @@ const OverviewForm = ({ slug }) => {
                             <FormControl>
                               <Input
                                 className={inputStyle}
-                                placeholder="CodeBlue Clothing Pvt Ltd"
+                                placeholder="Enter turnover"
                                 type="text"
                                 {...field}
                               />
@@ -491,7 +555,7 @@ const OverviewForm = ({ slug }) => {
                         secondary
                         type="button"
                         onClick={() => groupTwoFieldArray.remove(index)}
-                        className="size-9 gap-0 !p-1 mt-[32px]"
+                        className="size-10 gap-0 !p-1 mt-[32px] !h-10"
                       >
                         <DeleteIcon stroke="#F04438" />
                       </Button>
@@ -502,7 +566,7 @@ const OverviewForm = ({ slug }) => {
                     secondary
                     icon
                     type="button"
-                    className="h-9 w-full"
+                    className="h-9 w-full text-sm"
                     onClick={() =>
                       groupTwoFieldArray.append({
                         year: "",
