@@ -103,63 +103,65 @@ function FooterCopyright() {
         © {new Date().getFullYear()}. Textile Network. All Rights Reserved.
       </p>
       <ul className="flex gap-[30px] items-center mt-7">
+
         <li>
-          <a href="#">
+          <a href="https://www.linkedin.com/company/thetextilenetwork">
             <Image
-              src="/icons/social-icon-1.svg"
-              alt="twitter"
-              width={24}
-              height={24}
+                src="/icons/social-icon-2.svg"
+                alt="linkedin"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.facebook.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-2.svg"
-              alt="facebook"
-              width={24}
-              height={24}
+                src="/icons/social-icon-3.svg"
+                alt="facebook"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.instagram.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-3.svg"
-              alt="instagram"
-              width={24}
-              height={24}
+                src="/icons/instagram.svg"
+                alt="pinterest"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.pinterest.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-4.svg"
-              alt="linkedin"
-              width={24}
-              height={24}
+                src="/icons/social-icon-6.svg"
+                alt="pinterest"
+                width={24}
+                height={24}
+            />
+          </a>
+        </li>
+
+        <li>
+          <a href="https://whatsapp.com/channel/0029VaGfiPjCxoB4rHKoaY1p/221 ">
+            <Image
+                src="/icons/whatsup.svg"
+                alt="whatsup"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://t.me/thetextilenetworkcom">
             <Image
-              src="/icons/social-icon-5.svg"
-              alt="youtube"
-              width={24}
-              height={24}
-            />
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <Image
-              src="/icons/social-icon-6.svg"
-              alt="pinterest"
-              width={24}
-              height={24}
+                src="/icons/telegram.svg"
+                alt="telegrap"
+                width={24}
+                height={24}
             />
           </a>
         </li>

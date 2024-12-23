@@ -40,7 +40,7 @@ const SocialSlider = ({webAds}) => {
       >
           {webAds.map((webAd) => (
                   <SplideSlide key={webAd?.id} className="h-[120px]">
-                      <Link className="block" href={webAd?.link ? webAd?.link : '#'}>
+                      <Link className="block" target="_blank" href={webAd?.link ? webAd?.link : '#'}>
                           <div className="h-[120px] rounded-xl overflow-hidden">
                               <Image
                                   src={webAd?.image ? webAd?.image : slider1}

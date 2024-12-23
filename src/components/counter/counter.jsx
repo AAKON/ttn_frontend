@@ -10,7 +10,7 @@ const Counter = () => {
         {/* left */}
         <div className="text-center">
           <h3 className="font-semibold text-2xl md:text-4xl text-gray-900 max-w-[350px] leading-normal md:leading-[44px] pb-4 md:pb-10 px-16 md:text-start md:px-0">
-            Explore Your Business Needs{" "}
+            Grow Your Business Network{" "}
           </h3>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
             <Button
