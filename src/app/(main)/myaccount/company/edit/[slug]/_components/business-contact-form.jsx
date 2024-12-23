@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 import Button from "@/components/shared/button";
 import {
@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { companyBasicReq, companyBusinessContactReq } from "@/services/company";
+import {companyBasicReq, companyBusinessContactReq, getBusinessContact, getCompanyOverview} from "@/services/company";
 import TagsInput from "@/components/ui/tagsInput";
 import { Link } from "@/icons";
 import { LinkIcon } from "@/components/icons/linkIcon";
@@ -54,6 +54,8 @@ const formSchema = z.object({
 const BusinessContactForm = ({ slug }) => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
+    const [contactData, setContactData] = useState(null);
+    const [error, setError] = useState(null);
   const { toast } = useToast();
 
   const form = useForm({
@@ -70,9 +72,50 @@ const BusinessContactForm = ({ slug }) => {
 
   const {
     control,
+      reset,
     handleSubmit,
     formState: { errors },
   } = form;
+
+  // fetch business contact info
+    const fetchContactData = async () => {
+        try {
+            setLoading(true); // Optional: Show loading when refetching
+            const response = await getBusinessContact(slug);
+            setContactData(response);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchContactData();
+    }, [slug]);
+
+    useEffect(() => {
+        if (contactData) {
+            const {
+                email,
+                phone,
+                whatsapp,
+                address,
+                website,
+                lat_long
+            } = contactData;
+
+            // Reset all form fields with the data
+            reset({
+                email,
+                phone,
+                whatsapp,
+                address,
+                website,
+                lat_long
+            });
+        }
+    }, [contactData, reset]);
 
   // Function to handle form submission
   const onSubmit = async (data) => {
@@ -100,6 +143,7 @@ const BusinessContactForm = ({ slug }) => {
     }
   };
 
+
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -114,7 +158,7 @@ const BusinessContactForm = ({ slug }) => {
                   <FormControl>
                     <Input
                       className={inputStyle}
-                      placeholder="Lorem ipsum dolor"
+                      placeholder="Enter Address"
                       type="text"
                       {...field}
                     />
@@ -134,7 +178,7 @@ const BusinessContactForm = ({ slug }) => {
                   <FormControl>
                     <Input
                       className={inputStyle}
-                      placeholder="contact@codeblueindia.com"
+                      placeholder="Enter email"
                       type="email"
                       {...field}
                     />
@@ -153,7 +197,7 @@ const BusinessContactForm = ({ slug }) => {
                     <div className="relative">
                       <Input
                         className={inputStyle + " pr-10"}
-                        placeholder="link"
+                        placeholder="Enter whatsapp number"
                         type="text"
                         {...field}
                       />
@@ -175,7 +219,7 @@ const BusinessContactForm = ({ slug }) => {
                   <FormControl>
                     <Input
                       className={inputStyle}
-                      placeholder="+919810211006"
+                      placeholder="Enter phone number"
                       type="text"
                       {...field}
                     />
@@ -194,7 +238,7 @@ const BusinessContactForm = ({ slug }) => {
                     <div className="relative">
                       <Input
                         className={inputStyle + " pr-10"}
-                        placeholder="www.abcdcompany.com"
+                        placeholder="Enter website url"
                         type="text"
                         {...field}
                       />

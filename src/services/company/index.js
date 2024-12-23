@@ -101,6 +101,18 @@ export async function getCompanyOverview(slug) {
     return result?.data;
 }
 
+// fetch business contact
+export async function getBusinessContact(slug) {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `my/company/${slug}/contact`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}
+
 // business contact
 export async function companyBusinessContactReq(slug, data, toast) {
 
