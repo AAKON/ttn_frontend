@@ -14,8 +14,8 @@ export default async function Page() {
   const preDataBasic = await getDataPreBasic();
 
   return (
-    <div className="bg-gray-50">
-      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[275px] h-[42.667vw] w-full"></div>
+    <div className="bg-gray-50 pb-8">
+      <div className="bg-detailBennar bg-no-repeat bg-center bg-cover h-[200px] lg:h-[275px] w-full"></div>
       <Container>
         <div className="bg-white border border-gray-100 p-8 mb-8 rounded-2xl -mt-[140px]">
           {/*<div className="flex justify-end gap-3">*/}
