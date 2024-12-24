@@ -45,13 +45,13 @@ const DropDownTags = ({ value = [], onChange, options }) => {
     return (
         <div className="relative w-full" ref={dropdownRef}>
             {/* Input Field with Selected Tags */}
-            <div className="flex flex-wrap px-2 py-[2.20px] items-center gap-2 border rounded-md bg-gray-50 border-gray-200">
+            <div className="flex flex-wrap px-2 items-center gap-2 border rounded-md bg-gray-50 border-gray-200">
                 {value.map((tagValue) => {
                     const tag = options.find((opt) => opt.value === tagValue);
                     return (
                     <Badge
                         key={tag?.value ? tag?.value : tagValue?.value}
-                        className="flex h-7 items-center gap-2 text-sm px-2 py-1 rounded-sm bg-transparent border border-gray-200 text-gray-900 font-normal"
+                        className="flex h-7 items-center gap-2 text-xs px-2 py-1 rounded-sm bg-transparent border border-gray-200 text-gray-900 font-normal"
                     >
                         {tag?.label ? tag?.label : tagValue?.label}
                         <X
@@ -70,7 +70,7 @@ const DropDownTags = ({ value = [], onChange, options }) => {
                         setIsDropdownOpen(true);
                     }}
                     onFocus={() => setIsDropdownOpen(true)}
-                    className="flex-1 h-7 my-1.5 bg-gray-50 border-none outline-0 ring-0 focus:ring-0 focus-visible:ring-0"
+                    className="flex-1 h-[26.4px] text-sm my-1 bg-gray-50 border-none outline-0 ring-0 focus:ring-0 focus-visible:ring-0"
                 />
             </div>
 
