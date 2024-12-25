@@ -42,8 +42,7 @@ const DragDropFile = ({
         if (defaultValue === null) {
             setPreview(null);
             onChange([]); // Clear the value
-        } else if (initialFile && !preview) {
-            // Preview the initial file if available and no preview is set
+        } else if (initialFile) {
             setPreview(initialFile);
         }
     }, [defaultValue, initialFile, onChange, preview]);
