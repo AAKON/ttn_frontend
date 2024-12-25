@@ -48,55 +48,42 @@ import { Loader2 } from "lucide-react";
 import {getCompanyProducts} from "@/services/product";
 
 const formSchema = z.object({
-  manpower: z.string().min(1, {
-    message: "Manpower is required",
-  }),
-  production_capacity: z.string().min(1, {
-    message: "Production capacity is required",
-  }),
-  total_units: z.string().min(1, {
-    message: "Number of machines is required",
-  }),
-  moq: z.string().min(1, {
-    message: "MOQ is required",
-  }),
-  lead_time: z.string().min(1, {
-    message: "Lead time is required",
-  }),
+  manpower: z.string().optional(),
+  production_capacity: z.string().optional(),
+  total_units: z.string().optional(),
+  moq: z.string().optional(),
+  lead_time: z.string().optional(),
   shipment_term: z.string().min(1, {
     message: "Delivery terms is required",
   }),
   payment_policy: z.string().min(1, {
     message: "Payment policy is required",
   }),
-
   market_share: z.array(
-    z.object({
-      location_id: z.string().min(1, "Required"),
-      percentage: z.string()
-          .min(1, "Market share is required")
-          .refine(
-              (value) => !isNaN(parseFloat(value)),
-              {
+      z.object({
+        location_id: z.string().min(1, "Country is required"),
+        percentage: z
+            .union([
+              z.string().min(1, "Market share is required"),
+              z.number().refine((value) => !isNaN(value), {
                 message: "Market share must be a valid number",
-              }
-          )
-          .transform((value) => parseFloat(value)),
-    })
+              }),
+            ])
+            .transform((value) => parseFloat(value)), // Always transform to a number
+      })
   ),
   yearly_turnover: z.array(
-    z.object({
-      year: z.string().min(1, "Required"),
-      turnover: z.string()
-          .min(1, "Turnover is required")
-          .refine(
-              (value) => !isNaN(parseFloat(value)),
-              {
+      z.object({
+        year: z.string().min(1, "Year is required"),
+        turnover: z
+            .union([
+              z.string().min(1, "Turnover is required"),
+              z.number().refine((value) => !isNaN(value), {
                 message: "Turnover must be a valid number",
-              }
-          )
-          .transform((value) => parseFloat(value)),
-    })
+              }),
+            ])
+            .transform((value) => parseFloat(value)), // Always transform to a number
+      })
   ),
 });
 
