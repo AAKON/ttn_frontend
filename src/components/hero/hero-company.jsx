@@ -1,6 +1,5 @@
 import React from "react";
 import Button from "@/components/shared/button";
-import { Categories, Country } from "@/components/hero/hero";
 import { FilterIcon, WorldMap } from "@/icons";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -22,18 +21,20 @@ const style = {
 };
 const formSchema = z.object({
   businessCategoryIds: z.any().optional(),
+  locationIds: z.any().optional(),
   keyword: z.string().optional(),
 });
 export default function HeroCompanyForm({
   categories,
+  locations,
   onSearchSubmit, // Add a prop for handling search submit
-  locations = ["Bangladesh", "Indonesia", "Srilanka"],
   className,
 }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       businessCategoryIds: "",
+      locationIds: "",
       keyword: "",
     },
   });
