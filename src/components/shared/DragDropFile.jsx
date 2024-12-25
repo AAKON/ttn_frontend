@@ -61,7 +61,7 @@ const DragDropFile = ({
             {label && <label className="font-medium">{label}</label>}
             <div
                 {...getRootProps({
-                    className: `dropzone relative group w-full h-[150px] border-2 rounded-lg overflow-hidden flex justify-center bg-gray-50 cursor-pointer items-center transition-all ${
+                    className: `dropzone relative group w-full h-[190px] border-2 rounded-lg overflow-hidden flex justify-center bg-gray-50 cursor-pointer items-center transition-all ${
                         isDragActive ? "border-brand-500" : "border-dashed border-gray-200"
                     }`,
                 })}
