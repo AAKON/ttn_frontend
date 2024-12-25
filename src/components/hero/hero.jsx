@@ -9,9 +9,10 @@ const Hero = ({ categories, locations }) => {
       <Container>
         <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
           <div className="text-center pb-4 md:pb-10">
-            <h1 className="text-2xl md:text-[44px] text-white">
+            <h1 className="h-16 sm:h-auto text-2xl md:text-[44px] text-white">
               Find Your{" "}
               <TextAnimator
+                animationWordArray={["Apparel", "Textile", "Clothing", "Fabric"]}
                 className={"text-primary"}
                 cursorColor={"text-brand-600"}
               />

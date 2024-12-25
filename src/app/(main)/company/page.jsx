@@ -10,6 +10,7 @@ import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
 import HeroCompanyForm from "@/components/hero/hero-company";
 import SelectedOptions from "@/app/(main)/company/components/selectedOptions";
+import TextAnimator from "@/components/hero/text-animatior";
 
 const CompanyList = () => {
   const [view, setView] = useState("grid");
@@ -221,12 +222,19 @@ const CompanyList = () => {
     <>
       <Section className="bg-gray-50">
         <div className="mx-auto text-center">
-          <h3 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
-            Find Your Apparel Needs
-          </h3>
+          <h1 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
+            Find Your{" "}
+            <TextAnimator
+              animationWordArray={["Apparel", "Textile", "Clothing", "Fabric"]}
+              className={"text-primary"}
+              cursorColor={"text-brand-600"}
+            />
+            Business Needs
+          </h1>
           <HeroCompanyForm
             isFilterIcon={true}
             categories={categories}
+            // locations={locations}
             onSearchSubmit={handleSearchSubmit}
           />
         </div>
