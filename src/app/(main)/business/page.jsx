@@ -117,9 +117,9 @@ const Business = () => {
     <>
       <Section>
         <div className="mx-auto text-center">
-          <h3 className="text-gray-900   font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
+          <h1 className="text-gray-900   font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
             Find Your Apparel Needs
-          </h3>
+          </h1>
           <HeroForm
             isAnywhereDropdown={false}
             isCategoryDropdown={false}
