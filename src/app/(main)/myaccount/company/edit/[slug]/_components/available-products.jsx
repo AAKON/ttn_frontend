@@ -88,13 +88,15 @@ function AvailableProductsCard({product, slug, preData, onDeleteSuccess}) {
 
     return (
         <div>
-            <Image
-                src={product?.image_url ? product?.image_url : ShowCase1}
-                alt="ShowCase1"
-                className="w-[100%]"
-                width="215"
-                height="150"
-            />
+            <div className="image-holder h-[150px] overflow-hidden rounded-2xl">
+                <Image
+                    src={product?.image_url ? product?.image_url : ShowCase1}
+                    alt={product?.name}
+                    className="w-full h-full object-cover"
+                    width="215"
+                    height="150"
+                />
+            </div>
             <h4 className="text-sm font-semibold text-brand-600 mt-5 capitalize">
                 {product?.product_category?.name}
             </h4>
