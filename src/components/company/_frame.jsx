@@ -19,6 +19,7 @@ import {
 import ShareModal from "./share-modal";
 import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
+import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 
 const Frame = ({ slug, headerData, className }) => {
   const {
@@ -65,14 +66,15 @@ const Frame = ({ slug, headerData, className }) => {
                 </h3>
                 <div className="flex flex-wrap lg:flex-row flex-col lg:gap-6 gap-[10px]">
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
-                    <TagsIcon />
-                    {tags}
+                    {/*<TagsIcon />*/}
+                    {/*{tags}*/}
+                    <TagsView  />
                     {/*<span className="max-sm:hidden lg:block">/Mixed Rags</span>*/}
                   </h6>
-                  <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
-                    <BuildingOneIcon /> Joined:{" "}
-                    <DateFormatter publishDate={created} />
-                  </h6>
+                  {/*<h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">*/}
+                  {/*  <BuildingOneIcon /> Joined:{" "}*/}
+                  {/*  <DateFormatter publishDate={created} />*/}
+                  {/*</h6>*/}
                 </div>
               </div>
             </div>
@@ -109,7 +111,11 @@ const Frame = ({ slug, headerData, className }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <LdtCard icon={<GridIcon />} text={"Category"} title={category} />
+            <LdtCard
+                icon={<GridIcon />}
+                text={"Category"}
+                title={category}
+            />
             <LdtCard
               icon={<BuildingTwoIcon />}
               text={"Company size"}
@@ -123,7 +129,7 @@ const Frame = ({ slug, headerData, className }) => {
             />
             <LdtCard
               icon={<EyeIcon />}
-              text={"Monthly Visitor"}
+              text={"Views"}
               title={viewCount}
             />
           </div>
@@ -144,11 +150,11 @@ export function LdtCard({ icon, text, title, ExtSrc }) {
         </p>
       </div>
       <h3 className="text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2">
-        {title}
-        {ExtSrc ? (
-          <Image src={ExtSrc} alt="ExtSrc" className="lg:h-6 lg:w-6 h-5 w-5" />
+        <span className="line-clamp-1">{title}</span>
+          {ExtSrc ? (
+              <Image src={ExtSrc} alt="ExtSrc" className="lg:h-6 lg:w-6 h-5 w-5" />
         ) : (
-          false
+          <></>
         )}
       </h3>
     </div>

@@ -35,17 +35,16 @@ const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
     name: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
+        message: "Name must be at least 2 characters.",
     }),
     moto: z.string().optional(),
     business_category_id: z.number({message: "Please select an category"}),
     certificates: z
-        .array(z.number())
-        .min(1, {message: "Please add at least one certificates."}),
+        .array(z.number()).optional(),
     company_website: z.string().optional(),
     location_id: z.number({message: "Please select location."}),
-    manpower: z.string().optional(),
-    about: z.string().optional(),
+    manpower: z.string({message: "Please select company size."}),
+    about: z.string({message: "Add about company."}),
 });
 
 const CompanyForm = ({preData}) => {
