@@ -59,6 +59,7 @@ const CompanyList = () => {
   }, []);
 
   const categories = filterOptions?.categories || [];
+  const locations = filterOptions?.locations || [];
 
   // Fetch companies when filters change
   useEffect(() => {
@@ -104,6 +105,7 @@ const CompanyList = () => {
   };
 
   const handleSearchSubmit = (data) => {
+
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...data,
@@ -111,6 +113,7 @@ const CompanyList = () => {
         ? [data.businessCategoryIds]
         : prevFilters.businessCategoryIds,
       keyword: data.keyword || prevFilters.keyword,
+        locationIds: data.locationIds ? [data.locationIds] : []
     }));
   };
 
@@ -234,7 +237,7 @@ const CompanyList = () => {
           <HeroCompanyForm
             isFilterIcon={true}
             categories={categories}
-            // locations={locations}
+            locations={locations}
             onSearchSubmit={handleSearchSubmit}
           />
         </div>
