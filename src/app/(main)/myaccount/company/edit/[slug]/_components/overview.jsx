@@ -267,11 +267,11 @@ const OverviewForm = ({ slug }) => {
                 name="total_units"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>No of machines</FormLabel>
+                    <FormLabel className={labelStyle}>No of Machines</FormLabel>
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Enter total units"
+                        placeholder="Enter number"
                         type="text"
                         {...field}
                       />
@@ -289,7 +289,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Enter Min. Order"
+                        placeholder="Enter Min. Order quantity"
                         type="text"
                         {...field}
                       />
@@ -309,7 +309,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Enter lead time"
+                        placeholder="90 Days"
                         type="text"
                         {...field}
                       />
@@ -323,11 +323,11 @@ const OverviewForm = ({ slug }) => {
                 name="shipment_term"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>delivery terms</FormLabel>
+                    <FormLabel className={labelStyle}>Delivery terms</FormLabel>
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="FOB /C&F/CIF"
+                        placeholder="FOB, CF, CIF etc."
                         type="text"
                         {...field}
                       />
@@ -347,7 +347,7 @@ const OverviewForm = ({ slug }) => {
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="LC/TT/Bank Transfer"
+                        placeholder="LC, TT, Bank Transfer etc"
                         type="text"
                         {...field}
                       />
