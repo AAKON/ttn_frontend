@@ -105,7 +105,6 @@ const CompanyList = () => {
   };
 
   const handleSearchSubmit = (data) => {
-
     setFilters((prevFilters) => ({
       ...prevFilters,
       ...data,
@@ -113,7 +112,7 @@ const CompanyList = () => {
         ? [data.businessCategoryIds]
         : prevFilters.businessCategoryIds,
       keyword: data.keyword || prevFilters.keyword,
-        locationIds: data.locationIds ? [data.locationIds] : []
+      locationIds: data.locationIds ? [data.locationIds] : [],
     }));
   };
 
@@ -234,12 +233,14 @@ const CompanyList = () => {
             />
             Business Needs
           </h1>
-          <HeroCompanyForm
-            isFilterIcon={true}
-            categories={categories}
-            locations={locations}
-            onSearchSubmit={handleSearchSubmit}
-          />
+          <div className="max-w-[1096px] mx-auto">
+            <HeroCompanyForm
+              isFilterIcon={true}
+              categories={categories}
+              locations={locations}
+              onSearchSubmit={handleSearchSubmit}
+            />
+          </div>
         </div>
       </Section>
 
