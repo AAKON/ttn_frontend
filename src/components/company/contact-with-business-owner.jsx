@@ -11,6 +11,7 @@ import {
   ChevronDownIcon,
   FileDownloadIcon,
 } from "@/icons";
+import Link from "next/link";
 
 const ContactWithBusinessOwner = ({headerData}) => {
   const [Owner, setOwner] = useState(false);
@@ -67,18 +68,19 @@ const ContactWithBusinessOwner = ({headerData}) => {
         </div> */}
 
         <Button
-          onClick={emailClick}
+            TagName={Link}
+          href={'/contact'}
           className="w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
         >
-          Email Us
+          Contact Us
         </Button>
 
-        <Button
-          secondary
-          className="w-full text-center lg:text-lg mt-4 px-4 py-3 "
-        >
-          Send inquiry
-        </Button>
+        {/*<Button*/}
+        {/*  secondary*/}
+        {/*  className="w-full text-center lg:text-lg mt-4 px-4 py-3 "*/}
+        {/*>*/}
+        {/*  Send inquiry*/}
+        {/*</Button>*/}
 
         <div className="flex justify-center flex-wrap gap-4 md:gap-[24px] mt-[16px]">
           <h3

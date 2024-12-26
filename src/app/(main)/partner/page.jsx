@@ -11,13 +11,9 @@ export default async function PartnerPage() {
     try {
         const pagePromise = getPartnerList();
         const partnersData = await pagePromise;
-        console.log(partnersData, 'pagePromise')
 
-        const businessPartnerLogo = [];
-        const EventPartnerLogo = [];
-
-        const marketingPartners = partnersData?.marketing;
-        const b2bPartners = partnersData?.b2b;
+        const marketingPartners = partnersData?.marketing || [];
+        const b2bPartners = partnersData?.b2b || [];
 
         return (
             <div>
@@ -44,7 +40,7 @@ export default async function PartnerPage() {
                             />
                             {b2bPartners && Array.isArray(b2bPartners) && b2bPartners.length > 0 && (
                                     <div
-                                        className="pt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-none lg:grid-flow-col lg:auto-cols-max items-center gap-6 justify-center">
+                                        className="pt-10 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-6 justify-center">
                                         {b2bPartners?.map((item) => (
                                             <CompanyPartnerCard key={item?.id} image={item}/>
                                         ))}
@@ -60,7 +56,7 @@ export default async function PartnerPage() {
                                 }
                             />
                             {marketingPartners && Array.isArray(marketingPartners) && marketingPartners.length > 0 && (
-                            <div className="pt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-none lg:grid-flow-col lg:auto-cols-max items-center gap-6 justify-center">
+                            <div className="pt-10 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-6 justify-center">
                                 {marketingPartners?.map((item) => (
                                     <CompanyPartnerCard key={item?.id} image={item}/>
                                 ))}
@@ -93,12 +89,12 @@ function BusinessPartner({heading, summary}) {
 function CompanyPartnerCard({image}) {
     return (
         <div
-            className="sm:h-[75px] sm:w-[200px] xl:h-[100px] flex items-center rounded-md border-2 border-gray-200 justify-center p-1 lg:p-2">
+            className="h-[75px] w-auto sm:w-[180px] sm:h-[180px] flex items-center rounded-md border-2 border-gray-200 justify-center p-1 lg:p-2">
             <Image
                 src={image?.image ? image?.image : business1}
                 alt="logo"
-                width={148}
-                height={32}
+                width={200}
+                height={200}
                 className="max-w-full max-h-full object-contain"
             />
         </div>
