@@ -101,7 +101,7 @@ export default function FilterAccordion({
           {/* By Type start */}
           <AccordionItem value="type" className="py-5 px-6">
             <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
-              By Compliances
+              By Certificate
             </AccordionTrigger>
             <AccordionContent className="space-y-4">
               {filterOptions && filterOptions?.compliances && filterOptions?.compliances.map((compliance) => (
