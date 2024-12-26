@@ -5,7 +5,7 @@ import {ChevronDown, ChevronUp} from "lucide-react";
 
 const AboutCompany = ({aboutData}) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const previewText = aboutData.split('. ').slice(0, 3).join('. ') + '.';
+    const previewText = aboutData && aboutData.split('. ').slice(0, 3).join('. ') + '.';
     return (
         <div>
             <h2 className="text-lg font-semibold text-gray-900">About Company</h2>
