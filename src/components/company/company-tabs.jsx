@@ -185,7 +185,7 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
           certificatesData.length > 0 ? (
             <div className="!w-full max-[1000px]">
               <CertificateSlider
-                slideItems={allCertifications}
+                slideItems={certificatesData}
                 className="mr-8"
               />
             </div>
