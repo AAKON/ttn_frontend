@@ -169,12 +169,12 @@ html body[data-scroll-locked] {
 
 /* Hero Section */
 @media (max-width: 575px) {
-  .hero-title {
+  .main-title {
     font-size: 20px;
   }
 }
 @media (max-width: 375px) {
-  .hero-title {
+  .main-title {
     font-size: 16px;
   }
 }

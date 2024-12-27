@@ -9,7 +9,7 @@ const Hero = ({ categories, locations }) => {
       <Container>
         <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
           <div className="text-center pb-4 md:pb-10">
-            <h1 className="hero-title sm:text-2xl lg:text-[44px] text-white leading-normal">
+            <h1 className="main-title sm:text-2xl lg:text-[44px] text-white leading-normal">
               Find Your{" "}
               <TextAnimator
                 animationWordArray={[
