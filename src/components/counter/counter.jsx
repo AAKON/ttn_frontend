@@ -9,9 +9,9 @@ const Counter = () => {
       <div className="flex items-center justify-center flex-col md:flex-row md:justify-between">
         {/* left */}
         <div className="text-center">
-          <h3 className="font-semibold text-2xl md:text-4xl text-gray-900 max-w-[350px] leading-normal md:leading-[44px] pb-4 md:pb-10 px-16 md:text-start md:px-0">
+          <h2 className="max-w-[224px] sm:max-w-[350px] pb-4 md:pb-10 md:text-start">
             Grow Your Business Network{" "}
-          </h3>
+          </h2>
           <div className="flex items-center justify-center md:justify-start gap-x-2">
             <Button
               TagName={Link}

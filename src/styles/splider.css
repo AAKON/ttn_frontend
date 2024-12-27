@@ -1,12 +1,12 @@
 /* .splide__list {
     height: 185px;
 } */
- .social-slider .splide {
-    padding-bottom: 40px !important;
- }
- .social-slider .splide__pagination {
-    bottom: 0 !important;
- }
+.social-slider .splide {
+  padding-bottom: 40px !important;
+}
+.social-slider .splide__pagination {
+  bottom: 0 !important;
+}
 
 .splide__pagination__page {
   background: #d0d5dd;
@@ -24,4 +24,10 @@
   display: flex;
   column-gap: 18px;
   align-self: center;
+}
+
+@media (max-width: 375px) {
+  .social-slider .splide {
+    padding-bottom: 22px !important;
+  }
 }
