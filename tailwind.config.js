@@ -14,6 +14,7 @@ module.exports = {
       },
     },
     screens: {
+      xs: "575px",
       sm: "640px",
       md: "768px",
       lg: "1024px",
@@ -84,7 +85,7 @@ module.exports = {
       },
       backgroundImage: {
         "hero-image": "url('../assets/Hero.webp')",
-        "footer-bg-image": "url('../assets/footer-bg.png')"
+        "footer-bg-image": "url('../assets/footer-bg.png')",
       },
       borderRadius: {
         lg: "var(--radius)",
