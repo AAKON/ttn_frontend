@@ -52,7 +52,7 @@ export default function Login() {
       signIn("credentials", {
         email: email,
         password: password,
-        redirect: false,
+        redirect: true,
         callbackUrl: "/",
       }).then((res) => {
         if (res?.error) {
