@@ -9,16 +9,16 @@ import slider2 from "@/assets/slide-2.jpg";
 import slider3 from "@/assets/slide-3.jpg";
 import Link from "next/link";
 
-const SocialSlider = ({webAds}) => {
+const SocialSlider = ({ webAds }) => {
   return (
-    <Section noDefaultStyle className="social-slider py-8 lg:py-10">
+    <Section noDefaultStyle className="social-slider py-4 md:py-8 lg:py-10">
       <Splide
         options={{
           perPage: 3,
           // perMove: 1,
           gap: 30,
           autoplay: true,
-          type   : 'loop',
+          type: "loop",
           omitEnd: true,
           focus: 0,
           breakpoints: {
@@ -38,21 +38,25 @@ const SocialSlider = ({webAds}) => {
           arrows: false,
         }}
       >
-          {webAds.map((webAd) => (
-                  <SplideSlide key={webAd?.id} className="h-[120px]">
-                      <Link className="block" target="_blank" href={webAd?.link ? webAd?.link : '#'}>
-                          <div className="h-[120px] rounded-xl overflow-hidden">
-                              <Image
-                                  src={webAd?.image ? webAd?.image : slider1}
-                                  height={120}
-                                  width={445}
-                                  className="w-full h-full object-cover"
-                                  alt={"image"}
-                              />
-                          </div>
-                      </Link>
-                  </SplideSlide>
-          ))}
+        {webAds.map((webAd) => (
+          <SplideSlide key={webAd?.id} className="h-[120px]">
+            <Link
+              className="block"
+              target="_blank"
+              href={webAd?.link ? webAd?.link : "#"}
+            >
+              <div className="h-[120px] rounded-xl overflow-hidden">
+                <Image
+                  src={webAd?.image ? webAd?.image : slider1}
+                  height={120}
+                  width={445}
+                  className="w-full h-full object-cover"
+                  alt={"image"}
+                />
+              </div>
+            </Link>
+          </SplideSlide>
+        ))}
       </Splide>
     </Section>
   );

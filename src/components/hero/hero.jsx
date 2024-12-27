@@ -5,14 +5,19 @@ import HeroForm from "./hero-form";
 
 const Hero = ({ categories, locations }) => {
   return (
-    <section className="pt-[88px] md:pt-[208px] md:pb-[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
+    <section className="pt-[76px] md:pt-[208px] md:pb-[120px] bg-cover bg-center bg-no-repeat bg-hero-image">
       <Container>
         <div className="max-w-[1096px] mx-auto py-10 md:py-[70px]">
           <div className="text-center pb-4 md:pb-10">
-            <h1 className="h-16 sm:h-auto text-2xl md:text-[44px] text-white">
+            <h1 className="main-title sm:text-2xl lg:text-[44px] text-white leading-normal">
               Find Your{" "}
               <TextAnimator
-                animationWordArray={["Apparel", "Textile", "Clothing", "Fabric"]}
+                animationWordArray={[
+                  "Apparel",
+                  "Textile",
+                  "Clothing",
+                  "Fabric",
+                ]}
                 className={"text-primary"}
                 cursorColor={"text-brand-600"}
               />
@@ -20,7 +25,7 @@ const Hero = ({ categories, locations }) => {
             </h1>
           </div>
           <HeroForm categories={categories} locations={locations} />
-          <div className="mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
+          <div className="mt-4 md:mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
             <Tags tagText="Sports Wear" />
             <Tags tagText="Hoodie" />
             <Tags tagText="Tops" />

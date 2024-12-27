@@ -54,7 +54,7 @@ const RecentCompany = ({ data }) => {
 
       {/* all company */}
       {data && Array.isArray(data) && data.length > 0 && (
-        <div className="pt-12">
+        <div className="mt-6 md:pt-12">
           <Splide className="company-slider" options={options}>
             {data?.map((item) => (
               <SplideSlide key={item.id}>

@@ -128,7 +128,7 @@ function HeroForm({
                           }
                         >
                           <FormControl>
-                            <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                            <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
                               <SelectValue
                                 placeholder="All Categories"
                                 className="text_16 text-red-400"
@@ -156,7 +156,7 @@ function HeroForm({
               categories?.length > 0 && (
                 <div className="hidden md:block md:order-1 lg:border-r lg:border-r-gray-300">
                   <Select className={className}>
-                    <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                    <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
                       <SelectValue
                         placeholder="All Categories"
                         className="text_16 text-red-400"
@@ -195,7 +195,7 @@ function HeroForm({
                           }
                         >
                           <SelectTrigger
-                            className={`text-gray-700 font-semibold text-sm leading-5 w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
+                            className={`text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
                           >
                             <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
                               <WorldMap />
@@ -227,7 +227,7 @@ function HeroForm({
                 )}
             </div>
           )}
-          
+
           <div className="md:flex-1 md:order-4 w-full md:w-auto">
             <div className="flex gap-2">
               {isAnywhereDropdown ? (

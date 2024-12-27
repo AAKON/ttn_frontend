@@ -224,7 +224,7 @@ const CompanyList = () => {
     <>
       <Section className="bg-gray-50">
         <div className="mx-auto text-center">
-          <h1 className="text-gray-900 font-semibold text-3xl sm:text-5xl md:leading-[60px] pb-10">
+          <h1 className="main-title sm:text-2xl lg:text-[44px] text-gray-900 leading-normal pb-8 md:pb-10">
             Find Your{" "}
             <TextAnimator
               animationWordArray={["Apparel", "Textile", "Clothing", "Fabric"]}
