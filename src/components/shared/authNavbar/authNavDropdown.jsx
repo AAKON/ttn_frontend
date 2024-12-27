@@ -18,9 +18,6 @@ import {UserIcon} from "@/icons";
 
 function AuthNavDropdown({ userInfo }) {
   const { toast } = useToast();
-  const router = useRouter();
-
-  console.log(userInfo, 'userInfo ==============');
 
   const handleSignout = () => {
     try {
