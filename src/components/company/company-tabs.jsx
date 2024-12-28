@@ -249,7 +249,7 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
               <h3 className="text-base font-semibold text-gray-900">
                 Decision Makers
               </h3>
-              {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 && (
+              {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 ? (
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
                     {decissionMakers.map((item, index) => (
                         <ContactCard
@@ -273,7 +273,7 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
                         )
                     )}
                   </div>
-              )}
+              ) : <Empty message={'Empty decision makers'} /> }
             </div>
             {/* Decision Makers end */}
           </div>

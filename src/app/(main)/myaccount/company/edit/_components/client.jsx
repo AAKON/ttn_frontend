@@ -64,7 +64,6 @@ function MyClients({slug, allClients}) {
 
         setLoading(true);
 
-        console.log(data, "get client data");
         const formData = new FormData();
         if (data.file && data.file.length > 0) {
             formData.append('image', data.file[0]);
