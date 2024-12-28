@@ -39,6 +39,7 @@ const ProductShowCase = ({ products }) => {
         gap: 20,
         arrows: true,
         pagination: false,
+        focus: "center",
         breakpoints: {
             1280: {
                 perPage: 3,

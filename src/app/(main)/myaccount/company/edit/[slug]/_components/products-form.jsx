@@ -69,7 +69,6 @@ const ProductsForm = ({preData, slug, onSuccess}) => {
         setLoading(true);
 
         const {name, product_category_id, price_range} = data;
-        console.log(data?.file, "get fff data");
 
         const formData = new FormData();
         formData.append("name", name);
@@ -78,8 +77,6 @@ const ProductsForm = ({preData, slug, onSuccess}) => {
         if (data.file && data.file.length > 0) {
             formData.append('image', data.file[0]);
         }
-
-        console.log(...formData, 'formData')
 
         try {
             const result = await uploadProductReq(slug, formData, toast);
