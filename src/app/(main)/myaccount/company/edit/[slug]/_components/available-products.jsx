@@ -4,7 +4,7 @@ import "@splidejs/react-splide/css";
 import React, {useEffect, useState} from 'react';
 import {useToast} from "@/hooks/use-toast";
 
-const AvailableProducts = ({slug, productData, preData, onDeleteSuccess}) => {
+const AvailableProducts = ({slug, productData, productCategories, onDeleteSuccess}) => {
 
     const sliderOptions = {
         perPage: 4,
@@ -43,7 +43,7 @@ const AvailableProducts = ({slug, productData, preData, onDeleteSuccess}) => {
                                     <SplideSlide key={product?.id}>
                                         <AvailableProductsCard
                                             product={product}
-                                            slug={slug} preData={preData}
+                                            slug={slug} preData={productCategories}
                                             onDeleteSuccess={onDeleteSuccess} />
                                     </SplideSlide>
                                 );

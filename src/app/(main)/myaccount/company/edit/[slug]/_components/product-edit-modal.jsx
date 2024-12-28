@@ -95,7 +95,7 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
 
     const id = data?.id;
 
-    const tagOptions = preData?.categories.map((item) => ({
+    const tagOptions = preData && preData.length > 0 && preData.map((item) => ({
         label: item.name,
         value: item.id,
     })) || [];
@@ -107,7 +107,9 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
             image: data?.image_url || "",
             tag: "",
             name: data?.name || "",
-            price_range: data?.price_range || "",
+            // Parse price_range into price_min and price_max
+            price_min: data?.price_range ? Number(data.price_range.split("-")[0]) : "",
+            price_max: data?.price_range ? Number(data.price_range.split("-")[1]) : "",
         },
     });
 
@@ -149,9 +151,9 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
                 <FormField
                     control={control}
                     name="product_category_id"
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormItem>
-                            <FormLabel>Category</FormLabel>
+                            <FormLabel>Category <span className="text-red-600">*</span></FormLabel>
                             <DropDownTags
                                 value={field.value}
                                 onChange={field.onChange}
@@ -163,7 +165,8 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
                 />
 
                 <div className="flex flex-col">
-                    <FormLabel className={`${labelStyle} mb-3`}>Product Image</FormLabel>
+                    <FormLabel className={`${labelStyle} mb-3`}>Product Image <span
+                        className="text-red-600">*</span></FormLabel>
                     <DragDropFile
                         name="image"
                         control={control}
@@ -171,69 +174,176 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
                         defaultValue={data?.image_url}
                     />
                 </div>
-
-                <FormField
-                    control={form.control}
-                    name="tag"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className={labelStyle}>Tag</FormLabel>
-                            <FormControl>
-                                <Input
-                                    className={inputStyle}
-                                    placeholder="Cap"
-                                    type="text"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
                 <FormField
                     control={form.control}
                     name="name"
-                    render={({ field }) => (
+                    render={({field}) => (
                         <FormItem>
-                            <FormLabel className={labelStyle}>Product name</FormLabel>
+                            <FormLabel className={labelStyle}>Product Title <span
+                                className="text-red-600">*</span></FormLabel>
                             <FormControl>
                                 <Input
                                     className={inputStyle}
-                                    placeholder="Your Product Name"
+                                    placeholder="Enter product title"
                                     type="text"
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage/>
                         </FormItem>
                     )}
                 />
 
-                <FormField
-                    control={form.control}
-                    name="price_range"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel className={labelStyle}>Product Price</FormLabel>
-                            <FormControl>
-                                <Input
-                                    className={inputStyle}
-                                    placeholder="Your Product Price"
-                                    type="text"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <div className="flex flex-nowrap gap-2 items-stretch">
+                    <FormField
+                        control={form.control}
+                        name="price_min"
+                        render={({field}) => (
+                            <FormItem className="w-full">
+                                <FormLabel className={labelStyle}>Product Price (Min) <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className={inputStyle}
+                                        placeholder="Product min price"
+                                        type="number"
+                                        {...field}
+                                        onBlur={() => {
+                                            const maxPrice = form.watch("price_max");
+                                            const minPrice = field.value;
+                                            if (minPrice && maxPrice && Number(minPrice) >= Number(maxPrice)) {
+                                                form.setError("price_min", {
+                                                    type: "validate",
+                                                    message: "Min price must be less than max price",
+                                                });
+                                            } else {
+                                                form.clearErrors("price_min");
+                                                form.clearErrors("price_max");
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <div className="w-2.5 flex item-center">
+                        <div className={`h-[1px] bg-gray-300 self-center w-full ${
+                            form.formState.errors.price_min || form.formState.errors.price_max ? "mt-[-15px]" : "mt-[30px]"
+                        }`}></div>
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="price_max"
+                        render={({field}) => (
+                            <FormItem className="w-full">
+                                <FormLabel className={labelStyle}>Product Price (Max) <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className={inputStyle}
+                                        placeholder="Product max price"
+                                        type="number"
+                                        {...field}
+                                        onBlur={() => {
+                                            const minPrice = form.watch("price_min");
+                                            const maxPrice = field.value;
+                                            if (minPrice && maxPrice && Number(maxPrice) <= Number(minPrice)) {
+                                                form.setError("price_max", {
+                                                    type: "validate",
+                                                    message: "Max price must be greater than min price",
+                                                });
+                                            } else {
+                                                form.clearErrors("price_min");
+                                                form.clearErrors("price_max");
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <div className="flex flex-nowrap gap-2 items-stretch">
+                    <FormField
+                        control={form.control}
+                        name="moq_min"
+                        render={({field}) => (
+                            <FormItem className="w-full">
+                                <FormLabel className={labelStyle}>MOQ (Min) <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className={inputStyle}
+                                        placeholder="500 Piece/Pieces (Min. Order)"
+                                        type="number"
+                                        min={1}
+                                        {...field}
+                                        onBlur={() => {
+                                            const maxQty = form.watch("moq_max");
+                                            const minQty = field.value;
+                                            if (minQty && maxQty && Number(minQty) >= Number(maxQty)) {
+                                                form.setError("moq_min", {
+                                                    type: "validate",
+                                                    message: "Min order must be less than max order",
+                                                });
+                                            } else {
+                                                form.clearErrors("moq_min");
+                                                form.clearErrors("moq_max");
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <div className="w-2.5 flex item-center">
+                        <div className={`h-[1px] bg-gray-300 self-center w-full ${
+                            form.formState.errors.moq_min || form.formState.errors.moq_max ? "mt-[-15px]" : "mt-[30px]"
+                        }`}></div>
+                    </div>
+                    <FormField
+                        control={form.control}
+                        name="moq_max"
+                        render={({field}) => (
+                            <FormItem className="w-full">
+                                <FormLabel className={labelStyle}>MOQ (Max) <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                    <Input
+                                        className={inputStyle}
+                                        placeholder="500 Piece/Pieces (Min. Order)"
+                                        type="number"
+                                        min={1}
+                                        {...field}
+                                        onBlur={() => {
+                                            const minQty = form.watch("moq_min");
+                                            const maxQty = field.value;
+                                            if (minQty && maxQty && Number(maxQty) <= Number(minQty)) {
+                                                form.setError("moq_max", {
+                                                    type: "validate",
+                                                    message: "Max order must be greater than min order",
+                                                });
+                                            } else {
+                                                form.clearErrors("moq_min");
+                                                form.clearErrors("moq_max");
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
                 <div className="flex justify-end">
                     <Button type="submit" disabled={loading} className="h-9 min-w-40 self-end">
                         {loading ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                 Please wait
                             </>
                         ) : (

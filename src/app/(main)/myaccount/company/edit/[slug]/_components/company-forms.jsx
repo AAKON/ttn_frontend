@@ -54,7 +54,7 @@ function CompanyForms({slug, preData}) {
                 ) : (
                 <AvailableProducts
                     slug={slug}
-                    preData={preData}
+                    productCategories={productCategories}
                     productData={productData}
                     onDeleteSuccess={fetchProductData}
                 />)}
