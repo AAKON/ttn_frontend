@@ -32,7 +32,7 @@ const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50 !mt-[6px]";
 
 const formSchema = z.object({
-    product_category_id: z.number({
+    product_category_id: z.string({
         message: "Please select an category.",
     }),
     name: z.string().min(3,{ message: 'Product name is required'}),
@@ -50,7 +50,7 @@ const ProductsForm = ({productCategories, slug, onSuccess}) => {
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            product_category_id: null,
+            product_category_id: "",
             moq: "",
             file: [],
             name: "",
@@ -115,7 +115,8 @@ const ProductsForm = ({productCategories, slug, onSuccess}) => {
                         <FormItem>
                             <FormLabel className={labelStyle}>Category <span className="text-red-600">*</span></FormLabel>
                             <Select
-                                onValueChange={(value) => field.onChange(Number(value))}
+                                onValueChange={(value) => field.onChange(value)}
+                                value={field.value}
                             >
                                 <FormControl>
                                     <SelectTrigger
