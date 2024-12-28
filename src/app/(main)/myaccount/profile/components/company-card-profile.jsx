@@ -88,7 +88,7 @@ const CompanyCardProfile = ({ type, onItemRemove, data }) => {
 
       {/* peragraph start */}
       <CardContent className="flex gap-x-2">
-        <p className="text-gray-500 text-md font-normal leading-6">
+        <p className="text-gray-500 text-md font-normal leading-6 line-clamp-3">
           {data?.about}
         </p>
       </CardContent>
