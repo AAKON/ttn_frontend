@@ -39,9 +39,11 @@ const formSchema = z.object({
         .array(z.number())
         .optional(),
     image: z.any().optional(),
-    tag: z.string().optional(),
-    name: z.string().optional(),
-    price_range: z.string().optional(),
+    name: z.string().min(3,{ message: 'Product name is required'}),
+    price_min: z.coerce.number().min(1,{ message: 'Minimum price is required'}),
+    price_max:  z.coerce.number().min(1,{ message: 'Maximum price is required'}),
+    moq_min:  z.coerce.number().min(1,{ message: 'Minimum order is required'}),
+    moq_max:  z.coerce.number().min(1,{ message: 'Maximum order is required'}),
 });
 
 const ProductEditModal = ({
@@ -105,11 +107,12 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
         defaultValues: {
             product_category_id: data?.product_category_id ? [Number(data.product_category_id)] : [],
             image: data?.image_url || "",
-            tag: "",
             name: data?.name || "",
             // Parse price_range into price_min and price_max
             price_min: data?.price_range ? Number(data.price_range.split("-")[0]) : "",
             price_max: data?.price_range ? Number(data.price_range.split("-")[1]) : "",
+            moq_min: "",
+            moq_max: ""
         },
     });
 
@@ -122,12 +125,13 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
     const onSubmit = async (data) => {
         console.log(data, 'get form data');
         setLoading(true);
-        const { name, product_category_id, image, price_range } = data;
+        const { name, product_category_id, image, price_min, price_max, moq_min, moq_max } = data;
 
         const formData = new FormData();
         formData.append("name", name);
         formData.append("product_category_id", product_category_id);
-        formData.append("price_range", price_range);
+        formData.append("price_range", `${price_min}-${price_max}`);
+        formData.append("moq", `${moq_min}-${moq_max}`);
         if (image && Array.isArray(image) && image.length > 0) {
             formData.append('image', image[0]);
         }
