@@ -14,6 +14,7 @@ export async function getDataPreBasic() {
     return result?.data;
 }
 
+
 // get company details
 export async function getCompanyDetails(slug) {
 

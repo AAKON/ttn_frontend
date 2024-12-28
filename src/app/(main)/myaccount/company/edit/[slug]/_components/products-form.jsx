@@ -43,7 +43,7 @@ const formSchema = z.object({
     file: z.any().refine(val => val && val.length > 0, "Product image is required")
 });
 
-const ProductsForm = ({preData, slug, onSuccess}) => {
+const ProductsForm = ({productCategories, slug, onSuccess}) => {
     const [loading, setLoading] = useState(false);
     const {toast} = useToast();
 
@@ -68,6 +68,8 @@ const ProductsForm = ({preData, slug, onSuccess}) => {
         watch,
         formState: {errors},
     } = form;
+
+    console.log(productCategories, 'get form productCategories')
 
     // Function to handle form submission
     const onSubmit = async (data) => {
@@ -126,7 +128,7 @@ const ProductsForm = ({preData, slug, onSuccess}) => {
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    {preData?.categories?.map((category) => (
+                                    {productCategories && productCategories.length > 0 && productCategories?.map((category) => (
                                         <SelectItem key={category.id} value={String(category.id)}>
                                             {category.name}
                                         </SelectItem>
