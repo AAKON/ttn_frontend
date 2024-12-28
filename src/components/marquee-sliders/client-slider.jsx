@@ -6,7 +6,7 @@ import Image from "next/image";
 import defaultImage from "@/assets/certificate.svg";
 
 const options = {
-  type: "loop",
+  // type: "loop",
   drag: "free",
   focus: "center",
   gap: "28px",
@@ -47,14 +47,14 @@ const ClientSlider = ({ slideItems, direction = "ltr", ...props }) => {
         >
           <div
             key={item?.id}
-            className={`size-[138px] flex items-center justify-center bg-white border border-gray-300`}
+            className={`size-[138px] flex items-center justify-center bg-white border border-gray-300 p-1 overflow-hidden`}
           >
             <Image
-              width={138}
-              height={138}
-              src={item?.image_url ? item?.image_url : defaultImage}
-              className="w-full h-full object-contain"
-              alt={"company image"}
+                width={138}
+                height={138}
+                src={item?.image_url ? item?.image_url : defaultImage}
+                className="w-full h-full object-contain"
+                alt={"company image"}
             />
           </div>
         </SplideSlide>

@@ -6,7 +6,7 @@ import Image from "next/image";
 import defaultImage from "@/assets/certificate.svg";
 
 const options = {
-  type: "loop",
+  // type: "loop",
   drag: "free",
   focus: "center",
   gap: "28px",

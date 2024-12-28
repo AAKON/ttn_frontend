@@ -222,24 +222,24 @@ const OverviewForm = ({ slug }) => {
           <h3 className="text-base font-semibold text-gray-900">Overview</h3>
           <div className="grid grid-cols-1 gap-3 lg:gap-3">
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="manpower"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={labelStyle}>Manpower</FormLabel>
-                    <FormControl>
-                      <Input
-                        className={inputStyle}
-                        placeholder="Enter manpower"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/*<FormField*/}
+              {/*  control={form.control}*/}
+              {/*  name="manpower"*/}
+              {/*  render={({ field }) => (*/}
+              {/*    <FormItem>*/}
+              {/*      <FormLabel className={labelStyle}>Manpower</FormLabel>*/}
+              {/*      <FormControl>*/}
+              {/*        <Input*/}
+              {/*          className={inputStyle}*/}
+              {/*          placeholder="Enter manpower"*/}
+              {/*          type="text"*/}
+              {/*          {...field}*/}
+              {/*        />*/}
+              {/*      </FormControl>*/}
+              {/*      <FormMessage />*/}
+              {/*    </FormItem>*/}
+              {/*  )}*/}
+              {/*/>*/}
               <FormField
                 control={form.control}
                 name="production_capacity"
@@ -260,26 +260,26 @@ const OverviewForm = ({ slug }) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                  control={form.control}
+                  name="total_units"
+                  render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyle}>No of Machines</FormLabel>
+                        <FormControl>
+                          <Input
+                              className={inputStyle}
+                              placeholder="Enter number"
+                              type="text"
+                              {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="total_units"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={labelStyle}>No of Machines</FormLabel>
-                    <FormControl>
-                      <Input
-                        className={inputStyle}
-                        placeholder="Enter number"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="moq"
@@ -298,34 +298,34 @@ const OverviewForm = ({ slug }) => {
                   </FormItem>
                 )}
               />
+              <FormField
+                  control={form.control}
+                  name="lead_time"
+                  render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyle}>Lead Time</FormLabel>
+                        <FormControl>
+                          <Input
+                              className={inputStyle}
+                              placeholder="90 Days"
+                              type="text"
+                              {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )}
+              />
             </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="lead_time"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={labelStyle}>Lead Time</FormLabel>
-                    <FormControl>
-                      <Input
-                        className={inputStyle}
-                        placeholder="90 Days"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="shipment_term"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>Delivery terms</FormLabel>
+                    <FormLabel className={labelStyle}>Delivery terms <span className="text-red-600">*</span></FormLabel>
                     <FormControl>
-                      <Input
+                    <Input
                         className={inputStyle}
                         placeholder="FOB, CF, CIF etc."
                         type="text"
@@ -336,25 +336,24 @@ const OverviewForm = ({ slug }) => {
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               <FormField
-                control={form.control}
-                name="payment_policy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={labelStyle}>Payment Policy</FormLabel>
-                    <FormControl>
-                      <Input
-                        className={inputStyle}
-                        placeholder="LC, TT, Bank Transfer etc"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                  control={form.control}
+                  name="payment_policy"
+                  render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyle}>Payment Policy <span
+                            className="text-red-600">*</span></FormLabel>
+                        <FormControl>
+                        <Input
+                              className={inputStyle}
+                              placeholder="LC, TT, Bank Transfer etc"
+                              type="text"
+                              {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )}
               />
             </div>
           </div>
@@ -379,11 +378,11 @@ const OverviewForm = ({ slug }) => {
                     control={control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyle}>
-                          Select Country
-                        </FormLabel>
-                        <Select
-                          onValueChange={(value) => field.onChange(value)}
+                          <FormLabel className={labelStyle}>
+                              Select Country <span className="text-red-600">*</span>
+                          </FormLabel>
+                          <Select
+                              onValueChange={(value) => field.onChange(value)}
                           value={field.value}
                         >
                           <FormControl>
@@ -414,8 +413,9 @@ const OverviewForm = ({ slug }) => {
                     name={`market_share.${index}.percentage`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className={labelStyle}>Percentage</FormLabel>
-                        <FormControl>
+                          <FormLabel className={labelStyle}>Percentage <span
+                              className="text-red-600">*</span></FormLabel>
+                          <FormControl>
                           <Input
                             className={inputStyle}
                             placeholder="Enter market share"
@@ -463,8 +463,8 @@ const OverviewForm = ({ slug }) => {
             </div>
 
             <div className="border-t border-t-gray-200 pt-6 mt-6">
-              <p className="text-gray-500 text-sm pb-6">Yearly Turnover</p>
-              <div className="group_input">
+                <p className="text-gray-500 text-sm pb-6">Yearly Turnover <span className="text-red-600">*</span></p>
+                <div className="group_input">
                 <div className="grid gap-3">
                   {groupTwoFieldArray.fields.map((field, index) => (
                     <div
@@ -476,11 +476,11 @@ const OverviewForm = ({ slug }) => {
                         control={control}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className={labelStyle}>
-                              Select Year
-                            </FormLabel>
-                            <Select
-                              onValueChange={(value) => field.onChange(value)}
+                              <FormLabel className={labelStyle}>
+                                  Select Year <span className="text-red-600">*</span>
+                              </FormLabel>
+                              <Select
+                                  onValueChange={(value) => field.onChange(value)}
                               value={field.value}
                             >
                               <FormControl>
@@ -517,10 +517,10 @@ const OverviewForm = ({ slug }) => {
                         name={`yearly_turnover.${index}.turnover`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className={labelStyle}>
-                              Turnover
-                            </FormLabel>
-                            <FormControl>
+                              <FormLabel className={labelStyle}>
+                                  Turnover <span className="text-red-600">*</span>
+                              </FormLabel>
+                              <FormControl>
                               <Input
                                 className={inputStyle}
                                 placeholder="Enter turnover"

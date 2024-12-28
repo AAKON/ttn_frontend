@@ -13,6 +13,7 @@ import CompanyBasicForm from "./_components/company-form";
 import CompanyForms from "@/app/(main)/myaccount/company/edit/[slug]/_components/company-forms";
 import Company404 from "@/app/(main)/company/[slug]/not-found";
 import Link from "next/link";
+import {GlobalSkeleton} from "@/components/shared/skelton/globalSkeleton";
 
 export default async function Page({ params }) {
   const { slug } = await params;
@@ -26,7 +27,7 @@ export default async function Page({ params }) {
 
 
     return (
-      <Suspense fallback={<div>Loading ...</div>}>
+      <Suspense fallback={<GlobalSkeleton />}>
         <div className="bg-gray-50">
           <div className="bg-detailBennar bg-no-repeat bg-center bg-cover lg:h-[275px] h-[42.667vw] w-full"></div>
           <Container>

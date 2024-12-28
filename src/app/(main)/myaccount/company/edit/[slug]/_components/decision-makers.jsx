@@ -265,10 +265,10 @@ const DecisionMakersForm = ({slug}) => {
             <>
                 {dmData && Array.isArray(dmData) && dmData.length > 0 && (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
-                        {dmData.map((card) => (
+                        {dmData.map((card, index) => (
                             <div className="" key={card?.id}>
                                 <p className="text-gray-500 text-sm leading-[20px] mb-2">
-                                    Contact {card?.id}
+                                    Contact {index + 1}
                                 </p>
                                 {card?.name && (
                                     <h5 className="text-gray-900 text-lg leading-[24px] font-semibold capitalize">
