@@ -49,6 +49,31 @@ export async function getMyCompanies() {
     return result?.data;
 }
 
+// own favourite company list
+export async function getMyFavsCompanies() {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `my/favorite`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}
+
+export async function delFavsCompanyFaq(slug, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/favorite/${slug}`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
+
 export async function companyBasicReq(data, toast) {
 
     const session = await getSession();

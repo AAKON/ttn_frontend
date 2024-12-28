@@ -13,8 +13,9 @@ import {
 import Button from "@/components/shared/button";
 import {DeleteIcon} from "@/icons";
 import { Loader2 } from "lucide-react";
+import {Trash} from "lucide-react";
 
-function ConfirmDeleteDialogSm({ open, setOpen, onConfirm, isDeleting }) {
+function ConfirmDeleteDialogSm({ open, isDelCompany=false, setOpen, onConfirm, isDeleting }) {
 
     const handleConfirm = () => {
         onConfirm();
@@ -24,19 +25,25 @@ function ConfirmDeleteDialogSm({ open, setOpen, onConfirm, isDeleting }) {
     return (
         <AlertDialog className="z-50" onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
+                {isDelCompany ? (
+                    <Button type="button" deleteOutline className="group text-red-600 border-red-600">
+                        <Trash width={20} />
+                        Remove
+                    </Button>) : (
                 <Button
                     secondary
                     className="size-7 !p-1 !rounded-none border-none"
                     type="button"
                 >
                     <DeleteIcon stroke="#F04438" />
-                </Button>
+                </Button>)}
+
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Are you sure you want to delete this product? This action cannot be undone.
+                        Are you sure you want to delete? This action cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

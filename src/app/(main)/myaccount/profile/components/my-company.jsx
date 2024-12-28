@@ -5,7 +5,7 @@ import Profile_pic from "@/assets/CodeBlue.svg";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-const MyCompany = ({ companies }) => {
+const MyCompany = ({ heading, type, onItemRemove, companies }) => {
   let splideRef = null;
   const handlePrev = () => {
     if (splideRef) splideRef.go("<");
@@ -44,11 +44,13 @@ const MyCompany = ({ companies }) => {
     },
   };
 
+  console.log(companies, 'get fav');
+
   return (
     <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
       <div className="flex items-center justify-between gap-5 pb-9">
         <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-          My Companies (<span>{companies?.length}</span>)
+          {heading} (<span>{companies?.length}</span>)
         </h3>
         <div className="flex justify-end gap-3">
           <button
@@ -103,7 +105,7 @@ const MyCompany = ({ companies }) => {
         >
           {companies?.map((company) => (
             <SplideSlide key={company.id}>
-              <CompanyCardProfile data={company} />
+              <CompanyCardProfile type={type} data={company} onItemRemove={onItemRemove} />
             </SplideSlide>
           ))}
         </Splide>
