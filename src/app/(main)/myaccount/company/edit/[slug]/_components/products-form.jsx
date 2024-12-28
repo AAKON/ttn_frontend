@@ -51,7 +51,6 @@ const ProductsForm = ({productCategories, slug, onSuccess}) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             product_category_id: "",
-            moq: "",
             file: [],
             name: "",
             price_min: "",
