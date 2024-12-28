@@ -2,6 +2,7 @@ const Button = ({
   TagName = "button",
   secondary = false,
   primaryOutline = false,
+                  deleteOutline = false,
   icon = false,
   children,
   className = "",
@@ -14,7 +15,11 @@ const Button = ({
   } else if (primaryOutline) {
     dynamicClasses =
       "bg-white text-brand-600 border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700 hover:text-white";
-  } else {
+  }else if (deleteOutline) {
+    dynamicClasses =
+        "bg-white text-brand-600 border border-brand-600 hover:bg-red-600 hover:text-white";
+  }
+  else {
     dynamicClasses =
       "bg-brand-600 text-white border border-brand-600 hover:bg-gradient-to-r from-brand-600 to-brand-700";
   }

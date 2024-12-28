@@ -10,10 +10,35 @@ import Image from "next/image";
 import Button from "@/components/shared/button";
 
 import Profile_pic from "@/assets/CodeBlue.svg";
-import { MarkerPinIcon, StarIcon, EditIcon, ViewAs } from "@/icons";
+import {MarkerPinIcon, StarIcon, EditIcon, ViewAs, DeleteIcon} from "@/icons";
 import Link from "next/link";
+import React, {useState} from "react";
+import ConfirmDeleteDialogSm from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialogSm";
+import {useToast} from "@/hooks/use-toast";
+import {delFavsCompanyFaq} from "@/services/company";
 
-const CompanyCardProfile = ({ data }) => {
+const CompanyCardProfile = ({ type, onItemRemove, data }) => {
+
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [error, setError] = useState(null);
+    const { toast } = useToast();
+
+    const handleRemove = async (slug) => {
+        setIsDeleting(true);
+        try {
+            const response = await delFavsCompanyFaq(slug, toast);
+            if (response) {
+                setOpenDialog(false);
+                onItemRemove();
+            }
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
   return (
     <Card>
       <CardHeader className="grid grid-cols-[1fr_auto] gap-2">
@@ -95,10 +120,20 @@ const CompanyCardProfile = ({ data }) => {
         <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>
+          {type === 'myCompanies' && (
         <Button TagName={Link} href={`/myaccount/company/edit/${data?.slug}`} type="button" primaryOutline className="group">
           <EditIcon className="group-hover:!stroke-white !stroke-brand-600 transition-all" />
           Edit
-        </Button>
+        </Button>)}
+          {type === 'myFavourites' && (
+              <ConfirmDeleteDialogSm
+                  isDelCompany
+                 open={openDialog}
+                 setOpen={setOpenDialog}
+                 onConfirm={() => handleRemove(data?.slug)}
+                 isDeleting={isDeleting}
+              />
+              )}
       </CardFooter>
       {/* last btn end */}
     </Card>
