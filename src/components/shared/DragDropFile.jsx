@@ -25,7 +25,8 @@ const DragDropFile = ({
 
         const file = acceptedFiles[0];
         if (file) {
-            setPreview(URL.createObjectURL(file)); // Generate a preview URL
+            const previewUrl = URL.createObjectURL(file); // Generate a preview URL
+            setPreview(previewUrl);
             onChange([file]); // Attach file to the form
         }
     };
@@ -39,9 +40,11 @@ const DragDropFile = ({
 
     // Reset preview when defaultValue changes
     useEffect(() => {
-        if (defaultValue === null) {
+        if (defaultValue === null || (Array.isArray(defaultValue) && defaultValue.length === 0)) {
             setPreview(null);
-            onChange([]); // Clear the value
+            if (value?.length > 0) {
+                onChange([]); // Clear the value
+            }
         } else if (initialFile) {
             setPreview(initialFile);
         }
