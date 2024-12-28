@@ -102,10 +102,10 @@ const OverviewForm = ({ slug }) => {
       lead_time: "",
       shipment_term: "",
       payment_policy: "",
-      countries: [{ country: "", percentage: "" }],
-      turnoverData: [{ year: "", turnover: "" }],
-      market_share: [{ location_id: "", percentage: "" }],
-      yearly_turnover: [{ year: "", turnover: "" }],
+      // countries: [{ country: "", percentage: "" }],
+      // turnoverData: [{ year: "", turnover: "" }],
+      market_share: [],
+      yearly_turnover: [],
     },
   });
 

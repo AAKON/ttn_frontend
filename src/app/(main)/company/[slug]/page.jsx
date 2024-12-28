@@ -21,7 +21,7 @@ const CompanyDetails = async ({ params: { slug } }) => {
       tags: details?.company?.tags,
       name: details?.company?.name,
       viewCount: details?.company?.view_count,
-      location: details?.company?.location?.name,
+      location: details?.company?.location,
       category: details?.company?.business_category?.name,
       companySize: details?.company?.manpower,
       created: details?.company?.created_at,

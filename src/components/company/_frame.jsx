@@ -124,8 +124,8 @@ const Frame = ({ slug, headerData, className }) => {
             <LdtCard
               icon={<MarkerPinIcon />}
               text={"Location"}
-              ExtSrc={AU}
-              title={location}
+              ExtSrc={location?.flag_path ? location?.flag_path : AU}
+              title={location?.name}
             />
             <LdtCard
               icon={<EyeIcon />}
@@ -152,7 +152,7 @@ export function LdtCard({ icon, text, title, ExtSrc }) {
       <h3 className="text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2">
         <span className="line-clamp-1">{title}</span>
           {ExtSrc ? (
-              <Image src={ExtSrc} alt="ExtSrc" className="lg:h-6 lg:w-6 h-5 w-5" />
+              <Image src={ExtSrc} alt="flag" width={24} height={24} className="lg:h-6 lg:w-6 h-5 w-5 object-contain" />
         ) : (
           <></>
         )}
