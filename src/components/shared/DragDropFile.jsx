@@ -16,6 +16,8 @@ const DragDropFile = ({
         fieldState: {error},
     } = useController({name, control});
 
+    console.log(defaultValue, 'get defaultValue file')
+
     const [preview, setPreview] = useState(initialFile);
 
     const onDrop = (acceptedFiles, rejectedFiles) => {
@@ -116,9 +118,13 @@ const DragDropFile = ({
                             value?.length > 0 || preview ? "text-gray-50" : "text-gray-600"
                         }`}
                                         >
-                        {value?.length > 0 || preview
-                            ? `${value?.length || 1} file(s) uploaded`
-                            : "Drag or click to upload files"}
+                        {value && Array.isArray(value) && value?.length > 0
+                            ? (`${value?.length || 1} file(s) uploaded`) :
+                            preview ?
+                            (
+                                "1 file selected"
+                            )
+                            : ("Drag or click to upload files")}
                     </span>
                 </div>
             </div>
