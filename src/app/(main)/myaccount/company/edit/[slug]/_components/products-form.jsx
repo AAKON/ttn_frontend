@@ -68,8 +68,6 @@ const ProductsForm = ({productCategories, slug, onSuccess}) => {
         formState: {errors},
     } = form;
 
-    console.log(productCategories, 'get form productCategories')
-
     // Function to handle form submission
     const onSubmit = async (data) => {
 
