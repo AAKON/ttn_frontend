@@ -20,8 +20,10 @@ import ShareModal from "./share-modal";
 import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
+import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
 
 const Frame = ({ slug, headerData, className }) => {
+
   const {
     bannerImage,
     profileImage,
@@ -104,9 +106,7 @@ const Frame = ({ slug, headerData, className }) => {
                   </span>
                 </Button>
               )}
-              <Button className="lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9">
-                <BookmarkIcon stroke="#ffffff" />
-              </Button>
+              <BookmarkCompany slug={slug} />
             </div>
           </div>
 

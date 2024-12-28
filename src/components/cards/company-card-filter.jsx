@@ -12,8 +12,27 @@ import Button from "@/components/shared/button";
 import Profile_pic from "@/assets/CodeBlue.svg";
 import {MarkerPinIcon, StarIcon, LoveIcon} from "@/icons";
 import Link from "next/link";
+import {delFavsCompanyFaq} from "@/services/company";
+import {useState} from "react";
+import {useToast} from "@/hooks/use-toast";
 
 const CompanyCardFilter = ({company}) => {
+
+    const [isAdding, setIsAdding] = useState(false);
+    const [error, setError] = useState(null);
+    const { toast } = useToast();
+
+    const handleAddFavourite = async (slug) => {
+        setIsAdding(true);
+        try {
+            await delFavsCompanyFaq(slug, toast);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsAdding(false);
+        }
+    };
+
     return (
         <Card className="flex flex-col justify-between">
             <div>
@@ -43,6 +62,8 @@ const CompanyCardFilter = ({company}) => {
                     <Button
                         secondary
                         className=" !border-brand-300 !size-9 !py-[3px] !px-2 text-xs font-medium text-gray-500"
+                        onClick={() => handleAddFavourite(company?.slug)}
+                        disabled={isAdding}
                     >
                         <LoveIcon stroke="#C67618"/>
                     </Button>
