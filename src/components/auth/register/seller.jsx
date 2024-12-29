@@ -104,7 +104,7 @@ export const Seller = () => {
                     <FormControl>
                       <Input
                         className="text-[#667085] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-0 outline-0"
-                        placeholder="Sugan Cane"
+                        placeholder="Enter your company name"
                         {...field}
                       />
                     </FormControl>
@@ -124,7 +124,7 @@ export const Seller = () => {
                       <Input
                         type="email"
                         className="text-[#667085] focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-0 outline-0"
-                        placeholder="basharvai@textile.com"
+                        placeholder="Enter your email"
                         {...field}
                       />
                     </FormControl>
@@ -144,7 +144,7 @@ export const Seller = () => {
                     >
                       <FormControl>
                         <SelectTrigger className="w-full text-[#667085] font-normal text-sm leading-5 border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none">
-                          <SelectValue placeholder="Select a type" />
+                          <SelectValue placeholder="Select business type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -230,7 +230,7 @@ export const Seller = () => {
           Already have an account?{" "}
           <Link
             className="text-primary text-base font-semibold"
-            href="/sign-up"
+            href="/login"
           >
             Log in
           </Link>
