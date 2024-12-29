@@ -1,123 +1,137 @@
 "use client";
-import {Splide, SplideSlide} from "@splidejs/react-splide";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
-import React, {useEffect, useState} from 'react';
-import {useToast} from "@/hooks/use-toast";
+import React, { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
-const AvailableProducts = ({slug, productData, productCategories, onDeleteSuccess}) => {
+const AvailableProducts = ({
+  slug,
+  productData,
+  productCategories,
+  onDeleteSuccess,
+}) => {
+  const sliderOptions = {
+    perPage: 4,
+    perMove: 1,
+    gap: 20,
+    arrows: true,
+    pagination: false,
+    focus: "center",
+    breakpoints: {
+      1280: {
+        perPage: 3,
+      },
+      768: {
+        perPage: 2,
+        arrows: false,
+      },
+      414: {
+        perPage: 1,
+        arrows: false,
+      },
+    },
+  };
 
-    const sliderOptions = {
-        perPage: 4,
-        perMove: 1,
-        gap: 20,
-        arrows: true,
-        pagination: false,
-        focus: "center",
-        breakpoints: {
-            1280: {
-                perPage: 3,
-            },
-            768: {
-                perPage: 2,
-                arrows: false,
-            },
-            414: {
-                perPage: 1,
-                arrows: false,
-            },
-        },
-    };
-
-    return (
-        <div className="max-w-[932px]">
-            {productData && Array.isArray(productData) && productData.length > 0 && (
-                <div className="mt-4">
-                    <label
-                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
-                        Available Products
-                    </label>
-                    <div
-                        className="mt-3 ">
-                        <Splide options={sliderOptions}>
-                            {productData?.map((product) => {
-                                return (
-                                    <SplideSlide key={product?.id}>
-                                        <AvailableProductsCard
-                                            product={product}
-                                            slug={slug} preData={productCategories}
-                                            onDeleteSuccess={onDeleteSuccess}/>
-                                    </SplideSlide>
-                                );
-                            })}
-                        </Splide>
-                    </div>
-                </div>)}
+  return (
+    <div className="max-w-[932px]">
+      {productData && Array.isArray(productData) && productData.length > 0 && (
+        <div className="mt-4">
+          <label className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
+            Available Products
+          </label>
+          <div className="mt-3">
+            <Splide options={sliderOptions}>
+              {productData?.map((product) => {
+                return (
+                  <SplideSlide key={product?.id}>
+                    <AvailableProductsCard
+                      product={product}
+                      slug={slug}
+                      preData={productCategories}
+                      onDeleteSuccess={onDeleteSuccess}
+                    />
+                  </SplideSlide>
+                );
+              })}
+            </Splide>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 // Available Products Card
 import Image from "next/image";
 import ShowCase1 from "@/assets/ShowCase1.png";
 import Button from "@/components/shared/button";
-import {DeleteIcon, EditIcon} from "@/icons";
+import { DeleteIcon, EditIcon } from "@/icons";
 import ProductEditModal from "@/app/(main)/myaccount/company/edit/[slug]/_components/product-edit-modal";
-import {getSSToken} from "@/utils/getSSToken";
-import {delCompanyProduct, getCompanyProducts} from "@/services/product";
+import { getSSToken } from "@/utils/getSSToken";
+import { delCompanyProduct, getCompanyProducts } from "@/services/product";
 import ConfirmDeleteDialog from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialog";
 
-function AvailableProductsCard({product, slug, preData, onDeleteSuccess}) {
-    const {toast} = useToast();
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
-    const [error, setError] = useState(null);
+function AvailableProductsCard({ product, slug, preData, onDeleteSuccess }) {
+  const { toast } = useToast();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [error, setError] = useState(null);
 
-    const handleDelete = async (id) => {
-        setIsDeleting(true);
-        try {
-            const response = await delCompanyProduct(id, slug, toast);
-            if (response) {
-                setOpenDialog(false);
-                onDeleteSuccess();
-            }
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setIsDeleting(false);
-        }
-    };
+  const handleDelete = async (id) => {
+    setIsDeleting(true);
+    try {
+      const response = await delCompanyProduct(id, slug, toast);
+      if (response) {
+        setOpenDialog(false);
+        onDeleteSuccess();
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
-    return (
-        <div>
-            <div className="image-holder h-[150px] overflow-hidden rounded-2xl">
-                <Image
-                    src={product?.image_url ? product?.image_url : ShowCase1}
-                    alt={product?.name}
-                    className="w-full h-full object-cover"
-                    width="215"
-                    height="150"
-                />
-            </div>
-            <h4 className="text-sm font-semibold text-brand-600 mt-5 capitalize">
-                {product?.product_category?.name}
-            </h4>
-            <p className="text-base text-gray-900 font-normal mt-2 line-clamp-3">{product?.name}</p>
-            <div className="mt-2">
-                <p className="text-xl text-gray-900 font-semibold">{product?.price_range}</p>
-                <p className="text-sm text-gray-500">Min. order: 100 pieces</p>
-            </div>
-            <div className="flex gap-2 mt-2">
-                <ConfirmDeleteDialog
-                    open={openDialog}
-                    setOpen={setOpenDialog}
-                    onConfirm={() => handleDelete(product?.id)}
-                    isDeleting={isDeleting}
-                />
-                <ProductEditModal preData={preData} slug={slug} data={product} onSuccess={onDeleteSuccess}/>
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <div className="image-holder h-[150px] overflow-hidden rounded-2xl">
+        <Image
+          src={product?.image_url ? product?.image_url : ShowCase1}
+          alt={product?.name}
+          className="w-full h-full object-cover"
+          width="215"
+          height="150"
+        />
+      </div>
+      <h4 className="text-sm font-semibold text-brand-600 mt-5 capitalize">
+        {product?.product_category?.name}
+      </h4>
+      <p className="text-base text-gray-900 font-normal mt-2 line-clamp-3">
+        {product?.name}
+      </p>
+      <div className="mt-2">
+        <p className="text-xl text-gray-900 font-semibold">
+          {product?.price_range}
+        </p>
+        <p className="text-sm text-gray-500">Min. order: 100 pieces</p>
+      </div>
+      <div className="flex gap-2 mt-2">
+        <ConfirmDeleteDialog
+          open={openDialog}
+          setOpen={setOpenDialog}
+          onConfirm={() => handleDelete(product?.id)}
+          isDeleting={isDeleting}
+        />
+        <ProductEditModal
+          preData={preData}
+          slug={slug}
+          data={product}
+          onSuccess={onDeleteSuccess}
+        />
+      </div>
+    </div>
+  );
 }
 
-export {AvailableProductsCard};
+export { AvailableProductsCard };
 export default AvailableProducts;
