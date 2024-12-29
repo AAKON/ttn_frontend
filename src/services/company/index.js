@@ -14,6 +14,19 @@ export async function getDataPreBasic() {
     return result?.data;
 }
 
+// basic overview
+export async function getDataPreOverview() {
+
+    const token = await getSSToken();
+    const endpoint = `my/company/preparation-data/for-overview`;
+    const options = {
+        method: 'GET'
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data;
+}
+
+
 
 // get company details
 export async function getCompanyDetails(slug) {

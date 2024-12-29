@@ -52,6 +52,9 @@ import {
 import { Empty } from "@/shared";
 import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
 import ClientSlider from "../marquee-sliders/client-slider";
+import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import React from "react";
+import MarketShareChart from "@/app/(main)/company/[slug]/components/marketShareChart";
 
 function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, certificatesData }) {
   return (
@@ -140,7 +143,7 @@ function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, ce
                   Market Share
                 </p>
                 <div className="border rounded-[16px] mt-3">
-                  <Image src={marketShare} alt="marketShare" className="w-full"/>
+                  <MarketShareChart data={overview?.market_share} />
                 </div>
               </div>
               {overview?.yearly_turnover && Array.isArray(overview?.yearly_turnover) && overview?.yearly_turnover.length > 0 && (
