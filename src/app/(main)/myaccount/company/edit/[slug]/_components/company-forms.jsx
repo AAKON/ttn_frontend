@@ -12,7 +12,6 @@ import {getProductPreData} from "@/services/company";
 
 function CompanyForms({slug, preData}) {
 
-
     const [productData, setProductData] = useState(null);
     const [productCategories, setProductCategories] = useState([]);
     const [error, setError] = useState(null);
@@ -63,7 +62,7 @@ function CompanyForms({slug, preData}) {
                 <ContactWithBusinessOwner/>
             </div>
             <div>
-                <EditTabs slug={slug}/>
+                <EditTabs slug={slug} preData={preData}/>
             </div>
         </div>
     );

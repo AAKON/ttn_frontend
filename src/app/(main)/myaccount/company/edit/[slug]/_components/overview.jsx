@@ -88,7 +88,7 @@ const formSchema = z.object({
   ),
 });
 
-const OverviewForm = ({ slug }) => {
+const OverviewForm = ({ slug, locations }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [overviewData, setOverviewData] = useState(null);
@@ -182,6 +182,7 @@ const OverviewForm = ({ slug }) => {
   }, [overviewData, reset]);
 
   console.log(overviewData, "get overviewData");
+  console.log(locations, 'locations overview=======')
 
   // Function to handle form submission
   const onSubmit = async (data) => {
@@ -226,24 +227,6 @@ const OverviewForm = ({ slug }) => {
           <h3 className="text-base font-semibold text-gray-900">Overview</h3>
           <div className="grid grid-cols-1 gap-3 lg:gap-3">
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-              {/*<FormField*/}
-              {/*  control={form.control}*/}
-              {/*  name="manpower"*/}
-              {/*  render={({ field }) => (*/}
-              {/*    <FormItem>*/}
-              {/*      <FormLabel className={labelStyle}>Manpower</FormLabel>*/}
-              {/*      <FormControl>*/}
-              {/*        <Input*/}
-              {/*          className={inputStyle}*/}
-              {/*          placeholder="Enter manpower"*/}
-              {/*          type="text"*/}
-              {/*          {...field}*/}
-              {/*        />*/}
-              {/*      </FormControl>*/}
-              {/*      <FormMessage />*/}
-              {/*    </FormItem>*/}
-              {/*  )}*/}
-              {/*/>*/}
               <FormField
                 control={form.control}
                 name="production_capacity"
@@ -404,9 +387,11 @@ const OverviewForm = ({ slug }) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="1">Bangladesh</SelectItem>
-                            <SelectItem value="2">Indonesia</SelectItem>
-                            <SelectItem value="3">Srilanka</SelectItem>
+                            {locations && Array.isArray(locations) && locations.length > 0 && (
+                                locations.map((item) => (
+                                    <SelectItem key={item?.id} value={String(item?.id)}>{item?.name}</SelectItem>
+                                ))
+                              )}
                           </SelectContent>
                         </Select>
                         <FormMessage>
