@@ -22,7 +22,7 @@ import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
 
-const Frame = ({ slug, headerData, className }) => {
+const Frame = ({ slug, headerData, is_favorite, className }) => {
   const {
     bannerImage,
     profileImage,
@@ -105,7 +105,7 @@ const Frame = ({ slug, headerData, className }) => {
                   </span>
                 </Button>
               )}
-              <BookmarkCompany slug={slug} />
+              <BookmarkCompany slug={slug} is_favorite={is_favorite} />
             </div>
           </div>
 

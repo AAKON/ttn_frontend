@@ -17,6 +17,7 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 const CompanyCardFilter = ({ company }) => {
+  const [isFavorite, setIsFavorite] = useState(company?.is_favorite);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState(null);
   const { toast } = useToast();
@@ -24,9 +25,11 @@ const CompanyCardFilter = ({ company }) => {
   const handleAddFavourite = async (slug) => {
     setIsAdding(true);
     try {
+      setIsFavorite((prev) => !prev);
       await delFavsCompanyFaq(slug, toast);
     } catch (err) {
       setError(err.message);
+      setIsFavorite((prev) => !prev);
     } finally {
       setIsAdding(false);
     }
@@ -58,21 +61,24 @@ const CompanyCardFilter = ({ company }) => {
             </div>
           </div>
           <div className="flex gap-1">
-            <Button
-              secondary
-              className=" !border-brand-300 !size-9 !py-[3px] !px-2 "
-              onClick={() => handleAddFavourite(company?.slug)}
-              disabled={isAdding}
-            >
-              <LoveIcon stroke="#C67618" />
-            </Button>
-            <Button
-              className=" !border-brand-600 !size-9 !py-[3px] !px-2 !bg-brand-600"
-              onClick={() => handleAddFavourite(company?.slug)}
-              disabled={isAdding}
-            >
-              <LoveIcon stroke="#ffffff" />
-            </Button>
+            {isFavorite ? (
+                <Button
+                    className="!border-brand-600 !size-9 !py-[3px] !px-2 !bg-brand-600"
+                    onClick={() => handleAddFavourite(company?.slug)}
+                    disabled={isAdding}
+                >
+                  <LoveIcon stroke="#ffffff" />
+                </Button>
+            ) : (
+                <Button
+                    secondary
+                    className="!border-brand-300 !size-9 !py-[3px] !px-2"
+                    onClick={() => handleAddFavourite(company?.slug)}
+                    disabled={isAdding}
+                >
+                  <LoveIcon stroke="#C67618" />
+                </Button>
+            )}
           </div>
         </CardHeader>
 
