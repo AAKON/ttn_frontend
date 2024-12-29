@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AuthHeader } from "@/shared";
 import Button from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import React, {useState} from "react";
 import { useRouter } from "next/navigation";
 import {
   Form,
@@ -21,6 +21,7 @@ import { signIn, getSession } from "next-auth/react";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
+import {Loader2} from "lucide-react";
 
 const formSchema = z.object({
   email: z
@@ -36,6 +37,7 @@ const formSchema = z.object({
 
 export default function Login() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   const form = useForm({
@@ -47,6 +49,7 @@ export default function Login() {
   });
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     const { email, password } = values;
     try {
       const res = await signIn("credentials", {
@@ -59,16 +62,20 @@ export default function Login() {
           showErrorToast(toast, "The username or password you entered is incorrect. Please try again");
         } else {
           showSuccessToast(toast, "Sign in successful!");
-
-        const refreshedSession = await fetch("/api/auth/session").then((res) => res.json());
-        console.log(refreshedSession, 'get refreshedSession');
-        if (!refreshedSession || !refreshedSession.user) {
-          showErrorToast(toast, "Session refresh failed, Please reload page");
+        try {
+          await getSession();
+        } catch (sessionError) {
+          console.error("Failed to refresh session:", sessionError);
+          showErrorToast(toast, "Session refresh failed. Please reload the page.");
         }
-          router.push("/");
+          // router.push("/");
+        window.location.href = "/";
         }
     } catch (error) {
       showErrorToast(toast, "Sign in faild, Try again");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -126,7 +133,14 @@ export default function Login() {
                     )}
                   />
                   <Button className="w-full mt-2" type="submit">
-                    Log in
+                    {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Please wait
+                        </>
+                    ) : (
+                        "Log in"
+                    )}
                   </Button>
                   <p className="text-gray-500 text-md text-center">or</p>
                   <Button secondary className="w-full" type="button">
