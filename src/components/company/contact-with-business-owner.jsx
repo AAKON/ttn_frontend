@@ -13,12 +13,12 @@ import {
 } from "@/icons";
 import Link from "next/link";
 
-const ContactWithBusinessOwner = ({headerData}) => {
+const ContactWithBusinessOwner = ({ headerData }) => {
   const [Owner, setOwner] = useState(false);
   const [email, setEmail] = useState(false);
   const [report, setReport] = useState(false);
 
-  const {name, profileImage, tags} =headerData;
+  const { name, profileImage, tags } = headerData;
 
   const emailClick = () => {
     setEmail(true);
@@ -41,13 +41,15 @@ const ContactWithBusinessOwner = ({headerData}) => {
 
       <div className={`lg:block ${Owner ? "block" : "hidden"}`}>
         <div className="flex items-center mt-[32px] mb-4 gap-3.5">
-          <Image
-            className="border rounded-full object-cover"
-            src={profileImage ? profileImage : CodeBlue}
-            alt="CodeBlue"
-            width={40}
-            height={40}
-          />
+          <div className="size-10 rounded-full border overflow-hidden">
+            <Image
+              className="size-full object-cover"
+              src={profileImage ? profileImage : CodeBlue}
+              alt="CodeBlue"
+              width={40}
+              height={40}
+            />
+          </div>
           <div className="flex flex-col gap-[10px]">
             <h3 className="text-gray-900 text-base leading-base font-semibold">
               {name}
@@ -68,8 +70,8 @@ const ContactWithBusinessOwner = ({headerData}) => {
         </div> */}
 
         <Button
-            TagName={Link}
-          href={'/contact'}
+          TagName={Link}
+          href={"/contact"}
           className="w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
         >
           Contact Us

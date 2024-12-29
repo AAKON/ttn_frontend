@@ -37,7 +37,7 @@ const AvailableProducts = ({slug, productData, productCategories, onDeleteSucces
                         Available Products
                     </label>
                     <div
-                        className="mt-3 relative before:absolute before:content-[''] before:h-full before:w-[6%] before:bg-gradient-to-r from-white to-transparent before:top-0 before:left-0 before:z-[3] after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0">
+                        className="mt-3 ">
                         <Splide options={sliderOptions}>
                             {productData?.map((product) => {
                                 return (
