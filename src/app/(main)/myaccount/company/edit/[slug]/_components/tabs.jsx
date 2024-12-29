@@ -47,7 +47,7 @@ import FaqForm from "./faq-form";
 import BusinessContactForm from "./business-contact-form";
 import MyClients from "@/app/(main)/myaccount/company/edit/_components/client";
 
-function EditTabs({ slug }) {
+function EditTabs({ slug, preData }) {
   return (
     <div>
       <Tabs defaultValue="profile" className="edit-tabs w-full overflow-hidden mb-8">
@@ -86,51 +86,13 @@ function EditTabs({ slug }) {
 
         <TabsContent value="profile">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
-            <OverviewForm slug={slug} />
+            <OverviewForm slug={slug} locations={preData?.locations} />
           </div>
         </TabsContent>
 
         <TabsContent value="clients">
           <MyClients slug={slug} allClients={allClients} />
         </TabsContent>
-
-        {/*<TabsContent value="certifications">*/}
-        {/*  <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">*/}
-        {/*    <h3 className="text-xl font-semibold text-gray-900 mb-8">*/}
-        {/*      Certifications*/}
-        {/*    </h3>*/}
-        {/*    <p className="text-sm text-gray-900 mb-2">Client logo</p>*/}
-        {/*    <PhotoUploadBox />*/}
-        {/*    <div className="pt-5">*/}
-        {/*      <Label htmlFor="certificationName" className={formLabelClasses}>*/}
-        {/*        Certification Name*/}
-        {/*      </Label>*/}
-        {/*      <Input*/}
-        {/*        id="certificationName"*/}
-        {/*        type="text"*/}
-        {/*        name="certificationName"*/}
-        {/*        placeholder="Certification Name"*/}
-        {/*        className={`${inputClasses} h-9 bg-gray-50`}*/}
-        {/*      />*/}
-        {/*    </div>*/}
-        {/*    <Button secondary className="mt-4 w-full h-9">*/}
-        {/*      Done*/}
-        {/*    </Button>*/}
-
-        {/*    <div className="mt-5">*/}
-        {/*      <p className="text-sm text-gray-900 mb-2">Existing Clients</p>*/}
-        {/*      <div className="grid grid-cols-1 gap-4">*/}
-        {/*        {allClientsCertifications?.map((certification, index) => (*/}
-        {/*          <ExistingClientsCertifications*/}
-        {/*            key={index}*/}
-        {/*            certification={certification}*/}
-        {/*          />*/}
-        {/*        ))}*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</TabsContent>*/}
-
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
             {/* Business Contact start */}
