@@ -458,10 +458,15 @@ const OverviewForm = ({ slug, locations }) => {
               <p className="text-gray-500 text-sm pb-6">Market Share</p>
               <ResponsiveContainer height={240}>
                 <BarChart
-                  data={marketShareWatchedData.map((row) => ({
-                    country:  row.country ||"Bangladesh",
-                    percentage: Number(row.percentage) || 0,
-                  }))}
+                  data={marketShareWatchedData.map((row) => {
+                    // Find the matching location by ID
+                    const location = locations.find((loc) => loc.id === Number(row.country));
+                    return {
+                      country: location?.name || "Unknown", // Use the country name or a fallback
+                      percentage: Number(row.percentage) || 0,
+                    };
+                  })}
+
                   margin={{ top: 0, right: 0, left: -18, bottom: 0 }}
                 >
                   <CartesianGrid stroke="#F2F4F7" horizontal vertical={false} />
