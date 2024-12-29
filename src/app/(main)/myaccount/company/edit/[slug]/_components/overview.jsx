@@ -234,7 +234,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Production capacity
+                      Production Capacity
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -312,7 +312,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Delivery terms <span className="text-red-600">*</span>
+                      Delivery Terms <span className="text-red-600">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
