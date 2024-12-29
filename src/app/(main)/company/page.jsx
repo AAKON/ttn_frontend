@@ -3,6 +3,7 @@ import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import {getSession} from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
