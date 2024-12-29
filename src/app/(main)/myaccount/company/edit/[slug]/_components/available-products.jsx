@@ -12,6 +12,7 @@ const AvailableProducts = ({slug, productData, productCategories, onDeleteSucces
         gap: 20,
         arrows: true,
         pagination: false,
+        focus: "center",
         breakpoints: {
             1280: {
                 perPage: 3,
@@ -29,12 +30,12 @@ const AvailableProducts = ({slug, productData, productCategories, onDeleteSucces
 
     return (
         <div className="max-w-[932px]">
-            <div className="mt-4">
-                <label
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
-                    Available Products
-                </label>
-                {productData && Array.isArray(productData) && productData.length > 0 && (
+            {productData && Array.isArray(productData) && productData.length > 0 && (
+                <div className="mt-4">
+                    <label
+                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 font-medium">
+                        Available Products
+                    </label>
                     <div
                         className="mt-3 ">
                         <Splide options={sliderOptions}>
@@ -44,13 +45,13 @@ const AvailableProducts = ({slug, productData, productCategories, onDeleteSucces
                                         <AvailableProductsCard
                                             product={product}
                                             slug={slug} preData={productCategories}
-                                            onDeleteSuccess={onDeleteSuccess} />
+                                            onDeleteSuccess={onDeleteSuccess}/>
                                     </SplideSlide>
                                 );
                             })}
                         </Splide>
-                    </div>)}
-            </div>
+                    </div>
+                </div>)}
         </div>
     );
 };
@@ -112,7 +113,7 @@ function AvailableProductsCard({product, slug, preData, onDeleteSuccess}) {
                     onConfirm={() => handleDelete(product?.id)}
                     isDeleting={isDeleting}
                 />
-                <ProductEditModal preData={preData} slug={slug} data={product} onSuccess={onDeleteSuccess} />
+                <ProductEditModal preData={preData} slug={slug} data={product} onSuccess={onDeleteSuccess}/>
             </div>
         </div>
     );

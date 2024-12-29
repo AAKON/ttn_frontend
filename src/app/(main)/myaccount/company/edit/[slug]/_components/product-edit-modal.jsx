@@ -93,8 +93,6 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
-    console.log(data, 'form data get');
-
     const id = data?.id;
 
     const tagOptions = preData && preData.length > 0 && preData.map((item) => ({
@@ -111,8 +109,8 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
             // Parse price_range into price_min and price_max
             price_min: data?.price_range ? Number(data.price_range.split("-")[0]) : "",
             price_max: data?.price_range ? Number(data.price_range.split("-")[1]) : "",
-            moq_min: "",
-            moq_max: ""
+            moq_min: data?.moq ? Number(data.moq.split("-")[0]) : "",
+            moq_max: data?.moq ? Number(data.moq.split("-")[1]) : ""
         },
     });
 
