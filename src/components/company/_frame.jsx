@@ -23,7 +23,6 @@ import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
 
 const Frame = ({ slug, headerData, className }) => {
-
   const {
     bannerImage,
     profileImage,
@@ -52,7 +51,7 @@ const Frame = ({ slug, headerData, className }) => {
                 src={profileImage ? profileImage : CodeBlue}
                 width={70}
                 height={70}
-                alt={name || 'profile image'}
+                alt={name || "profile image"}
               />
               <div className="flex flex-col gap-[10px]">
                 <p className="text-brand-600 lg:text-sm lg:leading-sm lg:font-semibold text-[12px] font-bold leading-[18px] uppercase">
@@ -70,7 +69,7 @@ const Frame = ({ slug, headerData, className }) => {
                   <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
                     {/*<TagsIcon />*/}
                     {/*{tags}*/}
-                    <TagsView  />
+                    <TagsView />
                     {/*<span className="max-sm:hidden lg:block">/Mixed Rags</span>*/}
                   </h6>
                   {/*<h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">*/}
@@ -111,11 +110,7 @@ const Frame = ({ slug, headerData, className }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            <LdtCard
-                icon={<GridIcon />}
-                text={"Category"}
-                title={category}
-            />
+            <LdtCard icon={<GridIcon />} text={"Category"} title={category} />
             <LdtCard
               icon={<BuildingTwoIcon />}
               text={"Company size"}
@@ -127,11 +122,7 @@ const Frame = ({ slug, headerData, className }) => {
               ExtSrc={location?.flag_path ? location?.flag_path : AU}
               title={location?.name}
             />
-            <LdtCard
-              icon={<EyeIcon />}
-              text={"Views"}
-              title={viewCount}
-            />
+            <LdtCard icon={<EyeIcon />} text={"Views"} title={viewCount} />
           </div>
         </div>
       </Container>
@@ -151,8 +142,16 @@ export function LdtCard({ icon, text, title, ExtSrc }) {
       </div>
       <h3 className="text-gray-900 lg:text-lg text-[14px] font-medium flex items-center gap-2">
         <span className="line-clamp-1">{title}</span>
-          {ExtSrc ? (
-              <Image src={ExtSrc} alt="flag" width={24} height={24} className="lg:h-6 lg:w-6 h-5 w-5 object-contain" />
+        {ExtSrc ? (
+          <span className="size-[24px] overflow-hidden rounded-full">
+            <Image
+              src={ExtSrc}
+              alt="flag"
+              width={24}
+              height={24}
+              className="lg:size-6 size-5 object-cover"
+            />
+          </span>
         ) : (
           <></>
         )}

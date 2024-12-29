@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { formLabelClasses, inputClasses } from "@/utils/input-style";
 
-import {companyOverviewReq, getCompanyOverview} from "@/services/company";
+import { companyOverviewReq, getCompanyOverview } from "@/services/company";
 import Button from "@/components/shared/button";
 import { DeleteIcon } from "@/components/icons";
 
@@ -42,10 +42,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import {getCompanyProducts} from "@/services/product";
+import { getCompanyProducts } from "@/services/product";
 
 const formSchema = z.object({
   manpower: z.string().optional(),
@@ -60,30 +60,31 @@ const formSchema = z.object({
     message: "Payment policy is required",
   }),
   market_share: z.array(
-      z.object({
-        location_id: z.string().min(1, "Country is required"),
-        percentage: z
-            .union([
-              z.string().min(1, "Market share is required"),
-              z.number().refine((value) => !isNaN(value), {
-                message: "Market share must be a valid number",
-              }),
-            ])
-            .transform((value) => parseFloat(value)), // Always transform to a number
-      })
+    z.object({
+      // location_id: z.string().min(1, "Country is required"),
+      country: z.string().min(1, "Country is required"),
+      percentage: z
+        .union([
+          z.string().min(1, "Market share is required"),
+          z.number().refine((value) => !isNaN(value), {
+            message: "Market share must be a valid number",
+          }),
+        ])
+        .transform((value) => parseFloat(value)), // Always transform to a number
+    })
   ),
   yearly_turnover: z.array(
-      z.object({
-        year: z.string().min(1, "Year is required"),
-        turnover: z
-            .union([
-              z.string().min(1, "Turnover is required"),
-              z.number().refine((value) => !isNaN(value), {
-                message: "Turnover must be a valid number",
-              }),
-            ])
-            .transform((value) => parseFloat(value)), // Always transform to a number
-      })
+    z.object({
+      year: z.string().min(1, "Year is required"),
+      turnover: z
+        .union([
+          z.string().min(1, "Turnover is required"),
+          z.number().refine((value) => !isNaN(value), {
+            message: "Turnover must be a valid number",
+          }),
+        ])
+        .transform((value) => parseFloat(value)), // Always transform to a number
+    })
   ),
 });
 
@@ -123,6 +124,9 @@ const OverviewForm = ({ slug }) => {
 
   // Watch for changes in turnoverData
   const watchedData = form.watch("yearly_turnover");
+  const marketShareWatchedData = form.watch("market_share");
+  console.log(watchedData, "Turnover watchedData");
+  console.log(marketShareWatchedData, "marketShareWatchedData");
 
   const groupOneFieldArray = useFieldArray({
     control,
@@ -177,7 +181,7 @@ const OverviewForm = ({ slug }) => {
     }
   }, [overviewData, reset]);
 
-  console.log(overviewData, 'get overviewData')
+  console.log(overviewData, "get overviewData");
 
   // Function to handle form submission
   const onSubmit = async (data) => {
@@ -261,22 +265,22 @@ const OverviewForm = ({ slug }) => {
                 )}
               />
               <FormField
-                  control={form.control}
-                  name="total_units"
-                  render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className={labelStyle}>No of Machines</FormLabel>
-                        <FormControl>
-                          <Input
-                              className={inputStyle}
-                              placeholder="Enter number"
-                              type="text"
-                              {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}
+                control={form.control}
+                name="total_units"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyle}>No of Machines</FormLabel>
+                    <FormControl>
+                      <Input
+                        className={inputStyle}
+                        placeholder="Enter number"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -299,22 +303,22 @@ const OverviewForm = ({ slug }) => {
                 )}
               />
               <FormField
-                  control={form.control}
-                  name="lead_time"
-                  render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className={labelStyle}>Lead Time</FormLabel>
-                        <FormControl>
-                          <Input
-                              className={inputStyle}
-                              placeholder="90 Days"
-                              type="text"
-                              {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}
+                control={form.control}
+                name="lead_time"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyle}>Lead Time</FormLabel>
+                    <FormControl>
+                      <Input
+                        className={inputStyle}
+                        placeholder="90 Days"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -323,9 +327,11 @@ const OverviewForm = ({ slug }) => {
                 name="shipment_term"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>Delivery terms <span className="text-red-600">*</span></FormLabel>
+                    <FormLabel className={labelStyle}>
+                      Delivery terms <span className="text-red-600">*</span>
+                    </FormLabel>
                     <FormControl>
-                    <Input
+                      <Input
                         className={inputStyle}
                         placeholder="FOB, CF, CIF etc."
                         type="text"
@@ -337,23 +343,24 @@ const OverviewForm = ({ slug }) => {
                 )}
               />
               <FormField
-                  control={form.control}
-                  name="payment_policy"
-                  render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className={labelStyle}>Payment Policy <span
-                            className="text-red-600">*</span></FormLabel>
-                        <FormControl>
-                        <Input
-                              className={inputStyle}
-                              placeholder="LC, TT, Bank Transfer etc"
-                              type="text"
-                              {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                  )}
+                control={form.control}
+                name="payment_policy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className={labelStyle}>
+                      Payment Policy <span className="text-red-600">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className={inputStyle}
+                        placeholder="LC, TT, Bank Transfer etc"
+                        type="text"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
           </div>
@@ -374,15 +381,16 @@ const OverviewForm = ({ slug }) => {
                   className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr_36px]"
                 >
                   <Controller
-                    name={`market_share.${index}.location_id`}
+                    // name={`market_share.${index}.location_id`}
+                    name={`market_share.${index}.country`}
                     control={control}
                     render={({ field }) => (
                       <FormItem>
-                          <FormLabel className={labelStyle}>
-                              Select Country <span className="text-red-600">*</span>
-                          </FormLabel>
-                          <Select
-                              onValueChange={(value) => field.onChange(value)}
+                        <FormLabel className={labelStyle}>
+                          Select Country <span className="text-red-600">*</span>
+                        </FormLabel>
+                        <Select
+                          onValueChange={(value) => field.onChange(value)}
                           value={field.value}
                         >
                           <FormControl>
@@ -402,7 +410,8 @@ const OverviewForm = ({ slug }) => {
                           </SelectContent>
                         </Select>
                         <FormMessage>
-                          {errors.market_share?.[index]?.location_id?.message}
+                          {/* {errors.market_share?.[index]?.location_id?.message} */}
+                          {errors.market_share?.[index]?.country?.message}
                         </FormMessage>
                       </FormItem>
                     )}
@@ -413,9 +422,10 @@ const OverviewForm = ({ slug }) => {
                     name={`market_share.${index}.percentage`}
                     render={({ field }) => (
                       <FormItem>
-                          <FormLabel className={labelStyle}>Percentage <span
-                              className="text-red-600">*</span></FormLabel>
-                          <FormControl>
+                        <FormLabel className={labelStyle}>
+                          Percentage <span className="text-red-600">*</span>
+                        </FormLabel>
+                        <FormControl>
                           <Input
                             className={inputStyle}
                             placeholder="Enter market share"
@@ -449,7 +459,8 @@ const OverviewForm = ({ slug }) => {
                 className="h-9 w-full mt-3 text-sm"
                 onClick={() =>
                   groupOneFieldArray.append({
-                    location_id: "",
+                    // location_id: "",
+                    country: "",
                     percentage: "",
                   })
                 }
@@ -458,13 +469,36 @@ const OverviewForm = ({ slug }) => {
               </Button>
             </div>
 
-            <div className="border rounded-[16px] mt-3">
-              <Image src={marketShare} alt="marketShare" className="w-full" />
+            <div className="border-t border-t-gray-200 pt-6 mt-6">
+              <p className="text-gray-500 text-sm pb-6">Market Share</p>
+              <ResponsiveContainer height={240}>
+                <BarChart
+                  data={marketShareWatchedData.map((row) => ({
+                    country:  row.country ||"Bangladesh",
+                    percentage: Number(row.percentage) || 0,
+                  }))}
+                  margin={{ top: 0, right: 0, left: -18, bottom: 0 }}
+                >
+                  <CartesianGrid stroke="#F2F4F7" horizontal vertical={false} />
+                  <XAxis dataKey="country" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend verticalAlign="top" />
+                  <Bar
+                    dataKey="percentage"
+                    name="Market Share"
+                    stackId="a"
+                    fill="#F9A94B"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
 
             <div className="border-t border-t-gray-200 pt-6 mt-6">
-                <p className="text-gray-500 text-sm pb-6">Yearly Turnover <span className="text-red-600">*</span></p>
-                <div className="group_input">
+              <p className="text-gray-500 text-sm pb-6">
+                Yearly Turnover <span className="text-red-600">*</span>
+              </p>
+              <div className="group_input">
                 <div className="grid gap-3">
                   {groupTwoFieldArray.fields.map((field, index) => (
                     <div
@@ -476,11 +510,12 @@ const OverviewForm = ({ slug }) => {
                         control={control}
                         render={({ field }) => (
                           <FormItem>
-                              <FormLabel className={labelStyle}>
-                                  Select Year <span className="text-red-600">*</span>
-                              </FormLabel>
-                              <Select
-                                  onValueChange={(value) => field.onChange(value)}
+                            <FormLabel className={labelStyle}>
+                              Select Year{" "}
+                              <span className="text-red-600">*</span>
+                            </FormLabel>
+                            <Select
+                              onValueChange={(value) => field.onChange(value)}
                               value={field.value}
                             >
                               <FormControl>
@@ -517,10 +552,10 @@ const OverviewForm = ({ slug }) => {
                         name={`yearly_turnover.${index}.turnover`}
                         render={({ field }) => (
                           <FormItem>
-                              <FormLabel className={labelStyle}>
-                                  Turnover <span className="text-red-600">*</span>
-                              </FormLabel>
-                              <FormControl>
+                            <FormLabel className={labelStyle}>
+                              Turnover <span className="text-red-600">*</span>
+                            </FormLabel>
+                            <FormControl>
                               <Input
                                 className={inputStyle}
                                 placeholder="Enter turnover"
