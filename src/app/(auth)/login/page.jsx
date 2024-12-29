@@ -59,11 +59,11 @@ export default function Login() {
           showErrorToast(toast, "The username or password you entered is incorrect. Please try again");
         } else {
           showSuccessToast(toast, "Sign in successful!");
-        try {
-          await getSession();
-        } catch (sessionError) {
-          console.error("Failed to refresh session:", sessionError);
-          showErrorToast(toast, "Session refresh failed. Please reload the page.");
+
+        const refreshedSession = await fetch("/api/auth/session").then((res) => res.json());
+        console.log(refreshedSession, 'get refreshedSession');
+        if (!refreshedSession || !refreshedSession.user) {
+          showErrorToast(toast, "Session refresh failed, Please reload page");
         }
           router.push("/");
         }
