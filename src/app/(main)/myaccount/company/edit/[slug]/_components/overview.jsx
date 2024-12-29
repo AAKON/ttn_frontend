@@ -61,7 +61,7 @@ const formSchema = z.object({
   }),
   market_share: z.array(
     z.object({
-      // location_id: z.string().min(1, "Country is required"),
+      location_id: z.string().min(1, "Country is required"),
       country: z.string().min(1, "Country is required"),
       percentage: z
         .union([
@@ -125,6 +125,7 @@ const OverviewForm = ({ slug }) => {
   // Watch for changes in turnoverData
   const watchedData = form.watch("yearly_turnover");
   const marketShareWatchedData = form.watch("market_share");
+
   console.log(watchedData, "Turnover watchedData");
   console.log(marketShareWatchedData, "marketShareWatchedData");
 
@@ -474,7 +475,10 @@ const OverviewForm = ({ slug }) => {
               <ResponsiveContainer height={240}>
                 <BarChart
                   data={marketShareWatchedData.map((row) => ({
-                    country:  row.country ||"Bangladesh",
+                    country:
+                      ["Bangladesh", "Indonesia", "Srilanka"][
+                        row.location_id - 1
+                      ] || "Bangladesh",
                     percentage: Number(row.percentage) || 0,
                   }))}
                   margin={{ top: 0, right: 0, left: -18, bottom: 0 }}
