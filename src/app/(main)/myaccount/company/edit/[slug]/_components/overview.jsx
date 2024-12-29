@@ -62,7 +62,6 @@ const formSchema = z.object({
   market_share: z.array(
     z.object({
       location_id: z.string().min(1, "Country is required"),
-      country: z.string().min(1, "Country is required"),
       percentage: z
         .union([
           z.string().min(1, "Market share is required"),
@@ -126,9 +125,6 @@ const OverviewForm = ({ slug, locations }) => {
   const watchedData = form.watch("yearly_turnover");
   const marketShareWatchedData = form.watch("market_share");
 
-  console.log(watchedData, "Turnover watchedData");
-  console.log(marketShareWatchedData, "marketShareWatchedData");
-
   const groupOneFieldArray = useFieldArray({
     control,
     name: "market_share",
@@ -182,11 +178,9 @@ const OverviewForm = ({ slug, locations }) => {
     }
   }, [overviewData, reset]);
 
-  console.log(overviewData, "get overviewData");
-  console.log(locations, 'locations overview=======')
-
   // Function to handle form submission
   const onSubmit = async (data) => {
+
     const {
       moq,
       lead_time,
@@ -234,7 +228,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Production capacity
+                      Production Capacity
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -312,7 +306,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Delivery terms <span className="text-red-600">*</span>
+                      Delivery Terms <span className="text-red-600">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -365,8 +359,7 @@ const OverviewForm = ({ slug, locations }) => {
                   className="grid grid-cols-1 gap-3 lg:grid-cols-[1fr_1fr_36px]"
                 >
                   <Controller
-                    // name={`market_share.${index}.location_id`}
-                    name={`market_share.${index}.country`}
+                    name={`market_share.${index}.location_id`}
                     control={control}
                     render={({ field }) => (
                       <FormItem>
@@ -397,7 +390,7 @@ const OverviewForm = ({ slug, locations }) => {
                         </Select>
                         <FormMessage>
                           {/* {errors.market_share?.[index]?.location_id?.message} */}
-                          {errors.market_share?.[index]?.country?.message}
+                          {errors.market_share?.[index]?.location_id?.message}
                         </FormMessage>
                       </FormItem>
                     )}
@@ -437,7 +430,7 @@ const OverviewForm = ({ slug, locations }) => {
                 </div>
               ))}
 
-              {/* Add New Country Button */}
+              {/* Add New location Button */}
               <Button
                 secondary
                 icon
@@ -446,7 +439,7 @@ const OverviewForm = ({ slug, locations }) => {
                 onClick={() =>
                   groupOneFieldArray.append({
                     // location_id: "",
-                    country: "",
+                    location_id: "",
                     percentage: "",
                   })
                 }
@@ -461,9 +454,9 @@ const OverviewForm = ({ slug, locations }) => {
                 <BarChart
                   data={marketShareWatchedData.map((row) => {
                     // Find the matching location by ID
-                    const location = locations.find((loc) => loc.id === Number(row.country));
+                    const location = locations.find((loc) => loc.id === Number(row.location_id));
                     return {
-                      country: location?.name || "Unknown", // Use the country name or a fallback
+                      location_id: location?.name || "Unknown", // Use the country name or a fallback
                       percentage: Number(row.percentage) || 0,
                     };
                   })}
@@ -471,7 +464,7 @@ const OverviewForm = ({ slug, locations }) => {
                   margin={{ top: 0, right: 0, left: -18, bottom: 0 }}
                 >
                   <CartesianGrid stroke="#F2F4F7" horizontal vertical={false} />
-                  <XAxis dataKey="country" />
+                  <XAxis dataKey="location_id" />
                   <YAxis />
                   <Tooltip />
                   <Legend verticalAlign="top" />
@@ -574,7 +567,7 @@ const OverviewForm = ({ slug, locations }) => {
                       </Button>
                     </div>
                   ))}
-                  {/* Add New Country Button */}
+                  {/* Add New location Button */}
                   <Button
                     secondary
                     icon
