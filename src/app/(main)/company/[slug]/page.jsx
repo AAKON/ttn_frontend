@@ -9,7 +9,8 @@ import ProductShowcase from "@/components/company/product-showcase";
 import CompanyTabs from "@/components/company/company-tabs";
 import ContactWithBusinessOwner from "@/components/company/contact-with-business-owner";
 
-const CompanyDetails = async ({ params: { slug } }) => {
+const CompanyDetails = async ({ params }) => {
+  const slug = (await params).slug;
   try {
     const detailsPromise = getCompanyDetails(slug);
     const details = await detailsPromise;
@@ -26,8 +27,9 @@ const CompanyDetails = async ({ params: { slug } }) => {
       companySize: details?.company?.manpower,
       created: details?.company?.created_at,
       canEdit: details?.buttons?.edit,
-      canClaim: details?.buttons?.claim,
+      canClaim: details?.buttons?.claim
     };
+    const is_favorite = details?.company?.is_favorite;
     const faqData = details?.company?.faqs || [];
     const clientsData = details?.company?.clients || [];
     const certificatesData = details?.company?.certificates || [];
@@ -36,14 +38,12 @@ const CompanyDetails = async ({ params: { slug } }) => {
     const contactData = details?.company?.contact || null;
     const decissionMakersData = details?.company?.decision_makers || [];
 
-    console.log(overviewData);
-
     console.log(details, "get c details");
 
     return (
       <div className="bg-gray-50 pb-8 md:pb-10 lg:pb-16 xl:pb-20">
         <div className="relative">
-          <Frame slug={slug} headerData={headerData} />
+          <Frame slug={slug} headerData={headerData} is_favorite={is_favorite} />
           <Container>
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-12 relative mt-4 xl:mt-10">
               <div>
