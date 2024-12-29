@@ -27,7 +27,7 @@ const ProductShowCaseCard = ({ product }) => {
           <span className="text-gray-400">/pair</span>
         </h4>
         <h4 className="text-base text-gray-900 font-semibold">
-          300 pairs<span className="text-gray-400">(Min. Order)</span>
+            {product?.moq} pairs<span className="text-gray-400">(Min. Order)</span>
         </h4>
       </div>
     </div>
