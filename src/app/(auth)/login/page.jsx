@@ -17,7 +17,7 @@ import {
   FormDescription,
   FormMessage,
 } from "@/components/ui/form";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
@@ -49,19 +49,24 @@ export default function Login() {
   const handleSubmit = async (values) => {
     const { email, password } = values;
     try {
-      signIn("credentials", {
+      const res = await signIn("credentials", {
         email: email,
         password: password,
-        redirect: true,
+        redirect: false,
         callbackUrl: "/",
-      }).then((res) => {
-        if (res?.error) {
-          showErrorToast(toast, "Something went wrong, Try again");
+      })
+      if (res?.error) {
+          showErrorToast(toast, "The username or password you entered is incorrect. Please try again");
         } else {
           showSuccessToast(toast, "Sign in successful!");
+        try {
+          await getSession();
+        } catch (sessionError) {
+          console.error("Failed to refresh session:", sessionError);
+          showErrorToast(toast, "Session refresh failed. Please reload the page.");
+        }
           router.push("/");
         }
-      });
     } catch (error) {
       showErrorToast(toast, "Sign in faild, Try again");
     }
@@ -89,7 +94,7 @@ export default function Login() {
                           <Input
                             type="email"
                             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-0 outline-0"
-                            placeholder="basharvai@textile.com"
+                            placeholder="Enter your email"
                             {...field}
                           />
                         </FormControl>
@@ -106,6 +111,7 @@ export default function Login() {
                         <FormControl>
                           <Input
                             type="password"
+                            placeholder="Enter your password"
                             className="focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-0 outline-0"
                             {...field}
                           />
