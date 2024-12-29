@@ -114,8 +114,6 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
         }
     }, [basic, setValue]);
 
-    console.log(initialImage, "ggg initialImage");
-
     const handleImageChange = ({file}) => {
         setFileData((prev) => ({...prev, imageFile: file}));
     };
@@ -145,7 +143,6 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
             formData.append("moto", moto);
         }
         formData.append("business_category_id", business_category_id);
-
         normalizedCompliances.forEach((value, index) => {
             formData.append(`certificates[${index}]`, value);
         });
@@ -355,12 +352,9 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Medium (1000-10000 Manpower)">
-                                                    Medium (1000-10000 Manpower)
-                                                </SelectItem>
-                                                <SelectItem value="Large (1000-20000 Manpower)">
-                                                    Large (1000-20000 Manpower)
-                                                </SelectItem>
+                                                <SelectItem value="Small (Below 1000 Manpower)">Small (Below 1000 Manpower)</SelectItem>
+                                                <SelectItem value="Medium (1000 - 10000 Manpower)">Medium (1000 - 10000 Manpower)</SelectItem>
+                                                <SelectItem value="Large (Above 10000 Manpower)">Large (Above 10000 Manpower)</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage/>
