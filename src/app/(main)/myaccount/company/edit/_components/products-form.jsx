@@ -174,7 +174,7 @@ const ProductsForm = () => {
             Add new Product
           </Button>
           {/* Submit Button */}
-          <Button secondary type="submit" disabled={loading} className="h-9">
+          <Button type="submit" disabled={loading} className="h-9">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

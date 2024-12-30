@@ -307,11 +307,7 @@ function ContactUsForm() {
         </FormItem>
 
         {/* Submit Button */}
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-orange-500 text-white"
-        >
+        <Button type="submit" disabled={loading} className="w-full text-white">
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

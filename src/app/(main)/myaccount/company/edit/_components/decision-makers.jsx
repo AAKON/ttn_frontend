@@ -216,7 +216,7 @@ const DecisionMakersForm = () => {
             >
               Add new contact
             </Button>
-            <Button type="submit" secondary className="h-9">
+            <Button type="submit" className="h-9">
               {editIndex !== null ? "Update" : "Save"}
             </Button>
           </div>

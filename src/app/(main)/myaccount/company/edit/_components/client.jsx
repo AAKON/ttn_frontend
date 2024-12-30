@@ -106,7 +106,7 @@ function MyClients({slug, allClients}) {
             <Form {...form}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DragDropFile name="file" control={control} defaultValue={watch('file')}/>
-                    <Button secondary type="submit" className="mt-4 w-full h-9">
+                    <Button type="submit" className="mt-4 w-full h-9">
                         {loading ? (
                             <>
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin"/>

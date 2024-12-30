@@ -148,7 +148,7 @@ const FaqForm = () => {
           >
             Add new question
           </Button>
-          <Button secondary className="h-9" type="button" onClick={handleDone}>
+          <Button className="h-9" type="button" onClick={handleDone}>
             Done
           </Button>
         </div>

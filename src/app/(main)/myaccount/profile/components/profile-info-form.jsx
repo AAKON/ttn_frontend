@@ -170,7 +170,6 @@ const ProfileInfoForm = () => {
         {/* Buttons */}
         <div className="flex justify-end gap-2">
           <Button
-            secondary
             type="submit"
             disabled={loading}
             className="px-[62px]"

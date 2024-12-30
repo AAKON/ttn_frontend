@@ -160,7 +160,7 @@ const FaqForm = ({slug}) => {
 
                   {/* Add and Done Buttons */}
                   <div className="flex justify-end">
-                      <Button type="submit" secondary className="h-9 w-[200px]" disabled={loading}>
+                      <Button type="submit" className="h-9 w-[200px]" disabled={loading}>
                           {loading ? (
                               <>
                                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

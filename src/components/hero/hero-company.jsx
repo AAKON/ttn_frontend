@@ -100,11 +100,14 @@ export default function HeroCompanyForm({
                       onValueChange={(value) => field.onChange(Number(value))}
                     >
                       <FormControl>
-                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0">
+                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
                           <SelectValue placeholder="All Categories" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
+                        <SelectItem value="all_categories">
+                          All Categories
+                        </SelectItem>
                         {categories.map((category) => (
                           <SelectItem
                             key={category.id}
@@ -145,19 +148,15 @@ export default function HeroCompanyForm({
                         />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel className="flex gap-2 items-center">
-                            Anywhere
-                          </SelectLabel>
-                          {locations?.map((country, index) => (
-                            <SelectItem
-                              key={country?.id || index}
-                              value={String(country?.id || country)}
-                            >
-                              {country?.name || country}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
+                        <SelectItem value="anywhere">Anywhere</SelectItem>
+                        {locations?.map((country, index) => (
+                          <SelectItem
+                            key={country?.id || index}
+                            value={String(country?.id || country)}
+                          >
+                            {country?.name || country}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </FormItem>

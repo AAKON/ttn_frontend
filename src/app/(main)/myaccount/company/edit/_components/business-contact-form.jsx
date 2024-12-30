@@ -202,7 +202,7 @@ const BusinessContactForm = () => {
           <div className="grid grid-cols-1">
             <LocationPicker form={form} labelStyle={labelStyle} />
           </div>
-          <Button secondary className="h-9">
+          <Button className="h-9">
             Save
           </Button>
         </div>
