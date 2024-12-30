@@ -36,15 +36,15 @@ const CompanyCardFilter = ({ company }) => {
   };
 
   return (
-    <Card className="flex flex-col justify-between">
+    <Card className="flex flex-col justify-between border">
       <div>
         <CardHeader className="grid grid-cols-[1fr_auto] gap-2">
           <div className="flex items-center gap-3">
-            <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
+            <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-200">
               <Image
                 src={company?.profile_pic ? company?.profile_pic : Profile_pic}
-                width={64}
-                height={64}
+                width={62}
+                height={62}
                 alt="Profile_pic"
                 className="object-cover w-full h-full rounded-full"
               />
@@ -62,22 +62,22 @@ const CompanyCardFilter = ({ company }) => {
           </div>
           <div className="flex gap-1">
             {isFavorite ? (
-                <Button
-                    className="!border-brand-600 !size-9 !py-[3px] !px-2 !bg-brand-600"
-                    onClick={() => handleAddFavourite(company?.slug)}
-                    disabled={isAdding}
-                >
-                  <LoveIcon stroke="#ffffff" />
-                </Button>
+              <Button
+                className="!border-brand-600 !size-9 !py-[3px] !px-2 !bg-brand-600"
+                onClick={() => handleAddFavourite(company?.slug)}
+                disabled={isAdding}
+              >
+                <LoveIcon stroke="#ffffff" />
+              </Button>
             ) : (
-                <Button
-                    secondary
-                    className="!border-brand-300 !size-9 !py-[3px] !px-2"
-                    onClick={() => handleAddFavourite(company?.slug)}
-                    disabled={isAdding}
-                >
-                  <LoveIcon stroke="#C67618" />
-                </Button>
+              <Button
+                secondary
+                className="!border-brand-300 !size-9 !py-[3px] !px-2"
+                onClick={() => handleAddFavourite(company?.slug)}
+                disabled={isAdding}
+              >
+                <LoveIcon stroke="#C67618" />
+              </Button>
             )}
           </div>
         </CardHeader>
