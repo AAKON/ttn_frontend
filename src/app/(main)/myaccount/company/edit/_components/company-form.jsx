@@ -336,7 +336,6 @@ const CompanyForm = ({ preData }) => {
         <div className="flex justify-start">
           {/* Submit Button */}
           <Button
-            secondary
             type="submit"
             disabled={loading}
             className="w-[200px] h-9"

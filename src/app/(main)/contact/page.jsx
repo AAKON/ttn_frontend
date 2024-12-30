@@ -12,22 +12,18 @@ const Contact = () => {
     <div>
       {/* Office Information section */}
       <Section className="bg-gray-50">
-        <h1 className="text-center">
-          We’d love to hear from you
-        </h1>
+        <h1 className="text-center">We’d love to hear from you</h1>
         {/* sub titel part */}
         <p className="section_short_description text-center md:pt-4 lg:pt-6">
           Our friendly team is always here to chat.
         </p>
       </Section>
 
-      <Section className="pt-0 lg:pt-20">
-        <div className="grid grid-cols-1 gap-xl-6 gap-8 lg:gap-x-20 items-start lg:grid-cols-[3fr_2fr] xl:grid-cols-[4fr_2fr]">
+      <Section className="pt-0 lg:pt-20 max-w-[720px] mx-auto">
+        <div className="grid grid-cols-1 gap-8 ">
           <div>
             <div className="md:pb-6 lg:pt-0">
-              <h2 className="text-center">
-                Get in touch
-              </h2>
+              <h2 className="text-center">Get in touch</h2>
               <p className="section_short_description text-center pt-2 md:pt-3 lg:pt-5">
                 We’d love to hear from you. Please fill out this form.
               </p>
@@ -36,7 +32,7 @@ const Contact = () => {
           </div>
 
           {/* Office Information section */}
-          <div className="grid grid-cols-1 gap-4 md:gap-6 lg:gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-10">
             <div className="flex gap-x-2">
               <Email />
               <div className="pl-[10px]">
@@ -44,19 +40,6 @@ const Contact = () => {
                 <span className="font-semibold text-base text-gray-700">
                   info@thetexti lenetwork.com
                 </span>
-              </div>
-            </div>
-
-            <div className="flex gap-x-2">
-              <Location />
-              <div className="pl-[10px]">
-                <p className="text-gray-500 ">Office</p>
-                <span className="font-semibold text-base text-gray-700">
-                  18/7, Nikunja-2, Khilkhet, Dhaka,{" "}
-                </span>
-                <p className="font-semibold text-base text-gray-700">
-                  Bangladesh-1229{" "}
-                </p>
               </div>
             </div>
 

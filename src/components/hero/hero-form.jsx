@@ -131,11 +131,14 @@ function HeroForm({
                             <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
                               <SelectValue
                                 placeholder="All Categories"
-                                className="text_16 text-red-400"
+                                className="text_16"
                               />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
+                            <SelectItem value="all_categories">
+                              All Categories
+                            </SelectItem>
                             {categories?.map((category, index) => (
                               <SelectItem
                                 key={index}
@@ -159,20 +162,18 @@ function HeroForm({
                     <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
                       <SelectValue
                         placeholder="All Categories"
-                        className="text_16 text-red-400"
+                        className="text_16"
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel className="flex gap-2 items-center">
-                          All Categories
-                        </SelectLabel>
-                        {categories?.map((category, index) => (
-                          <SelectItem key={index} value={String(category.id)}>
-                            {category?.name}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
+                      <SelectItem value="all_categories">
+                        All Categories
+                      </SelectItem>
+                      {categories?.map((category, index) => (
+                        <SelectItem key={index} value={String(category.id)}>
+                          {category?.name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -202,23 +203,19 @@ function HeroForm({
                             </span>
                             <SelectValue
                               placeholder="Anywhere"
-                              className="text_16 text-red-400"
+                              className="text_16"
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel className="flex gap-2 items-center">
-                                Anywhere
-                              </SelectLabel>
-                              {locations?.map((country) => (
-                                <SelectItem
-                                  key={country?.id}
-                                  value={String(country?.id)}
-                                >
-                                  {country?.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
+                            <SelectItem value="anywhere">Anywhere</SelectItem>
+                            {locations?.map((country) => (
+                              <SelectItem
+                                key={country?.id}
+                                value={String(country?.id)}
+                              >
+                                {country?.name}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </FormItem>

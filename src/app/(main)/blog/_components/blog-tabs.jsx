@@ -121,14 +121,14 @@ function BlogTabs({ ttnsData }) {
 
   return (
     <>
-      <Section className={"pt-6 md:pb-12"}>
+      <div className={"pt-6 md:pb-12"}>
         <div className="items-center flex justify-center">
           <Search handleSearchChange={handleSearchChange} />
         </div>
-      </Section>
-      <Section noDefaultStyle className="pt-0 pb-10 lg:pb-20">
+      </div>
+      <div className="pt-0 pb-10 lg:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_356px] gap-6 lg:gap-16 pb-12">
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 max-w-[980px]">
             <Tabs
               value={activeTab}
               onValueChange={handleTabChange}
@@ -202,7 +202,7 @@ function BlogTabs({ ttnsData }) {
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-      </Section>
+      </div>
     </>
   );
 }

@@ -364,7 +364,6 @@ const ProductsForm = ({ productCategories, slug, onSuccess }) => {
         <div className="flex justify-end">
           {/* Submit Button */}
           <Button
-            secondary
             type="submit"
             disabled={loading}
             className="h-9 w-[200px]"

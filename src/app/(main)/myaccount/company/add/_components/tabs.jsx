@@ -133,7 +133,7 @@ function EditTabs() {
             </h3>
             <p className="text-sm text-gray-900 mb-2">Client logo</p>
             <PhotoUploadBox />
-            <Button secondary className="mt-4 w-full h-9">
+            <Button className="mt-4 w-full h-9">
               Done
             </Button>
 
@@ -167,7 +167,7 @@ function EditTabs() {
                 className={`${inputClasses} h-9 bg-gray-50`}
               />
             </div>
-            <Button secondary className="mt-4 w-full h-9">
+            <Button className="mt-4 w-full h-9">
               Done
             </Button>
 

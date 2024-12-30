@@ -50,17 +50,17 @@ const CertificateSlider = ({ slideItems, direction = "ltr", ...props }) => {
           className="overflow-y-visible"
           {...props}
         >
-          <div className="h-[62px] flex justify-center flex-col items-center">
-            <div className="size-9 flex items-center justify-center">
+          <div className="size-[100px] flex flex-col gap-1 items-center justify-center bg-white border border-gray-300 p-3">
+            <div className="h-[60px] flex items-center justify-center">
               <Image
-                width={36}
-                height={36}
+                width={60}
+                height={60}
                 src={item?.image_url ? item?.image_url : defaultImage}
                 className="w-full h-full object-contain"
                 alt={item?.name || "image"}
               />
             </div>
-            <span className="text-gray-500 text-sm">{item?.name}</span>
+            <span className="text-gray-500 text-[12px]">{item?.name}</span>
           </div>
         </SplideSlide>
       ))}

@@ -46,7 +46,7 @@ export default function PhotoUploadBox({ photo, setPhoto }) {
         htmlFor="photo-upload"
         className={`${
           uploadedImage ? "opacity-0 group-hover:opacity-100 " : ""
-        } flex flex-col items-center justify-center text-orange-400 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50`}
+        } flex flex-col items-center justify-center text-brand-400 cursor-pointer absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50`}
       >
         <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center">
           <svg

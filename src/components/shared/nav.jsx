@@ -123,7 +123,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                 ))}
               </ul>
               {/* Dropdown menu */}
-              <DropdownMenu className="hidden lg:block">
+              <DropdownMenu className="hidden lg:block" modal={false}>
                 <DropdownMenuTrigger asChild>
                   <span
                     className={`text-base font-semibold flex gap-2 items-center cursor-pointer ${
