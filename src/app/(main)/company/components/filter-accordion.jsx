@@ -52,7 +52,7 @@ export default function FilterAccordion({
               <SelectValue placeholder="Anywhere" />
             </SelectTrigger>
             <SelectContent className="text-gray-500">
-              <SelectItem value="anywhere">Anywhere</SelectItem>
+              <SelectItem value="all">Anywhere</SelectItem>
               {filterOptions &&
                 filterOptions?.locations &&
                 filterOptions?.locations.map((location) => (
