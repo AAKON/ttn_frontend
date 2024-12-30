@@ -90,15 +90,19 @@ const CompanyList = () => {
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
-      if (key === "locationIds") {
-        updatedFilters[key] = isChecked ? [id] : [];
-      } else {
-        if (isChecked) {
-          updatedFilters[key] = [...(updatedFilters[key] || []), id];
+      if (id === "all" || isNaN(id)) {
+        updatedFilters[key] = [];
+      }else {
+        if (key === "locationIds") {
+          updatedFilters[key] = isChecked ? [id] : [];
         } else {
-          updatedFilters[key] = updatedFilters[key].filter(
-            (item) => item !== id
-          );
+          if (isChecked) {
+            updatedFilters[key] = [...(updatedFilters[key] || []), id];
+          } else {
+            updatedFilters[key] = updatedFilters[key].filter(
+                (item) => item !== id
+            );
+          }
         }
       }
       return updatedFilters;
@@ -106,16 +110,20 @@ const CompanyList = () => {
   };
 
   const handleSearchSubmit = (data) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      ...data,
-      businessCategoryIds: data.businessCategoryIds
-        ? [data.businessCategoryIds]
-        : prevFilters.businessCategoryIds,
-      keyword: data.keyword || prevFilters.keyword,
-      locationIds: data.locationIds ? [data.locationIds] : [],
-    }));
+
+    setFilters((prevFilters) => {
+      const businessCategoryIds = isNaN(data.businessCategoryIds) ? [] : [data.businessCategoryIds];
+      const locationIds = isNaN(data.locationIds) ? [] : [data.locationIds];
+      return {
+        ...prevFilters,
+        ...data,
+        businessCategoryIds: businessCategoryIds,
+        locationIds: locationIds,
+        keyword: data.keyword || prevFilters.keyword,
+      };
+    });
   };
+
 
   // display selected options functions
 
@@ -239,6 +247,7 @@ const CompanyList = () => {
               isFilterIcon={true}
               categories={categories}
               locations={locations}
+              keyword={filters.keyword}
               onSearchSubmit={handleSearchSubmit}
             />
           </div>

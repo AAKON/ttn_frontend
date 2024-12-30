@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from "@/components/shared/button";
 import { FilterIcon, WorldMap } from "@/icons";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -27,15 +27,17 @@ const formSchema = z.object({
 export default function HeroCompanyForm({
   categories,
   locations,
+                                          keyword,
   onSearchSubmit, // Add a prop for handling search submit
   className,
 }) {
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       businessCategoryIds: "",
       locationIds: "",
-      keyword: "",
+      keyword: keyword ? keyword : "",
     },
   });
 
@@ -105,7 +107,7 @@ export default function HeroCompanyForm({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="all_categories">
+                        <SelectItem value={'all'}>
                           All Categories
                         </SelectItem>
                         {categories.map((category) => (
