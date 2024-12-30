@@ -35,8 +35,11 @@ function AuthNavDropdown({ userInfo }) {
 
   return (
     <>
-      <DropdownMenu className="left-auto right-0">
-        <DropdownMenuTrigger className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0">
+      <DropdownMenu className="left-auto right-0" modal={false}>
+        <DropdownMenuTrigger
+            className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0"
+            asChild
+        >
           <Image
             src={userInfo?.profile_image ? userInfo?.profile_image : <UserIcon />}
             width={48}
@@ -45,7 +48,7 @@ function AuthNavDropdown({ userInfo }) {
             className="rounded-full size-[34px] lg:size-12"
           />
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="right-0">
+        <DropdownMenuContent className="right-0 z-50">
           <DropdownMenuLabel className="pb-0.5">
             {userInfo?.user_name}
           </DropdownMenuLabel>
