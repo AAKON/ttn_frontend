@@ -18,11 +18,11 @@ const CompanyCard = ({ data }) => {
     <Card>
       <CardHeader className="grid grid-cols-[1fr_36px] gap-2">
         <div className="flex items-center gap-3">
-          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-500">
+          <div className="size-[64px] rounded-full overflow-hidden flex items-center justify-center border border-gray-200">
             <Image
               src={data?.thumbnail_url ? data?.thumbnail_url : Profile_pic}
-              width={64}
-              height={64}
+              width={62}
+              height={62}
               alt="Profile_pic"
               className="object-cover w-full h-full rounded-full"
             />
