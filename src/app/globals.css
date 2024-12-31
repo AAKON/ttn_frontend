@@ -61,6 +61,15 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+  .border-t,
+  .border-r,
+  .border-b,
+  .border-l,
+  .border-x,
+  .border-y,
+  .border {
+    border-color: #eaecf0;
+  }
 }
 
 @layer base {
@@ -120,6 +129,7 @@ body {
   .formLabelClasses {
     @apply !text-sm !text-gray-900 !font-normal;
   }
+  
 }
 
 .active-nav-item {
