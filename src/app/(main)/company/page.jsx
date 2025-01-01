@@ -1,7 +1,7 @@
 "use client";
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
-import React, { Suspense, useEffect, useState } from "react";
+import React, {Suspense, useEffect, useRef, useState} from "react";
 import { useSearchParams } from "next/navigation";
 import {getSession} from "next-auth/react";
 
@@ -12,11 +12,13 @@ import AccordionSkeleton from "@/components/shared/skelton/AccordionSkeleton";
 import HeroCompanyForm from "@/components/hero/hero-company";
 import SelectedOptions from "@/app/(main)/company/components/selectedOptions";
 import TextAnimator from "@/components/hero/text-animatior";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const CompanyList = () => {
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [loadingCompanies, setLoadingCompanies] = useState(false);
 
   const searchParams = useSearchParams();
 
@@ -36,8 +38,15 @@ const CompanyList = () => {
   };
 
   const [filters, setFilters] = useState(initialFilters);
-  const [companies, setCompanies] = useState([]);
   const [filterOptions, setFilterOptions] = useState(null);
+  const [companies, setCompanies] = useState([]);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    total: 0,
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   // Fetch filter options on load
   useEffect(() => {
@@ -62,30 +71,49 @@ const CompanyList = () => {
   const categories = filterOptions?.categories || [];
   const locations = filterOptions?.locations || [];
 
-  // Fetch companies when filters change
-  useEffect(() => {
-    const fetchCompanies = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/list`,
+  const fetchCompanies = async (page) => {
+    if (page > pagination.last_page || loadingCompanies) return;
+    setLoading(true);
+    setLoadingCompanies(true);
+    try {
+      const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(filters),
           }
-        );
-        const data = await response.json();
-        setCompanies(data?.data?.data || []);
-      } catch (error) {
-        console.error("Error fetching companies:", error);
-      } finally {
-        setLoading(false);
+      );
+      const data = await response.json();
+      if (data && data?.data) {
+        setCompanies((prev) => [...prev, ...data?.data?.data]);
+        setPagination(data?.data?.pagination);
+        setHasMore(page < data?.data?.pagination.last_page);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching companies:", error);
+    } finally {
+      setLoading(false);
+      setLoadingCompanies(false)
+    }
+  };
 
-    fetchCompanies();
+  // Fetch companies when filters change
+  useEffect(() => {
+    fetchCompanies(1);
+    setCompanies([]);
+    setPagination({ current_page: 1, last_page: 1, total: 0 });
+    setHasMore(true);
   }, [filters]);
+
+  const fetchMoreData = () => {
+    setTimeout(() => {
+      if (!loadingCompanies && hasMore) {
+        fetchCompanies(pagination.current_page + 1);
+      }
+    }, 2000); // 2 seconds delay
+  };
+
 
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
@@ -119,7 +147,7 @@ const CompanyList = () => {
         ...data,
         businessCategoryIds: businessCategoryIds,
         locationIds: locationIds,
-        keyword: data.keyword || prevFilters.keyword,
+        keyword: data.keyword,
       };
     });
   };
@@ -308,34 +336,41 @@ const CompanyList = () => {
               selectedOptions={getSelectedOptions()}
               onRemove={handleRemoveFilter}
             />
-            {/* end display selected options */}
-            <div
-              className={`mt-8 grid gap-3 lg:gap-8 ${
-                view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
-              }`}
+              {loading && <FilterCardSkeleton /> }
+            <InfiniteScroll
+                dataLength={companies.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                loader={<FilterCardSkeleton />}
+                endMessage={
+                  <p className="text-center text-lg text-gray-500 mt-10">No more results</p>
+                }
+                scrollThreshold={.1}
             >
-              {loading ? (
-                <FilterCardSkeleton />
-              ) : companies &&
-                Array.isArray(companies) &&
-                companies.length > 0 ? (
-                companies.map((company) => (
-                  <CompanyCardFilter key={company.id} company={company} />
-                ))
-              ) : (
-                <p className="text-center text-gray-500">No results found</p>
-              )}
-            </div>
-          </div>
+              <div
+                  className={`mt-8 grid gap-3 lg:gap-8 ${
+                      view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+                  }`}
+              >
+                {Array.isArray(companies) && companies?.length > 0 && companies?.map((company, index) => (
+                    <CompanyCardFilter
+                        key={index}
+                        company={company}
+                    />
+                ))}
+              </div>
+            </InfiniteScroll>
         </div>
-      </Section>
-    </>
-  );
+      </div>
+    </Section>
+</>
+)
+  ;
 };
 
 const Company = () => (
-  <Suspense fallback={<div>Loading...</div>}>
-    <CompanyList />
+    <Suspense fallback={<div>Loading...</div>}>
+      <CompanyList />
   </Suspense>
 );
 
