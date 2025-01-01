@@ -35,7 +35,7 @@ export default async function Page({ params }) {
               <div className="flex justify-end gap-3">
                 <Button TagName={Link} href={`/company/${slug}`} secondary>
                   <ViewAs stroke="#000000" />
-                  View as
+                  Preview
                 </Button>
                 {/*<Button>*/}
                 {/*  <EditIcon stroke="#ffffff" />*/}

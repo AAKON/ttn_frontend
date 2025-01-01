@@ -16,7 +16,7 @@ const footerLink = [
 
 export const Footer = () => {
   return (
-    <footer className="pt-8 xl:pt-20 md:pt-12 border-t border-t-gray-200">
+    <footer className="footer pt-8 xl:pt-20 md:pt-12 border-t border-t-gray-200">
       <Container>
           <FooterCta />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-[63.4%_1fr] md:my-12">
