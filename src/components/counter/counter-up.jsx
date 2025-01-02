@@ -1,7 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-const CounterUp = ({ endValue, duration = 2000, endfix, role }) => {
+const CounterUp = ({
+  endValue,
+  duration = 2000,
+  endfix,
+  role,
+  numberFontSize = "text-xl xl:text-[30px]",
+}) => {
   const [count, setCount] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const counterRef = useRef(null);
@@ -59,8 +65,11 @@ const CounterUp = ({ endValue, duration = 2000, endfix, role }) => {
       ref={counterRef}
       className="xl:pl-4 pl-2 border-l-2 border-l-gray-200 "
     >
-      <h5 className="font-medium text-xl xl:text-[30px] leading-tight text-brand-600 pb-2">
-        {formatNumber(count)}{endfix}
+      <h5
+        className={`font-medium leading-tight text-brand-600 pb-2 ${numberFontSize}`}
+      >
+        {formatNumber(count)}
+        {endfix}
       </h5>
       <p
         className={`text-gray-500 text-xs xl:text-base font-medium capitalize `}
