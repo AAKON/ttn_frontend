@@ -19,21 +19,25 @@ const options = {
     speed: 1,
   },
   breakpoints: {
-    414: {
-      gap: "8px",
-      perPage: 3,
-    },
-    620: {
-      gap: "12px",
-      perPage: 5,
-    },
-    1080: {
-      gap: "16px",
-      perPage: 6,
-    },
     1440: {
       gap: "20px",
       perPage: 7,
+    },
+    1024: {
+      gap: "16px",
+      perPage: 6,
+    },
+    768: {
+      gap: "16px",
+      perPage: 5,
+    },
+    620: {
+      gap: "12px",
+      perPage: 4,
+    },
+    414: {
+      gap: "8px",
+      perPage: 3,
     },
   },
 };
@@ -54,7 +58,7 @@ const MarqueeSlide = ({ slideItems, direction = "ltr", ...props }) => {
           <Link
             href={item?.link ? item?.link : "#"}
             key={item?.id}
-            className={`size-[100px] flex items-center justify-center bg-white border border-gray-300`}
+            className={`max-size-[100px] flex items-center justify-center bg-white border border-gray-300`}
           >
             <Image
               width={100}
