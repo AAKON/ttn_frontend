@@ -45,7 +45,7 @@ function AuthNavDropdown({ userInfo }) {
             width={48}
             height={48}
             alt="profile"
-            className="rounded-full size-[34px] lg:size-12"
+            className="rounded-full size-[34px] lg:size-12 cursor-pointer"
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="right-0 z-[10000]">
@@ -56,9 +56,9 @@ function AuthNavDropdown({ userInfo }) {
             {userInfo?.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-200" />
-          <DropdownMenuItem>
+          <DropdownMenuItem className="p-0">
             <Link
-              className="flex items-center gap-1 text-gray-500"
+              className="flex items-center w-full px-2 leading-8 gap-1 text-gray-500"
               href="/myaccount/profile"
             >
               <User />
