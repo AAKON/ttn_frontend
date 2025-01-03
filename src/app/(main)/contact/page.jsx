@@ -6,8 +6,20 @@ import Team2 from "@/assets/team2.jpg";
 import Team3 from "@/assets/team3.jpg";
 import { Email, Phone, Location } from "@/icons";
 import ContactUsForm from "./_contact-us-form";
+import {getTeams} from "@/services/contact";
 
-const Contact = () => {
+const Contact = async() => {
+
+  let teamsData = [];
+
+  try {
+    teamsData = await getTeams();
+    console.log(teamsData, "get teamsData");
+  } catch (error) {
+    console.error("Error fetching teamsData:", error);
+    teamsData = [];
+  }
+
   return (
     <div>
       {/* Office Information section */}
@@ -38,7 +50,7 @@ const Contact = () => {
               <div className="pl-[10px]">
                 <p className="text-gray-500 ">Email</p>
                 <span className="font-semibold text-base text-gray-700">
-                  info@thetexti lenetwork.com
+                  info@thetextilenetwork.com
                 </span>
               </div>
             </div>
@@ -48,7 +60,7 @@ const Contact = () => {
               <div className="pl-[10px]">
                 <p className="text-gray-500 ">Phone</p>
                 <span className="font-semibold text-base text-gray-700">
-                  +88017835252434 (WhatsApp)
+                  +8801783525434
                 </span>
               </div>
             </div>
@@ -60,46 +72,15 @@ const Contact = () => {
         <h2 className="text-center">Our Team</h2>
 
         <div className="mt-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-6 lg:gap-8">
+          {teamsData && teamsData.map((item) => (
           <ContactTeamCard
-            src={Team1}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
+              key={item?.id}
+            src={item?.image ? item?.image :Team1}
+            name={item?.name}
+            title={item?.designation}
+            email={item?.email}
           />
-
-          <ContactTeamCard
-            src={Team2}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
-          />
-
-          <ContactTeamCard
-            src={Team3}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
-          />
-          <ContactTeamCard
-            src={Team1}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
-          />
-
-          <ContactTeamCard
-            src={Team2}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
-          />
-
-          <ContactTeamCard
-            src={Team3}
-            name={"Naim Hasan"}
-            title={"Founder & CEO"}
-            email={"naim.hassan@gmail.com"}
-          />
+          ))}
         </div>
       </Section>
     </div>

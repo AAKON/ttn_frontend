@@ -7,15 +7,15 @@ const Option = ({ index, item }) => {
     <div className="Partner_Benefits flex items-center gap-x-4">
       <div
         className={`rounded-full overflow-hidden ${
-          index === 0 ? "size-[28px] md:size-[44px]" : "size-[24px] md:size-[40px]"
+          index === 0 ? "size-[44px] md:size-[56px]" : "size-[44px] md:size-[48px]"
         }`}
       >
         <Image
           src={img ? img : image}
           alt="image"
-          className="w-8 rounded-full"
-          width={index === 0 ? 48 : 44}
-          height={index === 0 ? 48 : 44}
+          className={`rounded-full p-0.5 ${index === 0 ? "w-14" : "w-11"}`}
+          width={index === 0 ? 52 : 42}
+          height={index === 0 ? 52 : 42}
         />
       </div>
       <p
