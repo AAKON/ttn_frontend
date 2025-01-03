@@ -78,7 +78,7 @@ function NewsletterForm() {
                 />
                 <Button
                   secondary
-                  className={"border border-gray-200 text-gray-700"}
+                  style={{ height: "48px" }}
                   disabled={loading}
                   type="submit"
                 >

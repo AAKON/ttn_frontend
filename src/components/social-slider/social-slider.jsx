@@ -22,11 +22,8 @@ const SocialSlider = ({ webAds }) => {
           omitEnd: true,
           focus: 0,
           breakpoints: {
-            1024: {
-              perPage: 2,
-            },
             768: {
-              perPage: 1,
+              perPage: 2,
             },
             640: {
               perPage: 1,

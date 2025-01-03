@@ -21,6 +21,12 @@ const RecentCompany = ({ data }) => {
     drag: true,
     snap: true,
     breakpoints: {
+      1600: {
+        padding: "9rem",
+      },
+      1300: {
+        padding: "3rem",
+      },
       1024: {
         perPage: 3,
         padding: "5",
@@ -32,12 +38,6 @@ const RecentCompany = ({ data }) => {
       640: {
         perPage: 1,
         padding: "3.5rem",
-      },
-      1300: {
-        padding: "3rem",
-      },
-      1600: {
-        padding: "9rem",
       },
     },
   };
