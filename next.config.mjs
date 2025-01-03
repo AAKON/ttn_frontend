@@ -12,6 +12,11 @@ const nextConfig = {
                 hostname: 'ttn.technostupid.com',
                 pathname: '**',
             },
+            {
+                protocol: 'http',
+                hostname: 'admin.thetextilenetwork.com',
+                pathname: '**',
+            }
         ]
     },
 };

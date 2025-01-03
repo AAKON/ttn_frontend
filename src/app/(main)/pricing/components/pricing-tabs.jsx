@@ -74,8 +74,7 @@ function PricingTabs(props) {
                             key={index}
                             item={"item-1"}
                             title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
-                            text={"Free"}
-                            price={`/${item?.price}`}
+                            text={item?.price}
                         />
                         ))}
                     </div>
@@ -90,8 +89,8 @@ function PricingTabs(props) {
                             key={index}
                             item={"item-1"}
                             title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
-                            text={"Paid"}
-                            price={`/${item?.price}`}
+                            text={item?.price}
+                            // price={`/${item?.price}`}
                         />
                             ))}
                     </div>

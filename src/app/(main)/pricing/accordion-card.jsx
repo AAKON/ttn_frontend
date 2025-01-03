@@ -9,7 +9,7 @@ import {
 import PricingCard from "./pricing-card";
 import { Minus, Plus } from "@/components/icons";
 
-const AccordionCard = ({ item, title, text, price }) => {
+const AccordionCard = ({ item, title, text }) => {
   const [active2, setactive2] = useState(false);
 
   const handleItem = () => {
@@ -36,9 +36,9 @@ const AccordionCard = ({ item, title, text, price }) => {
               </h2>
               <div className="flex">
                 <p className="font-bold text-3xl text-gray-600">{text}</p>
-                <p className="font-semibold text-xl pt-2 text-gray-300">
-                  {price}
-                </p>
+                {/*<p className="font-semibold text-xl pt-2 text-gray-300">*/}
+                {/*  {price}*/}
+                {/*</p>*/}
               </div>
             </div>
 
