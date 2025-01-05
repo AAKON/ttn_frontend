@@ -4,8 +4,23 @@ import AboutMap from "@/assets/aboutmap.jpg";
 import CounterUp from "@/components/counter/counter-up";
 import leftWaterMark from "@/assets/about-water-mark-left.png";
 import rightWaterMark from "@/assets/about-water-mark-right.png";
+import ContactTeamCard from "@/app/(main)/contact/_contact-team-card";
+import Team1 from "@/assets/team1.jpg";
+import React from "react";
+import {getTeams} from "@/services/contact";
 
-const About = () => {
+const About = async() => {
+
+    let teamsData = [];
+
+    try {
+        teamsData = await getTeams();
+        console.log(teamsData, "get teamsData");
+    } catch (error) {
+        console.error("Error fetching teamsData:", error);
+        teamsData = [];
+    }
+
   return (
     <>
       <Section className={"bg-gray-50"}>
@@ -90,6 +105,21 @@ const About = () => {
         </p>
         <Image src={AboutMap} alt="aboutpagemap" />
       </Section>
+        <Section className="bg-gray-50">
+            <h2 className="text-center">Our Team</h2>
+
+            <div className="mt-9 flex flex-wrap flex-col md:flex-row justify-center gap-y-12 md:gap-y-6 lg:gap-y-8">
+                {teamsData && teamsData.map((item) => (
+                    <ContactTeamCard
+                        key={item?.id}
+                        src={item?.image ? item?.image :Team1}
+                        name={item?.name}
+                        title={item?.designation}
+                        email={item?.email}
+                    />
+                ))}
+            </div>
+        </Section>
     </>
   );
 };

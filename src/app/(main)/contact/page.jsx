@@ -6,19 +6,9 @@ import Team2 from "@/assets/team2.jpg";
 import Team3 from "@/assets/team3.jpg";
 import { Email, Phone, Location } from "@/icons";
 import ContactUsForm from "./_contact-us-form";
-import {getTeams} from "@/services/contact";
 
 const Contact = async() => {
 
-  let teamsData = [];
-
-  try {
-    teamsData = await getTeams();
-    console.log(teamsData, "get teamsData");
-  } catch (error) {
-    console.error("Error fetching teamsData:", error);
-    teamsData = [];
-  }
 
   return (
     <div>
@@ -68,21 +58,6 @@ const Contact = async() => {
         </div>
       </Section>
 
-      <Section className="bg-gray-50">
-        <h2 className="text-center">Our Team</h2>
-
-        <div className="mt-9 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-6 lg:gap-8">
-          {teamsData && teamsData.map((item) => (
-          <ContactTeamCard
-              key={item?.id}
-            src={item?.image ? item?.image :Team1}
-            name={item?.name}
-            title={item?.designation}
-            email={item?.email}
-          />
-          ))}
-        </div>
-      </Section>
     </div>
   );
 };
