@@ -141,7 +141,7 @@ const CompanyCardFilter = ({ company }) => {
             View Profile
           </Button>
           <Button TagName={Link} href="/contact" type="button" primaryOutline>
-            Contact supplier
+            Contact
           </Button>
         </CardFooter>
         {/* last btn end */}

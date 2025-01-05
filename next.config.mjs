@@ -16,6 +16,11 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: 'admin.thetextilenetwork.com',
                 pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'admin.thetextilenetwork.com',
+                pathname: '**',
             }
         ]
     },

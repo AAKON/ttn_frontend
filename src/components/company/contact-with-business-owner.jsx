@@ -33,7 +33,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
         onClick={() => setOwner(!Owner)}
         className="lg:text-lg w-full flex justify-between items-center lg:text-brand-600 font-semibold lg:py-0 lg:px-0 lg:bg-transparent text-white px-4 py-3 text-base"
       >
-        Contact With Business Owner
+        Contact with Company
         <span className={`lg:hidden p-0 ${Owner ? "rotate-180" : "rotate-0"} `}>
           <ChevronDownIcon width={12} height={6} stroke="#ffffff" />
         </span>
