@@ -23,7 +23,7 @@ const AccordionCard = ({ item, title, text }) => {
     >
       <AccordionItem
         value={item}
-        className="border border-brand-500 rounded-lg px-[50px] py-10"
+        className="border border-brand-500 rounded-lg py-6 px-4 lg:px-[50px] lg:py-10"
       >
         <AccordionTrigger
           onClick={() => handleItem()}
@@ -31,18 +31,18 @@ const AccordionCard = ({ item, title, text }) => {
         >
           <div className="flex !justify-between items-center w-full">
             <div className="">
-              <h2 className="font-medium text-[20px] text-brand-600">
+              <h2 className="font-medium text-sm lg:text-[20px] text-brand-600">
                 {title}
               </h2>
               <div className="flex">
-                <p className="font-bold text-3xl text-gray-600">{text}</p>
+                <p className="font-bold text-2xl lg:text-3xl text-gray-900">{text}</p>
                 {/*<p className="font-semibold text-xl pt-2 text-gray-300">*/}
                 {/*  {price}*/}
                 {/*</p>*/}
               </div>
             </div>
 
-            <div className="-mr-7 bg-white">
+            <div className="mr-0 lg:-mr-7 bg-white">
               {active2 ? (
                 <Minus className="text-gray-400" />
               ) : (
