@@ -23,11 +23,11 @@ const ProductShowCaseCard = ({ product }) => {
 
       <div className="mt-2">
         <h4 className="text-base text-gray-900 font-semibold">
-          {product?.price_range}
-          <span className="text-gray-400">/pair</span>
+          ${product?.price_range}
+          {/*<span className="text-gray-400">/pair</span>*/}
         </h4>
         <h4 className="text-base text-gray-900 font-semibold">
-            {product?.moq} pairs<span className="text-gray-400">(Min. Order)</span>
+            {product?.moq}<span className="text-gray-400 text-sm">(Min. Order)</span>
         </h4>
       </div>
     </div>
