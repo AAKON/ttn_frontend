@@ -112,7 +112,7 @@ function ContactUsForm() {
         "Business Consultation",
         "Business Claim",
         "Support",
-        "thers"
+        "Others"
     ]
 
     return (
