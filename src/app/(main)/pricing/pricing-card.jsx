@@ -5,54 +5,35 @@ import {
   UserUpArrowIcon,
   CheckMarkIcon,
 } from "@/components/icons";
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import { useState } from "react";
 
-const PricingCard = () => {
+const PricingCard = ({ tabData }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { keyBenefits, servicesYouGet } = tabData;
+  console.log(keyBenefits);
+  console.log(servicesYouGet);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
 
   return (
-    <div className="grid grid-cols-2 gap-6 xl:gap-x-[191px] ">
+    <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-6 xl:gap-x-[191px] ">
       {/* left Side */}
       <div className="max-w-[550px]">
         <p className="font-semibold text-gray-900 pt-6">Key Benefits</p>
         <div className="grid grid-cols-1">
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <UserUpArrowIcon width={18} height={16} stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Increased brand awareness & credibility
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <UserUpArrowIcon width={18} height={16} stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Targeted exposure & content creation
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <UserUpArrowIcon width={18} height={16} stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Networking for relationship building
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <UserUpArrowIcon width={18} height={16} stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Exclusive content creation opportunities
-            </p>
-          </div>
+          {keyBenefits?.map(({ id, text }) => (
+            <BenefitList key={id} text={text} />
+          ))}
         </div>
 
-        <div>
-          <p className="font-medium text-lg text-gray-900 pt-8 pb-12">
+        <div className="hidden lg:block">
+          <p className="font-medium text-base lg:text-lg text-gray-900 pt-8 pb-12">
             A B2B platform with 300K+ Apparel & Textile professionals offering
             premium promotional solutions for event organizers.
           </p>
-
           <Button>Contact us</Button>
         </div>
       </div>
@@ -61,64 +42,53 @@ const PricingCard = () => {
       <div className="max-w-[550px] relative">
         <p className="font-semibold text-gray-900 pt-5">Services you get</p>
         <div className="grid grid-cols-1">
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Profile Creation and Management
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Branding and Marketing Materials Design
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Content Creation
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Social Media Marketing
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Digital Ads Management
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              Website Development
-            </p>
-          </div>
-          <div className="py-[11px] px-2 flex items-center gap-3">
-            <CheckMarkIcon stroke="#F7931E" />
-            <p className="font-medium text-md text-gray-700">
-              SEO and Website Management
-            </p>
+          {servicesYouGet?.map(({ id, text }) => (
+            <ServicesList key={id} text={text} />
+          ))}
+
+          {/* Show the content when isOpen is true */}
+          <div className="flex justify-end">
+            <span
+              onClick={toggleAccordion}
+              className="font-semibold text-md pl-2 text-blue cursor-pointer inline-flex gap-2 items-center justify-end"
+            >
+              {isOpen ? "Less" : "See More"}
+              {
+                <span className={isOpen ? "rotate-180" : ""}>
+                  <ChevronDownIcon stroke="#C67618" />
+                </span>
+              }
+            </span>
           </div>
         </div>
-        {/* Show the content when isOpen is true */}
-        <span
-          onClick={toggleAccordion}
-          className="font-semibold text-md pl-2 text-blue cursor-pointer flex gap-2 items-center absolute bottom-0 z-10 left-1/2 -translate-x-1/2"
-        >
-          {isOpen ? "Less" : "See More"}
-          {
-            <span className={isOpen ? "rotate-180" : ""}>
-              <ChevronDownIcon stroke="#C67618" />
-            </span>
-          }
-        </span>
+
+        <div className="lg:hidden">
+          <p className="font-medium text-base lg:text-lg text-gray-900 py-6 lg:pt-8 lg:pb-12">
+            A B2B platform with 300K+ Apparel & Textile professionals offering
+            premium promotional solutions for event organizers.
+          </p>
+          <Button>Contact us</Button>
+        </div>
       </div>
     </div>
   );
 };
+
+function BenefitList({ text }) {
+  return (
+    <div className="py-[6px] lg:py-[11px] px-2 flex items-center gap-3">
+      <UserUpArrowIcon width={18} height={16} stroke="#F7931E" />
+      <p className="font-normal text-sm lg:text-base text-gray-700">{text}</p>
+    </div>
+  );
+}
+function ServicesList({ text }) {
+  return (
+    <div className="py-[6px] lg:py-[11px] px-2 flex items-center gap-3">
+      <CheckMarkIcon stroke="#F7931E" />
+      <p className="font-normal text-sm lg:text-base text-gray-700">{text}</p>
+    </div>
+  );
+}
 
 export default PricingCard;

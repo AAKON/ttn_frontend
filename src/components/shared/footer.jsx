@@ -1,22 +1,24 @@
 import { Container } from "@/shared";
-import Button from "../ui/button";
+import Button from "@/components/shared/button";
 import Link from "next/link";
 import Image from "next/image";
 import NewsletterForm from "@/ui/newsletter-form";
+import FooterCta from "@/components/shared/footerCta";
 const footerLink = [
-  {title: "Membership", link: "/" },
-  {title: "Blog", link: "/" },
-  {title: "About us", link: "/" },
-  {title: "Jobs", link: "/" },
-  {title: "Influencers", link: "/" },
-  {title: "Privacy", link: "/privacy-policy" },
+  { title: "Company", link: "/company" },
+  { title: "Blog", link: "/blog" },
+  { title: "About us", link: "/about" },
+  { title: "Services", link: "/" },
+  { title: "Contact Us", link: "/contact" },
+  { title: "Partner", link: "/partner" },
+  { title: "Privacy", link: "/privacy-policy" },
 ];
 
 export const Footer = () => {
   return (
-    <footer className="pt-8 xl:pt-20 md:pt-12 border-t border-t-gray-200">
+    <footer className="footer pt-8 xl:pt-20 md:pt-12 border-t border-t-gray-200">
       <Container>
-        <FooterBanner />
+          <FooterCta />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-[63.4%_1fr] md:my-12">
           <FooterLinks />
           <FooterContact />
@@ -26,29 +28,6 @@ export const Footer = () => {
     </footer>
   );
 };
-
-function FooterBanner() {
-  return (
-    <div className="text-center md:text-left py-8 px-4 lg:py-12 lg:px-20 bg-footer-bg-image bg-no-repeat bg-right bg-cover border-gray-200 border bg-gray-50 rounded-2xl overflow-hidden">
-      <div className="md:max-w-[768px]">
-        <h3 className="text-lg leading-normal lg:text-3xl lg:leading-[38px] font-semibold">
-          Leverage Our Platform Expertise for Your Business Growth
-        </h3>
-        <p className="text-gray-500 pt-2">
-          Add your business for free. Forever.
-        </p>
-        <div className="flex gap-3 mt-6 justify-center md:justify-start">
-          <Button secondary type="button">
-            Get a quote
-          </Button>
-          <Button type="button" icon>
-            Add Business
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function FooterLinks() {
   return (
@@ -99,68 +78,68 @@ function FooterCopyright() {
   return (
     <div className="mt-3 lg:mt-12 md:mt-5 border-t border-[#eaecf0] py-4 md:py-8 flex flex-col lg:flex-row justify-between gap-4 md:gap-5 items-center">
       <p className="mt-7">
-        © {new Date().getFullYear()}.{" "}
-        Textile Network. All Rights
-        Reserved.
+        © {new Date().getFullYear()}. Textile Network. All Rights Reserved.
       </p>
       <ul className="flex gap-[30px] items-center mt-7">
+
         <li>
-          <a href="#">
+          <a href="https://www.linkedin.com/company/thetextilenetwork">
             <Image
-              src="/icons/social-icon-1.svg"
-              alt="twitter"
-              width={24}
-              height={24}
+                src="/icons/social-icon-2.svg"
+                alt="linkedin"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.facebook.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-2.svg"
-              alt="facebook"
-              width={24}
-              height={24}
+                src="/icons/social-icon-3.svg"
+                alt="facebook"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.instagram.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-3.svg"
-              alt="instagram"
-              width={24}
-              height={24}
+                src="/icons/instagram.svg"
+                alt="pinterest"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://www.pinterest.com/thetextilenetwork">
             <Image
-              src="/icons/social-icon-4.svg"
-              alt="linkedin"
-              width={24}
-              height={24}
+                src="/icons/social-icon-6.svg"
+                alt="pinterest"
+                width={24}
+                height={24}
+            />
+          </a>
+        </li>
+
+        <li>
+          <a href="https://whatsapp.com/channel/0029VaGfiPjCxoB4rHKoaY1p/221 ">
+            <Image
+                src="/icons/whatsup.svg"
+                alt="whatsup"
+                width={24}
+                height={24}
             />
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="https://t.me/thetextilenetworkcom">
             <Image
-              src="/icons/social-icon-5.svg"
-              alt="youtube"
-              width={24}
-              height={24}
-            />
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <Image
-              src="/icons/social-icon-6.svg"
-              alt="pinterest"
-              width={24}
-              height={24}
+                src="/icons/telegram.svg"
+                alt="telegrap"
+                width={24}
+                height={24}
             />
           </a>
         </li>

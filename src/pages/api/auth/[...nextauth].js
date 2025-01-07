@@ -29,14 +29,13 @@ export const authOptions = {
 
                 if (res.ok && user.data) {
                     const tokenPayload = JSON.parse(atob( user?.data?.access_token.split('.')[1]));
-                    console.log(tokenPayload, 'get access user');
                     return{
                         accessToken: user?.data?.access_token,
                         exp: tokenPayload.exp,
                         name: user?.data?.name,
                         user_name: user?.data?.name,
-                        // email: tokenPayload.email,
-                        // profile_image: tokenPayload.profile_image,
+                        email: user?.data?.email,
+                        profile_image: user?.data?.profile_picture,
                     }
                 } else {
                     return null;
@@ -47,13 +46,12 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                console.log('get access callback');
                 token.accessToken = user.accessToken;
                 token.exp = user.exp;
                 token.name = user.name;
                 token.user_name = user.name;
-                // token.email = user.email;
-                // token.picture = user.profile_image;
+                token.email = user.email;
+                token.picture = user.profile_image;
             }
             return token;
         },
@@ -61,12 +59,17 @@ export const authOptions = {
             session.user = {
                 full_name: token.name,
                 user_name: token.user_name,
-                // email: token.email,
-                // profile_image: token.picture,
+                email: token.email,
+                profile_image: token.picture,
             };
             session.accessToken = token.accessToken;
             return session;
         },
+        callbacks: {
+            async redirect({url, baseUrl}) {
+                return baseUrl + '/';
+            }
+        }
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {

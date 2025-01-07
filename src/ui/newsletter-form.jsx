@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 
-import Button from "@/components/ui/button";
+import Button from "@/components/shared/button";
 import {
   Form,
   FormControl,
@@ -78,7 +78,7 @@ function NewsletterForm() {
                 />
                 <Button
                   secondary
-                  className={"border border-gray-200 text-gray-700"}
+                  style={{ height: "48px" }}
                   disabled={loading}
                   type="submit"
                 >

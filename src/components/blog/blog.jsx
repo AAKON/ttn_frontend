@@ -173,7 +173,7 @@ const Blog = () => {
               <ul className="flex items-center gap-x-4">
                 <li
                   onClick={(e) => setTab("All")}
-                  className={`font-semibold text-base text-gray-500 cursor-pointer relative after:absolute after:w-full after:h-[2px]  after:bg-orange-600 after:-bottom-2 after:left-0 ${
+                  className={`font-semibold text-base text-gray-500 cursor-pointer relative after:absolute after:w-full after:h-[2px]  after:bg-brand-600 after:-bottom-2 after:left-0 ${
                     tab === item ? "after:scale-x-100" : "after:scale-x-0"
                   }`}
                 >
@@ -182,7 +182,7 @@ const Blog = () => {
                 {tabs?.map((item, index) => (
                   <li
                     onClick={(e) => setTab(e.target.innerText)}
-                    className={`font-semibold text-base text-gray-500 cursor-pointer relative after:absolute after:w-full after:h-[2px]  after:bg-orange-600 after:-bottom-2 after:left-0 ${
+                    className={`font-semibold text-base text-gray-500 cursor-pointer relative after:absolute after:w-full after:h-[2px]  after:bg-brand-600 after:-bottom-2 after:left-0 ${
                       tab === item ? "after:scale-x-100" : "after:scale-x-0"
                     }`}
                     key={index}

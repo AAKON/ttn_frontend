@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import Button from "@/ui/button";
+import Button from "@/components/shared/button";
 import {
   Select,
   SelectContent,
@@ -287,5 +287,6 @@ const ContactForm = () => {
     </form>
   );
 };
+
 
 export default ContactForm;

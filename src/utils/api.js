@@ -3,11 +3,11 @@
 import {showErrorToast, showSuccessToast} from "@/utils/toast";
 async function apiRequest(endpoint, options = {}, toast, token) {
 
-    const { isFormData, body, ...restOptions } = options;
+    const { isFormData, isMultipart, body, ...restOptions } = options;
     const config = {
         ...restOptions,
         headers: {
-            'Content-Type': isFormData ? undefined : 'application/json',
+            ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
             ...restOptions.headers,
             ...(token && { Authorization: `Bearer ${token}` }),
         },
@@ -15,11 +15,7 @@ async function apiRequest(endpoint, options = {}, toast, token) {
 
     // Handle FormData if needed
     if (isFormData && body) {
-        const formData = new FormData();
-        Object.entries(body).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
-        config.body = formData;
+        config.body = body;
     } else if (body) {
         config.body = JSON.stringify(body);
     }

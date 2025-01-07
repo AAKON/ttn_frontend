@@ -1,133 +1,207 @@
-'use client'
-import React, {useState, useEffect} from 'react';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+"use client";
+import React, { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AccordionCard from "@/app/(main)/pricing/accordion-card";
-import {Container} from "@/shared";
-import {getPricingList} from "@/services/pricing";
+import { Container } from "@/shared";
+import { getPricingList } from "@/services/pricing";
 
 function PricingTabs(props) {
-    const arr = ["B2B Partnership", "Marketing Partnership"];
-    const [active, setactive] = useState(arr[0]);
+  const arr = ["B2B Partnership", "Marketing Partnership"];
+  const [active, setactive] = useState(arr[0]);
+  const [pricingData, setPricingData] = useState({});
 
-    // Mapping tab names to API types
-    const tabTypeMap = {
-        "B2B Partnership": "b2b",
-        "Marketing Partnership": "marketing",
+  // Mapping tab names to API types
+  const tabTypeMap = {
+    "B2B Partnership": "b2b",
+    "Marketing Partnership": "marketing",
+  };
+
+  // Fetch data when the active tab changes
+  useEffect(() => {
+    const fetchData = async () => {
+      const tabType = tabTypeMap[active];
+      // Only fetch if data for this tab doesn't exist
+      if (!pricingData[tabType]) {
+        try {
+          const result = await getPricingList(tabType);
+          setPricingData((prevData) => ({
+            ...prevData,
+            [tabType]: result?.pricings, // Store data in object with tab type as key
+          }));
+        } catch (error) {
+          console.error("Error fetching pricing list:", error);
+        }
+      }
     };
 
+    fetchData();
+  }, [active]);
 
-// Fetch data when the active tab changes
-    useEffect(() => {
-        const fetchData = async () => {
-            const tabType = tabTypeMap[active];
-            try {
-                const result = await getPricingList(tabType);
-                console.log('Data fetched:', result);
-                // Handle API response (e.g., update state)
-            } catch (error) {
-                console.error('Error fetching pricing list:', error);
-            }
-        };
-
-        fetchData(); // Call the inner function
-    }, [active]); // Runs when 'active' changes
-
-    return (
-        <Container>
-            {/* Tabs part start */}
-            <Tabs
-                defaultValue="B2B Partnership"
-                className="max-w-full mx-auto pt-10 "
-            >
-                <TabsList className="ml-[440px] py-10 px-4 gap-x-4 rounded-lg">
-                    {arr.map((el, idx) => {
-                        return (
-                            <TabsTrigger
-                                key={idx}
-                                value={el}
-                                onClick={() => setactive(el)}
-                                className={`!text-[20px] !px-10 !py-4 ml-2 
+  return (
+    <Container>
+      {/* Tabs part start */}
+      <Tabs defaultValue="B2B Partnership" className="py-10">
+        <TabsList className="!h-auto flex justify-center !bg-transparent">
+          <div className="bg-gray-100 p-2 rounded-[12px] !inline-flex justify-center">
+            {arr.map((el, idx) => {
+              return (
+                <TabsTrigger
+                  key={idx}
+                  value={el}
+                  onClick={() => setactive(el)}
+                  className={`!text-sm lg:!text-xl !px-3 !py-2 rounded-[8px] lg:!py-[10px] lg:!px-5
             ${
-                                    active == el
-                                        ? "font-semibold  text-gray-900 bg-white"
-                                        : "font-medium  text-gray-600 !bg-transparent"
-                                }`}
-                            >
-                                {el}
-                            </TabsTrigger>
-                        );
-                    })}
-                </TabsList>
+              active == el
+                ? "font-semibold  text-gray-900 bg-white"
+                : "font-medium  text-gray-600 !bg-transparent"
+            }`}
+                >
+                  {el}
+                </TabsTrigger>
+              );
+            })}
+          </div>
+        </TabsList>
 
-                <TabsContent value="B2B Partnership">
-                    <div>
-                        {/* b2b Accordion part Start */}
-                        <AccordionCard
-                            item={"item-1"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Free"}
-                            price={"/Price"}
-                        />
+        <TabsContent value="B2B Partnership">
+          <div>
+            {active === "B2B Partnership" &&
+              pricingData?.b2b &&
+              pricingData?.b2b.map((item, index) => (
+                <AccordionCard
+                  key={index}
+                  item={"item-1"}
+                  title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
+                  text={item?.price}
+                  tabData={B2BPartnership}
+                />
+              ))}
+          </div>
+        </TabsContent>
 
-                        <AccordionCard
-                            item={"item-2"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Win-Win"}
-                            price={"/Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-3"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Contact for Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-4"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"1499$"}
-                            price={"/Price"}
-                        />
-
-                        {/* b2b Accordion part end */}
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="Marketing Partnership">
-                    <div>
-                        {/* marketing Accordion part Start */}
-                        <AccordionCard
-                            item={"item-1"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Paid"}
-                            price={"/Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-2"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Win"}
-                            price={"/Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-3"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"Contact for Price"}
-                        />
-
-                        <AccordionCard
-                            item={"item-4"}
-                            title={"MEDIA & EVENT PARTNERSHIP"}
-                            text={"1799$"}
-                            price={"/Price"}
-                        />
-                        {/* marketing Accordion part end */}
-                    </div>
-                </TabsContent>
-            </Tabs>
-        </Container>
-    );
+        <TabsContent value="Marketing Partnership">
+          <div>
+            {active === "Marketing Partnership" &&
+              pricingData?.marketing &&
+              pricingData?.marketing.map((item, index) => (
+                <AccordionCard
+                  key={index}
+                  item={"item-1"}
+                  title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
+                  text={item?.price}
+                  tabData={marketingPartnership}
+                  // price={`/${item?.price}`}
+                />
+              ))}
+          </div>
+        </TabsContent>
+      </Tabs>
+    </Container>
+  );
 }
+
+const B2BPartnership = {
+  keyBenefits: [
+    {
+      id: 1,
+      text: "Increased brand awareness & credibility",
+    },
+    {
+      id: 2,
+      text: "Targeted exposure & content creation",
+    },
+    {
+      id: 3,
+      text: "Networking for relationship building",
+    },
+    {
+      id: 4,
+      text: "Exclusive content creation opportunities",
+    },
+  ],
+
+  servicesYouGet: [
+    {
+      id: 1,
+      text: "Profile Creation and Management",
+    },
+    {
+      id: 2,
+      text: "Branding and Marketing Materials Design",
+    },
+    {
+      id: 3,
+      text: "Content Creation",
+    },
+    {
+      id: 4,
+      text: "Social Media Marketing",
+    },
+    {
+      id: 5,
+      text: "Digital Ads Management",
+    },
+    {
+      id: 6,
+      text: "Website Development",
+    },
+    {
+      id: 7,
+      text: "SEO and Website Management",
+    },
+  ],
+};
+
+const marketingPartnership = {
+  keyBenefits: [
+    {
+      id: 1,
+      text: "Increased brand awareness & credibility",
+    },
+    {
+      id: 2,
+      text: "Targeted exposure & content creation",
+    },
+    {
+      id: 3,
+      text: "Networking for relationship building",
+    },
+    {
+      id: 4,
+      text: "Exclusive content creation opportunities",
+    },
+  ],
+
+  servicesYouGet: [
+    {
+      id: 1,
+      text: "Profile Creation and Management",
+    },
+    {
+      id: 2,
+      text: "Branding and Marketing Materials Design",
+    },
+    {
+      id: 3,
+      text: "Content Creation",
+    },
+    {
+      id: 4,
+      text: "Social Media Marketing",
+    },
+    {
+      id: 5,
+      text: "Digital Ads Management",
+    },
+    {
+      id: 6,
+      text: "Website Development",
+    },
+    {
+      id: 7,
+      text: "SEO and Website Management",
+    },
+  ],
+};
 
 export default PricingTabs;

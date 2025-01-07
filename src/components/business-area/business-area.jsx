@@ -24,82 +24,48 @@ import Knit from "../../assets/Knit.svg";
 import Fabric from "../../assets/Fabric.svg";
 import Denim from "../../assets/Denim.svg";
 import Composite from "../../assets/Composite.svg";
+import {getBusinessArea} from "@/services/home";
+import {useEffect, useState} from "react";
+import Button from "@/components/shared/button";
+import Link from "next/link";
 
 const BusinessArea = () => {
-    const allcard = [
-        {
-            title: "Washing",
-            image: washing,
-        },
-        {
-            title: "Human Resource Service",
-            image: HumanResourceService,
-        },
-        {
-            title: "Cap",
-            image: Cap,
-        },
-        {
-            title: "Stocklot",
-            image: Stocklot,
-        },
-        {
-            title: "Outwear",
-            image: Outwear,
-        },
-        {
-            title: "Machineries",
-            image: Machineries,
-        },
-        {
-            title: "News & Publication",
-            image: NewsPublication,
-        },
-        {
-            title: "Sweater",
-            image: Sweater,
-        },
-        {
-            title: "Woven",
-            image: Woven,
-        },
-        {
-            title: "Media & Marketing",
-            image: MediaMarketing,
-        },
-        {
-            title: "Yarn",
-            image: Yarn,
-        },
-        {
-            title: "Dyes & Chemical",
-            image: DyesChemical,
-        },
-        {
-            title: "Online Sourcing",
-            image: OnlineSourcing,
-        },
-        {
-            title: "Printing",
-            image: Printing,
-        },
-        {
-            title: "Knit",
-            image: Knit,
-        },
-        {
-            title: "Fabric",
-            image: Fabric,
-        },
-        {
-            title: "Denim",
-            image: Denim,
-        },
-        {
-            title: "Composite",
-            image: Composite,
-        },
-    ];
+
+    const [businessAreas, setBusinessAreas] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const data = await getBusinessArea();
+                console.log(data, 'get business data')
+                setBusinessAreas(data?.business_categories || []);
+            } catch (error) {
+                console.error("Failed to fetch business areas:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Utility function to split array into chunks of a specified size
+    const chunkArray = (array, chunkSize) => {
+        const result = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            result.push(array.slice(i, i + chunkSize));
+        }
+        return result;
+    };
+
+    // Split the businessAreas array into chunks of 18 items
+    const chunkedBusinessAreas = chunkArray(businessAreas, 18);
+
+    console.log(businessAreas, '===businessAreas')
+
     const options = {
         pagination: false,
         arrows: true,
@@ -111,31 +77,36 @@ const BusinessArea = () => {
             },
         },
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+
     return (
         <Section>
             {/* heading */}
-            <SectionHeading heading={"Business Area"} description={"Explore Our Extensive Range of Textile & Apparel Products &  Services."} />
+            <SectionHeading heading={"Business Area"}
+                            description={"Explore Our Extensive Range of Textile & Apparel Products &  Services."} />
             {/* slider */}
-            <div className="relative mt-12">
+            <div className="relative mt-8 md:mt-12">
                 <Splide
                     className="splider2"
                     options={options}
                 >
-                    <SplideSlide>
+                    {chunkedBusinessAreas.map((chunk, chunkIndex) => (
+                    <SplideSlide key={chunkIndex}>
                         <div className="grid grid-cols-3 lg:grid-cols-9 gap-4 lg:gap-7 md:px-10 lg:px-[91px]">
-                            {allcard?.map((item, index) => (
+                            {chunk.map((item, index) => (
                                 <BusinessAreaCard key={index} item={item} />
                             ))}
                         </div>
                     </SplideSlide>
-                    <SplideSlide>
-                        <div className="grid grid-cols-3 lg:grid-cols-9 gap-4 lg:gap-7 md:px-10 lg:px-[91px]">
-                            {allcard?.map((item, index) => (
-                                <BusinessAreaCard key={index} item={item} />
-                            ))}
-                        </div>
-                    </SplideSlide>
+                    ))}
                 </Splide>
+            </div>
+            <div className="mt-12 flex justify-center">
+                <Button icon TagName={Link} href="/myaccount/company/add">Add Business</Button>
             </div>
         </Section>
     );

@@ -21,29 +21,34 @@ export { Phone } from "./phone";
 export { WorldMap } from "./world-map";
 
 //use icon for company page
-export {BookmarkIcon} from './bookmark'
-export {BuildingOneIcon} from './building-one'
-export {BuildingTwoIcon} from './building-two'
-export {EyeIcon} from './eye'
-export {GlobeIcon} from './globe'
-export {GridIcon} from './grid'
-export {MarkerPinIcon} from './marker-pin'
-export {ShareThinIcon} from './share-thin'
-export {ShareBoldIcon} from './share-bold'
-export {TagsIcon} from './tags'
-export {UsersCheckIcon} from './users-check'
-export {WhatsAppIcon} from './whats-app'
-export {ChevronDownIcon} from './chevron-down'
-export {FlagPriorityIcon} from './flag-priority'
-export {FileDownloadIcon} from './file-download'
-export {EmailIcon} from './email-icon'
-export {PhoneIcon} from './phone-icon'
-export {TwitterIcon} from './twitter'
-export {RedditIcon} from './reddit'
-export {FacebookFIcon} from './facebook-f'
-export {EnvelopeIcon} from './envelope'
+export { BookmarkIcon } from "./bookmark";
+export { BuildingOneIcon } from "./building-one";
+export { BuildingTwoIcon } from "./building-two";
+export { EyeIcon } from "./eye";
+export { GlobeIcon } from "./globe";
+export { GridIcon } from "./grid";
+export { MarkerPinIcon } from "./marker-pin";
+export { ShareThinIcon } from "./share-thin";
+export { ShareBoldIcon } from "./share-bold";
+export { TagsIcon } from "./tags";
+export { UsersCheckIcon } from "./users-check";
+export { WhatsAppIcon } from "./whats-app";
+export { ChevronDownIcon } from "./chevron-down";
+export { FlagPriorityIcon } from "./flag-priority";
+export { FileDownloadIcon } from "./file-download";
+export { EmailIcon } from "./email-icon";
+export { PhoneIcon } from "./phone-icon";
+export { TwitterIcon } from "./twitter";
+export { RedditIcon } from "./reddit";
+export { FacebookFIcon } from "./facebook-f";
+export { EnvelopeIcon } from "./envelope";
 export { UserUpArrowIcon } from "./user-uparrow";
 export { CheckMarkIcon } from "./check-mark";
 export { ViewAs } from "./view-as";
 export { EditIcon } from "./edit";
 export { DeleteIcon } from "./delete";
+export { StarIcon } from "./star";
+export { LoveIcon } from "./love";
+export { ListIcon } from "./list";
+export { FilterIcon } from "./filter";
+export { UserIcon } from "./user";

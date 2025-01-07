@@ -1,7 +1,7 @@
 "use client";
-import Button from "../ui/button";
+import Button from "@/components/shared/button";
 import { useEffect, useRef, useState } from "react";
-import { Bars, Cross } from "@/components/icons";
+import { Bars, ChevronDownIcon, Cross } from "@/components/icons";
 import HeroForm from "@/components/hero/hero-form";
 
 import {
@@ -12,37 +12,58 @@ import {
 } from "@/components/ui/accordion";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
+import { LogOutIcon } from "lucide-react";
+import AuthNavbar from "@/components/shared/authNavbar/authNavbar";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const menuItems = [
-  { id: 1, label: "Business", path: "/business" },
-  { id: 2, label: "Services", path: "/services" },
-  { id: 3, label: "Projects", path: "/projects" },
-  { id: 4, label: "Blog", path: "/blog" },
-  { id: 5, label: "Contact", path: "/contact" },
+  { id: 1, label: "Home", path: "/" },
+  { id: 2, label: "Company", path: "/company" },
+  { id: 3, label: "Blog", path: "/blog" },
+  { id: 4, label: "Pricing", path: "/pricing" },
+];
+const moreItems = [
+  { id: 1, label: "About Us", path: "/about" },
+  { id: 2, label: "Partner", path: "/partner" },
+  { id: 3, label: "Contact Us", path: "/contact" },
 ];
 
-export const Nav = () => {
-  const [showMobileNav, setShowMobileNav] = useState(false);
-  const nav = useRef(null);
+export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
   const pathname = usePathname();
+  console.log(isSticky);
 
+  function arrowColor() {
+    if (isSticky) {
+      return "#000000";
+    }
+    if (pathname === "/") {
+      return "#ffffff";
+    }
+    return "#000000";
+  }
   useEffect(() => {
-    window.onscroll = () => {
-      if (window.scrollY > 100) {
-        nav.current.classList.add("bg-white");
-      } else {
-        if (showMobileNav) {
-          nav.current.classList.add("bg-white");
-        } else {
-          nav.current.classList.remove("bg-white");
-        }
-      }
-    };
+    arrowColor();
   }, []);
 
   return (
     <>
-      <nav ref={nav} className={`${showMobileNav ? "bg-white" : ""}`}>
+      <nav>
         <div className="container mx-auto">
           <div className="flex justify-between items-center gap-12">
             <div className="logo">
@@ -84,7 +105,7 @@ export const Nav = () => {
               </Link>
             </div>
 
-            <div className="flex-1 hidden lg:block">
+            <div className="flex-1 hidden items-center lg:gap-6 lg:flex">
               <ul className="flex lg:gap-8 md:gap-6 items-center">
                 {menuItems?.map((item) => (
                   <li key={item.id}>
@@ -94,34 +115,74 @@ export const Nav = () => {
                         pathname === item.path ? "active-nav-item" : ""
                       } ${
                         pathname === "/" ? "text-gray-200" : "text-gray-900"
-                      }`}
+                      }  ${isSticky ? "text-gray-900" : "text-gray-200"}`}
                     >
                       {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
+              {/* Dropdown menu */}
+              <DropdownMenu className="hidden lg:block" modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <span
+                    className={`text-base font-semibold flex gap-2 items-center cursor-pointer ${
+                      pathname === "/partner" ||
+                      pathname === "/about" ||
+                      pathname === "/contact"
+                        ? "active-nav-item"
+                        : ""
+                    } ${pathname === "/" ? "text-gray-200" : "text-gray-900"} ${
+                      isSticky ? "text-gray-900" : "text-gray-200"
+                    }`}
+                  >
+                    More
+                    <span className="rotate-180">
+                      <ChevronDownIcon stroke={arrowColor()} />
+                    </span>
+                  </span>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 z-[10000]">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <Link
+                        href="/partner"
+                        className={`block w-full text-base font-semibold text-gray-900 ${
+                          pathname === "/partner" ? "active-nav-item" : ""
+                        }`}
+                      >
+                        Partner
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link
+                        href="/about"
+                        className={`block w-full text-base font-semibold text-gray-900 ${
+                          pathname === "/about" ? "active-nav-item" : ""
+                        }`}
+                      >
+                        About Us
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link
+                        href="/contact"
+                        className={`block w-full text-base font-semibold text-gray-900 ${
+                          pathname === "/contact" ? "active-nav-item" : ""
+                        }`}
+                      >
+                        Contact Us
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
-            <div className="flex justify-end items-center gap-3 md:gap-4 ">
-              <Button
-                TagName={Link}
-                href="/login"
-                secondary
-                className="!text-gray-900"
-              >
-                Login
-              </Button>
-              <Button TagName={Link} href="/register" icon>
-                Add
-              </Button>
-              <button
-                onClick={() => setShowMobileNav(!showMobileNav)}
-                className="lg:hidden size-10 bg-transparent p-2 flex items-center justify-center"
-              >
-                {showMobileNav ? <Cross /> : <Bars />}
-              </button>
-            </div>
+            <AuthNavbar
+              showMobileNav={showMobileNav}
+              setShowMobileNav={setShowMobileNav}
+            />
           </div>
         </div>
       </nav>
@@ -131,61 +192,51 @@ export const Nav = () => {
   );
 };
 
+// Mobile Nav
 function MobileNav() {
   return (
-    <div className="h-screen w-screen bg-white fixed z-[9999] top-[80px] p-4">
+    <div className="h-screen w-screen bg-white fixed z-30 top-[76px] p-4 lg:hidden">
       <HeroForm />
-      <div className="mt-3">
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full gap-6 flex flex-col"
-        >
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
-              Business
-            </AccordionTrigger>
-            <AccordionContent className="bg-[#F4F5F6]">
-              Yes. It adheres to the WAI-ARIA design pattern.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
-              Ask
-            </AccordionTrigger>
-            <AccordionContent>
-              Yes. It comes with default styles that matches the other
-              components&apos; aesthetic.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
-              Jobs
-            </AccordionTrigger>
-            <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
-              Blog
-            </AccordionTrigger>
-            <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base">
-              More
-            </AccordionTrigger>
-            <AccordionContent>
-              Yes. It&apos;s animated by default, but you can disable it if you
-              prefer.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+      <div className="mt-4 overflow-x-scroll max-h-[calc(100vh-300px)] scrollbar-hidden">
+        <div className="space-y-3">
+          <ul className="flex flex-col gap-3">
+            {menuItems?.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={item.path}
+                  className="bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base min-h-12 rounded-[8px] block"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full gap-6 flex flex-col border-b-0"
+          >
+            <AccordionItem value="more">
+              <AccordionTrigger className="no-underline bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base min-h-12 rounded-[8px]">
+                More
+              </AccordionTrigger>
+              <AccordionContent className="border-b-0">
+                <ul className="flex flex-col gap-3 pl-6 pt-3">
+                  {moreItems?.map((item) => (
+                    <li key={item.id}>
+                      <Link
+                        href={item.path}
+                        className="bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base min-h-10 rounded-[8px] block"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
     </div>
   );

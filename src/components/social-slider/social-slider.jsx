@@ -7,23 +7,23 @@ import "@/styles/splider.css";
 import slider1 from "@/assets/slide-1.jpg";
 import slider2 from "@/assets/slide-2.jpg";
 import slider3 from "@/assets/slide-3.jpg";
+import Link from "next/link";
 
-const SocialSlider = () => {
+const SocialSlider = ({ webAds }) => {
   return (
-    <Section noDefaultStyle className="hidden md:block py-8 lg:py-10">
+    <Section noDefaultStyle className="social-slider py-4 md:py-8 lg:py-10">
       <Splide
         options={{
           perPage: 3,
           // perMove: 1,
           gap: 30,
+          autoplay: true,
+          type: "loop",
           omitEnd: true,
           focus: 0,
           breakpoints: {
-            1024: {
-              perPage: 2,
-            },
             768: {
-              perPage: 1,
+              perPage: 2,
             },
             640: {
               perPage: 1,
@@ -35,36 +35,25 @@ const SocialSlider = () => {
           arrows: false,
         }}
       >
-        <SplideSlide>
-          <div className="h-[120px] rounded-xl overflow-hidden">
-            <Image src={slider1} alt={"image"} />
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider3} alt={"image"} />
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
-          </div>
-        </SplideSlide>
-        <SplideSlide>
-          <div className="h-[120px] bg-gray-50 rounded-xl overflow-hidden">
-            <Image src={slider2} alt={"image"} />
-          </div>
-        </SplideSlide>
+        {webAds.map((webAd) => (
+          <SplideSlide key={webAd?.id} className="h-[120px]">
+            <Link
+              className="block"
+              target="_blank"
+              href={webAd?.link ? webAd?.link : "#"}
+            >
+              <div className="h-[120px] rounded-xl overflow-hidden">
+                <Image
+                  src={webAd?.image ? webAd?.image : slider1}
+                  height={120}
+                  width={445}
+                  className="w-full h-full object-cover"
+                  alt={"image"}
+                />
+              </div>
+            </Link>
+          </SplideSlide>
+        ))}
       </Splide>
     </Section>
   );
