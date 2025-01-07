@@ -32,12 +32,12 @@ const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50 !mt-[6px]";
 
 const formSchema = z.object({
-  product_category_id: z.string({
+  product_category_id: z.string().min(1,{
     message: "Please select an category.",
   }),
   name: z.string().min(3, { message: "Product name is required" }),
   price_min: z.coerce.number().min(1, { message: "Minimum price is required" }),
-  price_max: z.coerce.number().min(1, { message: "Maximum price is required" }),
+  price_max: z.coerce.number().optional(),
   moq: z.coerce.number().min(1, { message: "Minimum order is required" }),
   file: z
     .any()
@@ -83,7 +83,11 @@ const ProductsForm = ({ productCategories, slug, onSuccess }) => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("product_category_id", product_category_id);
-    formData.append("price_range", `${price_min}-${price_max}`);
+    if(price_max){
+        formData.append("price_range", `${price_min}-${price_max}`);
+    }else {
+        formData.append("price_range", `${price_min}`);
+    }
     formData.append("moq", moq);
     if (data.file && data.file.length > 0) {
       formData.append("image", data.file[0]);
@@ -232,7 +236,6 @@ const ProductsForm = ({ productCategories, slug, onSuccess }) => {
                   <FormItem>
                     <FormLabel className={labelStyle}>
                       Product Price (Max){" "}
-                      <span className="text-red-600">*</span>
                     </FormLabel>
                     <FormControl>
                       <Input

@@ -111,9 +111,9 @@ function AvailableProductsCard({ product, slug, preData, onDeleteSuccess }) {
       </p>
       <div className="mt-2">
         <p className="text-xl text-gray-900 font-semibold">
-          {product?.price_range}
+          ${product?.price_range}
         </p>
-        <p className="text-sm text-gray-500">Min. order: {product?.moq} pieces</p>
+        <p className="text-sm text-gray-500">{product?.moq}<span className="text-xs">(Min. order)</span></p>
       </div>
       <div className="flex gap-2 mt-2">
         <ConfirmDeleteDialog
