@@ -25,6 +25,8 @@ export default async function Page({ params }) {
       return <Company404 />
     }
 
+    console.log(basic, 'get basic');
+
 
     return (
       <Suspense fallback={<GlobalSkeleton />}>

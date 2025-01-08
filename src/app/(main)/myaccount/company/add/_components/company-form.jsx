@@ -38,7 +38,10 @@ const formSchema = z.object({
         message: "Name must be at least 2 characters.",
     }),
     moto: z.string().optional(),
-    business_category_id: z.number({message: "Please select an category"}),
+    business_categories: z
+        .array(z.number({message: "Please select an category"})),
+    business_types: z
+        .array(z.number()).optional(),
     certificates: z
         .array(z.number()).optional(),
     company_website: z.string().optional(),
@@ -53,6 +56,26 @@ const CompanyForm = ({preData}) => {
 
     const [loading, setLoading] = useState(false);
 
+    // Options for the select dropdown category
+    const categoryOptions =
+        (preData &&
+            preData?.business_categories.length > 0 &&
+            preData?.business_categories?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
+
+    // Options for the select dropdown types
+    const btypesOptions =
+        (preData &&
+            preData?.business_types.length > 0 &&
+            preData?.business_types?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
+
     // Options for the select dropdown
     const tagOptions =
         preData?.certificates?.map((item) => ({
@@ -65,7 +88,8 @@ const CompanyForm = ({preData}) => {
         defaultValues: {
             name: "",
             moto: "",
-            business_category_id: "",
+            business_categories: [],
+            business_types: [],
             certificates: [],
             company_website: "",
             location_id: "",
@@ -85,7 +109,8 @@ const CompanyForm = ({preData}) => {
         const {
             name,
             moto,
-            business_category_id,
+            business_categories,
+            business_types,
             certificates,
             company_website,
             location_id,
@@ -96,7 +121,12 @@ const CompanyForm = ({preData}) => {
 
         formData.append("name", name);
         formData.append("moto", moto);
-        formData.append("business_category_id", business_category_id);
+        business_categories.forEach((item, index) => {
+            formData.append(`business_categories[${index}]`, item);
+        });
+        business_types.forEach((item, index) => {
+            formData.append(`business_types[${index}]`, item);
+        });
         certificates.forEach((item, index) => {
             formData.append(`certificates[${index}]`, item);
         });
@@ -203,36 +233,34 @@ const CompanyForm = ({preData}) => {
                     </div>
                     <div>
                         <FormField
-                            control={form.control}
-                            name="business_category_id"
+                            control={control}
+                            name="business_categories"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel className={labelStyle}>Category</FormLabel>
-                                    <Select
-                                        onValueChange={(value) => field.onChange(Number(value))}
-                                    >
-                                        <FormControl>
-                                            <SelectTrigger
-                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
-                                            >
-                                                <SelectValue
-                                                    placeholder="Select Category"
-                                                    className="text-gray-400 font-normal text-sm"
-                                                />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            {preData?.categories?.map((category) => (
-                                                <SelectItem
-                                                    key={category.id}
-                                                    value={String(category.id)}
-                                                >
-                                                    {category.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage/>
+                                    <FormLabel>Business Category</FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={categoryOptions}
+                                    />
+                                    <FormMessage>{errors.business_categories?.message}</FormMessage>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="business_types"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Business type</FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={btypesOptions}
+                                    />
+                                    <FormMessage>{errors.business_types?.message}</FormMessage>
                                 </FormItem>
                             )}
                         />
@@ -249,7 +277,7 @@ const CompanyForm = ({preData}) => {
                                         onChange={field.onChange}
                                         options={tagOptions}
                                     />
-                                    <FormMessage>{errors.tags?.message}</FormMessage>
+                                    <FormMessage>{errors.certificates?.message}</FormMessage>
                                 </FormItem>
                             )}
                         />
@@ -294,9 +322,12 @@ const CompanyForm = ({preData}) => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Small (Below 1000 Manpower)">Small (Below 1000 Manpower)</SelectItem>
-                                                <SelectItem value="Medium (1000 - 10000 Manpower)">Medium (1000 - 10000 Manpower)</SelectItem>
-                                                <SelectItem value="Large (Above 10000 Manpower)">Large (Above 10000 Manpower)</SelectItem>
+                                                <SelectItem value="Small (Below 1000 Manpower)">Small (Below 1000
+                                                    Manpower)</SelectItem>
+                                                <SelectItem value="Medium (1000 - 10000 Manpower)">Medium (1000 - 10000
+                                                    Manpower)</SelectItem>
+                                                <SelectItem value="Large (Above 10000 Manpower)">Large (Above 10000
+                                                    Manpower)</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage/>
