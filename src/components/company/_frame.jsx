@@ -21,6 +21,7 @@ import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
+import Claim from "@/app/(main)/company/[slug]/components/claim";
 
 const Frame = ({slug, headerData, is_favorite, className}) => {
     const {
@@ -87,13 +88,8 @@ const Frame = ({slug, headerData, is_favorite, className}) => {
                             <>
                                 <ShareModal/>
                             </>
-                            {canClaim && (
-                                <Button
-                                    secondary
-                                    className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
-                                >
-                                    Claim this Business
-                                </Button>
+                            {!canClaim && (
+                                <Claim />
                             )}
                             {canEdit && (
                                 <Button
