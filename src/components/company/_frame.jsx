@@ -25,6 +25,7 @@ import Claim from "@/app/(main)/company/[slug]/components/claim";
 
 const Frame = ({slug, headerData, is_favorite, className}) => {
     const {
+        company_id,
         bannerImage,
         profileImage,
         moto,
@@ -88,8 +89,8 @@ const Frame = ({slug, headerData, is_favorite, className}) => {
                             <>
                                 <ShareModal/>
                             </>
-                            {!canClaim && (
-                                <Claim />
+                            {canClaim && (
+                                <Claim companyId={company_id} />
                             )}
                             {canEdit && (
                                 <Button

@@ -25,16 +25,21 @@ import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
+import {submitCompanyClaim} from "@/services/contact/submitForm";
+import {useToast} from "@/hooks/use-toast";
+import {useSession} from "next-auth/react";
 
 const formSchema = z.object({
-
+    message: z.string().min(5, {message: "Message is required."}),
 });
 
-function Claim(props) {
-    const isUserLoggedIn = false;
+function Claim({companyId}) {
+    const { data, status } = useSession();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false); // Add a loading state
     const router = useRouter();
+    const {toast} = useToast();
+    const isUserLoggedIn = status && status === "authenticated";
 
     const handleClaim = () => {
         if (isUserLoggedIn) {
@@ -44,13 +49,10 @@ function Claim(props) {
         }
     };
 
-    const handleDialogClose = () => {
-        setIsOpen(false);
-    };
-
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            message: ""
         },
     });
 
@@ -60,14 +62,24 @@ function Claim(props) {
         formState: { errors },
     } = form;
 
-    const onSubmit = (e) => {
-        e.preventDefault();
+    const onSubmit = async(data) => {
         setLoading(true);
-        // Simulate API call
-        setTimeout(() => {
+        const modifiedFormData = {
+            company_id: companyId,
+            ...data
+        }
+        try {
+            const result = await submitCompanyClaim(modifiedFormData, toast);
+            if (result?.status && result?.code === 200) {
+                setIsOpen(false);
+                form.reset();
+            } else {
+                console.log("Error in form submission:", result?.message);
+            }
+        } catch (error) {
+        } finally {
             setLoading(false);
-            setIsOpen(false); // Close the dialog after submission
-        }, 2000);
+        }
     };
 
 
