@@ -8,10 +8,9 @@ import {
 } from "@/components/ui/popover"
 import TagsList from "@/app/(main)/company/[slug]/components/tags-list";
 
-function TagsView() {
-    const tags = "shirts, sports shirts, dress pants, casual pants, denim, sweater and golf apparel";
-    const tagList = tags.split(",").map((tag) => tag.trim());
+function TagsView({btypes}) {
 
+    const tagList = btypes && btypes.length > 0 ? btypes.map((btype) => btype.name) : [];
     // Display first 4 tags initially
     const initialTags = tagList.slice(0, 4);
     const remainingTags = tagList.slice(4);
