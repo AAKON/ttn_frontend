@@ -38,9 +38,10 @@ const formSchema = z.object({
         message: "Username must be at least 2 characters.",
     }),
     moto: z.string().optional(),
-    business_category_id: z.number({
-        required_error: "Please select an category.",
-    }),
+    business_categories: z
+        .array(z.any()).min(1,{message: "Please select an category"}),
+    business_types: z
+        .array(z.any()).optional(),
     certificates: z
         .array(z.any())
         .min(1, {message: "Please add at least one certificates."}),
@@ -57,12 +58,52 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
     const [fileData, setFileData] = useState(null); // File object
     const [initialImage, setInitialImage] = useState("");
 
+    // Options for the select dropdown category
+    const categoryOptions =
+        (preData &&
+            preData?.business_categories.length > 0 &&
+            preData?.business_categories?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
+
+    // Options for the select dropdown types
+    const btypesOptions =
+        (preData &&
+            preData?.business_types.length > 0 &&
+            preData?.business_types?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
+
     // Options for the select dropdown
     const tagOptions =
         preData?.certificates?.map((item) => ({
             label: item.name,
             value: item.id,
         })) || [];
+
+    const initialCategories =
+        (basic?.businessCategories &&
+            Array.isArray(basic?.businessCategories) &&
+            basic?.businessCategories.length > 0 &&
+            basic?.businessCategories?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
+
+    const initialBtypes =
+        (basic?.businessTypes &&
+            Array.isArray(basic?.businessTypes) &&
+            basic?.businessTypes.length > 0 &&
+            basic?.businessTypes?.map((item) => ({
+                label: item.name,
+                value: item.id,
+            }))) ||
+        [];
 
     const initialCompliances =
         (basic?.certificates &&
@@ -80,7 +121,8 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
         defaultValues: {
             name: "",
             moto: "",
-            business_category_id: "",
+            business_categories: [],
+            business_types: [],
             certificates: [],
             company_website: "",
             location_id: "",
@@ -105,6 +147,12 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
             if (basic?.certificates) {
                 setValue("certificates", initialCompliances || []);
             }
+            if (basic?.businessCategories) {
+                setValue("business_categories", initialCategories || []);
+            }
+            if (basic?.businessTypes) {
+                setValue("business_types", initialBtypes || []);
+            }
             setValue("company_website", basic?.company_website || "");
             setValue("about", basic?.about || "");
             setValue("business_category_id", basic?.businessCategory?.id || "");
@@ -124,7 +172,8 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
         const {
             name,
             moto,
-            business_category_id,
+            business_categories,
+            business_types,
             certificates,
             company_website,
             location_id,
@@ -137,12 +186,25 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
         const normalizedCompliances = certificates.map((item) =>
             typeof item === "object" ? item.value : item
         );
+        // Normalize the data to extract values
+        const normalizedCategories = business_categories.map((item) =>
+            typeof item === "object" ? item.value : item
+        );
+        // Normalize the data to extract values
+        const normalizedBtypes = business_types.map((item) =>
+            typeof item === "object" ? item.value : item
+        );
 
         formData.append("name", name);
         if (moto.trim() !== "") {
             formData.append("moto", moto);
         }
-        formData.append("business_category_id", business_category_id);
+        normalizedCategories.forEach((item, index) => {
+            formData.append(`business_categories[${index}]`, item);
+        });
+        normalizedBtypes.forEach((item, index) => {
+            formData.append(`business_types[${index}]`, item);
+        });
         normalizedCompliances.forEach((value, index) => {
             formData.append(`certificates[${index}]`, value);
         });
@@ -260,37 +322,32 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                         )}
                     />
                     <FormField
-                        control={form.control}
-                        name="business_category_id"
+                        control={control}
+                        name="business_categories"
                         render={({field}) => (
                             <FormItem>
-                                <FormLabel className={labelStyle}>Category</FormLabel>
-                                <Select
-                                    defaultValue={basic?.businessCategory?.id?.toString()}
-                                    onValueChange={(value) => field.onChange(Number(value))}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger
-                                            className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
-                                        >
-                                            <SelectValue
-                                                placeholder="Select Category"
-                                                className="text-gray-400 font-normal text-sm"
-                                            />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {preData?.categories?.map((category) => (
-                                            <SelectItem
-                                                key={category.id}
-                                                value={String(category.id)}
-                                            >
-                                                {category.name}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage/>
+                                <FormLabel>Business Category</FormLabel>
+                                <DropDownTags
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={categoryOptions}
+                                />
+                                <FormMessage>{errors.business_categories?.message}</FormMessage>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={control}
+                        name="business_types"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>Business type</FormLabel>
+                                <DropDownTags
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={btypesOptions}
+                                />
+                                <FormMessage>{errors.business_types?.message}</FormMessage>
                             </FormItem>
                         )}
                     />

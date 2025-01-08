@@ -16,6 +16,7 @@ const CompanyDetails = async ({ params }) => {
     const details = await detailsPromise;
 
     const headerData = {
+      company_id: details?.company?.id,
       bannerImage: details?.company?.thumbnail_url,
       profileImage: details?.company?.profile_pic_url,
       moto: details?.company?.moto,
@@ -23,7 +24,8 @@ const CompanyDetails = async ({ params }) => {
       name: details?.company?.name,
       viewCount: details?.company?.view_count,
       location: details?.company?.location,
-      category: details?.company?.business_category?.name,
+      categories: details?.company?.business_categories,
+      btypes: details?.company?.business_types,
       companySize: details?.company?.manpower,
       created: details?.company?.created_at,
       canEdit: details?.buttons?.edit,
