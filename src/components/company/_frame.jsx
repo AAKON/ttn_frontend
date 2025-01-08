@@ -21,9 +21,11 @@ import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
+import Claim from "@/app/(main)/company/[slug]/components/claim";
 
 const Frame = ({slug, headerData, is_favorite, className}) => {
     const {
+        company_id,
         bannerImage,
         profileImage,
         moto,
@@ -71,7 +73,7 @@ const Frame = ({slug, headerData, is_favorite, className}) => {
                                     <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
                                         {/*<TagsIcon />*/}
                                         {/*{tags}*/}
-                                        <TagsView/>
+                                        <TagsView btypes={btypes} />
                                         {/*<span className="max-sm:hidden lg:block">/Mixed Rags</span>*/}
                                     </h6>
                                     {/*<h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">*/}
@@ -88,12 +90,7 @@ const Frame = ({slug, headerData, is_favorite, className}) => {
                                 <ShareModal/>
                             </>
                             {canClaim && (
-                                <Button
-                                    secondary
-                                    className="!bg-transparent !text-gray-700 border lg:text-[16px] text-[14px] !font-semibold !border-gray-200 lg:!h-[48px] lg:w-[190px] h-9 w-[270px] "
-                                >
-                                    Claim this Business
-                                </Button>
+                                <Claim companyId={company_id} />
                             )}
                             {canEdit && (
                                 <Button
