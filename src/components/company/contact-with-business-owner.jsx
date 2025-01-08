@@ -18,7 +18,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
   const [email, setEmail] = useState(false);
   const [report, setReport] = useState(false);
 
-  const { name, profileImage, tags } = headerData;
+  const { name, profileImage, company_id, tags } = headerData;
 
   const emailClick = () => {
     setEmail(true);
@@ -70,11 +70,11 @@ const ContactWithBusinessOwner = ({ headerData }) => {
         </div> */}
 
         <Button
-          TagName={Link}
-          href={"/contact"}
+          // TagName={Link}
+          onClick={emailClick}
           className="w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
         >
-          Contact Us
+          Email us
         </Button>
 
         {/*<Button*/}
@@ -107,7 +107,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
       <div
         className={`w-full absolute top-0 left-0 ${email ? "block" : "hidden"}`}
       >
-        <EmailCard setemail={setEmail} />
+        <EmailCard setemail={setEmail} companyId={company_id} />
       </div>
 
       <div
@@ -115,7 +115,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
           report ? "block" : "hidden"
         }`}
       >
-        <ReportCard setreport={setReport} />
+        <ReportCard setreport={setReport} companyId={company_id} />
       </div>
     </div>
   );
