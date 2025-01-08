@@ -11,7 +11,7 @@ const BusinessAreaCard = ({ item }) => {
       } border-2 relative hover:border-brand-200 cursor-pointer`}
     >
       {image && (
-        <div className="h-[53px] w-[53px] overflow-hidden">
+        <div className="h-[53px] w-[53px] overflow-hidden flex items-center justify-center">
           <Image
             src={image}
             alt="image"
