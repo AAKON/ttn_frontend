@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/shared/button";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { Bars, ChevronDownIcon, Cross } from "@/components/icons";
 import HeroForm from "@/components/hero/hero-form";
 
@@ -10,7 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -22,15 +22,9 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { set } from "lodash";
 
 const menuItems = [
   { id: 1, label: "Home", path: "/" },
@@ -46,7 +40,12 @@ const moreItems = [
 
 export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
   const pathname = usePathname();
-  console.log(isSticky);
+  const router = useRouter();
+
+  const handleNavigate = (path) => {
+    router.push(path);
+    setShowMobileNav(false);
+  };
 
   function arrowColor() {
     if (isSticky) {
@@ -144,35 +143,23 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 z-[10000]">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                      <Link
-                        href="/partner"
-                        className={`block w-full text-base font-semibold text-gray-900 ${
-                          pathname === "/partner" ? "active-nav-item" : ""
-                        }`}
-                      >
-                        Partner
-                      </Link>
+                    <DropdownMenuItem
+                      onClick={() => handleNavigate("/partner")}
+                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
+                    >
+                      Partner
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link
-                        href="/about"
-                        className={`block w-full text-base font-semibold text-gray-900 ${
-                          pathname === "/about" ? "active-nav-item" : ""
-                        }`}
-                      >
-                        About Us
-                      </Link>
+                    <DropdownMenuItem
+                      onClick={() => handleNavigate("/about")}
+                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
+                    >
+                      About Us
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link
-                        href="/contact"
-                        className={`block w-full text-base font-semibold text-gray-900 ${
-                          pathname === "/contact" ? "active-nav-item" : ""
-                        }`}
-                      >
-                        Contact Us
-                      </Link>
+                    <DropdownMenuItem
+                      onClick={() => handleNavigate("/contact")}
+                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
+                    >
+                      Contact Us
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -187,13 +174,18 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
         </div>
       </nav>
       {/*  Show on Mobile */}
-      {showMobileNav && <MobileNav />}
+      {showMobileNav && (
+        <MobileNav
+          closeMobileNav={handleNavigate}
+          setShowMobileNav={setShowMobileNav}
+        />
+      )}
     </>
   );
 };
 
 // Mobile Nav
-function MobileNav() {
+function MobileNav({ closeMobileNav, setShowMobileNav }) {
   return (
     <div className="h-screen w-screen bg-white fixed z-30 top-[76px] p-4 lg:hidden">
       <HeroForm />
@@ -202,12 +194,12 @@ function MobileNav() {
           <ul className="flex flex-col gap-3">
             {menuItems?.map((item) => (
               <li key={item.id}>
-                <Link
-                  href={item.path}
+                <span
                   className="bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base min-h-12 rounded-[8px] block"
+                  onClick={() => closeMobileNav(item.path)}
                 >
                   {item.label}
-                </Link>
+                </span>
               </li>
             ))}
           </ul>
@@ -227,6 +219,7 @@ function MobileNav() {
                       <Link
                         href={item.path}
                         className="bg-[#F4F5F6] p-2 text-gray-900 font-semibold text-base min-h-10 rounded-[8px] block"
+                        onClick={() => setShowMobileNav(false)}
                       >
                         {item.label}
                       </Link>
