@@ -35,13 +35,14 @@ const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
-  product_category_id: z.array(z.number()).optional(),
+  product_category_id: z.array(z.number()).min(1,{
+      message: "Please select an category.",
+  }),
   image: z.any().optional(),
   name: z.string().min(3, { message: "Product name is required" }),
   price_min: z.coerce.number().min(1, { message: "Minimum price is required" }),
-  price_max: z.coerce.number().min(1, { message: "Maximum price is required" }),
-  moq_min: z.coerce.number().min(1, { message: "Minimum order is required" }),
-  moq_max: z.coerce.number().min(1, { message: "Maximum order is required" }),
+  price_max: z.coerce.number().optional(),
+  moq: z.coerce.number().min(1, { message: "Minimum order is required" })
 });
 
 const ProductEditModal = ({
@@ -120,8 +121,7 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
       price_max: data?.price_range
         ? Number(data.price_range.split("-")[1])
         : "",
-      moq_min: data?.moq ? Number(data.moq.split("-")[0]) : "",
-      moq_max: data?.moq ? Number(data.moq.split("-")[1]) : "",
+        moq: data?.moq ? Number(data.moq) : "",
     },
   });
 
@@ -140,15 +140,14 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
       image,
       price_min,
       price_max,
-      moq_min,
-      moq_max,
+        moq
     } = data;
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("product_category_id", product_category_id);
     formData.append("price_range", `${price_min}-${price_max}`);
-    formData.append("moq", `${moq_min}-${moq_max}`);
+      formData.append("moq", moq);
     if (image && Array.isArray(image) && image.length > 0) {
       formData.append("image", image[0]);
     }
@@ -272,7 +271,7 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel className={labelStyle}>
-                  Product Price (Max) <span className="text-red-600">*</span>
+                  Product Price (Max)
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -307,11 +306,11 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
         <div className="flex flex-nowrap gap-2 items-stretch">
           <FormField
             control={form.control}
-            name="moq_min"
+            name="moq"
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormLabel className={labelStyle}>
-                  MOQ (Min) <span className="text-red-600">*</span>
+                    Minimum Order Quantity (MOQ) <span className="text-red-600">*</span>
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -352,44 +351,6 @@ const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
               }`}
             ></div>
           </div>
-          <FormField
-            control={form.control}
-            name="moq_max"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel className={labelStyle}>
-                  MOQ (Max) <span className="text-red-600">*</span>
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className={inputStyle}
-                    placeholder="500 Piece/Pieces (Min. Order)"
-                    type="number"
-                    min={1}
-                    {...field}
-                    onBlur={() => {
-                      const minQty = form.watch("moq_min");
-                      const maxQty = field.value;
-                      if (
-                        minQty &&
-                        maxQty &&
-                        Number(maxQty) <= Number(minQty)
-                      ) {
-                        form.setError("moq_max", {
-                          type: "validate",
-                          message: "Max order must be greater than min order",
-                        });
-                      } else {
-                        form.clearErrors("moq_min");
-                        form.clearErrors("moq_max");
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
         <div className="flex justify-end">
