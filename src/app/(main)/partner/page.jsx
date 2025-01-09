@@ -43,7 +43,7 @@ export default async function PartnerPage() {
               {b2bPartners &&
                 Array.isArray(b2bPartners) &&
                 b2bPartners.length > 0 && (
-                  <div className="pt-10 grid grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-6 justify-center">
+                  <div className="pt-10 flex flex-wrap gap-6 justify-center">
                     {b2bPartners?.map((item) => (
                       <CompanyPartnerCard key={item?.id} image={item} />
                     ))}
@@ -61,7 +61,7 @@ export default async function PartnerPage() {
               {marketingPartners &&
                 Array.isArray(marketingPartners) &&
                 marketingPartners.length > 0 && (
-                  <div className="pt-10 grid grid-cols-[repeat(auto-fit,minmax(140px,140px))] lg:grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-6 justify-center">
+                  <div className="pt-10 flex flex-wrap gap-6 justify-center">
                     {marketingPartners?.map((item) => (
                       <CompanyPartnerCard key={item?.id} image={item} />
                     ))}
@@ -94,12 +94,13 @@ function BusinessPartner({ heading, summary }) {
 
 function CompanyPartnerCard({ image }) {
   return (
-    <div className="h-[100px] md:h-[140px] xl:h-[200px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2">
+    <div className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2">
       <Image
         src={image?.image ? image?.image : business1}
         alt="logo"
-        width={200}
-        height={200}
+        width={150}
+        height={150}
+        layout="responsive"
         className="max-w-full max-h-full object-contain"
       />
     </div>
