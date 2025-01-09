@@ -96,7 +96,7 @@ const BusinessArea = () => {
                 >
                     {chunkedBusinessAreas.map((chunk, chunkIndex) => (
                     <SplideSlide key={chunkIndex}>
-                        <div className="grid grid-cols-3 lg:grid-cols-9 gap-4 lg:gap-7 md:px-10 lg:px-[91px]">
+                        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-9 gap-4 lg:gap-7 md:px-10 lg:px-[91px]">
                             {chunk.map((item, index) => (
                                 <BusinessAreaCard key={index} item={item} />
                             ))}

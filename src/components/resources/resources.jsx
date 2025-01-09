@@ -21,7 +21,7 @@ const Resources = async ({blogsPromise}) => {
                             <p className="font-semibold text-center pb-8 lg:hidden text-2xl text-gray-900">
                                 Lastest blog posts
                             </p>
-                            <div className="flex gap-x-4 flex-col md:flex-row gap-y-6 items-center justify-between">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {homeBlogs?.TNN_picks.map((item) => (
                                     <ResourceCard key={item?.id} item={item}/>
                                 ))}

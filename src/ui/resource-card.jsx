@@ -38,7 +38,7 @@ const ResourceCard = ({ item }) => {
               ))}
           </span>
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-xl lg:text-2xl text-gray-900">
+            <h3 className="font-semibold text-xl lg:text-2xl text-gray-900 line-clamp-1 pr-6">
               {title}
             </h3>
             <span>
