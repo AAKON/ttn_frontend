@@ -34,6 +34,7 @@ const CompanyList = () => {
     businessCategoryIds: businessCategoryIds
       ? [parseInt(businessCategoryIds, 10)]
       : [],
+    businessTypeIds: [],
     keyword: keyword ? keyword : "",
   };
 
@@ -68,7 +69,7 @@ const CompanyList = () => {
     fetchFilterOptions();
   }, []);
 
-  const categories = filterOptions?.categories || [];
+  const categories = filterOptions?.business_categories || [];
   const locations = filterOptions?.locations || [];
 
   const fetchCompanies = async (page) => {
@@ -118,7 +119,7 @@ const CompanyList = () => {
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
-      if (id === "all" || isNaN(id)) {
+      if (id === "all" || (!isNaN(id) === false && key !== "manpower")) {
         updatedFilters[key] = [];
       }else {
         if (key === "locationIds") {
@@ -154,7 +155,6 @@ const CompanyList = () => {
 
 
   // display selected options functions
-
   const getSelectedOptions = () => {
     const selected = [];
 
