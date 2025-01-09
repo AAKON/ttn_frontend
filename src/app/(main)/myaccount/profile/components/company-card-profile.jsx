@@ -64,7 +64,7 @@ const CompanyCardProfile = ({ type, onItemRemove, data }) => {
         </div>
         <span className="flex items-center gap-[6px] bg-gray-50 rounded-sm !h-6 px-[6px] py-1 border border-brand-200">
           <ViewAs stroke="#F7931E" width={14} height={10} />
-          <span className="text-brand-600 text-sm">3.4k</span>
+          <span className="text-brand-600 text-sm">{data?.view_count}</span>
         </span>
       </CardHeader>
 
