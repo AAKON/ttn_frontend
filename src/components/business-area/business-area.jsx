@@ -40,7 +40,7 @@ const BusinessArea = () => {
             setLoading(true);
             try {
                 const data = await getBusinessArea();
-                console.log(data, 'get business data')
+                //console.log(data, 'get business data')
                 setBusinessAreas(data?.business_categories || []);
             } catch (error) {
                 console.error("Failed to fetch business areas:", error);
@@ -64,7 +64,7 @@ const BusinessArea = () => {
     // Split the businessAreas array into chunks of 18 items
     const chunkedBusinessAreas = chunkArray(businessAreas, 18);
 
-    console.log(businessAreas, '===businessAreas')
+    //console.log(businessAreas, '===businessAreas')
 
     const options = {
         pagination: false,
