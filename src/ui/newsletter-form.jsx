@@ -45,7 +45,7 @@ function NewsletterForm() {
 
   // Handle form submission
   const onSubmitNewsletter = async (data) => {
-    console.log("submitted==n");
+    //console.log("submitted==n");
     try {
       const result = await reqNewsletter(data, toast);
       if (result?.status && result?.code === 200) {

@@ -32,7 +32,7 @@ export default async function Home() {
     const locations = details?.locations || [];
     const webAds = details?.webAds || [];
 
-    console.log(details, "get detailsPromise");
+    //console.log(details, "get detailsPromise");
 
     return (
       <>

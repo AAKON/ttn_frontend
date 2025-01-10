@@ -1,12 +1,24 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = {
     session: {
         strategy: "jwt",
     },
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            }
+        }),
         CredentialsProvider({
             name: "Credentials",
             credentials: {
@@ -44,8 +56,35 @@ export const authOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
+        async jwt({ token, user, account, profile }) {
+            if (account && account.provider === 'google') {
+                try {
+                    // Send Google user data to external API
+                    const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google-login`;
+                    const res = await fetch(googleLoginUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: profile?.email,
+                            token: account.access_token
+                        }),
+                    });
+                    const apiResponse = await res.json();
+
+                    if (res.ok && apiResponse.data) {
+                        token.accessToken = apiResponse.data.access_token;
+                        token.email = apiResponse.data.email;
+                    } else {
+                        throw new Error(apiResponse.message || 'Google login failed.');
+                    }
+                }catch (error) {
+                    console.error('Google login API error:', error);
+                    throw new Error('Google login verification failed.');
+                }
+                token.name = profile?.name;
+                token.user_name = profile?.given_name || profile?.name;
+                token.picture = profile?.picture;
+            }else if(user){
                 token.accessToken = user.accessToken;
                 token.exp = user.exp;
                 token.name = user.name;
