@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Nav } from "./nav";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 export const Header = () => {
   const pathname = usePathname();

@@ -6,3 +6,10 @@ export async function getTeams() {
     });
     return result.data;
 }
+
+export async function getAbout() {
+    const result = await apiRequest('about', {
+        method: 'GET',
+    });
+    return result.data;
+}
