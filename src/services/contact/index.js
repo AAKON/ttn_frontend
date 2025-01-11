@@ -13,3 +13,9 @@ export async function getAbout() {
     });
     return result.data;
 }
+export async function getTerms() {
+    const result = await apiRequest('terms-and-conditions', {
+        method: 'GET',
+    });
+    return result.data;
+}

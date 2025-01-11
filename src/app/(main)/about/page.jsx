@@ -20,7 +20,7 @@ const About = async() => {
         aboutData = aboutResponse;
         teamsData = teamsResponse;
     } catch (error) {
-        console.error("Error fetching teamsData:", error);
+        console.error("Error fetching:", error);
         teamsData = [];
     }
 
