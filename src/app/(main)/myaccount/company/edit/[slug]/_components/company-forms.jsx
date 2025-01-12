@@ -6,9 +6,7 @@ import ContactWithBusinessOwner
     from "@/app/(main)/myaccount/company/edit/[slug]/_components/contact-with-business-owner";
 import EditTabs from "@/app/(main)/myaccount/company/edit/[slug]/_components/tabs";
 import {getCompanyProducts} from "@/services/product";
-import {Skeleton} from "@/components/ui/skeleton";
 import ProductSkeleton from "@/components/shared/skelton/productSkeleton";
-import {getProductPreData} from "@/services/company";
 
 function CompanyForms({slug, preData}) {
 
