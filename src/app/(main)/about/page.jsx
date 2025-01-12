@@ -6,96 +6,101 @@ import leftWaterMark from "@/assets/about-water-mark-left.png";
 import rightWaterMark from "@/assets/about-water-mark-right.png";
 import ContactTeamCard from "@/app/(main)/contact/_contact-team-card";
 import Team1 from "@/assets/team1.jpg";
-import React from "react";
-import {getTeams} from "@/services/contact";
+import React, {Suspense} from "react";
+import {getAbout, getTeams} from "@/services/contact";
+import {GlobalSkeleton} from "@/components/shared/skelton/globalSkeleton";
 
 const About = async() => {
 
     let teamsData = [];
+    let aboutData = null;
 
     try {
-        teamsData = await getTeams();
-        console.log(teamsData, "get teamsData");
+        const [aboutResponse, teamsResponse] = await Promise.all([getAbout(), getTeams()]);
+        aboutData = aboutResponse;
+        teamsData = teamsResponse;
     } catch (error) {
-        console.error("Error fetching teamsData:", error);
+        console.error("Error fetching:", error);
         teamsData = [];
     }
 
   return (
     <>
-      <Section className={"bg-gray-50"}>
-        <div className="">
-          {/* Heading part */}
-          <h1 className="text-center">About Textile Network</h1>
-          {/* sub titel part */}
-          <p className="text-base md:text-[20px] md:leading-[30px] text-center text-gray-600 pt-2 md:pt-[30px]">
-            Textile Network is an apparel and textile industry-based business
-            networking platform. Our goal is to create a textile business
-            networking platform that can help develop business networks in any
-            range of related industries. The service area is to grow business
-            awareness, branding, and digital sourcing solutions for the apparel
-            and textile business globally.
-          </p>
-          <div className="py-8 md:py-12 lg:py-16">
-            <div className="grid grid-cols-3 gap-[15px] md:items-center md:grid-cols-5 md:gap-8 ">
-              <CounterUp
-                endValue={10}
-                duration={2000}
-                role={"Partners"}
-                endfix={"+"}
-                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
-              />
-              <CounterUp
-                endValue={6}
-                duration={2000}
-                role={"Countries"}
-                endfix={"+"}
-                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
-              />
-              <CounterUp
-                endValue={70}
-                duration={2000}
-                role={"Listed Business"}
-                endfix={"+"}
-                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
-              />
-              <CounterUp
-                endValue={10}
-                duration={2000}
-                role={"Factory People"}
-                endfix={"k+"}
-                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
-              />
-              <CounterUp
-                endValue={300}
-                duration={2000}
-                role={"Global Audiences"}
-                endfix={"k+"}
-                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
-              />
-            </div>
-          </div>
+        <Suspense fallback={<GlobalSkeleton />}>
+            <Section className={"bg-gray-50"}>
+                <div className="">
+                    {/* Heading part */}
+                    <h1 className="text-center">About Textile Network</h1>
+                    {/* sub titel part */}
+                    <div className="text-base md:text-[20px] md:leading-[30px] text-center text-gray-600 pt-2 md:pt-[30px]"
+                         dangerouslySetInnerHTML={{__html: aboutData?.description}}
+                    >
+                    </div>
+                    <div className="py-8 md:py-12 lg:py-16">
+                        <div className="grid grid-cols-3 gap-[15px] md:items-center md:grid-cols-5 md:gap-8 ">
+                            {aboutData?.partners &&(
+                            <CounterUp
+                                endValue={parseInt(aboutData?.partners, 10)}
+                                duration={2000}
+                                role={"Partners"}
+                                endfix={"+"}
+                                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
+                            />)}
+                            {aboutData?.countries &&(
+                            <CounterUp
+                                endValue={parseInt(aboutData?.countries, 10)}
+                                duration={2000}
+                                role={"Countries"}
+                                endfix={"+"}
+                                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
+                            />)}
+                            {aboutData?.listed_business &&(
+                            <CounterUp
+                                endValue={parseInt(aboutData?.listed_business, 10)}
+                                duration={2000}
+                                role={"Listed Business"}
+                                endfix={"+"}
+                                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
+                            />)}
+                            {aboutData?.factory_people &&(
+                            <CounterUp
+                                endValue={parseInt(aboutData?.factory_people, 10)}
+                                duration={2000}
+                                role={"Factory People"}
+                                endfix={"k+"}
+                                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
+                            />)}
+                            {aboutData?.global_audience &&(
+                            <CounterUp
+                                endValue={parseInt(aboutData?.global_audience, 10)}
+                                duration={2000}
+                                role={"Global Audiences"}
+                                endfix={"k+"}
+                                numberFontSize="text-xl sm:text-[30px] md:text-[40px] 2xl:text-[60px]"
+                            />)}
+                        </div>
+                    </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <AboutUsCard
-              title={"Our Mission"}
-              description={
-                "To create sustainable sourcing and business transparency network for the apparel & textile industry globally. To create sustainable sourcing and business transparency network for the apparel & textile industry globally."
-              }
-              image={leftWaterMark}
-              leftTopPosition
-            />
-
-            <AboutUsCard
-              title={"Our Vision"}
-              description={
-                "To revolutionize the apparel and textile industry by providing a comprehensive business networking platform and empowering businesses in the apparel and textile sector to expand business networks, drive success, and make a significant sustainable business impact in global scale."
-              }
-              image={rightWaterMark}
-            />
-          </div>
-        </div>
-      </Section>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        {aboutData?.mission &&
+                        <AboutUsCard
+                            title={"Our Mission"}
+                            description={aboutData?.mission}
+                            image={leftWaterMark}
+                            leftTopPosition
+                        />}
+                        {aboutData?.vision &&
+                        <AboutUsCard
+                            title={"Our Vision"}
+                            description={
+                                aboutData?.vision
+                            }
+                            image={rightWaterMark}
+                        />}
+                    </div>
+                </div>
+            </Section>
+        </Suspense>
       <Section>
         <h2 className="text-[24px] lg:text-3xl leading-tight text-center text-gray-900">
           Market Share

@@ -3,7 +3,7 @@ import Button from "@/components/shared/button";
 import Link from "next/link";
 import CounterUp from "./counter-up";
 
-const Counter = () => {
+const Counter = ({homeStats}) => {
   return (
     <Section>
       <div className="flex items-center justify-center flex-col md:flex-row md:justify-between">
@@ -29,31 +29,31 @@ const Counter = () => {
         {/* right */}
         <div className="grid grid-cols-3 mt-8 md:items-center md:max-w-[692px] gap-[15px]">
           <CounterUp
-            endValue={12}
+            endValue={homeStats?.partners}
             duration={2000}
             role={"Partners"}
             endfix={"+"}
           />
           <CounterUp
-            endValue={7}
+            endValue={homeStats?.countries}
             duration={2000}
             role={"Countries"}
             endfix={"+"}
           />
           <CounterUp
-            endValue={9000}
+            endValue={homeStats?.factory_people}
             duration={2000}
             role={"Professionals Connected"}
             endfix={"+"}
           />
           <CounterUp
-            endValue={300000}
+            endValue={homeStats?.global_audience}
             duration={2000}
             role={"Global Audiences"}
             endfix={"+"}
           />
           <CounterUp
-            endValue={80}
+            endValue={homeStats?.listed_business}
             duration={2000}
             role={"Business"}
             endfix={"+"}

@@ -14,6 +14,7 @@ import SelectedOptions from "@/app/(main)/company/components/selectedOptions";
 import TextAnimator from "@/components/hero/text-animatior";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+
 const CompanyList = () => {
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
@@ -76,12 +77,16 @@ const CompanyList = () => {
     if (page > pagination.last_page || loadingCompanies) return;
     setLoading(true);
     setLoadingCompanies(true);
+    const session = await getSession();
+    const token = session?.accessToken;
     try {
       const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
             body: JSON.stringify(filters),
           }
       );
