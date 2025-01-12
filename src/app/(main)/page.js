@@ -27,11 +27,18 @@ export default async function Home() {
     const categories = details?.categories || [];
     const locations = details?.locations || [];
     const webAds = details?.webAds || [];
+    const homeStats = {
+        partners: details?.about?.partners || "",
+        countries: details?.about?.countries || "",
+        listed_business: details?.about?.listed_business || "",
+        factory_people: details?.about?.factory_people || "",
+        global_audience: details?.about?.global_audience || "",
+    };
 
     return (
         <Suspense fallback={<GlobalSkeleton />}>
             <Hero categories={categories} locations={locations} />
-            <Counter />
+            <Counter homeStats={homeStats} />
             <Fragment>
                 {webAds && Array.isArray(webAds) && webAds.length > 0 ? (
                     <SocialSlider webAds={webAds} />
