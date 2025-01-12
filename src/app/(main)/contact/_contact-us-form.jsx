@@ -40,7 +40,7 @@ const formSchema = z.object({
     countryCode: z.string().optional(),
     phoneNumber: z.string().optional(),
     message: z.string().optional(),
-    interest: z.array(z.string()).optional(),
+    interest: z.string().optional(),
 });
 
 // Input style
@@ -62,7 +62,7 @@ function ContactUsForm() {
             countryCode: "US",
             phoneNumber: "",
             message: "",
-            interest: [],
+            interest: "",
         },
     });
 
@@ -72,7 +72,7 @@ function ContactUsForm() {
         const message = data?.message;
         const name = `${data.fname} ${data.lname}`.trim();
         const phone = `${data.countryCode}-${data.phoneNumber}`.trim();
-        const interests = data.interest.join(", ");
+        const interests = data.interest;
         // Return the modified data
         return {
             company_name,
