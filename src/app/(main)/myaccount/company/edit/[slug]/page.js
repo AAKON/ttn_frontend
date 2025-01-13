@@ -1,12 +1,7 @@
-import { EditIcon, ViewAs } from "@/icons";
+import { ViewAs } from "@/icons";
 import { Container } from "@/shared";
 import Button from "@/components/shared/button";
 import React, { Suspense } from "react";
-import profile_pic from "@/assets/profile-pic.png";
-import ProductsForm from "./_components/products-form";
-import ContactWithBusinessOwner from "./_components/contact-with-business-owner";
-import AvailableProducts from "./_components/available-products";
-import EditTabs from "./_components/tabs";
 import { getCompanyBasic, getDataPreBasic } from "@/services/company";
 import ErrorMessage from "@/components/shared/errormessage";
 import CompanyBasicForm from "./_components/company-form";

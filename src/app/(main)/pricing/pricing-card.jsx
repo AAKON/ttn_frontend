@@ -44,19 +44,19 @@ const PricingCard = ({ tabData }) => {
           ))}
 
           {/* Show the content when isOpen is true */}
-          <div className="flex justify-end">
-            <span
-              onClick={toggleAccordion}
-              className="font-semibold text-md pl-2 text-blue cursor-pointer inline-flex gap-2 items-center justify-end"
-            >
-              {isOpen ? "Less" : "See More"}
-              {
-                <span className={isOpen ? "rotate-180" : ""}>
-                  <ChevronDownIcon stroke="#C67618" />
-                </span>
-              }
-            </span>
-          </div>
+          {/*<div className="flex justify-end">*/}
+          {/*  <span*/}
+          {/*    onClick={toggleAccordion}*/}
+          {/*    className="font-semibold text-md pl-2 text-blue cursor-pointer inline-flex gap-2 items-center justify-end"*/}
+          {/*  >*/}
+          {/*    {isOpen ? "Less" : "See More"}*/}
+          {/*    {*/}
+          {/*      <span className={isOpen ? "rotate-180" : ""}>*/}
+          {/*        <ChevronDownIcon stroke="#C67618" />*/}
+          {/*      </span>*/}
+          {/*    }*/}
+          {/*  </span>*/}
+          {/*</div>*/}
         </div>
 
         <div className="lg:hidden">
