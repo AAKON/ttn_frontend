@@ -45,7 +45,7 @@ export default function FilterAccordion({
           </p>
           <Select
             onValueChange={(value) =>
-              onFilterChange("locationIds", value, true)
+              onFilterChange("locationId", value, true)
             }
           >
             <SelectTrigger className=" bg-gray-50 text-black font-semibold py-3 px-[18px] outline-none rounded-[8px] border-gray-200 focus:outline-none focus:ring-0 focus:ring-offset-0">
@@ -148,26 +148,26 @@ export default function FilterAccordion({
             <AccordionContent className="space-y-4">
               {filterOptions &&
                 filterOptions?.certificates &&
-                filterOptions?.certificates.map((compliance) => (
-                  <div className="grid grid-cols-1" key={compliance.id}>
+                filterOptions?.certificates.map((certificate) => (
+                  <div className="grid grid-cols-1" key={certificate.id}>
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id={`compliance-${compliance.id}`}
+                        id={`certificate-${certificate.id}`}
                         className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
-                        checked={filters.complianceIds.includes(compliance.id)}
+                        checked={filters.certificateIds.includes(certificate.id)}
                         onCheckedChange={(isChecked) =>
                           onFilterChange(
-                            "complianceIds",
-                            compliance.id,
+                            "certificateIds",
+                            certificate.id,
                             isChecked
                           )
                         }
                       />
                       <label
-                        htmlFor={`compliance-${compliance.id}`}
+                        htmlFor={`certificate-${certificate.id}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
                       >
-                        {compliance.name}
+                        {certificate.name}
                       </label>
                     </div>
                   </div>

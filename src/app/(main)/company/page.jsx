@@ -25,13 +25,13 @@ const CompanyList = () => {
 
   // Extract query parameters
   const businessCategoryIds = searchParams.get("businessCategoryIds");
-  const locationIds = searchParams.get("locationIds");
+  const locationId = searchParams.get("locationIds");
   const keyword = searchParams.get("keyword");
 
   const initialFilters = {
-    locationIds: locationIds ? [parseInt(locationIds, 10)] : [],
+    locationId: locationId ? parseInt(locationId, 10) : null,
     manpower: [],
-    complianceIds: [],
+    certificateIds: [],
     businessCategoryIds: businessCategoryIds
       ? [parseInt(businessCategoryIds, 10)]
       : [],
@@ -71,7 +71,7 @@ const CompanyList = () => {
   }, []);
 
   const categories = filterOptions?.business_categories || [];
-  const locations = filterOptions?.locations || [];
+  const locations = filterOptions?.locations || null;
 
   const fetchCompanies = async (page) => {
     if (page > pagination.last_page || loadingCompanies) return;
@@ -127,8 +127,8 @@ const CompanyList = () => {
       if (id === "all" || (!isNaN(id) === false && key !== "manpower")) {
         updatedFilters[key] = [];
       }else {
-        if (key === "locationIds") {
-          updatedFilters[key] = isChecked ? [id] : [];
+        if (key === "locationId") {
+          updatedFilters[key] = isChecked ? id : null;
         } else {
           if (isChecked) {
             updatedFilters[key] = [...(updatedFilters[key] || []), id];
@@ -147,12 +147,12 @@ const CompanyList = () => {
 
     setFilters((prevFilters) => {
       const businessCategoryIds = isNaN(data.businessCategoryIds) ? [] : [data.businessCategoryIds];
-      const locationIds = isNaN(data.locationIds) ? [] : [data.locationIds];
+      const locationId = isNaN(data.locationId) ? [] : [data.locationId];
       return {
         ...prevFilters,
         ...data,
         businessCategoryIds: businessCategoryIds,
-        locationIds: locationIds,
+        locationId: locationId,
         keyword: data.keyword,
       };
     });
@@ -184,39 +184,34 @@ const CompanyList = () => {
     }
 
     // Map locationIds
-    if (filters.locationIds.length > 0) {
-      const selectedLocations = filters.locationIds
-        .map((id) => {
-          const location = filterOptions?.locations?.find(
-            (loc) => loc.id === id
-          );
-          return location ? { id, name: location.name } : null;
-        })
-        .filter(Boolean);
-
-      selected.push(
-        ...selectedLocations.map(({ id, name }) => ({
-          key: "locationIds",
-          id,
-          name,
-        }))
+    if (filters.locationId) {
+      const location = filterOptions?.locations?.find(
+          (loc) => loc.id === filters.locationId
       );
+
+      if (location) {
+        selected.push({
+          key: "locationId",
+          id: location.id,
+          name: location.name,
+        });
+      }
     }
 
     // Map complianceIds
-    if (filters.complianceIds.length > 0) {
-      const selectedCompliance = filters.complianceIds
+    if (filters.certificateIds.length > 0) {
+      const selectedCertificate = filters.certificateIds
         .map((id) => {
-          const compliance = filterOptions?.compliances?.find(
+          const certificate = filterOptions?.certificateIds?.find(
             (comp) => comp.id === id
           );
-          return compliance ? { id, name: compliance.name } : null;
+          return certificate ? { id, name: certificate.name } : null;
         })
         .filter(Boolean);
 
       selected.push(
-        ...selectedCompliance.map(({ id, name }) => ({
-          key: "complianceIds",
+        ...selectedCertificate.map(({ id, name }) => ({
+          key: "certificateIds",
           id,
           name,
         }))
