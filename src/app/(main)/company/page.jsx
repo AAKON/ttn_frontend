@@ -1,9 +1,9 @@
 "use client";
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
-import React, {Suspense, useEffect, useRef, useState} from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {getSession} from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
@@ -13,7 +13,6 @@ import HeroCompanyForm from "@/components/hero/hero-company";
 import SelectedOptions from "@/app/(main)/company/components/selectedOptions";
 import TextAnimator from "@/components/hero/text-animatior";
 import InfiniteScroll from "react-infinite-scroll-component";
-
 
 const CompanyList = () => {
   const [view, setView] = useState("grid");
@@ -81,14 +80,15 @@ const CompanyList = () => {
     const token = session?.accessToken;
     try {
       const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(filters),
-          }
+        `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(filters),
+        }
       );
       const data = await response.json();
       if (data && data?.data) {
@@ -100,7 +100,7 @@ const CompanyList = () => {
       console.error("Error fetching companies:", error);
     } finally {
       setLoading(false);
-      setLoadingCompanies(false)
+      setLoadingCompanies(false);
     }
   };
 
@@ -120,13 +120,12 @@ const CompanyList = () => {
     }, 2000); // 2 seconds delay
   };
 
-
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
       if (id === "all" || (!isNaN(id) === false && key !== "manpower")) {
         updatedFilters[key] = [];
-      }else {
+      } else {
         if (key === "locationId") {
           updatedFilters[key] = isChecked ? id : null;
         } else {
@@ -134,7 +133,7 @@ const CompanyList = () => {
             updatedFilters[key] = [...(updatedFilters[key] || []), id];
           } else {
             updatedFilters[key] = updatedFilters[key].filter(
-                (item) => item !== id
+              (item) => item !== id
             );
           }
         }
@@ -144,9 +143,10 @@ const CompanyList = () => {
   };
 
   const handleSearchSubmit = (data) => {
-
     setFilters((prevFilters) => {
-      const businessCategoryIds = isNaN(data.businessCategoryIds) ? [] : [data.businessCategoryIds];
+      const businessCategoryIds = isNaN(data.businessCategoryIds)
+        ? []
+        : [data.businessCategoryIds];
       const locationId = isNaN(data.locationId) ? [] : [data.locationId];
       return {
         ...prevFilters,
@@ -157,7 +157,6 @@ const CompanyList = () => {
       };
     });
   };
-
 
   // display selected options functions
   const getSelectedOptions = () => {
@@ -186,7 +185,7 @@ const CompanyList = () => {
     // Map locationIds
     if (filters.locationId) {
       const location = filterOptions?.locations?.find(
-          (loc) => loc.id === filters.locationId
+        (loc) => loc.id === filters.locationId
       );
 
       if (location) {
@@ -304,7 +303,7 @@ const CompanyList = () => {
               <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
                 Search Results: <span>{resultsCount}</span> Results found
               </h3>
-              <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
+              <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 lg:flex items-center justify-center gap-1 ">
                 <span
                   className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
                     view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
@@ -336,41 +335,41 @@ const CompanyList = () => {
               selectedOptions={getSelectedOptions()}
               onRemove={handleRemoveFilter}
             />
-              {loading && <FilterCardSkeleton /> }
+            {loading && <FilterCardSkeleton />}
             <InfiniteScroll
-                dataLength={companies.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                loader={<FilterCardSkeleton />}
-                endMessage={
-                  <p className="text-center text-lg text-gray-500 mt-10">No more results</p>
-                }
-                scrollThreshold={.1}
+              dataLength={companies.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<FilterCardSkeleton />}
+              endMessage={
+                <p className="text-center text-lg text-gray-500 mt-10">
+                  No more results
+                </p>
+              }
+              scrollThreshold={0.1}
             >
               <div
-                  className={`mt-8 grid gap-3 lg:gap-8 ${
-                      view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
-                  }`}
+                className={`mt-8 grid gap-3 lg:gap-8 ${
+                  view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+                }`}
               >
-                {Array.isArray(companies) && companies?.length > 0 && companies?.map((company, index) => (
-                    <CompanyCardFilter
-                        key={index}
-                        company={company}
-                    />
-                ))}
+                {Array.isArray(companies) &&
+                  companies?.length > 0 &&
+                  companies?.map((company, index) => (
+                    <CompanyCardFilter key={index} company={company} />
+                  ))}
               </div>
             </InfiniteScroll>
+          </div>
         </div>
-      </div>
-    </Section>
-</>
-)
-  ;
+      </Section>
+    </>
+  );
 };
 
 const Company = () => (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CompanyList />
+  <Suspense fallback={<div>Loading...</div>}>
+    <CompanyList />
   </Suspense>
 );
 
