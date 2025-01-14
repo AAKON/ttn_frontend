@@ -276,14 +276,19 @@ const CompanyList = () => {
               locations={locations}
               keyword={filters.keyword}
               onSearchSubmit={handleSearchSubmit}
+              //Only for mobile filter
+              filterOptions={filterOptions}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onResetFilter={resetFilterSelection}
             />
           </div>
         </div>
       </Section>
 
       <Section>
-        <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] xl:grid-cols-[336px_1fr] gap-8">
-          <div className="relative">
+        <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] xl:grid-cols-[336px_1fr] gap-8">
+          <div className="hidden lg:block relative">
             {filterOptionLoading ? (
               <AccordionSkeleton />
             ) : (
@@ -303,7 +308,7 @@ const CompanyList = () => {
               <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
                 Search Results: <span>{resultsCount}</span> Results found
               </h3>
-              <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 lg:flex items-center justify-center gap-1 ">
+              <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
                 <span
                   className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
                     view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
@@ -350,7 +355,7 @@ const CompanyList = () => {
             >
               <div
                 className={`mt-8 grid gap-3 lg:gap-8 ${
-                  view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+                  view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
                 }`}
               >
                 {Array.isArray(companies) &&
