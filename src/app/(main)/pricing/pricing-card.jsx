@@ -6,6 +6,7 @@ import {
   CheckMarkIcon,
 } from "@/components/icons";
 import Button from "@/components/shared/button";
+import Link from "next/link";
 import { useState } from "react";
 
 const PricingCard = ({ tabData }) => {
@@ -22,16 +23,21 @@ const PricingCard = ({ tabData }) => {
       <div className="max-w-[550px]">
         <p className="font-semibold text-gray-900 pt-6">Key Benefits</p>
         <div className="grid grid-cols-1">
-          {benefits && Array.isArray(benefits) && benefits.length > 0 && benefits?.map((item, index) => (
-            <BenefitList key={index} text={item} />
-          ))}
+          {benefits &&
+            Array.isArray(benefits) &&
+            benefits.length > 0 &&
+            benefits?.map((item, index) => (
+              <BenefitList key={index} text={item} />
+            ))}
         </div>
 
         <div className="hidden lg:block">
           <p className="font-medium text-base lg:text-lg text-gray-900 pt-8 pb-12">
             {bt_short_text ? bt_short_text : ""}
           </p>
-          <Button>Contact us</Button>
+          <Button TagName={Link} href="/contact" className="inline-flex">
+            Contact us
+          </Button>
         </div>
       </div>
 
@@ -39,9 +45,12 @@ const PricingCard = ({ tabData }) => {
       <div className="max-w-[550px] relative">
         <p className="font-semibold text-gray-900 pt-5">Services you get</p>
         <div className="grid grid-cols-1">
-          {services && Array.isArray(services) && services.length > 0 && services?.map((item, index) => (
-            <ServicesList key={index} text={item} />
-          ))}
+          {services &&
+            Array.isArray(services) &&
+            services.length > 0 &&
+            services?.map((item, index) => (
+              <ServicesList key={index} text={item} />
+            ))}
 
           {/* Show the content when isOpen is true */}
           {/*<div className="flex justify-end">*/}
