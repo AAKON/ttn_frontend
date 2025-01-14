@@ -83,17 +83,17 @@ const CompanyCardFilter = ({ company }) => {
         </CardHeader>
 
         {/* 1st btn start */}
-        {company?.compliances &&
-          Array.isArray(company?.compliances) &&
-          company?.compliances.length > 0 && (
+        {company?.businessTypes &&
+          Array.isArray(company?.businessTypes) &&
+          company?.businessTypes.length > 0 && (
             <CardContent className="flex gap-x-2 mr-2 w-full">
-              {company?.compliances.map((compliance) => (
+              {company?.businessTypes.map((type, index) => (
                 <Button
                   secondary
-                  className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-                  key={compliance.id}
+                  className="!border-gray-500 !h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
+                  key={index}
                 >
-                  {compliance?.name}
+                  {type}
                 </Button>
               ))}
             </CardContent>
