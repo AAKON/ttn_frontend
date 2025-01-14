@@ -20,7 +20,7 @@ const CompanyCard = ({ item }) => {
           objectFit="cover"
         />
       </div>
-      <h4 className="pt-8 pb-2 font-semibold text-base lg:text-lg 2xl:text-xl text-gray-900 line-clamp-1">
+      <h4 className="pt-8 mb-2 font-semibold text-base lg:text-lg 2xl:text-xl leading-[32px] text-gray-900 line-clamp-1">
         {name}
       </h4>
 
