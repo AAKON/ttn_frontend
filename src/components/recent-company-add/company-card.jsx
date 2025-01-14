@@ -6,7 +6,7 @@ import tag from "@/assets/tag.svg";
 import Link from "next/link";
 
 const CompanyCard = ({ item }) => {
-  const { name, thumbnail_url, about, slug, location, businessCategory } = item;
+  const { name, thumbnail_url, about, slug, location, businessCategories } = item;
   return (
     <div className="h-full py-8 px-4 2xl:py-10 2xl:px-6 text-center bg-white rounded-2xl shadow-card-shadow">
       <div className="size-[100px] md:size-[140px] rounded-full overflow-hidden flex items-center justify-center border-4 border-brand-500 mx-auto">
@@ -23,13 +23,13 @@ const CompanyCard = ({ item }) => {
       <h4 className="pt-8 mb-2 font-semibold text-base lg:text-lg 2xl:text-xl leading-[32px] text-gray-900 line-clamp-1">
         {name}
       </h4>
-
+        {businessCategories && Array.isArray(businessCategories) && businessCategories.length > 0 ?
       <div className="flex items-center justify-center text-center gap-x-2">
         <Image className="w-[16px]" src={tag} alt="tag Icon" />
         <span className="font-normal text-sm text-gray-600 text-left line-clamp-1">
-          {businessCategory?.name}
+          {businessCategories[0]?.name}
         </span>
-      </div>
+      </div> : <div className="h-5"></div>}
       <div className="flex items-center justify-center text-center gap-x-2">
         <Image className="w-[16px]" src={loc} alt="Location Icon" />
         <span className="font-normal text-sm text-gray-600 text-left line-clamp-1">
