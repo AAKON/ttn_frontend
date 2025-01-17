@@ -86,7 +86,7 @@ const CompanyCardFilter = ({ company }) => {
         {company?.businessTypes &&
           Array.isArray(company?.businessTypes) &&
           company?.businessTypes.length > 0 && (
-            <CardContent className="flex gap-x-2 mr-2 w-full">
+            <CardContent className="flex flex-wrap gap-2 mr-2 w-full">
               {company?.businessTypes.map((type, index) => (
                 <Button
                   secondary
