@@ -72,6 +72,8 @@ const CompanyList = () => {
   const categories = filterOptions?.business_categories || [];
   const locations = filterOptions?.locations || null;
 
+  console.log(filterOptions, 'get filterOptions');
+
   const fetchCompanies = async (page) => {
     if (page > pagination.last_page || loadingCompanies) return;
     setLoading(true);
@@ -117,7 +119,7 @@ const CompanyList = () => {
       if (!loadingCompanies && hasMore) {
         fetchCompanies(pagination.current_page + 1);
       }
-    }, 2000); // 2 seconds delay
+    }, 1000); // 1 seconds delay
   };
 
   const handleFilterChange = (key, id, isChecked) => {
@@ -162,11 +164,13 @@ const CompanyList = () => {
   const getSelectedOptions = () => {
     const selected = [];
 
+    console.log(filters, 'get selected filters');
+
     // Map businessCategoryIds
     if (filters.businessCategoryIds.length > 0) {
       const selectedCategories = filters.businessCategoryIds
         .map((id) => {
-          const category = filterOptions?.categories?.find(
+          const category = filterOptions?.business_categories?.find(
             (cat) => cat.id === id
           );
           return category ? { id, name: category.name } : null;
@@ -179,6 +183,26 @@ const CompanyList = () => {
           id,
           name,
         }))
+      );
+    }
+
+    // Map business types
+    if (filters.businessTypeIds.length > 0) {
+      const selectedBtypes = filters.businessTypeIds
+          .map((id) => {
+            const type = filterOptions?.business_types?.find(
+                (cat) => cat.id === id
+            );
+            return type ? { id, name: type.name } : null;
+          })
+          .filter(Boolean);
+
+      selected.push(
+          ...selectedBtypes.map(({ id, name }) => ({
+            key: "businessTypeIds",
+            id,
+            name,
+          }))
       );
     }
 
@@ -201,7 +225,7 @@ const CompanyList = () => {
     if (filters.certificateIds.length > 0) {
       const selectedCertificate = filters.certificateIds
         .map((id) => {
-          const certificate = filterOptions?.certificateIds?.find(
+          const certificate = filterOptions?.certificates?.find(
             (comp) => comp.id === id
           );
           return certificate ? { id, name: certificate.name } : null;
@@ -236,13 +260,17 @@ const CompanyList = () => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
 
-      if (key === "manpower") {
+      if (key === "locationId") {
+        if (updatedFilters[key] === id) {
+          updatedFilters[key] = null;
+        }
+      } else if (key === "manpower") {
         updatedFilters[key] = updatedFilters[key].filter(
-          (value) => value !== id
+            (value) => value !== id
         );
       } else {
         updatedFilters[key] = updatedFilters[key].filter(
-          (itemId) => itemId !== id
+            (itemId) => itemId !== id
         );
       }
 
@@ -351,7 +379,7 @@ const CompanyList = () => {
                   No more results
                 </p>
               }
-              scrollThreshold={0.1}
+              scrollThreshold={0.5}
             >
               <div
                 className={`mt-8 grid gap-3 lg:gap-8 ${
