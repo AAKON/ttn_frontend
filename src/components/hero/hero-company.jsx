@@ -110,7 +110,7 @@ export default function HeroCompanyForm({
                       defaultValue={filters?.businessCategoryIds?.toString()}
                     >
                       <FormControl>
-                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
                           <SelectValue placeholder="All Categories" />
                         </SelectTrigger>
                       </FormControl>
