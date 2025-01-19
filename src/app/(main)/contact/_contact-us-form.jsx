@@ -1,9 +1,9 @@
 "use client";
+import 'react-phone-input-2/lib/style.css'
 import {Loader2} from "lucide-react";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-
 import Button from "@/components/shared/button";
 import {
     Form,
@@ -30,6 +30,7 @@ import React, {useState} from "react";
 import {useToast} from "@/hooks/use-toast";
 import {Label} from "@/components/ui/label";
 import {submitContactForm} from "@/services/contact/submitForm";
+import PhoneInput from "react-phone-input-2";
 
 // Define the schema with Zod
 const formSchema = z.object({
@@ -37,8 +38,7 @@ const formSchema = z.object({
     fname: z.string().optional(),
     lname: z.string().optional(),
     email: z.string().email({message: "Invalid email address."}),
-    countryCode: z.string().optional(),
-    phoneNumber: z.string().optional(),
+    phone: z.string().optional(),
     message: z.string().optional(),
     interest: z.string().optional(),
 });
@@ -59,19 +59,20 @@ function ContactUsForm() {
             fname: "",
             lname: "",
             email: "",
-            countryCode: "US",
-            phoneNumber: "",
+            phone: "",
             message: "",
             interest: "",
         },
     });
+
+    const { reset, setValue, formState: { errors } } = form;
 
     const modifyFormData = (data) => {
         const company_name = data?.company_name;
         const email = data?.email;
         const message = data?.message;
         const name = `${data.fname} ${data.lname}`.trim();
-        const phone = `${data.countryCode}-${data.phoneNumber}`.trim();
+        const phone = data.phone;
         const interests = data.interest;
         // Return the modified data
         return {
@@ -91,7 +92,7 @@ function ContactUsForm() {
         try {
             const result = await submitContactForm(modifiedFormData, toast);
             if (result?.status && result?.code === 200) {
-                form.reset();
+                reset();
             } else {
                 console.log("Error in form submission:", result?.message);
             }
@@ -229,72 +230,21 @@ function ContactUsForm() {
                 />
 
                 {/* Phone Number */}
-                <FormField
-                    control={form.control}
-                    name="countryCode"
-                    render={({field}) => (
-                        <FormItem>
-                            <FormLabel className={formLabelClasses}>Phone Number</FormLabel>
-                            <div className="grid grid-cols-[auto_1fr]">
-                                {/* Country Code Dropdown */}
-                                <Select
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger
-                                            className="rounded-tr-none rounded-br-none focus:ring-0 focus:ring-offset-0 focus:outline-0 border border-r-0 border-gray-200 text-gray-500 text-base font-normal">
-                                            <SelectValue placeholder="Select"/>
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem
-                                            className={"text-bass !text-gray-900"}
-                                            value="US"
-                                        >
-                                            US
-                                        </SelectItem>
-                                        <SelectItem
-                                            className={"text-bass !text-gray-900"}
-                                            value="CA"
-                                        >
-                                            CA
-                                        </SelectItem>
-                                        <SelectItem
-                                            className={"text-bass !text-gray-900"}
-                                            value="GB"
-                                        >
-                                            GB
-                                        </SelectItem>
-                                        <SelectItem
-                                            className={"text-bass !text-gray-900"}
-                                            value="BD"
-                                        >
-                                            BD
-                                        </SelectItem>
-                                        {/* Add more countries as needed */}
-                                    </SelectContent>
-                                </Select>
-
-                                {/* Phone Number Input */}
-                                <FormField
-                                    control={form.control}
-                                    name="phoneNumber"
-                                    render={({field}) => (
-                                        <FormControl className="flex-1">
-                                            <Input
-                                                className={`!border-l-0 !rounded-tl-none !rounded-bl-none ${inputClasses}`}
-                                                placeholder="+880 1234567890"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                    )}
-                                />
-                            </div>
-                            <FormMessage/>
-                        </FormItem>
+                <div className="space-y-2">
+                    <label className="block text-sm text-gray-900 font-normal mb-3">
+                        Phone Number
+                    </label>
+                    <PhoneInput
+                        country={"us"}
+                        enableSearch={true}
+                        onChange={(value) => setValue("phone", value)}
+                        inputClass="!bg-background !w-full !h-10 !border-gray-200 !rounded-md"
+                        buttonClass="bg-gray-50 !h-10 !border-gray-200 !rounded-l-md"
+                    />
+                    {errors.phone && (
+                        <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>
                     )}
-                />
+                </div>
 
                 {/* Message */}
                 <FormField

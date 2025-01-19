@@ -37,7 +37,7 @@ const TabComponents = () => {
             setCurrentTab(value);
             window.location.hash = value; // Update the URL hash when a tab is clicked
           }}
-        className="profile-tabs w-full overflow-hidden"
+        className="profile-tabs w-full"
       >
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
           <TabsTrigger

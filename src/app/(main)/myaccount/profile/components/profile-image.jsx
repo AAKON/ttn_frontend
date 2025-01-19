@@ -46,11 +46,11 @@ const ProfileImage = ({ onImageChange, initialImage }) => {
         </div>
       </div>
       <span
-        className="cursor-pointer text-gray-600 flex items-center gap-2 font-bold"
+        className="cursor-pointer text-gray-600 flex items-center gap-1.5 font-bold"
         onClick={() => document.getElementById("fileInput").click()}
       >
         <EditIcon width={20} height={20} stroke="#475467" />
-        Change profile picture
+        Change
         <input
           type="file"
           accept="image/*"
