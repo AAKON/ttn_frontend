@@ -56,6 +56,7 @@ import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxi
 import React from "react";
 import MarketShareChart from "@/app/(main)/company/[slug]/components/marketShareChart";
 import {getDataPreOverview} from "@/services/company";
+import LocationPicker from "@/app/(main)/myaccount/company/edit/[slug]/_components/location-picker";
 
 async function CompanyTabs({ faqs, clients, overview, contactData, decissionMakers, certificatesData }) {
 
@@ -63,6 +64,8 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
   const preDataPromise = getDataPreOverview();
   const preData = await preDataPromise;
   const locationsData = preData?.locations || [];
+
+    const googleMapUrl = `https://www.google.com/maps?q=${contactData?.lat_long?.lat ?? '40.718625'},${contactData?.lat_long?.lng ?? '-74.035536'}&z=15&output=embed`;
 
   return (
     <div>
@@ -246,8 +249,13 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
 
                 <div className="w-full h-[280px] border-2 rounded-[16px] mt-6">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.170254395742!2d90.38000527589689!3d23.741307389124334!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b7a55cd36f%3A0xfcc5b021faff43ea!2sCreative%20IT%20Institute!5e0!3m2!1sen!2sbd!4v1731247486413!5m2!1sen!2sbd"
-                    className="w-full h-full"
+                      src={googleMapUrl}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      style={{border: 0}}
+                      width="100%"
+                      height="280"
                   ></iframe>
                 </div>
               </div>

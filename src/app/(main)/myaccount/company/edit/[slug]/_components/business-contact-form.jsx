@@ -67,8 +67,8 @@ const BusinessContactForm = ({ slug }) => {
       whatsapp: "",
       phone: "",
       website: "",
-        lat: "40.718625",
-        lng: "-74.035536",
+        lat: contactData?.lat_long?.lat ?? "40.718625",
+        lng: contactData?.lat_long?.lng ?? "-74.035536",
     },
   });
 
@@ -118,7 +118,8 @@ const BusinessContactForm = ({ slug }) => {
                 whatsapp,
                 address,
                 website,
-                lat_long
+                lat : lat_long?.lat ?? "40.718625",
+                lng : lat_long?.lng ?? "-74.035536",
             });
         }
     }, [contactData, reset]);
