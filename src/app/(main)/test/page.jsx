@@ -1,62 +1,105 @@
-"use client"
-import {Splide, SplideSlide} from '@splidejs/react-splide';
-import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
-import '@splidejs/react-splide/css/core';
+'use client'
+import {Button} from "@/components/ui/button"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
+import { z } from "zod"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import {toast} from "@/hooks/use-toast";
 
+const FormSchema = z.object({
+    email: z
+        .string({
+            required_error: "Please select an email to display.",
+        })
+        .email(),
+})
 
-const options = {
-    type   : "loop",
-    drag   : 'free',
-    focus  : 'center',
-    gap    : "30px",
-    arrows : false,
-    pagination : false,
-    perPage: 3,
-    padding: {left: '250px', right: '250px'},
-    autoScroll: {
-        speed: 1,
-    },
-    breakpoints: {
-        620: {
-            gap    : "12px",
-            perPage: 1,
-            padding: {left: '30px', right: '30px'},
-        },
-        768: {
-            padding: {left: '40px', right: '40px'},
-        },
-        1080: {
-            perPage: 2,
-            padding: {left: '100px', right: '100px'},
-        },
-        1440: {
-            perPage: 2,
-            padding: {left: '187px', right: '187px'},
-        },
-    },
-};
+export default function DialogDemo() {
 
-function ReviewSlide({ direction= "ltr"}) {
+    const form = useForm({
+        resolver: zodResolver(FormSchema)
+    });
+
+    function onSubmit(data) {
+        toast({
+            title: "You submitted the following values:",
+            description: (
+                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+            ),
+        })
+    }
+
     return (
-        <Splide options={{...options, direction }} extensions={{ AutoScroll }} className="overflow-y-visible">
-            {[1,2,3,4]?.map( (data, i) => (
-                <SplideSlide key={i} className="py-2 md:py-3 overflow-y-visible">
-                    <div className='border border-gray-300 p-4'>{data}</div>
-                </SplideSlide>
-            ) )}
-        </Splide>
-    )
+        <div className="p-14">
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="primary">Edit Profile</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Edit profile</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a verified email to display"/>
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="m@example.com">m@example.com</SelectItem>
+                                                    <SelectItem value="m@google.com">m@google.com</SelectItem>
+                                                    <SelectItem value="m@support.com">m@support.com</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage/>
+                                        </FormItem>
+                                    )}
+                                />
+                                <Button type="submit">Submit</Button>
+                            </form>
+                        </Form>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+)
 }
-
-const Reviews = () => {
-
-    return (
-        <section className="py-[60px] xl:py-[130px] overflow-x-hidden">
-            <div className="pt-[44px] md:pt-[65px]">
-                <ReviewSlide />
-            </div>
-        </section>
-    )
-}
-
-export default Reviews

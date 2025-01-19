@@ -2,7 +2,7 @@
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { getSession } from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
@@ -15,6 +15,7 @@ import TextAnimator from "@/components/hero/text-animatior";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const CompanyList = () => {
+  const router = useRouter();
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -55,7 +56,11 @@ const CompanyList = () => {
       setFilterOptionLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`,
+            {
+              next: { revalidate: 3600 }, // Revalidate every 1 hour
+              cache: "force-cache", // Use cached data
+            }
         );
         const data = await response.json();
         setFilterOptions(data.data);
@@ -83,6 +88,10 @@ const CompanyList = () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
+          {
+            next: { revalidate: 3600 }, // Revalidate every 1 hour
+            cache: "force-cache", // Use cached data
+          },
         {
           method: "POST",
           headers: {
@@ -122,6 +131,29 @@ const CompanyList = () => {
     }, 1000); // 1 seconds delay
   };
 
+  // Track when the filters change and update the URL params
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    console.log(filters.locationId, 'router params ========');
+
+    if (filters.locationId) {
+      params.set("locationIds", filters.locationId);
+    }
+    if (filters.businessCategoryIds.length > 0) {
+      params.set(
+          "businessCategoryIds",
+          filters.businessCategoryIds.join(",")
+      );
+    }
+    if (filters.keyword) {
+      params.set("keyword", filters.keyword);
+    }
+
+    // Update the URL using shallow routing
+    router.push(`/company?${params.toString()}`, undefined, { shallow: true });
+  }, [filters, router]); // Trigger this effect only when filters change
+
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
@@ -140,6 +172,7 @@ const CompanyList = () => {
           }
         }
       }
+
       return updatedFilters;
     });
   };
@@ -149,7 +182,7 @@ const CompanyList = () => {
       const businessCategoryIds = isNaN(data.businessCategoryIds)
         ? []
         : [data.businessCategoryIds];
-      const locationId = isNaN(data.locationId) ? [] : [data.locationId];
+      const locationId = isNaN(data.locationIds) ? null : data.locationIds;
       return {
         ...prevFilters,
         ...data,
@@ -163,8 +196,6 @@ const CompanyList = () => {
   // display selected options functions
   const getSelectedOptions = () => {
     const selected = [];
-
-    console.log(filters, 'get selected filters');
 
     // Map businessCategoryIds
     if (filters.businessCategoryIds.length > 0) {

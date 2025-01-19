@@ -37,16 +37,18 @@ export default function HeroCompanyForm({
   onFilterChange,
   onResetFilter,
 }) {
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessCategoryIds: "",
-      locationIds: "",
+      businessCategoryIds: filters?.businessCategoryIds,
+      locationIds: filters?.locationId,
       keyword: keyword ? keyword : "",
     },
   });
 
   const onSubmit = async (data) => {
+    console.log(data, 'submit data-=========')
     if (onSearchSubmit) {
       onSearchSubmit(data); // Pass form data to the parent handler
     }
@@ -105,6 +107,7 @@ export default function HeroCompanyForm({
                   <FormItem>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
+                      defaultValue={filters?.businessCategoryIds?.toString()}
                     >
                       <FormControl>
                         <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
@@ -140,6 +143,7 @@ export default function HeroCompanyForm({
                     <Select
                       className={className}
                       onValueChange={(value) => field.onChange(Number(value))}
+                      defaultValue={filters?.locationId?.toString()}
                     >
                       <SelectTrigger
                         className={`text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}

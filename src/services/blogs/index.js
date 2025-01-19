@@ -15,7 +15,9 @@ export async function getBlogs(key, keyword, page=1) {
     }
 
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 3600 },
+        cache: "force-cache",
     };
     const result = await apiRequest(endpoint, options);
     return result.data;
@@ -24,6 +26,8 @@ export async function getBlogs(key, keyword, page=1) {
 export async function getBlogTTNS() {
     const result = await apiRequest('blog/featured', {
         method: 'GET',
+        next: { revalidate: 3600 },
+        cache: "force-cache",
     });
     return result.data;
 }
@@ -31,6 +35,8 @@ export async function getBlogTTNS() {
 export async function getBlogTypes() {
     const result = await apiRequest('blog/types', {
         method: 'GET',
+        next: { revalidate: 3600 },
+        cache: "force-cache",
     });
     return result.data;
 }
@@ -38,7 +44,9 @@ export async function getBlogTypes() {
 export async function getBlogDetails(slug) {
     const endpoint = `blog/details/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 3600 },
+        cache: "force-cache",
     };
     const result = await apiRequest(endpoint, options);
     return result?.data?.blog;

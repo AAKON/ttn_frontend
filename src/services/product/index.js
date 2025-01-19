@@ -39,7 +39,8 @@ export async function getCompanyProducts(slug) {
 
     const endpoint = `my/company/${slug}/product`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;

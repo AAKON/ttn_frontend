@@ -47,6 +47,7 @@ export default function FilterAccordion({
             onValueChange={(value) =>
               onFilterChange("locationId", value, true)
             }
+            defaultValue={filters?.locationId}
           >
             <SelectTrigger className=" bg-gray-50 text-black font-semibold py-3 px-[18px] outline-none rounded-[8px] border-gray-200 focus:outline-none focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Anywhere" />
