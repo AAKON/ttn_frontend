@@ -22,6 +22,7 @@ import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import FileUploadPreview from "@/components/ui/file-upload-preview";
 import {toast} from "@/hooks/use-toast";
 import PhoneInput from 'react-phone-input-2'
+import ProfileImage from './profile-image';
 
 
 const formSchema = z.object({
@@ -103,7 +104,13 @@ const ProfileInfoForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex justify-start">
-          <FileUploadPreview
+          {/* <FileUploadPreview
+            onImageChange={({ file }) => {
+              setFileData(file);
+            }}
+            initialImage={profile?.profile_picture}
+          /> */}
+          <ProfileImage
             onImageChange={({ file }) => {
               setFileData(file);
             }}
