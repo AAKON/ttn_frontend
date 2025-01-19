@@ -1,14 +1,15 @@
 "use client";
+import 'react-phone-input-2/lib/style.css'
 import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Button from "@/components/shared/button";
+import PhoneInput from "react-phone-input-2";
 import {
   Select,
   SelectTrigger,
@@ -38,8 +39,7 @@ const formSchema = z.object({
   name: z.string().min(3, { message: "Name is required." }),
   designation: z.string().optional(),
   email: z.string().email({ message: "Invalid email address." }),
-  countryCode: z.string().optional(),
-  phoneNumber: z.string().optional(),
+  phone: z.string().optional(),
   message: z.string().min(10,{ message: "Message is required." }),
   terms: z.boolean().refine((value) => value, {
     message: "You must agree to the privacy policy.",
@@ -64,19 +64,19 @@ const Forms = () => {
       name: "",
       designation: "",
       email: "",
-      countryCode: "US",
-      phoneNumber: "",
+      phone: "",
       message: "",
       terms: true,
     },
   });
+  const { reset, setValue, formState: { errors } } = form;
 
   const modifyFormData = (data) => {
     const company_name = data?.company_name;
     const name = data?.name;
     const designation = data?.designation;
     const email = data?.email;
-    const phone = `${data.countryCode}-${data.phoneNumber}`.trim();
+    const phone = data?.phone;
     const message = data?.message;
     const terms = data?.terms;
     // Return the modified data
@@ -103,7 +103,7 @@ const Forms = () => {
           description: "Your message has been sent successfully.",
           variant: "success",
         });
-        form.reset();
+        reset();
       } else {
         toast({
           title: "Error",
@@ -224,93 +224,41 @@ const Forms = () => {
             </div>
             {/* Phone number */}
             <div className="sm:basis-[48%] w-full">
-              <FormField
-                control={form.control}
-                name="countryCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="formLabelClasses">
-                      Phone Number
-                    </FormLabel>
-                    <div className="grid grid-cols-[auto_1fr]">
-                      {/* Country Code Dropdown */}
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="rounded-tr-none rounded-br-none focus:ring-0 focus:ring-offset-0 focus:outline-0 border border-r-0 border-gray-200 text-gray-500 text-base font-normal">
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem
-                            className={"text-bass !text-gray-900"}
-                            value="US"
-                          >
-                            US
-                          </SelectItem>
-                          <SelectItem
-                            className={"text-bass !text-gray-900"}
-                            value="CA"
-                          >
-                            CA
-                          </SelectItem>
-                          <SelectItem
-                            className={"text-bass !text-gray-900"}
-                            value="GB"
-                          >
-                            GB
-                          </SelectItem>
-                          <SelectItem
-                            className={"text-bass !text-gray-900"}
-                            value="BD"
-                          >
-                            BD
-                          </SelectItem>
-                          {/* Add more countries as needed */}
-                        </SelectContent>
-                      </Select>
-
-                      {/* Phone Number Input */}
-                      <FormField
-                        control={form.control}
-                        name="phoneNumber"
-                        render={({ field }) => (
-                          <FormControl className="flex-1">
-                            <Input
-                              className="input_style !border-l-0 !rounded-tl-none !rounded-bl-none"
-                              placeholder="+880 1234567890"
-                              {...field}
-                            />
-                          </FormControl>
-                        )}
-                      />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
+              <div className="space-y-2">
+                <label className="block text-sm text-gray-900 font-normal mb-3">
+                  Phone Number
+                </label>
+                <PhoneInput
+                    country={"us"}
+                    enableSearch={true}
+                    onChange={(value) => setValue("phone", value)}
+                    inputClass="!bg-background !w-full !h-10 !border-gray-200 !rounded-md"
+                    buttonClass="bg-gray-50 !h-10 !border-gray-200 !rounded-l-md"
+                />
+                {errors.phone && (
+                    <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>
                 )}
-              />
+              </div>
             </div>
           </div>
           {/* Message */}
           <div>
             <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="formLabelClasses">Message</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      className="input_style resize-none min-h-[128px]"
-                      placeholder="Enter your message..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+                control={form.control}
+                name="message"
+                render={({field}) => (
+                    <FormItem>
+                      <FormLabel className="formLabelClasses">Message</FormLabel>
+                      <FormControl>
+                        <Textarea
+                            className="input_style resize-none min-h-[128px]"
+                            placeholder="Enter your message..."
+                            {...field}
+                        />
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem>
+                )}
             />
           </div>
           {/* terms and condition */}
