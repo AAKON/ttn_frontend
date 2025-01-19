@@ -4,6 +4,7 @@ import "./profile-tabs.css";
 import ProfileInfoForm from "./profile-info-form";
 import MyCompanies from "./my-companies";
 import {useEffect, useState} from "react";
+import PasswordForm from "@/app/(main)/myaccount/profile/components/password-form";
 
 const TabComponents = () => {
 
@@ -55,7 +56,7 @@ const TabComponents = () => {
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="danger-zone"
           >
-            Danger Zone
+            Settings
           </TabsTrigger>
         </TabsList>
 
@@ -69,9 +70,10 @@ const TabComponents = () => {
         </TabsContent>
         <TabsContent value="danger-zone">
           <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
-            <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-              Danger Zone
+            <h3 className="text-sm mb-6 md:text-lg font-semibold text-gray-900">
+              Change Password
             </h3>
+            <PasswordForm />
           </div>
         </TabsContent>
       </Tabs>
