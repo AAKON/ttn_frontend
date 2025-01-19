@@ -16,8 +16,6 @@ const DragDropFile = ({
         fieldState: {error},
     } = useController({name, control});
 
-    console.log(defaultValue, 'get defaultValue file')
-
     const [preview, setPreview] = useState(initialFile);
 
     const onDrop = (acceptedFiles, rejectedFiles) => {
