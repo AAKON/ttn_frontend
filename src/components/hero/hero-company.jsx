@@ -49,7 +49,12 @@ export default function HeroCompanyForm({
 
   const onSubmit = async (data) => {
     if (onSearchSubmit) {
-      onSearchSubmit(data); // Pass form data to the parent handler
+      const searchData = {
+        locationId : data?.locationIds,
+        businessCategoryIds : data?.businessCategoryIds,
+        keyword: data?.keyword
+      }
+      onSearchSubmit(searchData);
     }
   };
 
