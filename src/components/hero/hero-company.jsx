@@ -48,7 +48,6 @@ export default function HeroCompanyForm({
   });
 
   const onSubmit = async (data) => {
-    console.log(data, 'submit data-=========')
     if (onSearchSubmit) {
       onSearchSubmit(data); // Pass form data to the parent handler
     }

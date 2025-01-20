@@ -56,12 +56,7 @@ const CompanyList = () => {
       setFilterOptionLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`,
-            {
-              next: { revalidate: 3600 }, // Revalidate every 1 hour
-              cache: "force-cache", // Use cached data
-            }
-        );
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`);
         const data = await response.json();
         setFilterOptions(data.data);
       } catch (error) {
@@ -77,8 +72,6 @@ const CompanyList = () => {
   const categories = filterOptions?.business_categories || [];
   const locations = filterOptions?.locations || null;
 
-  console.log(filterOptions, 'get filterOptions');
-
   const fetchCompanies = async (page) => {
     if (page > pagination.last_page || loadingCompanies) return;
     setLoading(true);
@@ -88,10 +81,6 @@ const CompanyList = () => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
-          {
-            next: { revalidate: 3600 }, // Revalidate every 1 hour
-            cache: "force-cache", // Use cached data
-          },
         {
           method: "POST",
           headers: {
@@ -102,11 +91,17 @@ const CompanyList = () => {
         }
       );
       const data = await response.json();
-      if (data && data?.data) {
-        setCompanies((prev) => [...prev, ...data?.data?.data]);
-        setPagination(data?.data?.pagination);
-        setHasMore(page < data?.data?.pagination.last_page);
+      if(data?.status) {
+        if (data && data?.data) {
+          setCompanies((prev) => [...prev, ...data?.data?.data]);
+          setPagination(data?.data?.pagination);
+          setHasMore(page < data?.data?.pagination.last_page);
+        }
+      }else{
+        setLoading(false);
+        setHasMore(false);
       }
+
     } catch (error) {
       console.error("Error fetching companies:", error);
     } finally {
@@ -134,8 +129,6 @@ const CompanyList = () => {
   // Track when the filters change and update the URL params
   useEffect(() => {
     const params = new URLSearchParams();
-
-    console.log(filters.locationId, 'router params ========');
 
     if (filters.locationId) {
       params.set("locationIds", filters.locationId);
