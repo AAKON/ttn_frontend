@@ -50,9 +50,9 @@ const CompanyCardFilter = ({ company }) => {
               />
             </div>
             <div className="flex-1">
-              {company?.businessCategory && (
+              {company?.businessCategories && (
                 <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
-                  {company?.businessCategory}
+                  {company?.businessCategories[0]}
                 </CardTitle>
               )}
               <CardDescription className="font-semibold text-md sm:text-2xl sm:leading-8 text-gray-900">
