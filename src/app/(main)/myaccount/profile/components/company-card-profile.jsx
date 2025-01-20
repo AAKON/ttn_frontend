@@ -116,12 +116,13 @@ const CompanyCardProfile = ({ type, onItemRemove, data }) => {
 
       {/* last btn start */}
       <CardFooter className="grid grid-cols-2 gap-2">
-        <Button TagName={Link} href={`/company/${data?.slug}`} secondary>
+        <Button TagName={Link} prefetch={false} href={`/company/${data?.slug}`} secondary>
           View Profile
         </Button>
         {type === "myCompanies" && (
           <Button
             TagName={Link}
+            prefetch={false}
             href={`/myaccount/company/edit/${data?.slug}`}
             type="button"
             primaryOutline

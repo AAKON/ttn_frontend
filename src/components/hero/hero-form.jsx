@@ -75,9 +75,9 @@ function HeroForm({
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap md:flex-nowrap"
+          className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap lg:flex-nowrap"
         >
-          <div className="flex w-full items-center gap-2 rounded-lg py-1 px-6 md:order-2">
+          <div className="flex w-full items-center gap-2 rounded-lg py-1 px-6 md:order-2 md:w-[43%] lg-w-auto">
             <span>
               <svg
                 width={24}
@@ -115,7 +115,7 @@ function HeroForm({
             ? categories &&
               Array.isArray(categories) &&
               categories?.length > 0 && (
-                <div className="md:order-1 lg:border-r lg:border-r-gray-300">
+                <div className="md:order-1 lg:border-r lg:border-r-gray-300 w-[45%] xs:w-auto">
                   <FormField
                     control={form.control}
                     name="businessCategoryIds"
@@ -128,7 +128,7 @@ function HeroForm({
                           }
                         >
                           <FormControl>
-                            <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                            <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
                               <SelectValue
                                 placeholder="All Categories"
                                 className="text_16"
@@ -159,7 +159,7 @@ function HeroForm({
               categories?.length > 0 && (
                 <div className="hidden md:block md:order-1 lg:border-r lg:border-r-gray-300">
                   <Select className={className}>
-                    <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                    <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
                       <SelectValue
                         placeholder="All Categories"
                         className="text_16"
@@ -180,7 +180,7 @@ function HeroForm({
               )}
 
           {isAnywhereDropdown && (
-            <div className="md:order-3">
+            <div className="md:order-3 w-[45%] md:w-auto sx:w-auto">
               {locations &&
                 Array.isArray(locations) &&
                 locations?.length > 0 && (
@@ -195,9 +195,7 @@ function HeroForm({
                             field.onChange(Number(value))
                           }
                         >
-                          <SelectTrigger
-                            className={`text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
-                          >
+                          <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11  text-left">
                             <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
                               <WorldMap />
                             </span>
@@ -225,16 +223,16 @@ function HeroForm({
             </div>
           )}
 
-          <div className="md:flex-1 md:order-4 w-full md:w-auto">
+          <div className="md:flex-1 md:order-4 w-full lg:w-auto">
             <div className="flex gap-2">
               {isAnywhereDropdown ? (
-                <Button className="w-full md:w-[210px]" type="submit">
+                <Button className="w-full lg:w-[210px]" type="submit">
                   Search
                 </Button>
               ) : (
                 <Button
                   primaryOutline
-                  className="w-full md:w-[210px]"
+                  className="w-full lg:w-[210px]"
                   type="submit"
                 >
                   Search

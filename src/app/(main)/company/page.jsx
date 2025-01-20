@@ -2,7 +2,7 @@
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { getSession } from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
@@ -15,6 +15,7 @@ import TextAnimator from "@/components/hero/text-animatior";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const CompanyList = () => {
+  const router = useRouter();
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -55,8 +56,7 @@ const CompanyList = () => {
       setFilterOptionLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
-        );
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`);
         const data = await response.json();
         setFilterOptions(data.data);
       } catch (error) {
@@ -71,8 +71,6 @@ const CompanyList = () => {
 
   const categories = filterOptions?.business_categories || [];
   const locations = filterOptions?.locations || null;
-
-  console.log(filterOptions, 'get filterOptions');
 
   const fetchCompanies = async (page) => {
     if (page > pagination.last_page || loadingCompanies) return;
@@ -93,11 +91,17 @@ const CompanyList = () => {
         }
       );
       const data = await response.json();
-      if (data && data?.data) {
-        setCompanies((prev) => [...prev, ...data?.data?.data]);
-        setPagination(data?.data?.pagination);
-        setHasMore(page < data?.data?.pagination.last_page);
+      if(data?.status) {
+        if (data && data?.data) {
+          setCompanies((prev) => [...prev, ...data?.data?.data]);
+          setPagination(data?.data?.pagination);
+          setHasMore(page < data?.data?.pagination.last_page);
+        }
+      }else{
+        setLoading(false);
+        setHasMore(false);
       }
+
     } catch (error) {
       console.error("Error fetching companies:", error);
     } finally {
@@ -122,6 +126,27 @@ const CompanyList = () => {
     }, 1000); // 1 seconds delay
   };
 
+  // Track when the filters change and update the URL params
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (filters.locationId) {
+      params.set("locationIds", filters.locationId);
+    }
+    if (filters.businessCategoryIds.length > 0) {
+      params.set(
+          "businessCategoryIds",
+          filters.businessCategoryIds.join(",")
+      );
+    }
+    if (filters.keyword) {
+      params.set("keyword", filters.keyword);
+    }
+
+    // Update the URL using shallow routing
+    router.push(`/company?${params.toString()}`, undefined, { shallow: true });
+  }, [filters, router]); // Trigger this effect only when filters change
+
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
@@ -140,6 +165,7 @@ const CompanyList = () => {
           }
         }
       }
+
       return updatedFilters;
     });
   };
@@ -148,8 +174,8 @@ const CompanyList = () => {
     setFilters((prevFilters) => {
       const businessCategoryIds = isNaN(data.businessCategoryIds)
         ? []
-        : [data.businessCategoryIds];
-      const locationId = isNaN(data.locationId) ? [] : [data.locationId];
+        : [data?.businessCategoryIds];
+      const locationId = isNaN(data.locationId) ? null : data.locationId;
       return {
         ...prevFilters,
         ...data,
@@ -163,8 +189,6 @@ const CompanyList = () => {
   // display selected options functions
   const getSelectedOptions = () => {
     const selected = [];
-
-    console.log(filters, 'get selected filters');
 
     // Map businessCategoryIds
     if (filters.businessCategoryIds.length > 0) {

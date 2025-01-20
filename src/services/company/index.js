@@ -8,7 +8,8 @@ export async function getDataPreBasic() {
     const token = await getSSToken();
     const endpoint = `my/company/preparation-data/for-basic`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -20,7 +21,8 @@ export async function getDataPreOverview() {
     const token = await getSSToken();
     const endpoint = `my/company/preparation-data/for-overview`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -34,7 +36,9 @@ export async function getCompanyDetails(slug) {
     const token = await getSSToken();
     const endpoint = `company/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -46,7 +50,8 @@ export async function getCompanyBasic(slug) {
     const token = await getSSToken();
     const endpoint = `my/company/edit/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     return await apiRequest(endpoint, options, null, token);
 }
@@ -57,7 +62,9 @@ export async function getMyCompanies() {
     const token = session?.accessToken;
     const endpoint = `my/company/list`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -69,7 +76,9 @@ export async function getMyFavsCompanies() {
     const token = session?.accessToken;
     const endpoint = `my/favorite`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -82,7 +91,9 @@ export async function delFavsCompanyFaq(slug, toast) {
 
     const endpoint = `my/favorite/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, toast, token);
     return result?.status && result?.code === 200;
@@ -134,7 +145,8 @@ export async function getCompanyOverview(slug) {
     const token = session?.accessToken;
     const endpoint = `my/company/${slug}/overview`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -146,7 +158,8 @@ export async function getBusinessContact(slug) {
     const token = session?.accessToken;
     const endpoint = `my/company/${slug}/contact`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -190,7 +203,8 @@ export async function getDecissionMakers(slug) {
 
     const endpoint = `my/company/${slug}/decision-maker`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -249,7 +263,8 @@ export async function getCompanyFaqs(slug) {
 
     const endpoint = `my/company/${slug}/faq`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -291,7 +306,8 @@ export async function getCompanyClients(slug) {
 
     const endpoint = `my/company/${slug}/client`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;

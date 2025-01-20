@@ -60,3 +60,19 @@ export async function updateUserProfileReq(data, toast) {
   };
   return await apiRequest(endpoint, options, toast, token);
 }
+
+// update password
+export async function updateUserPasswordReq(data, toast) {
+
+  const session = await getSession();
+  const token = session?.accessToken;
+
+  const endpoint = `auth/change-password`;
+
+  const options = {
+    method: 'POST',
+    body: data,
+    isFormData: true
+  };
+  return await apiRequest(endpoint, options, toast, token);
+}
