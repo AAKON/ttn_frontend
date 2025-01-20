@@ -3,7 +3,7 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
 import "@splidejs/react-splide/css/core";
 import Image from "next/image";
-import defaultImage from "@/assets/certificate.svg";
+import defaultImage from "@/assets/certification_5.png";
 
 const options = {
   // type: "loop",
@@ -52,13 +52,22 @@ const CertificateSlider = ({ slideItems, direction = "ltr", ...props }) => {
         >
           <div className="size-[100px] flex flex-col gap-1 items-center justify-center bg-white border border-gray-300 p-3">
             <div className="h-[60px] flex items-center justify-center">
-              <Image
+              {item?.image_url && (
+                <Image
+                  width={60}
+                  height={60}
+                  src={item?.image_url}
+                  className="w-full h-full object-contain"
+                  alt={item?.name || "image"}
+                />
+              )}
+              {/* <Image
                 width={60}
                 height={60}
                 src={item?.image_url ? item?.image_url : defaultImage}
                 className="w-full h-full object-contain"
                 alt={item?.name || "image"}
-              />
+              /> */}
             </div>
             <span className="text-gray-500 text-[12px]">{item?.name}</span>
           </div>
