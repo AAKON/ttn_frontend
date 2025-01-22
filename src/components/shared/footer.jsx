@@ -8,7 +8,7 @@ const footerLink = [
   { title: "Company", link: "/company" },
   { title: "Blog", link: "/blog" },
   { title: "About us", link: "/about" },
-  { title: "Services", link: "/" },
+  { title: "Pricing", link: "/pricing" },
   { title: "Contact Us", link: "/contact" },
   { title: "Partner", link: "/partner" },
   { title: "Privacy", link: "/privacy-policy" },
@@ -83,7 +83,7 @@ function FooterCopyright() {
       <ul className="flex gap-[30px] items-center mt-7">
 
         <li>
-          <a href="https://www.linkedin.com/company/thetextilenetwork">
+          <a href="https://www.linkedin.com/company/thetextilenetwork" target="_blank">
             <Image
                 src="/icons/social-icon-2.svg"
                 alt="linkedin"
@@ -93,7 +93,7 @@ function FooterCopyright() {
           </a>
         </li>
         <li>
-          <a href="https://www.facebook.com/thetextilenetwork">
+          <a href="https://www.facebook.com/thetextilenetwork" target="_blank">
             <Image
                 src="/icons/social-icon-3.svg"
                 alt="facebook"
@@ -103,7 +103,7 @@ function FooterCopyright() {
           </a>
         </li>
         <li>
-          <a href="https://www.instagram.com/thetextilenetwork">
+          <a href="https://www.instagram.com/thetextilenetwork" target="_blank">
             <Image
                 src="/icons/instagram.svg"
                 alt="pinterest"
@@ -113,9 +113,9 @@ function FooterCopyright() {
           </a>
         </li>
         <li>
-          <a href="https://www.pinterest.com/thetextilenetwork">
+          <a href="https://www.pinterest.com/thetextilenetwork" target="_blank">
             <Image
-                src="/icons/social-icon-6.svg"
+                src="/icons/pinterest.svg"
                 alt="pinterest"
                 width={24}
                 height={24}
@@ -124,7 +124,7 @@ function FooterCopyright() {
         </li>
 
         <li>
-          <a href="https://whatsapp.com/channel/0029VaGfiPjCxoB4rHKoaY1p/221 ">
+          <a href="https://whatsapp.com/channel/0029VaGfiPjCxoB4rHKoaY1p/221 " target="_blank">
             <Image
                 src="/icons/whatsup.svg"
                 alt="whatsup"
@@ -134,7 +134,7 @@ function FooterCopyright() {
           </a>
         </li>
         <li>
-          <a href="https://t.me/thetextilenetworkcom">
+          <a href="https://t.me/thetextilenetworkcom" target="_blank">
             <Image
                 src="/icons/telegram.svg"
                 alt="telegrap"

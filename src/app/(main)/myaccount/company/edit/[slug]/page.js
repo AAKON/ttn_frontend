@@ -8,7 +8,7 @@ import CompanyBasicForm from "./_components/company-form";
 import CompanyForms from "@/app/(main)/myaccount/company/edit/[slug]/_components/company-forms";
 import Company404 from "@/app/(main)/company/[slug]/not-found";
 import Link from "next/link";
-import {GlobalSkeleton} from "@/components/shared/skelton/globalSkeleton";
+import { GlobalSkeleton } from "@/components/shared/skelton/globalSkeleton";
 
 export default async function Page({ params }) {
   const { slug } = await params;
@@ -17,11 +17,10 @@ export default async function Page({ params }) {
     const preDataBasic = await getDataPreBasic();
 
     if (!basic?.status && basic?.code === 404) {
-      return <Company404 />
+      return <Company404 />;
     }
 
-    console.log(basic, 'get basic');
-
+    console.log(basic, "get basic");
 
     return (
       <Suspense fallback={<GlobalSkeleton />}>

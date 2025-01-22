@@ -11,7 +11,7 @@ const BlogDetails = async ({ blog }) => {
   return (
     <div className="pb-8 lg:pb-20">
       <div className="lg:w-[1024px] container w-container mx-auto">
-        <h1 className="lg:w-[770px] lg:text-[48px]  w-container text-[36px] font-semibold text-gray-900 pt-[70px] mx-auto text-center">
+        <h1 className="lg:w-[770px] lg:text-[48px]  w-container text-3xl leading-tight font-semibold text-gray-900 pt-[70px] mx-auto text-center">
           {blog.title}
         </h1>
 

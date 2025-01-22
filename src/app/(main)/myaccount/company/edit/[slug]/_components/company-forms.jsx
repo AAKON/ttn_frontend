@@ -57,7 +57,7 @@ function CompanyForms({slug, preData}) {
                 />)}
             </div>
             <div>
-                <ContactWithBusinessOwner/>
+                {/* <ContactWithBusinessOwner/> */}
             </div>
             <div>
                 <EditTabs slug={slug} preData={preData}/>
