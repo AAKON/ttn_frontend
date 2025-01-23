@@ -218,32 +218,33 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
                 <div className="grid grid-cols-2 gap-6">
                   <FeedBackList
                     text="Address"
-                    text2={contactData?.address || '...'}
+                    text2={contactData?.address || ''}
                     icon={
                       <MarkerPinIcon width={30} height={30} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Email"}
-                    text2={contactData?.email || '...'}
+                    text2={contactData?.email || ''}
                     icon={<EmailIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Whatsapp"}
-                    text2={contactData?.whatsapp || '...'}
+                    text2={contactData?.whatsapp || ''}
                     icon={
                       <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Phone"}
-                    text2={contactData?.phone || '...'}
+                    text2={contactData?.phone || ''}
                     icon={<PhoneIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Website"}
-                    text2={contactData?.website || '...'}
+                    text2={contactData?.website || ''}
                     icon={<GlobeIcon width={20} height={20} stroke="#F7931E" />}
+                    DataType="website"
                   />
                 </div>
 
@@ -312,14 +313,21 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
   }
 }
 
-export function FeedBackList({text, text2, icon, className}) {
+export function FeedBackList({text, text2, icon, className, DataType}) {
+
+  if (!text2 || text2.trim() === '') return null;
+
   return (
       <div className={`${className}`}>
         <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
         <div className="flex items-start gap-3 mt-1">
           {icon && icon}
           <h3 className="text-gray-900 text-base leading-[24px] font-medium">
-            <span>{text2}</span>
+            {DataType !== 'website' ? (
+                <span>{text2}</span>
+            ) : (
+                <a target="_blank" href={text2} rel="noopener noreferrer">{text2}</a>
+            )}
           </h3>
         </div>
       </div>

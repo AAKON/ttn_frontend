@@ -51,7 +51,7 @@ export default function HeroCompanyForm({
     if (onSearchSubmit) {
       const searchData = {
         locationId : data?.locationIds,
-        businessCategoryIds : data?.businessCategoryIds,
+        businessCategoryIds : data?.businessCategoryIds && data?.businessCategoryIds.length > 0 ? data?.businessCategoryIds.length : null,
         keyword: data?.keyword
       }
       onSearchSubmit(searchData);
