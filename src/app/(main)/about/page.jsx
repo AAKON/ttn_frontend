@@ -106,7 +106,7 @@ const About = async() => {
           Market Share
         </h2>
         <p className="text-sm md:text-xl text-center text-gray-400 pt-2 pb-6">
-          Lorem ipsum around 10+ countries
+          10+ countries
         </p>
         <Image src={AboutMap} alt="aboutpagemap" />
       </Section>

@@ -24,11 +24,11 @@ export default async function PartnerPage() {
             </h1>
             <p className="text-gray-600 text-sm lg:text-xl font-normal lg:leading-7 leading-5 max-w-[800px] pb-4 lg:pb-8">
               Are you looking to expand your horizons in the textile and apparel
-              industry? Join our dynamic team as a valued partner and unlock a
+              industry? Join as a valued partner and unlock a
               world of opportunities.
             </p>
-            <Button TagName={Link} href={"/contact"} primaryOutline>
-              Join as a partner
+            <Button TagName={Link} href={"/pricing"} primaryOutline>
+              Pricing
             </Button>
           </div>
           <div className="lg:py-[80px] py-8">
@@ -94,7 +94,7 @@ function BusinessPartner({ heading, summary }) {
 
 function CompanyPartnerCard({ image }) {
   return (
-    <div className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2">
+    <div className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2 overflow-hidden">
       <Image
         src={image?.image ? image?.image : business1}
         alt="logo"

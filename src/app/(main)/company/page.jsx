@@ -172,7 +172,7 @@ const CompanyList = () => {
 
   const handleSearchSubmit = (data) => {
     setFilters((prevFilters) => {
-      const businessCategoryIds = isNaN(data.businessCategoryIds)
+      const businessCategoryIds = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
         ? []
         : [data?.businessCategoryIds];
       const locationId = isNaN(data.locationId) ? null : data.locationId;

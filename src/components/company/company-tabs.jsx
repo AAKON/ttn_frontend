@@ -86,24 +86,19 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
           >
             Clients
           </TabsTrigger>
-          {/*<TabsTrigger*/}
-          {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
-          {/*  value="awards"*/}
-          {/*>*/}
-          {/*  Awards*/}
-          {/*</TabsTrigger>*/}
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="certifications"
           >
             Certifications
           </TabsTrigger>
-          <TabsTrigger
+          {((decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0) || (typeof contactData === 'object' && contactData !== null && Object.keys(contactData).length > 0)) &&
+              (<TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"
           >
             Contacts
-          </TabsTrigger>
+          </TabsTrigger>)}
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="faq"
@@ -209,7 +204,8 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6">
             {/* Business Contact start */}
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-6">
+            {(typeof contactData === 'object' && contactData !== null && Object.keys(contactData).length > 0) &&
+                (<div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-6">
               <h3 className="text-base font-semibold text-gray-900 h-full">
                 Business Contact
               </h3>
@@ -218,35 +214,36 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
                 <div className="grid grid-cols-2 gap-6">
                   <FeedBackList
                     text="Address"
-                    text2={contactData?.address || '...'}
+                    text2={contactData?.address || ''}
                     icon={
                       <MarkerPinIcon width={30} height={30} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Email"}
-                    text2={contactData?.email || '...'}
+                    text2={contactData?.email || ''}
                     icon={<EmailIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Whatsapp"}
-                    text2={contactData?.whatsapp || '...'}
+                    text2={contactData?.whatsapp || ''}
                     icon={
                       <WhatsAppIcon width={20} height={20} stroke="#F7931E" />
                     }
                   />
                   <FeedBackList
                     text={"Phone"}
-                    text2={contactData?.phone || '...'}
+                    text2={contactData?.phone || ''}
                     icon={<PhoneIcon width={20} height={20} stroke="#F7931E" />}
                   />
                   <FeedBackList
                     text={"Website"}
-                    text2={contactData?.website || '...'}
+                    text2={contactData?.website || ''}
                     icon={<GlobeIcon width={20} height={20} stroke="#F7931E" />}
+                    DataType="website"
                   />
                 </div>
-
+                {contactData?.lat_long && (
                 <div className="w-full h-[280px] border-2 rounded-[16px] mt-6">
                   <iframe
                       src={googleMapUrl}
@@ -257,42 +254,42 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
                       width="100%"
                       height="280"
                   ></iframe>
-                </div>
+                </div>)}
+
               </div>
-            </div>
+            </div>)}
             {/* Business Contact end */}
 
             {/* Decision Makers start */}
-            <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-8 mt-6 lg:mt-8">
-              <h3 className="text-base font-semibold text-gray-900">
-                Decision Makers
-              </h3>
-              {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
-                    {decissionMakers.map((item, index) => (
-                        <ContactCard
-                            key={item?.id}
-                            contactId={`Contact ${index+1}`}
-                            personName={item?.name}
-                            designation={item?.designation}
-                            emailIcon={
-                              <EmailIcon width={16} height={16} stroke="#F7931E"/>
-                            }
-                            phoneIcon={
-                              <PhoneIcon width={16} height={16} stroke="#F7931E"/>
-                            }
-                            whatsAppIcon={
-                              <WhatsAppIcon width={16} height={16} stroke="#F7931E"/>
-                            }
-                            emailAddress={item?.email}
-                            phoneNumber={item?.phone}
-                            whatsAppText={item?.whatsapp}
-                        />
-                        )
-                    )}
-                  </div>
-              ) : <Empty message={'Empty decision makers'} /> }
-            </div>
+            {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 && (
+              <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-8 mt-6 lg:mt-8">
+                <h3 className="text-base font-semibold text-gray-900">
+                  Decision Makers
+                </h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-y-4 lg:gap-y-6 gap-x-8">
+                      {decissionMakers.map((item, index) => (
+                          <ContactCard
+                              key={item?.id}
+                              contactId={`Contact ${index+1}`}
+                              personName={item?.name}
+                              designation={item?.designation}
+                              emailIcon={
+                                <EmailIcon width={16} height={16} stroke="#F7931E"/>
+                              }
+                              phoneIcon={
+                                <PhoneIcon width={16} height={16} stroke="#F7931E"/>
+                              }
+                              whatsAppIcon={
+                                <WhatsAppIcon width={16} height={16} stroke="#F7931E"/>
+                              }
+                              emailAddress={item?.email}
+                              phoneNumber={item?.phone}
+                              whatsAppText={item?.whatsapp}
+                          />
+                          )
+                      )}
+                    </div>
+              </div>)}
             {/* Decision Makers end */}
           </div>
         </TabsContent>
@@ -312,14 +309,21 @@ async function CompanyTabs({ faqs, clients, overview, contactData, decissionMake
   }
 }
 
-export function FeedBackList({text, text2, icon, className}) {
+export function FeedBackList({text, text2, icon, className, DataType}) {
+
+  if (!text2 || text2.trim() === '') return null;
+
   return (
       <div className={`${className}`}>
         <p className="text-gray-500 text-sm leading-[20px]">{text}</p>
         <div className="flex items-start gap-3 mt-1">
           {icon && icon}
           <h3 className="text-gray-900 text-base leading-[24px] font-medium">
-            <span>{text2}</span>
+            {DataType !== 'website' ? (
+                <span>{text2}</span>
+            ) : (
+                <a target="_blank" href={text2} rel="noopener noreferrer">{text2}</a>
+            )}
           </h3>
         </div>
       </div>
