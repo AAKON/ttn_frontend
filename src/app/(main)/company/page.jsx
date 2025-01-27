@@ -360,7 +360,7 @@ const CompanyList = () => {
           <div>
             <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
               <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
-                Results: <span>{resultsCount}</span> Results of <span>{totalResults}</span>
+                Showing <span>{resultsCount}</span> companies of <span>{totalResults}</span>
               </h3>
               <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
                 <span
