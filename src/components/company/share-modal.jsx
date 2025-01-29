@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation"; // ✅ Import usePathname
 import {
   CopyIcon,
   FacebookFIcon,
@@ -21,12 +22,21 @@ import {
 import { Input } from "@/components/ui/input";
 
 const ShareModal = () => {
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const pathname = usePathname(); // ✅ Get current route
+  const [fullUrl, setFullUrl] = useState("");
+
+  // ✅ Construct full URL dynamically
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setFullUrl(`${window.location.origin}${pathname}`);
+    }
+  }, [pathname]);
+
   const [copySuccess, setCopySuccess] = useState(false);
 
-  // Function to copy link
+  // ✅ Copy URL function
   const handleCopy = () => {
-    navigator.clipboard.writeText(shareUrl).then(() => {
+    navigator.clipboard.writeText(fullUrl).then(() => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     });
@@ -39,7 +49,7 @@ const ShareModal = () => {
             <ShareBoldIcon />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[464px] p-5 ">
+        <DialogContent className="sm:max-w-[464px] p-5">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-gray-900">
               Share
@@ -51,7 +61,7 @@ const ShareModal = () => {
             <ul className="flex items-center gap-4">
               <li className="px-2 flex flex-col gap-1 items-center">
                 <a
-                    href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+                    href={`https://wa.me/?text=${encodeURIComponent(fullUrl)}`}
                     target="_blank"
                     className="size-[56px] rounded-full bg-[#65D072] flex items-center justify-center text-white"
                 >
@@ -61,7 +71,7 @@ const ShareModal = () => {
               </li>
               <li className="px-2 flex flex-col gap-1 items-center">
                 <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`}
                     target="_blank"
                     className="size-[56px] rounded-full bg-[#425893] flex items-center justify-center text-white"
                 >
@@ -71,7 +81,7 @@ const ShareModal = () => {
               </li>
               <li className="px-2 flex flex-col gap-1 items-center">
                 <a
-                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`}
+                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}`}
                     target="_blank"
                     className="size-[56px] rounded-full bg-[#1DA1F2] flex items-center justify-center text-white"
                 >
@@ -81,7 +91,7 @@ const ShareModal = () => {
               </li>
               <li className="px-2 flex flex-col gap-1 items-center">
                 <a
-                    href={`mailto:?subject=Check this out&body=${encodeURIComponent(shareUrl)}`}
+                    href={`mailto:?subject=Check this out&body=${encodeURIComponent(fullUrl)}`}
                     className="size-[56px] rounded-full bg-[#888888] flex items-center justify-center text-white"
                 >
                   <EnvelopeIcon stroke="#ffffff" />
@@ -90,7 +100,7 @@ const ShareModal = () => {
               </li>
               <li className="px-2 flex flex-col gap-1 items-center">
                 <a
-                    href={`https://www.reddit.com/submit?url=${encodeURIComponent(shareUrl)}`}
+                    href={`https://www.reddit.com/submit?url=${encodeURIComponent(fullUrl)}`}
                     target="_blank"
                     className="size-[56px] rounded-full bg-[#FF4500] flex items-center justify-center text-white"
                 >
@@ -103,7 +113,7 @@ const ShareModal = () => {
             {/* Copy Link Input */}
             <div className="relative border border-gray-200 rounded-[8px] grid grid-cols-[1fr_auto] gap-2 h-12">
               <Input
-                  value={shareUrl}
+                  value={fullUrl}
                   readOnly
                   className="border-none focus-visible:ring-0 focus-visible:ring-offset-0"
               />
