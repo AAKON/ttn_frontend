@@ -2,44 +2,7 @@ import "@splidejs/react-splide/css";
 import "./company-tabs.css";
 
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import Image from "next/image";
-import marketShare from "@/assets/marketShare.svg";
-// Clients Slide items
-import clients_1 from "@/assets/company1.jpg";
-import clients_2 from "@/assets/company2.jpg";
-import clients_3 from "@/assets/company3.jpg";
-import clients_4 from "@/assets/company4.jpg";
-
-const allClients = [
-    clients_1,
-    clients_2,
-    clients_3,
-    clients_4,
-    clients_1,
-    clients_2,
-    clients_3,
-    clients_4,
-];
-
-// Certifications Slide items
-import certification_1 from "@/assets/certification_1.png";
-import certification_2 from "@/assets/certification_2.png";
-import certification_3 from "@/assets/certification_3.png";
-import certification_4 from "@/assets/certification_4.png";
-import certification_5 from "@/assets/certification_5.png";
-import certification_6 from "@/assets/certification_6.png";
 import FrequentlyAskedQuestions from "./frequently-asked-questions";
-
-const allCertifications = [
-    certification_1,
-    certification_2,
-    certification_3,
-    certification_4,
-    certification_5,
-    certification_6,
-    certification_3,
-    certification_4,
-];
 import ChartYearly from "./chart-yearly";
 
 // icons
@@ -50,14 +13,11 @@ import {
     PhoneIcon,
     GlobeIcon,
 } from "@/icons";
-import {Empty} from "@/shared";
 import CertificateSlider from "@/app/(main)/company/[slug]/components/certificateSlider";
 import ClientSlider from "../marquee-sliders/client-slider";
-import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import React from "react";
 import MarketShareChart from "@/app/(main)/company/[slug]/components/marketShareChart";
 import {getDataPreOverview} from "@/services/company";
-import LocationPicker from "@/app/(main)/myaccount/company/edit/[slug]/_components/location-picker";
 
 async function CompanyTabs({faqs, clients, overview, contactData, decissionMakers, certificatesData}) {
 
@@ -69,15 +29,13 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                 overview.yearly_turnover.length > 0)
         );
     };
-    const hasValidClients = (clients) => {
-        return Array.isArray(clients) && clients.length > 0;
+    function isNonEmptyObject(obj) {
+        return typeof obj === 'object' && obj !== null && Object.keys(obj).length > 0;
+    }
+    const isNonEmptyArray = (array) => {
+        return Array.isArray(array) && array.length > 0;
     };
-    const hasValidCertificates = (certificatesData) => {
-        return Array.isArray(certificatesData) && certificatesData.length > 0;
-    };
-    const hasValidFaqs = (faqs) => {
-        return Array.isArray(faqs) && faqs.length > 0;
-    };
+
     const checkOverviewConditions = (overview) => {
         return [
             overview?.production_capacity,
@@ -98,7 +56,8 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
 
         return (
             <div>
-                {(overview || clients) && (
+                {((overview && checkOverviewConditions(overview)) || (clients && isNonEmptyArray(clients)) || (certificatesData && isNonEmptyArray(certificatesData)) ||
+                    (decissionMakers && isNonEmptyArray(decissionMakers)) || (faqs && isNonEmptyArray(faqs)) || (contactData && isNonEmptyObject(contactData)) ) && (
                 <Tabs
                     defaultValue="profile"
                     className="company-tabs w-full overflow-hidden"
@@ -112,28 +71,28 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                         >
                             Profile
                         </TabsTrigger>)}
-                        {hasValidClients(clients) && (
+                        {clients && isNonEmptyArray(clients) && (
                             <TabsTrigger
                                 className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
                                 value="clients"
                             >
                                 Clients
                             </TabsTrigger>)}
-                        {hasValidCertificates(certificatesData) && (
+                        {certificatesData && isNonEmptyArray(certificatesData) && (
                                 <TabsTrigger
                                     className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
                                     value="certifications"
                                 >
                                     Certifications
                                 </TabsTrigger>)}
-                        {((decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0) || (typeof contactData === 'object' && contactData !== null && Object.keys(contactData).length > 0)) &&
+                        {((decissionMakers && isNonEmptyArray(decissionMakers)) || (contactData && isNonEmptyObject(contactData))) &&
                             (<TabsTrigger
                                 className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
                                 value="contacts"
                             >
                                 Contacts
                             </TabsTrigger>)}
-                        {hasValidFaqs(faqs) && (
+                        {faqs && isNonEmptyArray(faqs) && (
                                 <TabsTrigger
                                     className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
                                     value="faq"
@@ -143,7 +102,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                     </TabsList>
 
                     <TabsContent value="profile">
-                        {checkOverviewConditions(overview) && (
+                        {overview && checkOverviewConditions(overview) && (
                             <div
                                 className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 bg-white rounded-2xl p-4 lg:p-6">
                                 <h3 className="text-base font-semibold text-gray-900">Overview</h3>
@@ -180,7 +139,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                                         />)}
                                 </div>
                             </div>)}
-                        {BusinessInsight(overview) && (
+                        {overview && BusinessInsight(overview) && (
                         <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
                             <h3 className="text-base font-semibold text-gray-900 h-full">
                                 Business Insight
@@ -196,7 +155,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                                         <MarketShareChart data={overview?.market_share} locations={locationsData}/>
                                     </div>
                                 </div>)}
-                                {overview?.yearly_turnover && Array.isArray(overview?.yearly_turnover) && overview?.yearly_turnover.length > 0 && (
+                                {overview?.yearly_turnover && isNonEmptyArray(overview?.yearly_turnover) (
                                     <div>
                                         <p className="text-gray-500 text-sm leading-[20px] mt-6">
                                             Yearly Turnover
@@ -209,7 +168,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                             </div>
                         </div>)}
                     </TabsContent>
-                    {hasValidClients(clients) && (
+                    {clients && isNonEmptyArray(clients) && (
                         <TabsContent value="clients">
                             <div className="bg-white rounded-2xl p-4 lg:p-6">
                                 <h3 className="text-xl font-semibold text-gray-900 mb-8">
@@ -218,7 +177,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                                 <ClientSlider slideItems={clients}/>
                             </div>
                         </TabsContent>)}
-                    {hasValidCertificates(certificatesData) && (
+                    {certificatesData && isNonEmptyArray(certificatesData) && (
                             <TabsContent
                                 className="bg-white rounded-2xl p-6"
                                 value="certifications"
@@ -237,7 +196,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                     <TabsContent value="contacts">
                         <div className="bg-white rounded-2xl p-4 lg:p-6">
                             {/* Business Contact start */}
-                            {(typeof contactData === 'object' && contactData !== null && Object.keys(contactData).length > 0) &&
+                            {contactData && isNonEmptyObject(contactData) &&
                                 (<div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-6">
                                     <h3 className="text-base font-semibold text-gray-900 h-full">
                                         Business Contact
@@ -294,7 +253,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                             {/* Business Contact end */}
 
                             {/* Decision Makers start */}
-                            {decissionMakers && Array.isArray(decissionMakers) && decissionMakers.length > 0 && (
+                            {decissionMakers && isNonEmptyArray(decissionMakers) && (
                                 <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-4 lg:gap-8 mt-6 lg:mt-8">
                                     <h3 className="text-base font-semibold text-gray-900">
                                         Decision Makers
@@ -326,7 +285,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                             {/* Decision Makers end */}
                         </div>
                     </TabsContent>
-                    {hasValidFaqs(faqs) && (
+                    {faqs && isNonEmptyArray(faqs) && (
                             <TabsContent value="faq">
                                 <div className="bg-white rounded-2xl p-4 lg:p-6">
                                     <h3 className="text-xl font-semibold text-gray-900 mb-8">
