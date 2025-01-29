@@ -63,7 +63,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                     className="company-tabs w-full overflow-hidden"
                 >
                     <TabsList
-                        className="justify-between rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
+                        className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
                         {(checkOverviewConditions(overview)) && (
                         <TabsTrigger
                             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}

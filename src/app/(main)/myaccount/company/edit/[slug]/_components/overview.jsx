@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,9 +21,6 @@ import { DeleteIcon } from "@/components/icons";
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-10 bg-gray-50";
 
-import Image from "next/image";
-import marketShare from "@/assets/marketShare.svg";
-
 import {
   BarChart,
   Bar,
@@ -45,7 +41,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { getCompanyProducts } from "@/services/product";
 
 const formSchema = z.object({
   manpower: z.string().optional(),
@@ -53,12 +48,8 @@ const formSchema = z.object({
   total_units: z.string().optional(),
   moq: z.string().optional(),
   lead_time: z.string().optional(),
-  shipment_term: z.string().min(1, {
-    message: "Delivery terms is required",
-  }),
-  payment_policy: z.string().min(1, {
-    message: "Payment policy is required",
-  }),
+  shipment_term: z.string().optional(),
+  payment_policy: z.string().optional(),
   market_share: z.array(
     z.object({
       location_id: z.string().min(1, "Country is required"),
@@ -306,7 +297,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Delivery Terms <span className="text-red-600">*</span>
+                      Delivery Terms
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -326,7 +317,7 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Payment Policy <span className="text-red-600">*</span>
+                      Payment Policy
                     </FormLabel>
                     <FormControl>
                       <Input

@@ -39,7 +39,7 @@ function CompanyForms({slug, preData}) {
 
     return (
         <div
-            className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-x-12 xl:gap-y-8">
+            className="mt-8 grid grid-cols-1 gap-6 xl:gap-x-12 xl:gap-y-8">
             <div className="bg-white border border-gray-100 p-6 rounded-2xl">
                 <ProductsForm
                     slug={slug}
