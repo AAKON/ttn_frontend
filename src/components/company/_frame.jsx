@@ -1,23 +1,17 @@
 import Image from "next/image";
 import Button from "@/components/shared/button";
 import {Container} from "@/shared";
-import shield_tick from "@/assets/shield-tick.png";
 import AU from "@/assets/AU.png";
 import CodeBlue from "@/assets/CodeBlue.svg";
 
 import {
-    BookmarkIcon,
-    BuildingOneIcon,
     BuildingTwoIcon,
     EditIcon,
     EyeIcon,
     GridIcon,
-    MarkerPinIcon,
-    ShareBoldIcon,
-    TagsIcon,
+    MarkerPinIcon
 } from "@/icons";
 import ShareModal from "./share-modal";
-import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
 import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
@@ -63,29 +57,16 @@ const Frame = ({slug, headerData, is_favorite, className}) => {
                                 </p>
                                 <h3 className="text-gray-900 flex gap-4 lg:text-3xl lg:leading-[38px] text-[20px] leading-[30px] font-semibold">
                                     {name}
-                                    {/* <Image
-                    src={shield_tick}
-                    alt="CompanyIcon"
-                    className="max-sm:w-6 max-sm:h-6"
-                  /> */}
                                 </h3>
                                 <div className="flex flex-wrap lg:flex-row flex-col lg:gap-6 gap-[10px]">
                                     <h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">
-                                        {/*<TagsIcon />*/}
-                                        {/*{tags}*/}
                                         <TagsView btypes={btypes} />
-                                        {/*<span className="max-sm:hidden lg:block">/Mixed Rags</span>*/}
                                     </h6>
-                                    {/*<h6 className="text-gray-600 lg:text-md :leading-lg text-sm leading-sm font-normal flex items-center lg:gap-[10px] gap-[8px]">*/}
-                                    {/*  <BuildingOneIcon /> Joined:{" "}*/}
-                                    {/*  <DateFormatter publishDate={created} />*/}
-                                    {/*</h6>*/}
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex lg:gap-4 gap-2">
-                            {/* Share Modal */}
                             <>
                                 <ShareModal/>
                             </>

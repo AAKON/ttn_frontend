@@ -15,14 +15,14 @@ const BlogDetails = async ({ blog }) => {
           {blog.title}
         </h1>
 
-        <p className="lg:text-[20px] text-gray-600 lg:leading-[30px] lg:w-[800px] lg:block hidden mx-auto text-center mt-6">
-          How do you create compelling presentations that wow your colleagues.
-        </p>
+        {/*<p className="lg:text-[20px] text-gray-600 lg:leading-[30px] lg:w-[800px] lg:block hidden mx-auto text-center mt-6">*/}
+        {/*  How do you create compelling presentations that wow your colleagues.*/}
+        {/*</p>*/}
 
-        <p className="text-[18px] text-gray-600 leading-[28px] w-full lg:hidden block mx-auto text-center mt-6">
-          How do you create compelling presentations that wow your colleagues
-          and impress your managers? Here’s how to get started.
-        </p>
+        {/*<p className="text-[18px] text-gray-600 leading-[28px] w-full lg:hidden block mx-auto text-center mt-6">*/}
+        {/*  How do you create compelling presentations that wow your colleagues*/}
+        {/*  and impress your managers? Here’s how to get started.*/}
+        {/*</p>*/}
 
         <div className="flex justify-center gap-4 mt-8">
           {blog?.author && (

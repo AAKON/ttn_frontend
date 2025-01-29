@@ -20,8 +20,6 @@ export default async function Page({ params }) {
       return <Company404 />;
     }
 
-    console.log(basic, "get basic");
-
     return (
       <Suspense fallback={<GlobalSkeleton />}>
         <div className="bg-gray-50">
@@ -33,10 +31,6 @@ export default async function Page({ params }) {
                   <ViewAs stroke="#000000" />
                   Preview
                 </Button>
-                {/*<Button>*/}
-                {/*  <EditIcon stroke="#ffffff" />*/}
-                {/*  Edit My Profile*/}
-                {/*</Button>*/}
               </div>
               <div className="pt-4">
                 <CompanyBasicForm slug={slug} basic={basic?.data} preData={preDataBasic} />
