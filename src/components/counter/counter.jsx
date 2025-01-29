@@ -44,13 +44,13 @@ const Counter = ({homeStats}) => {
             endValue={homeStats?.factory_people}
             duration={2000}
             role={"Professionals Connected"}
-            endfix={"+"}
+            endfix={"K+"}
           />
           <CounterUp
             endValue={homeStats?.global_audience}
             duration={2000}
             role={"Global Audiences"}
-            endfix={"+"}
+            endfix={"K+"}
           />
           <CounterUp
             endValue={homeStats?.listed_business}

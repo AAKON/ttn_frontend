@@ -9,39 +9,7 @@ import clients_3 from "@/assets/company3.jpg";
 import clients_4 from "@/assets/company4.jpg";
 const allClients = [clients_1, clients_2, clients_3, clients_4];
 
-// Clients Certifications items
-import clientsCertification_1 from "@/assets/certificate_1.png";
-import clientsCertification_2 from "@/assets/certificate_1.png";
-import clientsCertification_3 from "@/assets/certificate_1.png";
-import clientsCertification_4 from "@/assets/certificate_1.png";
-
-const allClientsCertifications = [
-  {
-    img: clientsCertification_1,
-    certificate_title: "Cap",
-  },
-  {
-    img: clientsCertification_2,
-    certificate_title: "Yarn",
-  },
-  {
-    img: clientsCertification_3,
-    certificate_title: "Oeko Text",
-  },
-  {
-    img: clientsCertification_4,
-    certificate_title: "Oeko Text",
-  },
-];
-
-import PhotoUploadBox from "./photo-upload-box";
-import Button from "@/components/shared/button";
 import OverviewForm from "./overview";
-import ExistingClients from "./existing-clients";
-import ExistingClientsCertifications from "./existing-clients-certifications";
-import { Input } from "@/components/ui/input";
-import { formLabelClasses, inputClasses } from "@/utils/input-style";
-import { Label } from "@/components/ui/label";
 import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
 import BusinessContactForm from "./business-contact-form";
@@ -64,12 +32,6 @@ function EditTabs({ slug, preData }) {
           >
             Clients
           </TabsTrigger>
-          {/*<TabsTrigger*/}
-          {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
-          {/*  value="certifications"*/}
-          {/*>*/}
-          {/*  Certifications*/}
-          {/*</TabsTrigger>*/}
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"

@@ -42,6 +42,7 @@ const CompanyList = () => {
   const [filters, setFilters] = useState(initialFilters);
   const [filterOptions, setFilterOptions] = useState(null);
   const [companies, setCompanies] = useState([]);
+  const [totalResults, setTotalResults] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -95,6 +96,7 @@ const CompanyList = () => {
         if (data && data?.data) {
           setCompanies((prev) => [...prev, ...data?.data?.data]);
           setPagination(data?.data?.pagination);
+          setTotalResults(data?.data?.pagination?.total);
           setHasMore(page < data?.data?.pagination.last_page);
         }
       }else{
@@ -358,7 +360,7 @@ const CompanyList = () => {
           <div>
             <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
               <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
-                Search Results: <span>{resultsCount}</span> Results found
+                Showing <span>{resultsCount}</span> companies of <span>{totalResults}</span>
               </h3>
               <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
                 <span

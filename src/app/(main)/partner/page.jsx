@@ -40,9 +40,9 @@ export default async function PartnerPage() {
                   "Offering wide range of business sourcing services, such as product development, sampling, production, quality control, logistics, and after-sales support."
                 }
               />
-              {b2bPartners &&
+              {(b2bPartners &&
                 Array.isArray(b2bPartners) &&
-                b2bPartners.length > 0 && (
+                b2bPartners.length > 0) && (
                   <div className="pt-10 flex flex-wrap gap-6 justify-center">
                     {b2bPartners?.map((item) => (
                       <CompanyPartnerCard key={item?.id} image={item} />
@@ -58,9 +58,9 @@ export default async function PartnerPage() {
                   "To help reach event and more engaged audience through our website, social media channels, and newsletters."
                 }
               />
-              {marketingPartners &&
+              {(marketingPartners &&
                 Array.isArray(marketingPartners) &&
-                marketingPartners.length > 0 && (
+                marketingPartners.length > 0) && (
                   <div className="pt-10 flex flex-wrap gap-6 justify-center">
                     {marketingPartners?.map((item) => (
                       <CompanyPartnerCard key={item?.id} image={item} />
@@ -94,17 +94,20 @@ function BusinessPartner({ heading, summary }) {
 
 function CompanyPartnerCard({ image }) {
   return (
-    <div className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2 overflow-hidden">
-      <Image
-        src={image?.image ? image?.image : business1}
-        alt="logo"
-        width={150}
-        height={150}
-        layout="responsive"
-        className="max-w-full max-h-full object-contain"
-      />
-    </div>
+      <Link href={image?.link} target="_blank">
+        <div
+            className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2 overflow-hidden">
+          <Image
+              src={image?.image ? image?.image : business1}
+              alt="logo"
+              width={150}
+              height={150}
+              layout="responsive"
+              className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      </Link>
   );
 }
 
-export { BusinessPartner, CompanyPartnerCard };
+export {BusinessPartner, CompanyPartnerCard};

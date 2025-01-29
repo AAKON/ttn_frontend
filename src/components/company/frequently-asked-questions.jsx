@@ -19,7 +19,7 @@ const FrequentlyAskedQuestions = ({faqs}) => {
 
     return (
         <div>
-            {faqs && Array.isArray(faqs) && faqs.length > 0 ?
+            {faqs && Array.isArray(faqs) && faqs.length > 0 && (
                 <Accordion type="single" collapsible>
                     {
                         faqs.map((el) => (
@@ -39,8 +39,7 @@ const FrequentlyAskedQuestions = ({faqs}) => {
                             </AccordionItem>
                         ))
                     }
-                </Accordion>
-                : <Empty message={'No Faq found'} />}
+                </Accordion>)}
         </div >
     )
 }

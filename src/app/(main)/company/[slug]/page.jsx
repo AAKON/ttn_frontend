@@ -53,12 +53,10 @@ const CompanyDetails = async ({ params }) => {
                   {/* AboutCompany part start */}
                   <div className="lg:mb-[32px] relative grid grid-cols-1 gap-6 xl:gap-8">
                     <AboutCompany aboutData={details?.company?.about} />
-                    {productsData &&
+                    {(productsData &&
                     Array.isArray(productsData) &&
-                    productsData.length > 0 ? (
+                    productsData.length > 0) && (
                       <ProductShowcase products={productsData} />
-                    ) : (
-                      <ErrorMessage message={"No products available"} />
                     )}
                   </div>
                   {/* AboutCompany part end */}
