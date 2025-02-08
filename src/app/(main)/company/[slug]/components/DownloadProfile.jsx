@@ -28,7 +28,7 @@ const DownloadProfile = ({profileData}) => {
         const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
         pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-        pdf.save("profile-35.pdf");
+        pdf.save("profile.pdf");
     };
 
     const name = profileData?.company?.name;
@@ -43,11 +43,13 @@ const DownloadProfile = ({profileData}) => {
     const langIcon = profileData?.company?.location?.flag_path ?? '';
     const viewCount = profileData?.company?.view_count;
 
+    const slideItems = profileData?.company?.certificates || []
+
 
     return (
-        <div className="mt-4">
+        <div>
             {/* Hidden div to capture profile content */}
-            <div ref={profileRef} className="bg-white p-3 w-full">
+            <div ref={profileRef} className="bg-white p-3 w-full" style={{ position: "absolute", top: "-9999px", left: "-9999px" }}>
                 <div className="max-w-screen-md mx-auto p-2.5 rounded-lg border border-gray-200">
                     <div className="flex flex-col gap-2.5">
                         <div className="flex items-center gap-2">
@@ -60,11 +62,11 @@ const DownloadProfile = ({profileData}) => {
                             />
                             <div className="flex flex-col gap-2">
                                 <div className="text-brand-600 text-sm font-semibold uppercase"
-                                     style={{fontSize: '10px', marginBottom: 0, lineHeight: ".5"}}>
+                                     style={{fontSize: '10px', marginBottom: 0, lineHeight: "1"}}>
                                     {moto}
                                 </div>
                                 <p className="text-gray-900 font-semibold"
-                                     style={{fontSize: '12px', marginBottom: '10px', lineHeight: "1.5"}}>
+                                   style={{fontSize: '12px', marginBottom: '10px', lineHeight: "1.5"}}>
                                     {name}
                                 </p>
                             </div>
@@ -77,14 +79,14 @@ const DownloadProfile = ({profileData}) => {
                                         className="border border-gray-300 bg-transparent text-gray-600 rounded-lg inline-flex items-center justify-center"
                                         style={{
                                             fontSize: "7px",
-                                            lineHeight: ".4",
+                                            lineHeight: ".2",
                                             padding: "0 4px",
                                             margin: 0,
                                             height: "12px",
                                             display: "block",
                                         }}
                                     >
-                                      {tag}
+                                        {tag}
                                     </p>
                                 ))}
                             </div>)}
@@ -92,7 +94,12 @@ const DownloadProfile = ({profileData}) => {
                     <div className="flex flex-col gap-1 mt-1">
                         {categories && categories.length > 0 && (
                             <div>
-                                <p style={{fontSize: '9px', margin: '0', lineHeight: "1", color: 'rgb(102, 112, 133)'}}>Category</p>
+                                <p style={{
+                                    fontSize: '9px',
+                                    margin: '0',
+                                    lineHeight: "1",
+                                    color: 'rgb(102, 112, 133)'
+                                }}>Category</p>
                                 {categories.map((category, index) => (
                                     <small key={category?.id} style={{fontSize: '8px', lineHeight: "1", color: '#000'}}>
                                         {category?.name}
@@ -101,35 +108,107 @@ const DownloadProfile = ({profileData}) => {
                                 ))}
                             </div>)}
                         {companySize && (
-                        <div>
-                            <p style={{fontSize: '9px', margin: '0', lineHeight: "1", color: 'rgb(102, 112, 133)'}}>Company Size</p>
-                            <small style={{fontSize: '8px', lineHeight: "1", color: '#000'}}>{companySize}</small>
-                        </div>)}
+                            <div>
+                                <p style={{
+                                    fontSize: '9px',
+                                    margin: '0',
+                                    lineHeight: "1",
+                                    color: 'rgb(102, 112, 133)'
+                                }}>Company Size</p>
+                                <small style={{fontSize: '8px', lineHeight: "1", color: '#000'}}>{companySize}</small>
+                            </div>)}
                         {location && (
                             <div className="flex items-center gap-1">
-                                <div style={{fontSize: '9px', margin: '0', lineHeight: "1", color: 'rgb(102, 112, 133)'}}>Location</div>
+                                <div style={{
+                                    fontSize: '9px',
+                                    margin: '0',
+                                    lineHeight: "1",
+                                    color: 'rgb(102, 112, 133)'
+                                }}>Location
+                                </div>
                                 <div className="flex items-center gap-1">
                                     {langIcon ? (
-                                            <div className="overflow-hidden">
-                                                <Image src={langIcon} width="14" height="14" className="w-3.5 h-3.5 rounded-full bg-cover object-center"
-                                                       alt={""} />
-                                            </div>
+                                        <div className="overflow-hidden mt-2">
+                                            <Image src={langIcon} width="14" height="14"
+                                                   className="w-3.5 h-3.5 rounded-full bg-cover object-center"
+                                                   alt={""}
+                                            style={{ margin: 0}}
+                                            />
+                                        </div>
                                     ) : <div className="w-5 h-5 rounded-full bg-gray-300">{location?.name}</div>}
-                                    <small style={{fontSize: '8px', lineHeight: "1", color: '#000'}}>{location?.name}</small>
+                                    <small style={{
+                                        fontSize: '8px',
+                                        lineHeight: "1",
+                                        color: '#000'
+                                    }}>{location?.name}</small>
                                 </div>
                             </div>)}
                         {viewCount && (
                             <div className="flex gap-1">
-                                <p style={{fontSize: '9px', margin: '0', lineHeight: "1", color: 'rgb(102, 112, 133)'}}>Views</p>
+                                <p style={{
+                                    fontSize: '9px',
+                                    margin: '0',
+                                    lineHeight: "1",
+                                    color: 'rgb(102, 112, 133)'
+                                }}>Views</p>
                                 <small style={{fontSize: '8px', lineHeight: "1", color: '#000'}}>{viewCount}</small>
                             </div>)}
 
+                        {about &&
+                            (<div className="py-2">
+                                <div style={{
+                                    fontSize: '9px',
+                                    marginBottom: '5px',
+                                    lineHeight: "1",
+                                    color: 'rgb(102, 112, 133)'
+                                }}>About Company
+                                </div>
+                                <p style={{
+                                    fontSize: '8px',
+                                    marginBottom: '8px',
+                                    lineHeight: "1.5",
+                                    color: '#000'
+                                }}>{about}</p>
+                            </div>)}
+
+                        <div>
+                            <p
+                                style={{
+                                fontSize: '9px',
+                                marginBottom: '12px',
+                                lineHeight: "1",
+                                color: 'rgb(102, 112, 133)'
+                            }}>Certifications</p>
+                            <div className="flex flex-wrap gap-1">
+                                {slideItems?.map((item, index) => (
+                                <div key={item?.id || index}
+                                    className="size-[80px] flex flex-col gap-1 items-center justify-center bg-white border border-gray-300 p-3">
+                                    <div className="h-[60px] mt-0.5 flex items-center justify-center">
+                                        {item?.image_url && (
+                                        <Image
+                                            style={{
+                                                margin: 0
+                                            }}
+                                            src={item?.image_url}
+                                            width={60}
+                                            height={60}
+                                            className="w-full h-full object-contain"
+                                            alt={""}/>)}
+                                    </div>
+                                    <p className="text-gray-500"
+                                       style={{
+                                           fontSize: '7px',
+                                           lineHeight: "1",
+                                           marginTop: '0',
+                                           marginBottom: '2px'
+                                       }}
+                                    >{item?.name}</p>
+                                </div>))}
+                            </div>
+                        </div>
+
                     </div>
-                    {about &&
-                        (<div className="py-2">
-                            <div style={{fontSize: '9px', marginBottom: '5px', lineHeight: "1", color: 'rgb(102, 112, 133)'}}>About Company</div>
-                            <p style={{fontSize: '8px', marginBottom: '8px', lineHeight: "1.5", color: '#000'}}>{about}</p>
-                        </div>)}
+
                 </div>
             </div>
 

@@ -47,6 +47,16 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
         ].some(Boolean);
     };
 
+    const availableTabs = [
+        checkOverviewConditions(overview) && "profile",
+        isNonEmptyArray(clients) && "clients",
+        isNonEmptyArray(certificatesData) && "certifications",
+        isNonEmptyArray(faqs) && "faq",
+        isNonEmptyObject(contactData) && "contacts",
+    ].filter(Boolean);
+
+    const defaultTab = availableTabs.length > 0 ? availableTabs[0] : "profile";
+
     try {
         const preDataPromise = getDataPreOverview();
         const preData = await preDataPromise;
@@ -59,7 +69,7 @@ async function CompanyTabs({faqs, clients, overview, contactData, decissionMaker
                 {((overview && checkOverviewConditions(overview)) || (clients && isNonEmptyArray(clients)) || (certificatesData && isNonEmptyArray(certificatesData)) ||
                     (decissionMakers && isNonEmptyArray(decissionMakers)) || (faqs && isNonEmptyArray(faqs)) || (contactData && isNonEmptyObject(contactData)) ) && (
                 <Tabs
-                    defaultValue="profile"
+                    defaultValue={defaultTab}
                     className="company-tabs w-full overflow-hidden"
                 >
                     <TabsList
