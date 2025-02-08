@@ -12,8 +12,9 @@ import {
   FileDownloadIcon,
 } from "@/icons";
 import Link from "next/link";
+import DownloadProfile from "@/app/(main)/company/[slug]/components/DownloadProfile";
 
-const ContactWithBusinessOwner = ({ headerData }) => {
+const ContactWithBusinessOwner = ({ headerData, profileData }) => {
   const [Owner, setOwner] = useState(false);
   const [email, setEmail] = useState(false);
   const [report, setReport] = useState(false);
@@ -95,12 +96,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
             </p>
           </h3>
 
-          <h3 className="text-gray-500 text-[14px] flex items-center gap-[4px] cursor-pointer">
-            <FileDownloadIcon />
-            <p className="text-gray-500 text-[14px] border-b border-gray-500">
-              Download Profile
-            </p>
-          </h3>
+          <DownloadProfile profileData={profileData} />
         </div>
       </div>
 
