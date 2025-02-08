@@ -1,11 +1,6 @@
 import Title from "@/components/blog/Title";
-import Search from "@/components/blog/search";
 import { Section } from "@/shared";
-import BlogCard from "@/components/blog/blog-card";
-import blog_1 from "@/assets/blog-1.jpg";
 import { getBlogTTNS } from "@/services/blogs";
-import RecommendedTopics from "@/components/blog/recommended-topics";
-import PaginationBlog from "@/components/blog/pagination";
 import BlogTabs from "@/app/(main)/blog/_components/blog-tabs";
 
 const Blog = async () => {
@@ -13,9 +8,8 @@ const Blog = async () => {
 
   try {
     ttnsData = await getBlogTTNS();
-    console.log(ttnsData, "get blogdd");
   } catch (error) {
-    console.error("Error fetching videos:", error);
+    console.error("Error fetching blogs:", error);
     ttnsData = [];
   }
 

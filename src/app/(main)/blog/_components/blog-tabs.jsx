@@ -1,8 +1,6 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BlogCard from "@/components/blog/blog-card";
-import { debounce } from "lodash";
-import RecommendedTopics from "@/components/blog/recommended-topics";
 import { Empty, Error, Section } from "@/shared";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import Search from "@/components/blog/search";
@@ -18,7 +16,7 @@ import "@splidejs/react-splide/css";
 
 function BlogTabs({ ttnsData }) {
   const [blogTypes, setBlogTypes] = useState(null);
-  const [blogData, setBlogData] = useState(null);
+  const [blogData, setBlogData] = useState([]);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
   const [isLoadingBlogTypes, setIsLoadingBlogTypes] = useState(true);
@@ -49,11 +47,6 @@ function BlogTabs({ ttnsData }) {
           blog_topics: [allTab, ...data.blog_topics],
         });
         fetchBlogs("all");
-        // if (data?.blog_topics.length > 0) {
-        //     const firstTabKey = data.blog_topics[0].id;
-        //     setActiveTab(firstTabKey); // Set the first tab as active initially
-        //     fetchBlogs(firstTabKey); // Fetch blogs for the first tab
-        // }
       } catch (err) {
         setError(err);
         setIsBlogTypesEmpty(true);
@@ -110,14 +103,15 @@ function BlogTabs({ ttnsData }) {
     if (page !== currentPage) {
       fetchBlogs(activeTab, debouncedKeyword, page);
     }
-    console.log(page);
+  };
+
+  const isNonEmptyArray = (array) => {
+    return array && Array.isArray(array) && array.length > 0;
   };
 
   if (error) {
     return <Error error={error} />;
   }
-
-  console.log(blogData, "get blogData");
 
   return (
     <>
@@ -158,7 +152,7 @@ function BlogTabs({ ttnsData }) {
                     }}
                     className="w-full max-w-[1024px]"
                   >
-                    {blogTypes?.blog_topics.map((type) => (
+                    {(blogTypes && blogTypes?.blog_topics) && isNonEmptyArray(blogTypes?.blog_topics) && blogTypes?.blog_topics.map((type) => (
                       <SplideSlide key={type.id}>
                         <TabsTrigger
                           className="capitalize py-2.5 px-3 font-semibold text-base cursor-pointer bg-transparent text-gray-500 data-[state=active]:text-brand-700 border-b-2 border-b-transparent rounded-none shadow-none data-[state=active]:border-b-primary"
@@ -179,12 +173,11 @@ function BlogTabs({ ttnsData }) {
               ) : isBlogDataEmpty ? (
                 <Empty message="No blogs available for this category." />
               ) : (
+                  (blogTypes && blogTypes?.blog_topics) && isNonEmptyArray(blogTypes?.blog_topics) &&
                 blogTypes?.blog_topics.map((type) => (
                   <TabsContent key={type.id} value={type.id}>
                     <div className="pt-8 flex flex-col gap-8">
-                      {blogData &&
-                        Array.isArray(blogData) &&
-                        blogData.length > 0 &&
+                      {blogData && isNonEmptyArray(blogData) &&
                         blogData.map((item, index) => (
                           <BlogCard key={index} item={item} />
                         ))}

@@ -11,7 +11,8 @@ export async function getTeams() {
 export async function getAbout() {
     const result = await apiRequest('about', {
         method: 'GET',
-        next: { revalidate: 3600 }
+        next: { revalidate: 0 },
+        cache: "no-store",
     });
     return result.data;
 }

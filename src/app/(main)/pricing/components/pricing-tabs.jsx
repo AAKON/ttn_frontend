@@ -37,9 +37,6 @@ function PricingTabs(props) {
     fetchData();
   }, [active]);
 
-
-  console.log(pricingData, 'get pricingData======');
-
   return (
     <Container>
       {/* Tabs part start */}

@@ -10,8 +10,6 @@ import {
 
 function PaginationBlog({ currentPage, totalPages, onPageChange }) {
 
-  console.log(currentPage, totalPages, 'get pagi data')
-
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (

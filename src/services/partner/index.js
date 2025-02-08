@@ -4,7 +4,8 @@ export async function getPartnerList() {
     const endpoint = `partners`;
     const options = {
         method: 'GET',
-        next: { revalidate: 3600 }
+        next: { revalidate: 0 },
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options);
     return result.data;

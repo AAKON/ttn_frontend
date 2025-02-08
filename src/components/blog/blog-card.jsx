@@ -61,10 +61,11 @@ const BlogCard = ({ item }) => {
             href={`/blog/${slug}`}
             className="font-semibold cursor-pointer hover:underline min-[1300px]:text-2xl text-base lg:text-xl text-gray-900"
             onClick={handleLinkClick}
+            prefetch={false}
           >
             {title}
           </Link>
-          <Link href={`/blog/${slug}`} onClick={handleLinkClick}>
+          <Link href={`/blog/${slug}`} onClick={handleLinkClick} prefetch={false}>
             <svg
               width={24}
               height={24}
