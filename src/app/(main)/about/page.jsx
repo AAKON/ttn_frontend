@@ -32,10 +32,11 @@ const About = async() => {
                     {/* Heading part */}
                     <h1 className="text-center">About Textile Network</h1>
                     {/* sub titel part */}
+                    {aboutData?.description && (
                     <div className="text-base md:text-[20px] md:leading-[30px] text-center text-gray-600 pt-2 md:pt-[30px]"
                          dangerouslySetInnerHTML={{__html: aboutData?.description}}
                     >
-                    </div>
+                    </div>)}
                     <div className="py-8 md:py-12 lg:py-16">
                         <div className="grid grid-cols-3 gap-[15px] md:items-center md:grid-cols-5 md:gap-8 ">
                             {aboutData?.partners &&(

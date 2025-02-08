@@ -84,6 +84,7 @@ const CompanyList = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
         {
           method: "POST",
+          cache: 'no-store',
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
