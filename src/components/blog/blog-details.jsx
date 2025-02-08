@@ -6,6 +6,7 @@ import detailsImg3 from "@/assets/detailsImg3.jpg";
 import { CalendarIcon } from "lucide-react";
 import { CopyIcon, Facebook, Link, Twiter, UserEdit } from "@/icons";
 import Button from "@/components/shared/button";
+import SocialShare from "@/app/(main)/blog/_components/social-share";
 
 const BlogDetails = async ({ blog }) => {
   return (
@@ -69,25 +70,7 @@ const BlogDetails = async ({ blog }) => {
                 </Button>
               ))}
           </div>
-
-          <div className="flex gap-4">
-            <Button secondary className="h-10">
-              <CopyIcon />
-              Copy link
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Twiter />
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Facebook />
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Link />
-            </Button>
-          </div>
+        <SocialShare />
         </div>
       </div>
     </div>

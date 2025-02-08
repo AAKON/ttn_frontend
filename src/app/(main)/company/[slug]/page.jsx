@@ -74,7 +74,7 @@ const CompanyDetails = async ({ params }) => {
               </div>
 
               <div>
-                <ContactWithBusinessOwner headerData={headerData} />
+                <ContactWithBusinessOwner headerData={headerData} profileData={details} />
               </div>
             </div>
           </Container>
