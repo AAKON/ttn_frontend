@@ -24,11 +24,11 @@ export default async function PartnerPage() {
             </h1>
             <p className="text-gray-600 text-sm lg:text-xl font-normal lg:leading-7 leading-5 max-w-[800px] pb-4 lg:pb-8">
               Are you looking to expand your horizons in the textile and apparel
-              industry? Join our dynamic team as a valued partner and unlock a
+              industry? Join as a valued partner and unlock a
               world of opportunities.
             </p>
-            <Button TagName={Link} href={"/contact"} primaryOutline>
-              Join as a partner
+            <Button TagName={Link} href={"/pricing"} primaryOutline>
+              Pricing
             </Button>
           </div>
           <div className="lg:py-[80px] py-8">
@@ -40,13 +40,15 @@ export default async function PartnerPage() {
                   "Offering wide range of business sourcing services, such as product development, sampling, production, quality control, logistics, and after-sales support."
                 }
               />
-              {b2bPartners &&
+              {(b2bPartners &&
                 Array.isArray(b2bPartners) &&
-                b2bPartners.length > 0 && (
-                  <div className="pt-10 grid grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-6 justify-center">
-                    {b2bPartners?.map((item) => (
-                      <CompanyPartnerCard key={item?.id} image={item} />
-                    ))}
+                b2bPartners.length > 0) && (
+                  <div className="pt-10 flex flex-wrap gap-6 justify-center">
+                    {b2bPartners?.map((item) => {
+                        if (item && item?.link) {
+                            return <CompanyPartnerCard key={item?.id} image={item}/>
+                        }
+                    })}
                   </div>
                 )}
             </div>
@@ -58,13 +60,15 @@ export default async function PartnerPage() {
                   "To help reach event and more engaged audience through our website, social media channels, and newsletters."
                 }
               />
-              {marketingPartners &&
+              {(marketingPartners &&
                 Array.isArray(marketingPartners) &&
-                marketingPartners.length > 0 && (
-                  <div className="pt-10 grid grid-cols-[repeat(auto-fit,minmax(140px,140px))] lg:grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-6 justify-center">
-                    {marketingPartners?.map((item) => (
-                      <CompanyPartnerCard key={item?.id} image={item} />
-                    ))}
+                marketingPartners.length > 0) && (
+                  <div className="pt-10 flex flex-wrap gap-6 justify-center">
+                    {marketingPartners?.map((item) => {
+                        if (item && item?.link) {
+                            return <CompanyPartnerCard key={item?.id} image={item}/>
+                        }
+                    })}
                   </div>
                 )}
             </div>
@@ -94,16 +98,20 @@ function BusinessPartner({ heading, summary }) {
 
 function CompanyPartnerCard({ image }) {
   return (
-    <div className="h-[100px] md:h-[140px] xl:h-[200px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2">
-      <Image
-        src={image?.image ? image?.image : business1}
-        alt="logo"
-        width={200}
-        height={200}
-        className="max-w-full max-h-full object-contain"
-      />
-    </div>
+      <Link href={image?.link} target="_blank">
+        <div
+            className="size-[100px] md:size-[130px] xl:size-[150px] flex items-center justify-center rounded-md outline-2 outline-gray-200 outline p-1 lg:p-2 overflow-hidden">
+          <Image
+              src={image?.image ? image?.image : business1}
+              alt="logo"
+              width={150}
+              height={150}
+              layout="responsive"
+              className="max-w-full max-h-full object-contain"
+          />
+        </div>
+      </Link>
   );
 }
 
-export { BusinessPartner, CompanyPartnerCard };
+export {BusinessPartner, CompanyPartnerCard};

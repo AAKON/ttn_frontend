@@ -1,5 +1,6 @@
 import BlogDetails from "@/components/blog/blog-details";
 import { getBlogDetails } from "@/services/blogs";
+import detailsImg1 from "@/assets/detailsImg1.jpg";
 
 /**
  * Page component that renders the details of a specific blog post.
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }) {
           details?.meta_description || details.content.substring(0, 150), // A fallback if no excerpt
         images: [
           {
-            url: process.env.NEXT_PUBLIC_BASE_URL + details?.featured_image, // OG image URL
+            url: details?.featured_image ? details?.featured_image : detailsImg1, // OG image URL
             width: 1200,
             height: 630,
             alt: details?.meta_title,

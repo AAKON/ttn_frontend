@@ -1,19 +1,14 @@
-import { EditIcon, ViewAs } from "@/icons";
+import { ViewAs } from "@/icons";
 import { Container } from "@/shared";
 import Button from "@/components/shared/button";
 import React, { Suspense } from "react";
-import profile_pic from "@/assets/profile-pic.png";
-import ProductsForm from "./_components/products-form";
-import ContactWithBusinessOwner from "./_components/contact-with-business-owner";
-import AvailableProducts from "./_components/available-products";
-import EditTabs from "./_components/tabs";
 import { getCompanyBasic, getDataPreBasic } from "@/services/company";
 import ErrorMessage from "@/components/shared/errormessage";
 import CompanyBasicForm from "./_components/company-form";
 import CompanyForms from "@/app/(main)/myaccount/company/edit/[slug]/_components/company-forms";
 import Company404 from "@/app/(main)/company/[slug]/not-found";
 import Link from "next/link";
-import {GlobalSkeleton} from "@/components/shared/skelton/globalSkeleton";
+import { GlobalSkeleton } from "@/components/shared/skelton/globalSkeleton";
 
 export default async function Page({ params }) {
   const { slug } = await params;
@@ -22,11 +17,8 @@ export default async function Page({ params }) {
     const preDataBasic = await getDataPreBasic();
 
     if (!basic?.status && basic?.code === 404) {
-      return <Company404 />
+      return <Company404 />;
     }
-
-    console.log(basic, 'get basic');
-
 
     return (
       <Suspense fallback={<GlobalSkeleton />}>
@@ -39,16 +31,12 @@ export default async function Page({ params }) {
                   <ViewAs stroke="#000000" />
                   Preview
                 </Button>
-                {/*<Button>*/}
-                {/*  <EditIcon stroke="#ffffff" />*/}
-                {/*  Edit My Profile*/}
-                {/*</Button>*/}
               </div>
               <div className="pt-4">
                 <CompanyBasicForm slug={slug} basic={basic?.data} preData={preDataBasic} />
               </div>
             </div>
-            <CompanyForms slug={slug} preData={preDataBasic} />
+            <CompanyForms slug={slug} basic={basic?.data} preData={preDataBasic} />
           </Container>
         </div>
       </Suspense>

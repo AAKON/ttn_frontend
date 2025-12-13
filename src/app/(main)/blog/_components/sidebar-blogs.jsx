@@ -9,7 +9,7 @@ function SidebarBlogs({ ttnsData, recomended }) {
         <div className="max-w-[356px] w-[356px]">
             <div className="">
                 {/* TNN Picks */}
-                <h3 className="text-xl font-semibold text-gray-700">TNN Picks</h3>
+                <h3 className="text-xl font-semibold text-gray-700">Featured</h3>
                 <div className="pt-6">
                     <div className="flex flex-col gap-y-8">
                         {ttnsData && ttnsData?.TNN_picks.map((item, index) => (

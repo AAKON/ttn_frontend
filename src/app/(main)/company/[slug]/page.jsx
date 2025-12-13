@@ -40,7 +40,7 @@ const CompanyDetails = async ({ params }) => {
     const contactData = details?.company?.contact || null;
     const decissionMakersData = details?.company?.decision_makers || [];
 
-    console.log(details, "get c details");
+    // console.log(details, "get c details");
 
     return (
       <div className="bg-gray-50 pb-8 md:pb-10 lg:pb-16 xl:pb-20">
@@ -53,12 +53,10 @@ const CompanyDetails = async ({ params }) => {
                   {/* AboutCompany part start */}
                   <div className="lg:mb-[32px] relative grid grid-cols-1 gap-6 xl:gap-8">
                     <AboutCompany aboutData={details?.company?.about} />
-                    {productsData &&
+                    {(productsData &&
                     Array.isArray(productsData) &&
-                    productsData.length > 0 ? (
+                    productsData.length > 0) && (
                       <ProductShowcase products={productsData} />
-                    ) : (
-                      <ErrorMessage message={"No products available"} />
                     )}
                   </div>
                   {/* AboutCompany part end */}
@@ -76,7 +74,7 @@ const CompanyDetails = async ({ params }) => {
               </div>
 
               <div>
-                <ContactWithBusinessOwner headerData={headerData} />
+                <ContactWithBusinessOwner headerData={headerData} profileData={details} />
               </div>
             </div>
           </Container>

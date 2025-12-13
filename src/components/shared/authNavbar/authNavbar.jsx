@@ -6,7 +6,7 @@ import Button from "@/components/shared/button";
 import { Bars, Cross } from "@/icons";
 import AuthNavDropdown from "@/components/shared/authNavbar/authNavDropdown";
 
-function AuthNavbar({ userInfo, showMobileNav, setShowMobileNav }) {
+function AuthNavbar({ showMobileNav, setShowMobileNav }) {
   const { data, status } = useSession();
   return (
     <div className="flex justify-end items-center gap-3 md:gap-4 ">

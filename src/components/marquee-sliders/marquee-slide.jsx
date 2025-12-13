@@ -58,6 +58,7 @@ const MarqueeSlide = ({ slideItems, direction = "ltr", ...props }) => {
           <Link
             href={item?.link ? item?.link : "#"}
             key={item?.id}
+            target="_blank"
             className={`max-size-[100px] flex items-center justify-center bg-white border border-gray-300`}
           >
             <Image

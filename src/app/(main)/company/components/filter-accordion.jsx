@@ -45,8 +45,9 @@ export default function FilterAccordion({
           </p>
           <Select
             onValueChange={(value) =>
-              onFilterChange("locationIds", value, true)
+              onFilterChange("locationId", value, true)
             }
+            defaultValue={filters?.locationId}
           >
             <SelectTrigger className=" bg-gray-50 text-black font-semibold py-3 px-[18px] outline-none rounded-[8px] border-gray-200 focus:outline-none focus:ring-0 focus:ring-offset-0">
               <SelectValue placeholder="Anywhere" />
@@ -72,8 +73,8 @@ export default function FilterAccordion({
             </AccordionTrigger>
             <AccordionContent className="space-y-4">
               {filterOptions &&
-                filterOptions?.categories &&
-                filterOptions?.categories.map((category) => (
+                filterOptions?.business_categories &&
+                filterOptions?.business_categories.map((category) => (
                   <div className="grid grid-cols-1" key={category.id}>
                     <div className="flex items-center space-x-2">
                       <Checkbox
@@ -103,6 +104,43 @@ export default function FilterAccordion({
           </AccordionItem>
           {/* By Category end */}
 
+          <AccordionItem value="btypes" className="xs:py-3 sm:py-5 px-6">
+            <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
+              By Types
+            </AccordionTrigger>
+            <AccordionContent className="space-y-4">
+              {filterOptions &&
+                  filterOptions?.business_types &&
+                  filterOptions?.business_types.map((type) => (
+                      <div className="grid grid-cols-1" key={type.id}>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                              id={`btype-${type.id}`}
+                              className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
+                              checked={filters.businessTypeIds.includes(
+                                  type.id
+                              )}
+                              onCheckedChange={(isChecked) =>
+                                  onFilterChange(
+                                      "businessTypeIds",
+                                      type.id,
+                                      isChecked
+                                  )
+                              }
+                          />
+                          <label
+                              htmlFor={`btype-${type.id}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
+                          >
+                            {type.name}
+                          </label>
+                        </div>
+                      </div>
+                  ))}
+            </AccordionContent>
+          </AccordionItem>
+          {/*by types */}
+
           {/* By Type start */}
           <AccordionItem value="type" className="xs:py-3 sm:py-5 px-6">
             <AccordionTrigger className="bg-white hover:no-underline text-sm font-semibold text-gray-900 leading-5 px-0">
@@ -110,27 +148,27 @@ export default function FilterAccordion({
             </AccordionTrigger>
             <AccordionContent className="space-y-4">
               {filterOptions &&
-                filterOptions?.compliances &&
-                filterOptions?.compliances.map((compliance) => (
-                  <div className="grid grid-cols-1" key={compliance.id}>
+                filterOptions?.certificates &&
+                filterOptions?.certificates.map((certificate) => (
+                  <div className="grid grid-cols-1" key={certificate.id}>
                     <div className="flex items-center space-x-2">
                       <Checkbox
-                        id={`compliance-${compliance.id}`}
+                        id={`certificate-${certificate.id}`}
                         className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
-                        checked={filters.complianceIds.includes(compliance.id)}
+                        checked={filters.certificateIds.includes(certificate.id)}
                         onCheckedChange={(isChecked) =>
                           onFilterChange(
-                            "complianceIds",
-                            compliance.id,
+                            "certificateIds",
+                            certificate.id,
                             isChecked
                           )
                         }
                       />
                       <label
-                        htmlFor={`compliance-${compliance.id}`}
+                        htmlFor={`certificate-${certificate.id}`}
                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-500"
                       >
-                        {compliance.name}
+                        {certificate.name}
                       </label>
                     </div>
                   </div>

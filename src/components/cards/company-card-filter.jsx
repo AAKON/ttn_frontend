@@ -50,9 +50,9 @@ const CompanyCardFilter = ({ company }) => {
               />
             </div>
             <div className="flex-1">
-              {company?.businessCategory && (
+              {company?.businessCategories && (
                 <CardTitle className="font-normal text-sm sm:text-md text-brand-500">
-                  {company?.businessCategory}
+                  {company?.businessCategories[0]}
                 </CardTitle>
               )}
               <CardDescription className="font-semibold text-md sm:text-2xl sm:leading-8 text-gray-900">
@@ -83,17 +83,17 @@ const CompanyCardFilter = ({ company }) => {
         </CardHeader>
 
         {/* 1st btn start */}
-        {company?.compliances &&
-          Array.isArray(company?.compliances) &&
-          company?.compliances.length > 0 && (
-            <CardContent className="flex gap-x-2 mr-2 w-full">
-              {company?.compliances.map((compliance) => (
+        {company?.businessTypes &&
+          Array.isArray(company?.businessTypes) &&
+          company?.businessTypes.length > 0 && (
+            <CardContent className="flex flex-wrap gap-2 mr-2 w-full">
+              {company?.businessTypes.map((type, index) => (
                 <Button
                   secondary
-                  className="!border-gray-500 h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
-                  key={compliance.id}
+                  className="!border-gray-500 !h-[24px] !py-[3px] !px-2 text-xs font-medium text-gray-500"
+                  key={index}
                 >
-                  {compliance?.name}
+                  {type}
                 </Button>
               ))}
             </CardContent>

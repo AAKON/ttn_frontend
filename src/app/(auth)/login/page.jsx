@@ -143,7 +143,9 @@ export default function Login() {
                     )}
                   </Button>
                   <p className="text-gray-500 text-md text-center">or</p>
-                  <Button secondary className="w-full" type="button">
+                  <Button secondary className="w-full" type="button"
+                          onClick={() => signIn("google", { callbackUrl: "/" })}
+                  >
                     <Image
                       src="/icons/google-icon.svg"
                       width={20}

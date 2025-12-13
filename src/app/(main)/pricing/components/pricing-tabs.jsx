@@ -73,7 +73,7 @@ function PricingTabs(props) {
                   item={"item-1"}
                   title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
                   text={item?.price}
-                  tabData={B2BPartnership}
+                  tabData={item}
                 />
               ))}
           </div>
@@ -89,7 +89,7 @@ function PricingTabs(props) {
                   item={"item-1"}
                   title={item?.title ?? "MEDIA & EVENT PARTNERSHIP"}
                   text={item?.price}
-                  tabData={marketingPartnership}
+                  tabData={item}
                   // price={`/${item?.price}`}
                 />
               ))}
@@ -99,109 +99,5 @@ function PricingTabs(props) {
     </Container>
   );
 }
-
-const B2BPartnership = {
-  keyBenefits: [
-    {
-      id: 1,
-      text: "Increased brand awareness & credibility",
-    },
-    {
-      id: 2,
-      text: "Targeted exposure & content creation",
-    },
-    {
-      id: 3,
-      text: "Networking for relationship building",
-    },
-    {
-      id: 4,
-      text: "Exclusive content creation opportunities",
-    },
-  ],
-
-  servicesYouGet: [
-    {
-      id: 1,
-      text: "Profile Creation and Management",
-    },
-    {
-      id: 2,
-      text: "Branding and Marketing Materials Design",
-    },
-    {
-      id: 3,
-      text: "Content Creation",
-    },
-    {
-      id: 4,
-      text: "Social Media Marketing",
-    },
-    {
-      id: 5,
-      text: "Digital Ads Management",
-    },
-    {
-      id: 6,
-      text: "Website Development",
-    },
-    {
-      id: 7,
-      text: "SEO and Website Management",
-    },
-  ],
-};
-
-const marketingPartnership = {
-  keyBenefits: [
-    {
-      id: 1,
-      text: "Increased brand awareness & credibility",
-    },
-    {
-      id: 2,
-      text: "Targeted exposure & content creation",
-    },
-    {
-      id: 3,
-      text: "Networking for relationship building",
-    },
-    {
-      id: 4,
-      text: "Exclusive content creation opportunities",
-    },
-  ],
-
-  servicesYouGet: [
-    {
-      id: 1,
-      text: "Profile Creation and Management",
-    },
-    {
-      id: 2,
-      text: "Branding and Marketing Materials Design",
-    },
-    {
-      id: 3,
-      text: "Content Creation",
-    },
-    {
-      id: 4,
-      text: "Social Media Marketing",
-    },
-    {
-      id: 5,
-      text: "Digital Ads Management",
-    },
-    {
-      id: 6,
-      text: "Website Development",
-    },
-    {
-      id: 7,
-      text: "SEO and Website Management",
-    },
-  ],
-};
 
 export default PricingTabs;

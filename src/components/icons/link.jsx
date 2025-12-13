@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Link = ({
+export const Linkedin = ({
   width = 20,
   height = 20,
   stroke = "#98A2B3",

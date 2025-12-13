@@ -1,10 +1,11 @@
 "use client";
-
+import 'react-phone-input-2/lib/style.css'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import React, {useEffect, useState} from "react";
+import PhoneInput from 'react-phone-input-2'
 
 import Button from "@/components/shared/button";
 import {
@@ -43,7 +44,7 @@ const formSchema = z.object({
     name: z.string().min(3, { message: "Name must be 3 characters" }),
     designation: z.string().min(3, { message: "Designation must be 3 characters" }),
     email: z.string().email({ message: "Must be a valid email" }),
-    phone: z.string().min(5, { message: "Must be valid phone number" }),
+    phone: z.string().optional(),
     whatsapp: z.string().optional(),
 });
 
@@ -62,7 +63,7 @@ const DecisionMakersForm = ({slug}) => {
         name: "", designation: "", email: "", phone: "", whatsapp: ""
     },
   });
-  const { control, handleSubmit, setValue, reset } = form;
+  const { control, handleSubmit, setValue, formState: { errors }, reset } = form;
 
 
     const fetchDecissionMakers = async () => {
@@ -144,123 +145,114 @@ const DecisionMakersForm = ({slug}) => {
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-4">
-              <p className="text-gray-500 text-sm pb-2">Contact</p>
-              <div className="grid grid-cols-1 gap-3 lg:gap-3">
-                <FormField
-                  control={control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={labelStyle}>Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          className={inputStyle}
-                          placeholder="Enter Name"
-                          type="text"
-                          {...field}
+                <div className="grid grid-cols-1 gap-3 lg:gap-3">
+                    <FormField
+                        control={control}
+                        name="name"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel className={labelStyle}>Name <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                <Input
+                                        className={inputStyle}
+                                        placeholder="Enter Name"
+                                        type="text"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={control}
+                        name="designation"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel className={labelStyle}>Designation <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                <Input
+                                        className={inputStyle}
+                                        placeholder="Enter Designation"
+                                        type="text"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={control}
+                        name="email"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel className={labelStyle}>Email <span
+                                    className="text-red-600">*</span></FormLabel>
+                                <FormControl>
+                                <Input
+                                        className={inputStyle}
+                                        placeholder="Enter Email"
+                                        type="text"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <div className="space-y-2">
+                        <label className="block text-sm text-gray-900 font-normal mb-3">
+                            Phone
+                        </label>
+                        <PhoneInput
+                            country={"us"}
+                            enableSearch={true}
+                            onChange={(value) => setValue("phone", value)}
+                            inputClass="!bg-background !w-full !h-10 !border-gray-200 !rounded-md"
+                            buttonClass="bg-gray-50 !h-10 !border-gray-200 !rounded-l-md"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="designation"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={labelStyle}>Designation</FormLabel>
-                      <FormControl>
-                        <Input
-                          className={inputStyle}
-                          placeholder="Enter Designation"
-                          type="text"
-                          {...field}
+                        {errors.phone && (
+                            <p className="mt-2 text-sm text-red-600">{errors.phone.message}</p>
+                        )}
+                    </div>
+                    <div className="space-y-2">
+                        <label className="block text-sm text-gray-900 font-normal mb-3">
+                            WhatsApp
+                        </label>
+                        <PhoneInput
+                            country={"us"}
+                            enableSearch={true}
+                            onChange={(value) => setValue("whatsapp", value)}
+                            inputClass="!bg-background !w-full !h-10 !border-gray-200 !rounded-md"
+                            buttonClass="bg-gray-50 !h-10 !border-gray-200 !rounded-l-md"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={labelStyle}>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          className={inputStyle}
-                          placeholder="Enter Email"
-                          type="text"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={labelStyle}>Phone</FormLabel>
-                      <FormControl>
-                        <Input
-                          className={inputStyle}
-                          placeholder="Enter Phone"
-                          type="text"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={control}
-                  name="whatsapp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={labelStyle}>
-                        Whatsapp
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            className={inputStyle + " pr-10"}
-                            placeholder="Enter whatsapp number"
-                            type="text"
-                            {...field}
-                          />
-                          <LinkIcon className="absolute right-2 top-1/2 -translate-y-1/2" />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                        {errors.whatsapp && (
+                            <p className="mt-2 text-sm text-red-600">{errors.whatsapp.message}</p>
+                        )}
+                    </div>
+                </div>
             </div>
-          <div className="flex justify-end">
-            <Button type="submit" secondary disabled={loading} className="h-9 w-[200px]">
-                {loading ? (
-                    <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Please wait
-                    </>
-                ) : (
-                    editId ? "Update" : "Done"
-                )}
-            </Button>
-          </div>
+            <div className="flex justify-end">
+                <Button type="submit" secondary disabled={loading} className="h-9 w-[200px]">
+                    {loading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                            Please wait
+                        </>
+                    ) : (
+                        editId ? "Update" : "Done"
+                    )}
+                </Button>
+            </div>
         </form>
       </Form>
 
-      {/* Preview Cards */}
+        {/* Preview Cards */}
         {loading ? (
-            <DecissionMakerSkeleton />
+            <DecissionMakerSkeleton/>
         ) : (
             <>
                 {dmData && Array.isArray(dmData) && dmData.length > 0 && (

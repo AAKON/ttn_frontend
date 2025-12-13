@@ -12,8 +12,9 @@ import {
   FileDownloadIcon,
 } from "@/icons";
 import Link from "next/link";
+import DownloadProfile from "@/app/(main)/company/[slug]/components/DownloadProfile";
 
-const ContactWithBusinessOwner = ({ headerData }) => {
+const ContactWithBusinessOwner = ({ headerData, profileData }) => {
   const [Owner, setOwner] = useState(false);
   const [email, setEmail] = useState(false);
   const [report, setReport] = useState(false);
@@ -54,9 +55,9 @@ const ContactWithBusinessOwner = ({ headerData }) => {
             <h3 className="text-gray-900 text-base leading-base font-semibold">
               {name}
             </h3>
-            <h6 className="text-gray-600 text-sm leading-sm font-normal line-clamp-1">
-              {tags}
-            </h6>
+            {/*<h6 className="text-gray-600 text-sm leading-sm font-normal line-clamp-1">*/}
+            {/*  {tags}*/}
+            {/*</h6>*/}
           </div>
         </div>
 
@@ -74,7 +75,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
           onClick={emailClick}
           className="w-full text-center lg:text-lg font-semibold lg:mt-7 mt-4 text-white px-4 py-3 text-base"
         >
-          Email us
+          Contact Request
         </Button>
 
         {/*<Button*/}
@@ -95,12 +96,7 @@ const ContactWithBusinessOwner = ({ headerData }) => {
             </p>
           </h3>
 
-          <h3 className="text-gray-500 text-[14px] flex items-center gap-[4px] cursor-pointer">
-            <FileDownloadIcon />
-            <p className="text-gray-500 text-[14px] border-b border-gray-500">
-              Download Profile
-            </p>
-          </h3>
+          <DownloadProfile profileData={profileData} />
         </div>
       </div>
 

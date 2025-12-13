@@ -29,6 +29,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {companyBasicReq} from "@/services/company";
 import DropDownTags from "@/components/ui/dropDownTags";
 import {useRouter} from "next/navigation";
+import ProfileImage from "@/app/(main)/myaccount/profile/components/profile-image";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
@@ -41,10 +42,10 @@ const formSchema = z.object({
     business_categories: z
         .array(z.number({message: "Please select an category"})),
     business_types: z
-        .array(z.number()).optional(),
-    certificates: z
-        .array(z.number()).optional(),
-    company_website: z.string().optional(),
+        .array(z.number({message: "Please select an type"})),
+    // certificates: z
+    //     .array(z.number()).optional(),
+    // company_website: z.string().optional(),
     location_id: z.number({message: "Please select location."}),
     manpower: z.string({message: "Please select company size."}),
     about: z.string({message: "Add about company."}),
@@ -55,6 +56,7 @@ const CompanyForm = ({preData}) => {
     const {toast} = useToast();
 
     const [loading, setLoading] = useState(false);
+    const [fileData, setFileData] = useState(null);
 
     // Options for the select dropdown category
     const categoryOptions =
@@ -77,11 +79,11 @@ const CompanyForm = ({preData}) => {
         [];
 
     // Options for the select dropdown
-    const tagOptions =
-        preData?.certificates?.map((item) => ({
-            label: item.name,
-            value: item.id,
-        })) || [];
+    // const tagOptions =
+    //     preData?.certificates?.map((item) => ({
+    //         label: item.name,
+    //         value: item.id,
+    //     })) || [];
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -90,8 +92,8 @@ const CompanyForm = ({preData}) => {
             moto: "",
             business_categories: [],
             business_types: [],
-            certificates: [],
-            company_website: "",
+            // certificates: [],
+            // company_website: "",
             location_id: "",
             manpower: "",
             about: ""
@@ -111,8 +113,8 @@ const CompanyForm = ({preData}) => {
             moto,
             business_categories,
             business_types,
-            certificates,
-            company_website,
+            // certificates,
+            // company_website,
             location_id,
             manpower,
             about,
@@ -127,13 +129,16 @@ const CompanyForm = ({preData}) => {
         business_types.forEach((item, index) => {
             formData.append(`business_types[${index}]`, item);
         });
-        certificates.forEach((item, index) => {
-            formData.append(`certificates[${index}]`, item);
-        });
-        formData.append("company_website", company_website);
+        // certificates.forEach((item, index) => {
+        //     formData.append(`certificates[${index}]`, item);
+        // });
+        // formData.append("company_website", company_website);
         formData.append("location_id", location_id);
         formData.append("manpower", manpower);
         formData.append("about", about);
+        if (fileData) {
+            formData.append('profile_pic', fileData);
+        }
 
         setLoading(true);
         try {
@@ -160,7 +165,8 @@ const CompanyForm = ({preData}) => {
                                 name="name"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel className={labelStyle}>Company Name</FormLabel>
+                                        <FormLabel className={labelStyle}>Company Name <span
+                                            className="text-red-600">*</span></FormLabel>
                                         <FormControl>
                                             <Input
                                                 className={inputStyle}
@@ -177,139 +183,11 @@ const CompanyForm = ({preData}) => {
                         <div className="col-span-12 md:col-span-6 lg:col-span-4">
                             <FormField
                                 control={form.control}
-                                name="location_id"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel className={labelStyle}>Country</FormLabel>
-                                        <Select
-                                            onValueChange={(value) => field.onChange(Number(value))}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger
-                                                    className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
-                                                >
-                                                    <SelectValue
-                                                        placeholder="Select country"
-                                                        className="text-gray-400 font-normal text-sm"
-                                                    />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {preData?.locations?.map((location) => (
-                                                    <SelectItem
-                                                        key={location.id}
-                                                        value={String(location.id)}
-                                                    >
-                                                        {location.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <FormField
-                            control={form.control}
-                            name="moto"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel className={labelStyle}>Company Motto</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            className={inputStyle}
-                                            placeholder="Enter company moto"
-                                            type="text"
-                                            {...field}
-                                        />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <FormField
-                            control={control}
-                            name="business_categories"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Business Category</FormLabel>
-                                    <DropDownTags
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        options={categoryOptions}
-                                    />
-                                    <FormMessage>{errors.business_categories?.message}</FormMessage>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <FormField
-                            control={control}
-                            name="business_types"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Business type</FormLabel>
-                                    <DropDownTags
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        options={btypesOptions}
-                                    />
-                                    <FormMessage>{errors.business_types?.message}</FormMessage>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <FormField
-                            control={control}
-                            name="certificates"
-                            render={({field}) => (
-                                <FormItem>
-                                    <FormLabel>Certificates</FormLabel>
-                                    <DropDownTags
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                        options={tagOptions}
-                                    />
-                                    <FormMessage>{errors.certificates?.message}</FormMessage>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="grid grid-cols-12 gap-3">
-                        <div className="col-span-12 md:col-span-6 lg:col-span-8">
-                            <FormField
-                                control={form.control}
-                                name="company_website"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel className={labelStyle}>Company Website</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                className={inputStyle}
-                                                placeholder="www.companyurl.com"
-                                                type="text"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                            <FormField
-                                control={form.control}
                                 name="manpower"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel className={labelStyle}>Company size</FormLabel>
+                                        <FormLabel className={labelStyle}>Company size <span
+                                            className="text-red-600">*</span></FormLabel>
                                         <Select onValueChange={field.onChange}>
                                             <FormControl>
                                                 <SelectTrigger
@@ -336,24 +214,130 @@ const CompanyForm = ({preData}) => {
                             />
                         </div>
                     </div>
-
-                    <FormField
-                        control={form.control}
-                        name="about"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel className={labelStyle}>About us</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        className={inputStyle}
-                                        placeholder="Enter a description"
-                                        {...field}
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="location_id"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Country <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <Select
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select country"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {preData?.locations?.map((location) => (
+                                                <SelectItem
+                                                    key={location.id}
+                                                    value={String(location.id)}
+                                                >
+                                                    {location.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="business_categories"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Category <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={categoryOptions}
                                     />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage>{errors.business_categories?.message}</FormMessage>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="business_types"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Type <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={btypesOptions}
+                                    />
+                                    <FormMessage>{errors.business_types?.message}</FormMessage>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="moto"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company Motto</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="Enter company moto"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="about"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>About us <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <FormControl>
+                                        <Textarea
+                                            className={inputStyle}
+                                            placeholder="Enter a description"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
+                    <div>
+                        <h3 className={labelStyle + ' mb-2'}>Profile Image</h3>
+                        <ProfileImage
+                            onImageChange={({file}) => {
+                                setFileData(file);
+                            }}
+                            // buttonTitle="Add Image"
+                        />
+                    </div>
+
                 </div>
 
                 {/* Buttons */}

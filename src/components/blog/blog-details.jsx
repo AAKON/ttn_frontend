@@ -6,23 +6,24 @@ import detailsImg3 from "@/assets/detailsImg3.jpg";
 import { CalendarIcon } from "lucide-react";
 import { CopyIcon, Facebook, Link, Twiter, UserEdit } from "@/icons";
 import Button from "@/components/shared/button";
+import SocialShare from "@/app/(main)/blog/_components/social-share";
 
 const BlogDetails = async ({ blog }) => {
   return (
     <div className="pb-8 lg:pb-20">
-      <div className="lg:w-[1024px] container w-container mx-auto">
-        <h1 className="lg:w-[770px] lg:text-[48px]  w-container text-[36px] font-semibold text-gray-900 pt-[70px] mx-auto text-center">
+      <div className="lg:w-[1024px] container w-container mx-auto blog-details-container">
+        <h1 className="lg:w-[770px] lg:text-[48px]  w-container text-3xl leading-tight font-semibold text-gray-900 pt-[70px] mx-auto text-center">
           {blog.title}
         </h1>
 
-        <p className="lg:text-[20px] text-gray-600 lg:leading-[30px] lg:w-[800px] lg:block hidden mx-auto text-center mt-6">
-          How do you create compelling presentations that wow your colleagues.
-        </p>
+        {/*<p className="lg:text-[20px] text-gray-600 lg:leading-[30px] lg:w-[800px] lg:block hidden mx-auto text-center mt-6">*/}
+        {/*  How do you create compelling presentations that wow your colleagues.*/}
+        {/*</p>*/}
 
-        <p className="text-[18px] text-gray-600 leading-[28px] w-full lg:hidden block mx-auto text-center mt-6">
-          How do you create compelling presentations that wow your colleagues
-          and impress your managers? Here’s how to get started.
-        </p>
+        {/*<p className="text-[18px] text-gray-600 leading-[28px] w-full lg:hidden block mx-auto text-center mt-6">*/}
+        {/*  How do you create compelling presentations that wow your colleagues*/}
+        {/*  and impress your managers? Here’s how to get started.*/}
+        {/*</p>*/}
 
         <div className="flex justify-center gap-4 mt-8">
           {blog?.author && (
@@ -69,25 +70,7 @@ const BlogDetails = async ({ blog }) => {
                 </Button>
               ))}
           </div>
-
-          <div className="flex gap-4">
-            <Button secondary className="h-10">
-              <CopyIcon />
-              Copy link
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Twiter />
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Facebook />
-            </Button>
-
-            <Button secondary className="!size-10 !p-1">
-              <Link />
-            </Button>
-          </div>
+        <SocialShare />
         </div>
       </div>
     </div>

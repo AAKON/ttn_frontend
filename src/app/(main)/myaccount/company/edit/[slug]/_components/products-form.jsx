@@ -38,7 +38,7 @@ const formSchema = z.object({
   name: z.string().min(3, { message: "Product name is required" }),
   price_min: z.coerce.number().min(1, { message: "Minimum price is required" }),
   price_max: z.coerce.number().optional(),
-  moq: z.coerce.number().min(1, { message: "Minimum order is required" }),
+  moq: z.coerce.number().optional(),
   file: z
     .any()
     .refine((val) => val && val.length > 0, "Product image is required"),
@@ -274,14 +274,13 @@ const ProductsForm = ({ productCategories, slug, onSuccess }) => {
                   render={({ field }) => (
                       <FormItem>
                           <FormLabel className={labelStyle}>
-                              Minimum Order Quantity (MOQ) <span className="text-red-600">*</span>
+                              Minimum Order Quantity (MOQ)
                           </FormLabel>
                           <FormControl>
                               <Input
                                   className={inputStyle}
                                   placeholder="500 Piece/Pieces (Min. Order)"
                                   type="number"
-                                  min={1}
                                   {...field}
                               />
                           </FormControl>

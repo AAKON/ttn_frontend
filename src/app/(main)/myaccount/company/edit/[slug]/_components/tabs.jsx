@@ -9,45 +9,14 @@ import clients_3 from "@/assets/company3.jpg";
 import clients_4 from "@/assets/company4.jpg";
 const allClients = [clients_1, clients_2, clients_3, clients_4];
 
-// Clients Certifications items
-import clientsCertification_1 from "@/assets/certificate_1.png";
-import clientsCertification_2 from "@/assets/certificate_1.png";
-import clientsCertification_3 from "@/assets/certificate_1.png";
-import clientsCertification_4 from "@/assets/certificate_1.png";
-
-const allClientsCertifications = [
-  {
-    img: clientsCertification_1,
-    certificate_title: "Cap",
-  },
-  {
-    img: clientsCertification_2,
-    certificate_title: "Yarn",
-  },
-  {
-    img: clientsCertification_3,
-    certificate_title: "Oeko Text",
-  },
-  {
-    img: clientsCertification_4,
-    certificate_title: "Oeko Text",
-  },
-];
-
-import PhotoUploadBox from "./photo-upload-box";
-import Button from "@/components/shared/button";
 import OverviewForm from "./overview";
-import ExistingClients from "./existing-clients";
-import ExistingClientsCertifications from "./existing-clients-certifications";
-import { Input } from "@/components/ui/input";
-import { formLabelClasses, inputClasses } from "@/utils/input-style";
-import { Label } from "@/components/ui/label";
 import DecisionMakersForm from "./decision-makers";
 import FaqForm from "./faq-form";
 import BusinessContactForm from "./business-contact-form";
-import MyClients from "@/app/(main)/myaccount/company/edit/_components/client";
+import MyClients from "@/app/(main)/myaccount/company/edit/[slug]/_components/client";
+import MyCertificates from "@/app/(main)/myaccount/company/edit/[slug]/_components/certificates";
 
-function EditTabs({ slug, preData }) {
+function EditTabs({ slug, basic, preData }) {
   return (
     <div>
       <Tabs defaultValue="profile" className="edit-tabs w-full overflow-hidden mb-8">
@@ -64,12 +33,12 @@ function EditTabs({ slug, preData }) {
           >
             Clients
           </TabsTrigger>
-          {/*<TabsTrigger*/}
-          {/*  className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}*/}
-          {/*  value="certifications"*/}
-          {/*>*/}
-          {/*  Certifications*/}
-          {/*</TabsTrigger>*/}
+          <TabsTrigger
+              className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
+              value="certificates"
+          >
+            Certificates
+          </TabsTrigger>
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="contacts"
@@ -93,6 +62,9 @@ function EditTabs({ slug, preData }) {
         <TabsContent value="clients">
           <MyClients slug={slug} allClients={allClients} />
         </TabsContent>
+        <TabsContent value="certificates">
+          <MyCertificates slug={slug} basic={basic} preData={preData} />
+        </TabsContent>
         <TabsContent value="contacts">
           <div className="bg-white rounded-2xl p-4 lg:p-6 border border-gray-100">
             {/* Business Contact start */}
@@ -104,7 +76,7 @@ function EditTabs({ slug, preData }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
               <h3 className="text-base font-semibold text-gray-900">
-                Business Contact
+                Business
               </h3>
               <div>
                 <BusinessContactForm slug={slug} />
@@ -113,7 +85,7 @@ function EditTabs({ slug, preData }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
               <h3 className="text-base font-semibold text-gray-900">
-                Decision Makers
+                Decision Maker
               </h3>
               <div>
                 <DecisionMakersForm slug={slug} />

@@ -35,20 +35,16 @@ const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
     name: z.string().min(2, {
-        message: "Username must be at least 2 characters.",
+        message: "Name must be at least 2 characters.",
     }),
     moto: z.string().optional(),
     business_categories: z
         .array(z.any()).min(1,{message: "Please select an category"}),
     business_types: z
-        .array(z.any()).optional(),
-    certificates: z
-        .array(z.any())
-        .min(1, {message: "Please add at least one certificates."}),
-    company_website: z.string().optional(),
+        .array(z.any()).min(1, {message: "Please select an type"}),
     location_id: z.number({required_error: "Please select location."}),
-    manpower: z.string().optional(),
-    about: z.string().optional(),
+    manpower: z.string({message: "Please select company size."}),
+    about: z.string({message: "Add about company."}),
     profile_pic: z.string().optional(),
 });
 
@@ -123,8 +119,6 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
             moto: "",
             business_categories: [],
             business_types: [],
-            certificates: [],
-            company_website: "",
             location_id: "",
             manpower: "",
             about: "",
@@ -144,16 +138,12 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
             setValue("moto", basic?.moto || "");
             setValue("manpower", basic?.manpower || "");
             setValue("about", basic?.about || "");
-            if (basic?.certificates) {
-                setValue("certificates", initialCompliances || []);
-            }
             if (basic?.businessCategories) {
                 setValue("business_categories", initialCategories || []);
             }
             if (basic?.businessTypes) {
                 setValue("business_types", initialBtypes || []);
             }
-            setValue("company_website", basic?.company_website || "");
             setValue("about", basic?.about || "");
             setValue("business_category_id", basic?.businessCategory?.id || "");
             setValue("location_id", basic?.location?.id || "");
@@ -167,25 +157,18 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
     };
 
     const onSubmit = async (data) => {
-        console.log(data, "get ddd");
 
         const {
             name,
             moto,
             business_categories,
             business_types,
-            certificates,
-            company_website,
             location_id,
             manpower,
             about,
         } = data;
         const formData = new FormData();
 
-        // Normalize the data to extract values
-        const normalizedCompliances = certificates.map((item) =>
-            typeof item === "object" ? item.value : item
-        );
         // Normalize the data to extract values
         const normalizedCategories = business_categories.map((item) =>
             typeof item === "object" ? item.value : item
@@ -205,12 +188,6 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
         normalizedBtypes.forEach((item, index) => {
             formData.append(`business_types[${index}]`, item);
         });
-        normalizedCompliances.forEach((value, index) => {
-            formData.append(`certificates[${index}]`, value);
-        });
-        if (company_website.trim() !== "") {
-            formData.append("company_website", company_website);
-        }
         formData.append("location_id", location_id);
         formData.append("manpower", manpower);
         if (about.trim() !== "") {
@@ -237,12 +214,6 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="flex justify-start">
-                    <FileUploadPreview
-                        initialImage={initialImage}
-                        onImageChange={handleImageChange}
-                    />
-                </div>
                 <div className="grid grid-cols-1 gap-3 lg:gap-3">
                     <div className="grid gap-3 grid-cols-12">
                         <div className="col-span-12 md:col-span-6 lg:col-span-8">
@@ -251,133 +222,12 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                                 name="name"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel className={labelStyle}>Company Name</FormLabel>
+                                        <FormLabel className={labelStyle}>Company Name <span
+                                            className="text-red-600">*</span></FormLabel>
                                         <FormControl>
                                             <Input
                                                 className={inputStyle}
-                                                placeholder="CodeBlue Clothing Pvt Ltd"
-                                                type="text"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        <div className="col-span-12 md:col-span-6 lg:col-span-4">
-                            <FormField
-                                control={form.control}
-                                name="location_id"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel className={labelStyle}>Country</FormLabel>
-                                        <Select
-                                            defaultValue={basic?.location?.id?.toString()}
-                                            onValueChange={(value) => field.onChange(Number(value))}
-                                        >
-                                            <FormControl>
-                                                <SelectTrigger
-                                                    className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
-                                                >
-                                                    <SelectValue
-                                                        placeholder="Select location"
-                                                        className="text-gray-400 font-normal text-sm"
-                                                    />
-                                                </SelectTrigger>
-                                            </FormControl>
-                                            <SelectContent>
-                                                {preData?.locations?.map((location) => (
-                                                    <SelectItem
-                                                        key={location.id}
-                                                        value={String(location.id)}
-                                                    >
-                                                        {location.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    </div>
-                    <FormField
-                        control={form.control}
-                        name="moto"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel className={labelStyle}>Company Motto</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        className={inputStyle}
-                                        placeholder="Tour tagline here"
-                                        type="text"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={control}
-                        name="business_categories"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Business Category</FormLabel>
-                                <DropDownTags
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    options={categoryOptions}
-                                />
-                                <FormMessage>{errors.business_categories?.message}</FormMessage>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={control}
-                        name="business_types"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Business type</FormLabel>
-                                <DropDownTags
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    options={btypesOptions}
-                                />
-                                <FormMessage>{errors.business_types?.message}</FormMessage>
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={control}
-                        name="certificates"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel>Certificates</FormLabel>
-                                <DropDownTags
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    options={tagOptions}
-                                />
-                                <FormMessage>{errors.tags?.message}</FormMessage>
-                            </FormItem>
-                        )}
-                    />
-                    <div className="grid grid-cols-12 gap-3">
-                        <div className="col-span-12 md:col-span-6 lg:col-span-8">
-                            <FormField
-                                control={form.control}
-                                name="company_website"
-                                render={({field}) => (
-                                    <FormItem>
-                                        <FormLabel className={labelStyle}>Company Website</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                className={inputStyle}
-                                                placeholder="www.companyurl.com"
+                                                placeholder="Write your company name"
                                                 type="text"
                                                 {...field}
                                             />
@@ -393,7 +243,8 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                                 name="manpower"
                                 render={({field}) => (
                                     <FormItem>
-                                        <FormLabel className={labelStyle}>Company size</FormLabel>
+                                        <FormLabel className={labelStyle}>Company size <span
+                                            className="text-red-600">*</span></FormLabel>
                                         <Select
                                             defaultValue={basic?.manpower}
                                             onValueChange={field.onChange}
@@ -409,9 +260,12 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="Small (Below 1000 Manpower)">Small (Below 1000 Manpower)</SelectItem>
-                                                <SelectItem value="Medium (1000 - 10000 Manpower)">Medium (1000 - 10000 Manpower)</SelectItem>
-                                                <SelectItem value="Large (Above 10000 Manpower)">Large (Above 10000 Manpower)</SelectItem>
+                                                <SelectItem value="Small (Below 1000 Manpower)">Small (Below 1000
+                                                    Manpower)</SelectItem>
+                                                <SelectItem value="Medium (1000 - 10000 Manpower)">Medium (1000 - 10000
+                                                    Manpower)</SelectItem>
+                                                <SelectItem value="Large (Above 10000 Manpower)">Large (Above 10000
+                                                    Manpower)</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage/>
@@ -420,24 +274,129 @@ const CompanyBasicForm = ({slug, preData, basic}) => {
                             />
                         </div>
                     </div>
-
-                    <FormField
-                        control={form.control}
-                        name="about"
-                        render={({field}) => (
-                            <FormItem>
-                                <FormLabel className={labelStyle}>About us</FormLabel>
-                                <FormControl>
-                                    <Textarea
-                                        className={`${inputStyle} min-h-[200px] max-h-[500px]`}
-                                        placeholder="Enter a description"
-                                        {...field}
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="location_id"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Country <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <Select
+                                        defaultValue={basic?.location?.id?.toString()}
+                                        onValueChange={(value) => field.onChange(Number(value))}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger
+                                                className={`focus:ring-0 focus:ring-offset-0 focus:ring-offset-none text-gray-900 h-9 font-normal bg-gray-50`}
+                                            >
+                                                <SelectValue
+                                                    placeholder="Select location"
+                                                    className="text-gray-400 font-normal text-sm"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {preData?.locations?.map((location) => (
+                                                <SelectItem
+                                                    key={location.id}
+                                                    value={String(location.id)}
+                                                >
+                                                    {location.name}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="business_categories"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Category <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={categoryOptions}
                                     />
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage>{errors.business_categories?.message}</FormMessage>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="business_types"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Type <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <DropDownTags
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                        options={btypesOptions}
+                                    />
+                                    <FormMessage>{errors.business_types?.message}</FormMessage>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="moto"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>Company Motto</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            className={inputStyle}
+                                            placeholder="Enter company moto"
+                                            type="text"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <FormField
+                            control={form.control}
+                            name="about"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className={labelStyle}>About us <span
+                                        className="text-red-600">*</span></FormLabel>
+                                    <FormControl>
+                                    <Textarea
+                                            className={`${inputStyle} min-h-[200px] max-h-[500px]`}
+                                            placeholder="Enter a description"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <h3 className={labelStyle + ' mb-2 mt-2'}>Profile Image</h3>
+                        <div className="flex justify-start">
+                            <FileUploadPreview
+                                initialImage={initialImage}
+                                onImageChange={handleImageChange}
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 {/* Buttons */}
