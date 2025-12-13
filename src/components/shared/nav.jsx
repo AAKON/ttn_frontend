@@ -29,8 +29,9 @@ import { set } from "lodash";
 const menuItems = [
   { id: 1, label: "Home", path: "/" },
   { id: 2, label: "Company", path: "/company" },
-  { id: 3, label: "Blog", path: "/blog" },
-  { id: 4, label: "Pricing", path: "/pricing" },
+  { id: 3, label: "Sourcing", path: "/sourcing" },
+  { id: 4, label: "Blog", path: "/blog" },
+  { id: 5, label: "Pricing", path: "/pricing" },
 ];
 const moreItems = [
   { id: 1, label: "About Us", path: "/about" },
