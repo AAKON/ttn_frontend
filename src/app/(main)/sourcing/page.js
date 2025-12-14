@@ -2,6 +2,7 @@
 import { Section } from "@/components/shared";
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { getSession } from "next-auth/react";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import HeroCompanyForm from "@/components/hero/hero-company";
 import TextAnimator from "@/components/hero/text-animatior";
@@ -16,18 +17,32 @@ import {
 // Sourcing Card Component 
 import SourcingCard from "@/components/cards/sourcing-card";
 import { Tags } from "@/components/hero/hero";
+import { GridIcon, ListIcon } from "lucide-react";
+import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
+import InfiniteScroll from "react-infinite-scroll-component";
+import PopupSourcingFilter from "./components/popup-sourcing-filter";
+import SourcingCardSkeleton from "@/components/shared/skelton/SourcingCardSkeleton";
 
 const SourcingList = () => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const [view, setView] = useState("grid");
 
   const [filterOptions, setFilterOptions] = useState(null);
   const [sourcings, setSourcings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSourcings, setLoadingSourcings] = useState(false);
+  const [totalResults, setTotalResults] = useState(0);
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    total: 0,
+  });
+  const [hasMore, setHasMore] = useState(true);
+
   const [filters, setFilters] = useState({
     locationId: null,
     businessCategoryIds: [],
     keyword: "",
+    priceRange: null,
   });
 
   // Fetch filter options
@@ -50,42 +65,134 @@ const SourcingList = () => {
   const categories = filterOptions?.business_categories || [];
   const locations = filterOptions?.locations || [];
 
-  // Fetch sourcings
-  useEffect(() => {
-    const fetchSourcings = async () => {
-      setLoading(true);
-      try {
-        // Mock data for now
-        const mockData = Array.from({ length: 9 }, (_, i) => ({
-          id: i + 1,
-          category: i % 3 === 0 ? "Garments" : i % 3 === 1 ? "Textile" : "Fabric",
-          title: `Looking for T-shirt Manufacturer in Bangladesh`,
-          description:
-            "We are looking for reliable FOB T-shirt manufacturers in Bangladesh who are certified with GOTS (Global Organic Textile Standard)",
-          location: "Singapore",
-          company_name: "ABC Group",
-          posted_date: "28 Feb 2024 02:37",
-          tags: ["Fabric", "Yarn", "Washing", "Dying", "Knit"],
-        }));
+  // Fetch sourcings with pagination
+  const fetchSourcings = async (page) => {
+    if (page > pagination.last_page || loadingSourcings) return;
+    setLoading(true);
+    setLoadingSourcings(true);
+    const session = await getSession();
+    const token = session?.accessToken;
+    
+    try {
+      // TODO: Replace with actual API endpoint when ready
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/sourcing/list?page=${page}`,
+      //   {
+      //     method: "POST",
+      //     cache: 'no-store',
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //     body: JSON.stringify(filters),
+      //   }
+      // );
+      // const data = await response.json();
+      
+      // Mock data for now - simulating pagination
+      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
+      
+      const itemsPerPage = 6;
+      const totalItems = 15; // Mock total
+      const mockData = Array.from({ length: Math.min(itemsPerPage, totalItems - (page - 1) * itemsPerPage) }, (_, i) => ({
+        id: (page - 1) * itemsPerPage + i + 1,
+        category: i % 3 === 0 ? "Garments" : i % 3 === 1 ? "Textile" : "Fabric",
+        title: `Looking for T-shirt Manufacturer in Bangladesh`,
+        description:
+          "We are looking for reliable FOB T-shirt manufacturers in Bangladesh who are certified with GOTS (Global Organic Textile Standard)",
+        location: "Singapore",
+        company_name: "ABC Group",
+        posted_date: "28 Feb 2024 02:37",
+        tags: ["Fabric", "Yarn", "Washing", "Dying", "Knit"],
+      }));
 
-        setSourcings(mockData);
-      } catch (error) {
-        console.error("Error fetching sourcings:", error);
-      } finally {
+      const mockPagination = {
+        current_page: page,
+        last_page: Math.ceil(totalItems / itemsPerPage),
+        total: totalItems,
+      };
+
+      // Simulate API response structure
+      const data = {
+        status: true,
+        data: {
+          data: mockData,
+          pagination: mockPagination,
+        }
+      };
+
+      if (data?.status) {
+        if (data && data?.data) {
+          setSourcings((prev) => [...prev, ...data?.data?.data]);
+          setPagination(data?.data?.pagination);
+          setTotalResults(data?.data?.pagination?.total);
+          setHasMore(page < data?.data?.pagination.last_page);
+        }
+      } else {
         setLoading(false);
+        setHasMore(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching sourcings:", error);
+    } finally {
+      setLoading(false);
+      setLoadingSourcings(false);
+    }
+  };
 
-    fetchSourcings();
+  // Fetch sourcings when filters change
+  useEffect(() => {
+    setSourcings([]);
+    setPagination({ current_page: 1, last_page: 1, total: 0 });
+    setHasMore(true);
+    fetchSourcings(1);
   }, [filters]);
 
+  const fetchMoreData = () => {
+    setTimeout(() => {
+      if (!loadingSourcings && hasMore) {
+        fetchSourcings(pagination.current_page + 1);
+      }
+    }, 1000); // 1 second delay
+  };
+
   const handleSearchSubmit = (data) => {
-    setFilters({
-      locationId: data.locationId,
-      businessCategoryIds: data.businessCategoryIds ? [data.businessCategoryIds] : [],
-      keyword: data.keyword || "",
+    setFilters((prevFilters) => {
+      const businessCategoryIds = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
+        ? []
+        : [data?.businessCategoryIds];
+      const locationId = isNaN(data.locationId) ? null : data.locationId;
+      return {
+        ...prevFilters,
+        ...data,
+        businessCategoryIds: businessCategoryIds,
+        locationId: locationId,
+        keyword: data.keyword,
+      };
     });
   };
+
+  const handleFilterChange = (key, id, isChecked) => {
+    setFilters((prev) => {
+      const updatedFilters = { ...prev };
+      if (key === "locationId") {
+        updatedFilters[key] = isChecked ? id : null;
+      } else if (key === "priceRange") {
+        updatedFilters[key] = isChecked ? id : null;
+      } else {
+        if (isChecked) {
+          updatedFilters[key] = [...(updatedFilters[key] || []), id];
+        } else {
+          updatedFilters[key] = updatedFilters[key].filter(
+            (item) => item !== id
+          );
+        }
+      }
+      return updatedFilters;
+    });
+  };
+
+  const resultsCount = sourcings.length;
 
   return (
     <>
@@ -109,22 +216,25 @@ const SourcingList = () => {
               keyword={filters.keyword}
               onSearchSubmit={handleSearchSubmit}
               filters={filters}
+              filterOptions={filterOptions}
+              onFilterChange={handleFilterChange}
+              PopupFilterComponent={PopupSourcingFilter}
             />
           </div>
-          <div className="mt-4 md:mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
+          <div className="hidden mt-4 md:mt-10 lg:flex justify-center items-center gap-3 md:gap-6 flex-wrap">
             <Tags outline tagText="Sports Wear" />
             <Tags outline tagText="Hoodie" />
             <Tags outline tagText="Tops" />
             <Tags outline tagText="Cotton Yarn" />
-        </div>
+          </div>
         </div>
       </Section>
 
       {/* Sourcing Cards Section */}
       <Section>
-        <div className=" mx-auto">
+        <div className="mx-auto">
           {/* Horizontal Dropdown Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <Select
               value={filters.locationId?.toString() || "all"}
               onValueChange={(value) => {
@@ -187,28 +297,66 @@ const SourcingList = () => {
             </Select>
           </div>
 
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
-              {sourcings.length} Sourcing Proposals
-            </h2>
-          </div>
+          <div>
+            <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
+              <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
+                T-shirt manufactures: {resultsCount} Resutls
+              </h3>
+              <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
+                <span
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
+                    view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
+                  }`}
+                  onClick={() => setView("list")}
+                >
+                  <ListIcon
+                    height={12}
+                    width={18}
+                    stroke={view === "list" ? "#475467" : "#98A2B3"}
+                  />
+                </span>
+                <span
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
+                    view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
+                  }`}
+                  onClick={() => setView("grid")}
+                >
+                  <GridIcon
+                    height={18}
+                    width={18}
+                    stroke={view === "grid" ? "#475467" : "#98A2B3"}
+                  />
+                </span>
+              </div>
+            </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-100 animate-pulse rounded-lg h-80"
-                ></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sourcings.map((sourcing) => (
-                <SourcingCard key={sourcing.id} sourcing={sourcing} />
-              ))}
-            </div>
-          )}
+            {loading && <SourcingCardSkeleton />}
+
+            <InfiniteScroll
+              dataLength={sourcings.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<SourcingCardSkeleton />}
+              endMessage={
+                <p className="text-center text-lg text-gray-500 mt-10">
+                  No more results
+                </p>
+              }
+              scrollThreshold={0.5}
+            >
+              <div
+                className={`mt-8 grid gap-3 lg:gap-8 ${
+                  view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+                }`}
+              >
+                {Array.isArray(sourcings) &&
+                  sourcings?.length > 0 &&
+                  sourcings?.map((sourcing, index) => (
+                    <SourcingCard key={index} sourcing={sourcing} />
+                  ))}
+              </div>
+            </InfiniteScroll>
+          </div>
         </div>
       </Section>
 

@@ -36,6 +36,7 @@ export default function HeroCompanyForm({
   filters,
   onFilterChange,
   onResetFilter,
+  PopupFilterComponent, // Custom popup filter component
 }) {
 
   const form = useForm({
@@ -184,12 +185,20 @@ export default function HeroCompanyForm({
               Search
             </Button>
             <div className="lg:hidden">
-              <PopupFilterCard
-                filterOptions={filterOptions}
-                filters={filters}
-                onFilterChange={onFilterChange}
-                onResetFilter={onResetFilter}
-              />
+              {PopupFilterComponent ? (
+                <PopupFilterComponent
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={onFilterChange}
+                />
+              ) : (
+                <PopupFilterCard
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={onFilterChange}
+                  onResetFilter={onResetFilter}
+                />
+              )}
             </div>
           </div>
         </form>
