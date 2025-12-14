@@ -96,6 +96,7 @@ const SourcingList = () => {
       const totalItems = 15; // Mock total
       const mockData = Array.from({ length: Math.min(itemsPerPage, totalItems - (page - 1) * itemsPerPage) }, (_, i) => ({
         id: (page - 1) * itemsPerPage + i + 1,
+        slug: `t-shirt-manufacturer-${(page - 1) * itemsPerPage + i + 1}`,
         category: i % 3 === 0 ? "Garments" : i % 3 === 1 ? "Textile" : "Fabric",
         title: `Looking for T-shirt Manufacturer in Bangladesh`,
         description:
