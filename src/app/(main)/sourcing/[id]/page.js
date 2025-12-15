@@ -4,12 +4,20 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSession } from "next-auth/react";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
-import { MapPin, Mail, User } from "lucide-react";
+import {
+	MapPin,
+	Mail,
+	User,
+	ArrowUp,
+	ChevronUp,
+	ChevronDown,
+} from "lucide-react";
 import Image from "next/image";
 import Button from "@/components/shared/button";
 import SourcingDetailsFrame from "../components/sourcing-details-frame";
 import SourcingInfoCard from "../components/sourcing-info-card";
-import { PhoneIcon, WhatsAppIcon } from "@/components/icons";
+import ContactInfoContent from "../components/contact-info-content";
+import { ArrowTopAngle, PhoneIcon, WhatsAppIcon } from "@/components/icons";
 import { QuantityIcon } from "@/components/icons/quantity-icon";
 import { TargetIcon } from "@/components/icons/target-iocn";
 import { PaymentIcon } from "@/components/icons/payment-icon";
@@ -21,6 +29,7 @@ import { SendIcon } from "@/components/icons/send-icon";
 export default function SourcingDetails() {
 	const params = useParams();
 	const [sourcing, setSourcing] = useState(null);
+	const [showContact, setShowContact] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -322,98 +331,52 @@ export default function SourcingDetails() {
 						</div>
 
 						{/* Right Column - Contact Card */}
-						<div>
+						{/* Right Column - Contact Card */}
+						<div className="lg:hidden">
+							<button
+								onClick={() => setShowContact(true)}
+								className="w-full bg-brand-600 text-white py-3 px-4 rounded-xl flex items-center justify-between cursor-pointer shadow-sm hover:bg-brand-700 transition-colors"
+							>
+								<span className="font-semibold">
+									Contact With Business Owner
+								</span>
+								<ChevronUp className="w-5 h-5 text-white" />
+							</button>
+						</div>
+
+						{/* Mobile Bottom Sheet/Modal */}
+						{showContact && (
+							<div className="fixed inset-0 z-[9999] lg:hidden flex items-end justify-center sm:items-center mx-5 lg:mx-0 mb-5 lg:mb-0">
+								{/* Backdrop */}
+								<div
+									className="fixed w-full h-screen top-0 inset-0 bg-black/60 backdrop-blur-sm"
+									onClick={() => setShowContact(false)}
+								/>
+								{/* Content */}
+								<div className="relative bg-white w-full sm:w-[480px] sm:rounded-2xl rounded-2xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 max-h-[90vh] overflow-y-auto">
+									<div className="flex justify-between items-center mb-6">
+										<h3 className="text-lg font-bold text-gray-900">
+											Contact With Business Owner
+										</h3>
+										<button
+											onClick={() => setShowContact(false)}
+											className="p-2 bg-transparent rounded-full transition-colors"
+										>
+											<ChevronDown className="w-6 h-6 text-brand-600" />
+										</button>
+									</div>
+									<ContactInfoContent sourcing={sourcing} />
+								</div>
+							</div>
+						)}
+
+						{/* Desktop Static Card */}
+						<div className="lg:block hidden">
 							<div className="bg-white border border-gray-200 rounded-xl p-6 sticky top-[120px]">
 								<h3 className="text-lg font-bold text-gray-900 mb-6">
 									Contact
 								</h3>
-
-								{/* Address */}
-								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
-									<div className="flex items-start gap-3 mb-2">
-										<div className="space-y-2">
-											<div className="flex justify-between gap-2">
-												<span className="text-gray-500 text-sm">Address</span>
-												<span className="text-primary text-sm underline text-brand-700 font-semibold mt-1 hover:underline">
-													View On Map
-												</span>
-											</div>
-											<div className="flex gap-2">
-												<MapPin className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
-												<p className="text-md font-medium text-gray-900">
-													{sourcing.contact.address}
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								{/* Email */}
-								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
-									<div className="flex items-start gap-3">
-										<div className="space-y-1">
-											<div className="flex justify-between gap-2">
-												<span className="text-gray-500 text-sm">Email</span>
-											</div>
-											<div className="flex gap-2">
-												<Mail className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
-												<p className="text-md font-medium text-gray-900">
-													{sourcing.contact.email}
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								{/* WhatsApp */}
-								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
-									<div className="flex items-start gap-3">
-										<div className="space-y-1">
-											<div className="flex justify-between gap-2">
-												<span className="text-gray-500 text-sm">Whatsapp</span>
-											</div>
-											<div className="flex gap-2">
-												<WhatsAppIcon
-													stroke="#F7931E"
-													className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5"
-												/>
-												<p className="text-md font-medium text-gray-900">
-													{sourcing.contact.whatsapp}
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								{/* Phone */}
-								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
-									<div className="flex items-start gap-3">
-										<div className="space-y-1">
-											<div className="flex justify-between gap-2">
-												<span className="text-gray-500 text-sm">Phone</span>
-											</div>
-											<div className="flex gap-2">
-												<PhoneIcon
-													stroke="#F7931E"
-													className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5"
-												/>
-												<p className="text-md font-medium text-gray-900">
-													{sourcing.contact.phone}
-												</p>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								{/* Action Buttons */}
-								<div className="grid grid-cols-2 gap-4">
-									<Button primaryOutline className="w-full">
-										Send Email
-									</Button>
-									<Button primary className="w-full">
-										WhatsApp
-									</Button>
-								</div>
+								<ContactInfoContent sourcing={sourcing} />
 							</div>
 						</div>
 					</div>
