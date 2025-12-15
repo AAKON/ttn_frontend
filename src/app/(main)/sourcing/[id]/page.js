@@ -16,6 +16,7 @@ import { PaymentIcon } from "@/components/icons/payment-icon";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import { ReplyIcon } from "@/components/icons/reply-icon";
+import { SendIcon } from "@/components/icons/send-icon";
 
 export default function SourcingDetails() {
 	const params = useParams();
@@ -168,11 +169,7 @@ export default function SourcingDetails() {
 		drag: true,
 		snap: true,
 		breakpoints: {
-			640: {
-				perPage: 1,
-				padding: { right: "20px" },
-			},
-			1024: {
+			768: {
 				perPage: 2,
 				padding: { right: "60px" },
 			},
@@ -223,7 +220,7 @@ export default function SourcingDetails() {
 
 								{/* Description */}
 								<div className="mb-8">
-									<p className="text-gray-700 leading-relaxed">
+									<p className="text-gray-700 leading-relaxed text-md md:text-lg">
 										{sourcing.description}
 									</p>
 								</div>
@@ -256,14 +253,18 @@ export default function SourcingDetails() {
 
 								{/* Add Comment */}
 								<div className="mb-6 border-b border-gray-100 pb-8">
-									<div className="flex gap-3">
-										<input
+									<div className="flex gap-3 items-end">
+										<textarea
 											type="text"
 											placeholder="Add your comments..."
-											className="h-12 flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+											className="resize-none h-12 lg:h-[100px] flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
 										/>
-										<Button secondary className="px-6 !h-12">
-											Submit
+										<Button
+											secondary
+											className="!bg-gray-100 lg:!bg-white px-3 lg:px-6 !h-12"
+										>
+											<SendIcon className="lg:hidden" />
+											<span className="hidden lg:block">Submit</span>
 										</Button>
 									</div>
 								</div>
@@ -273,14 +274,18 @@ export default function SourcingDetails() {
 									{sourcing.comments.map((comment) => (
 										<div
 											key={comment.id}
-											className="border-b border-gray-200 pb-4 last:border-0"
+											className={`${
+												comment.has_reply
+													? "pb-4 last:border-0"
+													: "pl-12 pb-4 last:border-0"
+											}`}
 										>
 											<div className="flex gap-3">
 												<div className="size-12 rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center flex-shrink-0">
 													<User className="w-6 h-6 text-gray-600" />
 												</div>
 												<div className="flex-1 bg-gray-50 p-5 rounded-[16px]">
-													<p className="text-gray-900 text-lg mb-2">
+													<p className="text-gray-900 text-sm md:text-md lg:text-lg mb-2">
 														{comment.comment}
 														{comment.comment.includes("...") && (
 															<button className="ml-2 inline p-0 bg-transparent text-brand-600">
@@ -288,9 +293,15 @@ export default function SourcingDetails() {
 															</button>
 														)}
 													</p>
-													<div className="flex justify-between items-center gap-4 text-xs text-gray-500">
+													<div
+														className={`flex ${
+															comment.has_reply
+																? "justify-between"
+																: "justify-end"
+														} items-center gap-4 text-xs text-gray-500`}
+													>
 														{comment.has_reply && (
-															<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600">
+															<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg">
 																Reply
 																<ReplyIcon
 																	stroke="#C67618"
@@ -298,7 +309,7 @@ export default function SourcingDetails() {
 																/>
 															</button>
 														)}
-														<span className="text-gray-500 text-md">
+														<span className="text-gray-500 text-sm md:text-md">
 															{comment.date}
 														</span>
 													</div>
@@ -312,13 +323,13 @@ export default function SourcingDetails() {
 
 						{/* Right Column - Contact Card */}
 						<div>
-							<div className="bg-white border border-gray-200 rounded-xl p-6 sticky top-4">
+							<div className="bg-white border border-gray-200 rounded-xl p-6 sticky top-[120px]">
 								<h3 className="text-lg font-bold text-gray-900 mb-6">
 									Contact
 								</h3>
 
 								{/* Address */}
-								<div className="mb-6 bg-gray-50 p-4 rounded-lg">
+								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
 									<div className="flex items-start gap-3 mb-2">
 										<div className="space-y-2">
 											<div className="flex justify-between gap-2">
@@ -338,8 +349,8 @@ export default function SourcingDetails() {
 								</div>
 
 								{/* Email */}
-								<div className="mb-6 bg-gray-50 p-4 rounded-lg">
-									<div className="flex items-start gap-3 mb-2">
+								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
+									<div className="flex items-start gap-3">
 										<div className="space-y-1">
 											<div className="flex justify-between gap-2">
 												<span className="text-gray-500 text-sm">Email</span>
@@ -355,8 +366,8 @@ export default function SourcingDetails() {
 								</div>
 
 								{/* WhatsApp */}
-								<div className="mb-6 bg-gray-50 p-4 rounded-lg">
-									<div className="flex items-start gap-3 mb-2">
+								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
+									<div className="flex items-start gap-3">
 										<div className="space-y-1">
 											<div className="flex justify-between gap-2">
 												<span className="text-gray-500 text-sm">Whatsapp</span>
@@ -375,8 +386,8 @@ export default function SourcingDetails() {
 								</div>
 
 								{/* Phone */}
-								<div className="mb-6 bg-gray-50 p-4 rounded-lg">
-									<div className="flex items-start gap-3 mb-2">
+								<div className="mb-6 bg-gray-50 p-3 rounded-lg">
+									<div className="flex items-start gap-3">
 										<div className="space-y-1">
 											<div className="flex justify-between gap-2">
 												<span className="text-gray-500 text-sm">Phone</span>
