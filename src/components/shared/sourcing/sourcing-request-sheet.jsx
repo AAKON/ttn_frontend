@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
 	Sheet,
@@ -23,8 +23,18 @@ import { Check, ArrowRight } from "lucide-react";
 import StepFormDragDropFile from "@/components/shared/StepFormDragDropFile";
 
 export default function SourcingRequestSheet({ open, onOpenChange }) {
-	const isDesktop = useMediaQuery("(min-width: 1024px)");
+	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [step, setStep] = useState(1);
+
+	useEffect(() => {
+		if (!open) {
+			const timer = setTimeout(() => {
+				setStep(1);
+			}, 500); // Reset after closing animation
+			return () => clearTimeout(timer);
+		}
+	}, [open]);
+
 	const {
 		control,
 		handleSubmit,
@@ -80,7 +90,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 				side={isDesktop ? "right" : "bottom"}
 				className={`w-full ${
 					isDesktop
-						? "sm:max-w-xl sm:border-l border-gray-200"
+						? "sm:max-w-[600px] sm:border-l border-gray-200"
 						: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
 				} p-0 flex flex-col gap-0 bg-white`}
 			>
@@ -146,9 +156,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 						</div>
 
 						{/* Progress Bar under tabs (Orange bar) */}
-						<div className="w-full h-1 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
+						<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
 							<div
-								className={`absolute top-0 left-0 h-full bg-brand-500 transition-all duration-300 ease-in-out ${
+								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
 									step === 1 ? "w-1/2" : "w-full"
 								}`}
 							/>
@@ -157,163 +167,161 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 							{step === 1 && (
 								<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-									<div className="grid grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
-												Category
-											</label>
-											<Controller
-												name="category"
-												control={control}
-												render={({ field }) => (
-													<Select
-														onValueChange={field.onChange}
-														defaultValue={field.value}
-													>
-														<SelectTrigger className="text-gray-500">
-															<SelectValue placeholder="Select category" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="T-shirt">T-shirt</SelectItem>
-															<SelectItem value="Yarn">Yarn</SelectItem>
-															<SelectItem value="Fabric">Fabric</SelectItem>
-														</SelectContent>
-													</Select>
-												)}
-											/>
-										</div>
-										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
-												Country
-											</label>
-											<Controller
-												name="country"
-												control={control}
-												render={({ field }) => (
-													<Select
-														onValueChange={field.onChange}
-														defaultValue={field.value}
-													>
-														<SelectTrigger className="text-gray-500">
-															<SelectValue placeholder="Select country" />
-														</SelectTrigger>
-														<SelectContent>
-															<SelectItem value="America">America</SelectItem>
-															<SelectItem value="Bangladesh">
-																Bangladesh
-															</SelectItem>
-															<SelectItem value="India">India</SelectItem>
-														</SelectContent>
-													</Select>
-												)}
-											/>
-										</div>
-									</div>
-
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
-											Company Name
-										</label>
-										<Input
-											{...register("company_name", {
-												required: "Company Name is required",
-											})}
-											placeholder="Type your company name"
-										/>
-										{errors.company_name && (
-											<span className="text-red-500 text-xs">
-												{errors.company_name.message}
-											</span>
-										)}
-									</div>
-
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
-											Email
-										</label>
-										<Input
-											{...register("email", {
-												required: "Email is required",
-												pattern: {
-													value: /^\S+@\S+$/i,
-													message: "Invalid email",
-												},
-											})}
-											placeholder="Ex: demo@email.com"
-										/>
-										{errors.email && (
-											<span className="text-red-500 text-xs">
-												{errors.email.message}
-											</span>
-										)}
-									</div>
-
-									<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
-												Phone
-											</label>
-											<div className="flex gap-2">
+									<div className="bg-gray-50 p-4 rounded-[8px] space-y-2">
+										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											<div className="space-y-2">
+												<label className="text-sm text-gray-900">
+													Category
+												</label>
 												<Controller
-													name="phone_code"
+													name="category"
 													control={control}
 													render={({ field }) => (
 														<Select
 															onValueChange={field.onChange}
 															defaultValue={field.value}
 														>
-															<SelectTrigger className="w-[80px] text-gray-500">
-																<SelectValue />
+															<SelectTrigger className="text-gray-500">
+																<SelectValue placeholder="Select category" />
 															</SelectTrigger>
 															<SelectContent>
-																<SelectItem value="US">US</SelectItem>
-																<SelectItem value="BD">BD</SelectItem>
+																<SelectItem value="T-shirt">T-shirt</SelectItem>
+																<SelectItem value="Yarn">Yarn</SelectItem>
+																<SelectItem value="Fabric">Fabric</SelectItem>
 															</SelectContent>
 														</Select>
 													)}
 												/>
-												<Input
-													{...register("phone", {
-														required: "Phone is required",
-													})}
-													placeholder="Ex: 123654789"
-													className="flex-1"
+											</div>
+											<div className="space-y-2">
+												<label className="text-sm text-gray-900">Country</label>
+												<Controller
+													name="country"
+													control={control}
+													render={({ field }) => (
+														<Select
+															onValueChange={field.onChange}
+															defaultValue={field.value}
+														>
+															<SelectTrigger className="text-gray-500">
+																<SelectValue placeholder="Select country" />
+															</SelectTrigger>
+															<SelectContent>
+																<SelectItem value="America">America</SelectItem>
+																<SelectItem value="Bangladesh">
+																	Bangladesh
+																</SelectItem>
+																<SelectItem value="India">India</SelectItem>
+															</SelectContent>
+														</Select>
+													)}
 												/>
 											</div>
-											{errors.phone && (
+										</div>
+
+										<div className="space-y-2">
+											<label className="text-sm text-gray-900">
+												Company Name
+											</label>
+											<Input
+												{...register("company_name", {
+													required: "Company Name is required",
+												})}
+												placeholder="Type your company name"
+											/>
+											{errors.company_name && (
 												<span className="text-red-500 text-xs">
-													{errors.phone.message}
+													{errors.company_name.message}
 												</span>
 											)}
 										</div>
+									</div>
+
+									<div className="bg-gray-50 p-4 rounded-[8px] space-y-2">
 										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
-												WhatsApp
-											</label>
-											<div className="flex gap-2">
-												<Controller
-													name="whatsapp_code"
-													control={control}
-													render={({ field }) => (
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<SelectTrigger className="w-[80px] text-gray-500">
-																<SelectValue />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="US">US</SelectItem>
-																<SelectItem value="BD">BD</SelectItem>
-															</SelectContent>
-														</Select>
-													)}
-												/>
-												<Input
-													{...register("whatsapp")}
-													placeholder="Ex: 123654789"
-													className="flex-1"
-												/>
+											<label className="text-sm text-gray-900">Email</label>
+											<Input
+												{...register("email", {
+													required: "Email is required",
+													pattern: {
+														value: /^\S+@\S+$/i,
+														message: "Invalid email",
+													},
+												})}
+												placeholder="Ex: demo@email.com"
+											/>
+											{errors.email && (
+												<span className="text-red-500 text-xs">
+													{errors.email.message}
+												</span>
+											)}
+										</div>
+
+										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											<div className="space-y-2">
+												<label className="text-sm text-gray-900">Phone</label>
+												<div className="flex gap-2">
+													<Controller
+														name="phone_code"
+														control={control}
+														render={({ field }) => (
+															<Select
+																onValueChange={field.onChange}
+																defaultValue={field.value}
+															>
+																<SelectTrigger className="w-[80px] text-gray-500">
+																	<SelectValue />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="US">US</SelectItem>
+																	<SelectItem value="BD">BD</SelectItem>
+																</SelectContent>
+															</Select>
+														)}
+													/>
+													<Input
+														{...register("phone", {
+															required: "Phone is required",
+														})}
+														placeholder="Ex: 123654789"
+														className="flex-1"
+													/>
+												</div>
+												{errors.phone && (
+													<span className="text-red-500 text-xs">
+														{errors.phone.message}
+													</span>
+												)}
+											</div>
+											<div className="space-y-2">
+												<label className="text-sm font-medium text-gray-900">
+													WhatsApp
+												</label>
+												<div className="flex gap-2">
+													<Controller
+														name="whatsapp_code"
+														control={control}
+														render={({ field }) => (
+															<Select
+																onValueChange={field.onChange}
+																defaultValue={field.value}
+															>
+																<SelectTrigger className="w-[80px] text-gray-500">
+																	<SelectValue />
+																</SelectTrigger>
+																<SelectContent>
+																	<SelectItem value="US">US</SelectItem>
+																	<SelectItem value="BD">BD</SelectItem>
+																</SelectContent>
+															</Select>
+														)}
+													/>
+													<Input
+														{...register("whatsapp")}
+														placeholder="Ex: 123654789"
+														className="flex-1"
+													/>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -323,7 +331,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 							{step === 2 && (
 								<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
 									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
+										<label className="text-sm font-medium text-gray-900">
 											Proposal Title
 										</label>
 										<Input
@@ -333,7 +341,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
+										<label className="text-sm font-medium text-gray-900">
 											Proposal Description
 										</label>
 										<Textarea
@@ -345,7 +353,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 									<div className="grid grid-cols-2 gap-4">
 										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
+											<label className="text-sm font-medium text-gray-900">
 												Quantity
 											</label>
 											<div className="flex gap-2">
@@ -376,7 +384,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 											</div>
 										</div>
 										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-700">
+											<label className="text-sm font-medium text-gray-900">
 												Target Price Per Unit
 											</label>
 											<div className="flex gap-2">
@@ -412,7 +420,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
+										<label className="text-sm font-medium text-gray-900">
 											Payment Methods
 										</label>
 										<Controller
@@ -437,7 +445,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									</div>
 
 									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-700">
+										<label className="text-sm font-medium text-gray-900">
 											Delivery Information
 										</label>
 										<Input

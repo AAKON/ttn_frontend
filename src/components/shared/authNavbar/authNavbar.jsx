@@ -34,7 +34,11 @@ function AuthNavbar({ showMobileNav, setShowMobileNav }) {
 				<DropdownMenuContent align="end" className="w-[165px] p-2 z-[10001]">
 					<DropdownMenuItem
 						className="cursor-pointer py-3 rounded-xl border-b border-gray-200 font-semibold text-md text-gray-900"
-						onClick={() => setShowSourcingSheet(true)}
+						onSelect={() => {
+							setTimeout(() => {
+								setShowSourcingSheet(true);
+							}, 200);
+						}}
 					>
 						Sourcing
 					</DropdownMenuItem>
