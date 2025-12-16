@@ -18,7 +18,6 @@ import {
 import SourcingCard from "@/components/cards/sourcing-card";
 import { Tags } from "@/components/hero/hero";
 import { GridIcon, ListIcon } from "lucide-react";
-import FilterCardSkeleton from "@/components/shared/skelton/filterCardSkeleton";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PopupSourcingFilter from "./components/popup-sourcing-filter";
 import SourcingCardSkeleton from "@/components/shared/skelton/SourcingCardSkeleton";
@@ -50,7 +49,7 @@ const SourcingList = () => {
     const fetchFilterOptions = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
+          `${process.env.NEXT_PUBLIC_API_URL}/filter-options/sourcing-proposals`
         );
         const data = await response.json();
         setFilterOptions(data.data);
@@ -67,79 +66,44 @@ const SourcingList = () => {
 
   // Fetch sourcings with pagination
   const fetchSourcings = async (page) => {
-    if (page > pagination.last_page || loadingSourcings) return;
-    setLoading(true);
-    setLoadingSourcings(true);
-    const session = await getSession();
-    const token = session?.accessToken;
-    
-    try {
-      // TODO: Replace with actual API endpoint when ready
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/sourcing/list?page=${page}`,
-      //   {
-      //     method: "POST",
-      //     cache: 'no-store',
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //     body: JSON.stringify(filters),
-      //   }
-      // );
-      // const data = await response.json();
-      
-      // Mock data for now - simulating pagination
-      await new Promise(resolve => setTimeout(resolve, 500)); // Simulate API delay
-      
-      const itemsPerPage = 6;
-      const totalItems = 15; // Mock total
-      const mockData = Array.from({ length: Math.min(itemsPerPage, totalItems - (page - 1) * itemsPerPage) }, (_, i) => ({
-        id: (page - 1) * itemsPerPage + i + 1,
-        slug: `t-shirt-manufacturer-${(page - 1) * itemsPerPage + i + 1}`,
-        category: i % 3 === 0 ? "Garments" : i % 3 === 1 ? "Textile" : "Fabric",
-        title: `Looking for T-shirt Manufacturer in Bangladesh`,
-        description:
-          "We are looking for reliable FOB T-shirt manufacturers in Bangladesh who are certified with GOTS (Global Organic Textile Standard)",
-        location: "Singapore",
-        company_name: "ABC Group",
-        posted_date: "28 Feb 2024 02:37",
-        tags: ["Fabric", "Yarn", "Washing", "Dying", "Knit"],
-      }));
-
-      const mockPagination = {
-        current_page: page,
-        last_page: Math.ceil(totalItems / itemsPerPage),
-        total: totalItems,
-      };
-
-      // Simulate API response structure
-      const data = {
-        status: true,
-        data: {
-          data: mockData,
-          pagination: mockPagination,
+      if (page > pagination.last_page || loadingSourcings) return;
+      setLoading(true);
+      setLoadingSourcings(true);
+      const session = await getSession();
+      const token = session?.accessToken;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/sourcing-proposals/list?page=${page}`,
+          {
+            method: "POST",
+            cache: 'no-store',
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(filters),
+          }
+        );
+        const data = await response.json();
+        if(data?.status) {
+          if (data && data?.data) {
+            setSourcings((prev) => [...prev, ...data?.data?.data]);
+            setPagination(data?.data?.pagination);
+            setTotalResults(data?.data?.pagination?.total);
+            setHasMore(page < data?.data?.pagination.last_page);
+          }
+        }else{
+          setLoading(false);
+          setHasMore(false);
         }
-      };
-
-      if (data?.status) {
-        if (data && data?.data) {
-          setSourcings((prev) => [...prev, ...data?.data?.data]);
-          setPagination(data?.data?.pagination);
-          setTotalResults(data?.data?.pagination?.total);
-          setHasMore(page < data?.data?.pagination.last_page);
-        }
-      } else {
+  
+      } catch (error) {
+        console.error("Error fetching sourcings:", error);
+      } finally {
         setLoading(false);
-        setHasMore(false);
+        setLoadingSourcings(false);
       }
-    } catch (error) {
-      console.error("Error fetching sourcings:", error);
-    } finally {
-      setLoading(false);
-      setLoadingSourcings(false);
-    }
-  };
+    };
 
   // Fetch sourcings when filters change
   useEffect(() => {
