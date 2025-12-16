@@ -11,12 +11,7 @@ export default function MobileSourcingFilter({
   filters,
   onFilterChange,
 }) {
-  const priceRanges = [
-    { id: "0-10", label: "$0 - $10" },
-    { id: "10-50", label: "$10 - $50" },
-    { id: "50-100", label: "$50 - $100" },
-    { id: "100+", label: "$100+" },
-  ];
+  const priceRanges = filterOptions?.price_ranges || [];
 
   return (
     <div>
@@ -36,7 +31,7 @@ export default function MobileSourcingFilter({
                       <Checkbox
                         id={`location-${location.id}`}
                         className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
-                        checked={filters.locationId === location.id}
+                        checked={filters.location_id === location.id}
                         onCheckedChange={(isChecked) =>
                           onFilterChange(
                             "locationId",
@@ -65,16 +60,14 @@ export default function MobileSourcingFilter({
             </AccordionTrigger>
             <AccordionContent className="space-y-4 max-h-[270px] overflow-y-auto pt-3 border-t border-gray-200">
               {filterOptions &&
-                filterOptions?.business_categories &&
-                filterOptions?.business_categories.map((category) => (
+                filterOptions?.categories &&
+                filterOptions?.categories.map((category) => (
                   <div className="grid grid-cols-1" key={category.id}>
                     <div className="flex items-center space-x-2">
                       <Checkbox
                         id={`category-${category.id}`}
                         className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
-                        checked={filters.businessCategoryIds.includes(
-                          category.id
-                        )}
+                        checked={filters.product_category_id === category.id}
                         onCheckedChange={(isChecked) =>
                           onFilterChange(
                             "businessCategoryIds",
@@ -108,7 +101,7 @@ export default function MobileSourcingFilter({
                     <Checkbox
                       id={`price-${range.id}`}
                       className="h-4 w-4 p-2 border-gray-400 border bg-white text-gray-500"
-                      checked={filters.priceRange === range.id}
+                      checked={filters.price_range === range.id}
                       onCheckedChange={(isChecked) =>
                         onFilterChange("priceRange", range.id, isChecked)
                       }

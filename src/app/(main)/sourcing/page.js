@@ -38,10 +38,12 @@ const SourcingList = () => {
   const [hasMore, setHasMore] = useState(true);
 
   const [filters, setFilters] = useState({
-    locationId: null,
-    businessCategoryIds: [],
-    keyword: "",
-    priceRange: null,
+    location_id: null,
+    product_category_id: null,
+    currency: null,
+    price_range: null,
+    title: "",
+    company_name: "",
   });
 
   // Fetch filter options
@@ -61,8 +63,9 @@ const SourcingList = () => {
     fetchFilterOptions();
   }, []);
 
-  const categories = filterOptions?.business_categories || [];
+  const categories = filterOptions?.categories || [];
   const locations = filterOptions?.locations || [];
+  const priceRanges = filterOptions?.price_ranges || [];
 
   // Fetch sourcings with pagination
   const fetchSourcings = async (page) => {
@@ -71,17 +74,28 @@ const SourcingList = () => {
       setLoadingSourcings(true);
       const session = await getSession();
       const token = session?.accessToken;
+      
+      // Build query string from filters
+      const queryParams = new URLSearchParams({
+        page: page.toString(),
+        ...(filters.location_id && { location_id: filters.location_id.toString() }),
+        ...(filters.product_category_id && { product_category_id: filters.product_category_id.toString() }),
+        ...(filters.currency && { currency: filters.currency }),
+        ...(filters.price_range && { price_range: filters.price_range }),
+        ...(filters.title && { title: filters.title }),
+        ...(filters.company_name && { company_name: filters.company_name }),
+      });
+      
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/sourcing-proposals/list?page=${page}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/sourcing-proposals/list?${queryParams}`,
           {
-            method: "POST",
+            method: "GET",
             cache: 'no-store',
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(filters),
           }
         );
         const data = await response.json();
@@ -123,16 +137,18 @@ const SourcingList = () => {
 
   const handleSearchSubmit = (data) => {
     setFilters((prevFilters) => {
-      const businessCategoryIds = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
-        ? []
-        : [data?.businessCategoryIds];
-      const locationId = isNaN(data.locationId) ? null : data.locationId;
+      const product_category_id = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
+        ? null
+        : data?.businessCategoryIds;
+      const location_id = isNaN(data.locationId) ? null : data.locationId;
       return {
         ...prevFilters,
-        ...data,
-        businessCategoryIds: businessCategoryIds,
-        locationId: locationId,
-        keyword: data.keyword,
+        location_id: location_id,
+        product_category_id: product_category_id,
+        title: data.keyword || "",
+        company_name: "",
+        currency: null,
+        price_range: data.priceRange || null,
       };
     });
   };
@@ -141,17 +157,11 @@ const SourcingList = () => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
       if (key === "locationId") {
-        updatedFilters[key] = isChecked ? id : null;
+        updatedFilters.location_id = isChecked ? id : null;
       } else if (key === "priceRange") {
-        updatedFilters[key] = isChecked ? id : null;
-      } else {
-        if (isChecked) {
-          updatedFilters[key] = [...(updatedFilters[key] || []), id];
-        } else {
-          updatedFilters[key] = updatedFilters[key].filter(
-            (item) => item !== id
-          );
-        }
+        updatedFilters.price_range = isChecked ? id : null;
+      } else if (key === "businessCategoryIds") {
+        updatedFilters.product_category_id = isChecked ? id : null;
       }
       return updatedFilters;
     });
@@ -201,11 +211,11 @@ const SourcingList = () => {
           {/* Horizontal Dropdown Filters */}
           <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             <Select
-              value={filters.locationId?.toString() || "all"}
+              value={filters.location_id?.toString() || "all"}
               onValueChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
-                  locationId: value === "all" ? null : parseInt(value, 10),
+                  location_id: value === "all" ? null : parseInt(value, 10),
                 }));
               }}
             >
@@ -223,15 +233,11 @@ const SourcingList = () => {
             </Select>
 
             <Select
-              value={
-                filters.businessCategoryIds.length > 0
-                  ? filters.businessCategoryIds[0].toString()
-                  : "all"
-              }
+              value={filters.product_category_id?.toString() || "all"}
               onValueChange={(value) => {
                 setFilters((prev) => ({
                   ...prev,
-                  businessCategoryIds: value === "all" ? [] : [parseInt(value, 10)],
+                  product_category_id: value === "all" ? null : parseInt(value, 10),
                 }));
               }}
             >
@@ -248,16 +254,25 @@ const SourcingList = () => {
               </SelectContent>
             </Select>
 
-            <Select defaultValue="all">
+            <Select
+              value={filters.price_range || "all"}
+              onValueChange={(value) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  price_range: value === "all" ? null : value,
+                }));
+              }}
+            >
               <SelectTrigger className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none">
                 <SelectValue placeholder="By Price Per Unit ($)" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">By Price Per Unit ($)</SelectItem>
-                <SelectItem value="0-10">$0 - $10</SelectItem>
-                <SelectItem value="10-50">$10 - $50</SelectItem>
-                <SelectItem value="50-100">$50 - $100</SelectItem>
-                <SelectItem value="100+">$100+</SelectItem>
+                {priceRanges?.map((range) => (
+                  <SelectItem key={range.id} value={range.id}>
+                    {range.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
