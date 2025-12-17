@@ -292,8 +292,6 @@ export default function SourcingDetails() {
 							</div>
 						</div>
 
-						{/* Right Column - Contact Card */}
-						{/* Right Column - Contact Card */}
 						<div className="lg:hidden">
 							<button
 								onClick={() => setShowContact(true)}
