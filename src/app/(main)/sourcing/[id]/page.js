@@ -75,21 +75,20 @@ export default function SourcingDetails() {
 							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
 							user_avatar: null,
 							comment: comment.comment,
-							date: new Date(comment.created_at).toLocaleDateString('en-US', { 
-								day: 'numeric', 
-								month: 'short', 
-								year: 'numeric' 
+							date: new Date(comment.created_at).toLocaleDateString('en-US', {
+								day: 'numeric',
+								month: 'short',
+								year: 'numeric'
 							}),
-							has_reply: comment.replies && comment.replies.length > 0,
 							replies: comment.replies?.map(reply => ({
 								id: reply.id,
 								user_name: `${reply.user?.first_name} ${reply.user?.last_name}`.trim() || 'Anonymous',
 								user_avatar: null,
 								comment: reply.reply,
-								date: new Date(reply.created_at).toLocaleDateString('en-US', { 
-									day: 'numeric', 
-									month: 'short', 
-									year: 'numeric' 
+								date: new Date(reply.created_at).toLocaleDateString('en-US', {
+									day: 'numeric',
+									month: 'short',
+									year: 'numeric'
 								}),
 							})) || []
 						})) || []
@@ -245,13 +244,9 @@ export default function SourcingDetails() {
 									{sourcing.comments.map((comment) => (
 										<div
 											key={comment.id}
-											className={`${
-												comment.has_reply
-													? "pb-4 last:border-0"
-													: "pl-12 pb-4 last:border-0"
-											}`}
+											className="mb-4 last:border-0 last:mb-0"
 										>
-											<div className="flex gap-3">
+											<div className="mb-4 flex gap-3">
 												<div className="size-12 rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center flex-shrink-0">
 													<User className="w-6 h-6 text-gray-600" />
 												</div>
@@ -264,28 +259,46 @@ export default function SourcingDetails() {
 															</button>
 														)}
 													</p>
-													<div
-														className={`flex ${
-															comment.has_reply
-																? "justify-between"
-																: "justify-end"
-														} items-center gap-4 text-xs text-gray-500`}
-													>
-														{comment.has_reply && (
-															<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg">
-																Reply
-																<ReplyIcon
-																	stroke="#C67618"
-																	className="w-4 h-4"
-																/>
-															</button>
-														)}
+													<div className="flex justify-between items-center gap-4 text-xs text-gray-500">
+														<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg">
+															Reply
+															<ReplyIcon
+																stroke="#C67618"
+																className="w-4 h-4"
+															/>
+														</button>
 														<span className="text-gray-500 text-sm md:text-md">
 															{comment.date}
 														</span>
 													</div>
 												</div>
 											</div>
+											{comment.replies && comment.replies.length > 0 && (
+												<div className="pl-12 mb-4 last:border-0 space-y-3 last:mb-0">
+													{comment.replies.map((reply) => (
+														<div key={reply.id} className="flex gap-3">
+															<div className="size-10 rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center flex-shrink-0">
+																<User className="w-5 h-5 text-gray-600" />
+															</div>
+															<div className="flex-1 bg-gray-50 p-4 rounded-[12px]">
+																<p className="text-gray-900 text-sm md:text-md mb-2">
+																	{reply.comment}
+																	{reply.comment.includes("...") && (
+																		<button className="ml-2 inline p-0 bg-transparent text-brand-600">
+																			Show more
+																		</button>
+																	)}
+																</p>
+																<div className="flex justify-end items-center gap-4 text-xs text-gray-500">
+																	<span className="text-gray-500 text-sm md:text-md">
+																		{reply.date}
+																	</span>
+																</div>
+															</div>
+														</div>
+													))}
+												</div>
+											)}
 										</div>
 									))}
 								</div>
