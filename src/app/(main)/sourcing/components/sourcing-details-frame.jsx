@@ -19,20 +19,12 @@ import ShareModal from "@/components/company/share-modal";
 
 const SourcingDetailsFrame = ({slug, headerData, is_favorite, className}) => {
     const {
-        company_id,
-        bannerImage,
-        profileImage,
-        moto,
-        tags,
-        name,
-        viewCount,
+        title,
+        company_name,
+        category,
         location,
-        categories,
-        btypes,
-        companyName,
-        created,
-        canEdit,
-        canClaim,
+        posted_date,
+        proposal_views,
     } = headerData;
 
     return (
@@ -43,20 +35,11 @@ const SourcingDetailsFrame = ({slug, headerData, is_favorite, className}) => {
                     className="bg-white border border-gray-100 p-8 rounded-2xl grid grid-cols-1 gap-8 xl:gap-12">
                     <div className="flex items-start lg:flex-row flex-col gap-4 lg:justify-between">
                         <div className="space-y-1">
-                            <p>28 Feb 2024 02:37</p>
-                            <h3 className="text-gray-900 md:text-[20px] lg:text-[30px] text-[18px] font-semibold">Looking for T-shirt Manufacturer in Bangladesh</h3>
+                            <p>{posted_date}</p>
+                            <h3 className="text-gray-900 md:text-[20px] lg:text-[30px] text-[18px] font-semibold">{title}</h3>
                         </div>
 
                         <div className="flex lg:gap-4 gap-2">
-                            {!canEdit && (
-                                <Button
-                                    className="!p-3 lg:text-[16px] text-[14px] !font-semibold  size-12"
-                                    TagName={Link}
-                                    href={`/myaccount/company/edit/${slug}`}
-                                >
-                                    <EditIcon stroke="#ffffff"/>
-                                </Button>
-                            )}
                             <ShareModal/>
                             <BookmarkCompany slug={slug} is_favorite={is_favorite} heartIcon/>
                         </div>
@@ -66,16 +49,16 @@ const SourcingDetailsFrame = ({slug, headerData, is_favorite, className}) => {
                         <LdtCard
                             icon={<BuildingTwoIcon/>}
                             text={"Company Name"}
-                            title={"ABC Group"}
+                            title={company_name}
                         />
-                        <LdtCard icon={<GridIcon/>} text={"Category"} title={"T-Shirt"}/>
+                        <LdtCard icon={<GridIcon/>} text={"Category"} title={category}/>
                         <LdtCard
                             icon={<MarkerPinIcon/>}
                             text={"Location"}
                             ExtSrc={location?.flag_path ? location?.flag_path : AU}
-                            title={"Bangladesh"}
+                            title={location?.name || ''}
                         />
-                        <LdtCard icon={<EyeIcon/>} text={"Views"} title={"123"}/>
+                        <LdtCard icon={<EyeIcon/>} text={"Views"} title={proposal_views?.toString() || "0"}/>
                     </div>
                 </div>
             </Container>

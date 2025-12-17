@@ -3,6 +3,7 @@ import { Section } from "@/components/shared";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSession } from "next-auth/react";
+import { getSourcingDetails } from "@/services/sourcing";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import {
 	MapPin,
@@ -31,7 +32,6 @@ export default function SourcingDetails() {
 	const [sourcing, setSourcing] = useState(null);
 	const [showContact, setShowContact] = useState(false);
 	const [loading, setLoading] = useState(true);
-	const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
 	useEffect(() => {
 		const fetchSourcingDetails = async () => {
@@ -40,85 +40,65 @@ export default function SourcingDetails() {
 			const token = session?.accessToken;
 
 			try {
-				// TODO: Replace with actual API endpoint
-				// const response = await fetch(
-				//   `${process.env.NEXT_PUBLIC_API_URL}/sourcing/${params.id}`,
-				//   {
-				//     headers: {
-				//       Authorization: `Bearer ${token}`,
-				//     },
-				//   }
-				// );
-				// const data = await response.json();
+				const response = await getSourcingDetails(params.id, token);
+				
+				if (response && response.status) {
+					// Transform the API response to match the expected format
+					const transformedData = {
+						id: response.message.id,
+						slug: response.message.id,
+						posted_date: new Date(response.message.created_at).toLocaleDateString('en-US', { 
+							day: 'numeric', 
+							month: 'short', 
+							year: 'numeric' 
+						}),
+						title: response.message.title,
+						company_name: response.message.company_name,
+						category: response.message.product_categories?.map(cat => cat.name).join(', ') || '',
+						location: response.message.location?.name || '',
+						country_flag: response.message.location?.flag_path || '',
+						proposal_views: 0, // Not provided in API response
+						images: response.message.images_urls?.map(img => img.original) || [],
+						description: response.message.description || '',
+						quantity: `${response.message.quantity} ${response.message.unit}`,
+						target_price: `${response.message.currency} ${response.message.price}`,
+						payment_methods: response.message.payment_method?.replace('_', ' ') || '',
+						is_favorite: response.message.is_favorited || false,
+						contact: {
+							email: response.message.email || '',
+							whatsapp: response.message.whatsapp || '',
+							phone: response.message.phone || '',
+							address: response.message.delivery_info || '',
+						},
+						comments: response.message.comments?.map(comment => ({
+							id: comment.id,
+							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
+							user_avatar: null,
+							comment: comment.comment,
+							date: new Date(comment.created_at).toLocaleDateString('en-US', { 
+								day: 'numeric', 
+								month: 'short', 
+								year: 'numeric' 
+							}),
+							has_reply: comment.replies && comment.replies.length > 0,
+							replies: comment.replies?.map(reply => ({
+								id: reply.id,
+								user_name: `${reply.user?.first_name} ${reply.user?.last_name}`.trim() || 'Anonymous',
+								user_avatar: null,
+								comment: reply.reply,
+								date: new Date(reply.created_at).toLocaleDateString('en-US', { 
+									day: 'numeric', 
+									month: 'short', 
+									year: 'numeric' 
+								}),
+							})) || []
+						})) || []
+					};
 
-				// Mock data for now
-				await new Promise((resolve) => setTimeout(resolve, 500));
-				const mockData = {
-					id: params.id,
-					posted_date: "28 Feb 2024 02:37",
-					title: "Looking for T-shirt Manufacturer in Bangladesh",
-					company_name: "ABC Group",
-					category: "Manufacturing, Yarn, Sewing",
-					location: "Singapore",
-					country_flag: "🇸🇬",
-					proposal_views: 2343,
-					images: [
-						"/sourcing-1.png",
-						"/sourcing-2.png",
-						"/sourcing-1.png",
-						"/sourcing-2.png",
-					],
-					description: `Codeblue Clothing Private Limited is a Non-govt company, incorporated on 08 Jun, 2010. It serves as a prominent sourcing hub for leading e-commerce and retail players in India. The company has earned its position as a preferred partner for renowned e-commerce names that entrust Codeblue with responsibilities in product development, manufacturing, and design solutions, employing a holistic approach.`,
-					quantity: "20,000 yd",
-					target_price: "$ 5.25",
-					payment_methods: "Bank",
-					contact: {
-						address:
-							"Noida Road, D Block, Sector 11, Noida, Uttar Pradesh, India",
-						email: "contact@codeblueindia.com",
-						whatsapp: "+919810211006",
-						phone: "+919810211006",
-					},
-					comments: [
-						{
-							id: 1,
-							user_name: "Codeblue Clothing Private Limited",
-							user_avatar: null,
-							comment:
-								"Codeblue Clothing Private Limited is a Non-govt company, incorporated on 08 Jun, 2010. It serves as a prominent sourcing hub for leading e-commerce and retail players in India. The company has earned its position as a preferred partner for ...",
-							date: "28 Feb 2024 02:37",
-							has_reply: true,
-						},
-						{
-							id: 2,
-							user_name: null,
-							user_avatar: null,
-							comment:
-								"It serves as a prominent sourcing hub for leading e-commerce and retail players.",
-							date: "28 Feb 2024 02:37",
-							has_reply: false,
-						},
-						{
-							id: 3,
-							user_name: null,
-							user_avatar: null,
-							comment: "It serves as a prominent sourcing.",
-							date: "28 Feb 2024 02:37",
-							has_reply: false,
-						},
-						{
-							id: 4,
-							user_name: "Codeblue Clothing Private Limited",
-							user_avatar: null,
-							comment:
-								"Codeblue Clothing Private Limited is a Non-govt company, incorporated on 08 Jun, 2010. It serves as a prominent sourcing hub for leading e-commerce.",
-							date: "28 Feb 2024 02:37",
-							has_reply: true,
-						},
-					],
-				};
-
-				setSourcing(mockData);
+					setSourcing(transformedData);
+				} else {
+					console.error("API response error:", response);
+				}
 			} catch (error) {
 				console.error("Error fetching sourcing details:", error);
 			} finally {
@@ -130,22 +110,6 @@ export default function SourcingDetails() {
 			fetchSourcingDetails();
 		}
 	}, [params.id]);
-
-	const nextImage = () => {
-		if (sourcing?.images) {
-			setCurrentImageIndex((prev) =>
-				prev === sourcing.images.length - 1 ? 0 : prev + 1
-			);
-		}
-	};
-
-	const prevImage = () => {
-		if (sourcing?.images) {
-			setCurrentImageIndex((prev) =>
-				prev === 0 ? sourcing.images.length - 1 : prev - 1
-			);
-		}
-	};
 
 	if (loading) {
 		return (
@@ -184,8 +148,6 @@ export default function SourcingDetails() {
 			},
 		},
 	};
-
-	console.log(sourcing);
 
 	return (
 		<>
