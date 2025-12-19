@@ -27,7 +27,7 @@ const SourcingCard = ({ sourcing }) => {
               <div className="flex items-center font-medium gap-2 text-gray-900">
                 <MarkerPinIcon stroke="#101828" width={20} height={20} />
                 <span className="text-sm font-medium">
-                  {sourcing?.location}
+                  {sourcing?.location?.name || sourcing?.location}
                 </span>
               </div>
               <div className="flex items-center text-gray-500 mb-3">

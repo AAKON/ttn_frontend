@@ -55,7 +55,7 @@ export default function SourcingDetails() {
 						title: response.message.title,
 						company_name: response.message.company_name,
 						category: response.message.product_categories?.map(cat => cat.name).join(', ') || '',
-						location: response.message.location?.name || '',
+						location: response.message.location || '',
 						country_flag: response.message.location?.flag_path || '',
 						proposal_views: 0, // Not provided in API response
 						images: response.message.images_urls?.map(img => img.original) || [],

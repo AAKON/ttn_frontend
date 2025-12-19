@@ -55,8 +55,8 @@ const SourcingDetailsFrame = ({slug, headerData, is_favorite, className}) => {
                         <LdtCard
                             icon={<MarkerPinIcon/>}
                             text={"Location"}
-                            ExtSrc={location?.flag_path ? location?.flag_path : AU}
-                            title={location?.name || ''}
+                            ExtSrc={typeof location === 'object' ? location?.flag_path : AU}
+                            title={typeof location === 'object' ? location?.name : location}
                         />
                         <LdtCard icon={<EyeIcon/>} text={"Views"} title={proposal_views?.toString() || "0"}/>
                     </div>
@@ -73,10 +73,17 @@ export function LdtCard({icon, text, title, ExtSrc}) {
             <div className="flex items-center lg:gap-[11px] gap-2">
                 {icon}
                 <p className="text-gray-400 font-light lg:text-lg text-[14px]">
-                    {text}
-                </p>
+                    {text} 
+                    </p>
                 </div>
-            <h3>{title}</h3>
+                <div className="flex items-center gap-2.5">
+                        <h3>{title}</h3>
+                        {ExtSrc &&
+                        <div className="w-6 h-6 overflow-hidden rounded-full">
+                        <img src={ExtSrc} alt="flag"/>
+                    </div>}
+                </div>
+            
         </div>
     );
 }
