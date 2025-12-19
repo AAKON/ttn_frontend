@@ -97,8 +97,6 @@ const ProfileInfoForm = () => {
           profile_image: result?.data?.profile_picture
         });
         // window.location.reload();
-        console.log(result?.data?.profile_picture, 'result?.data?.profile_picture')
-        console.log(session, 'get session?.profile_image')
         getProfileData();
       }
     }catch (error) {

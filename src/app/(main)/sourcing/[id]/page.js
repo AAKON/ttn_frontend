@@ -3,7 +3,7 @@ import { Section } from "@/components/shared";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSession } from "next-auth/react";
-import { getSourcingDetails } from "@/services/sourcing";
+import { getSourcingDetails, submitComment } from "@/services/sourcing";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import {
 	MapPin,
@@ -12,6 +12,7 @@ import {
 	ArrowUp,
 	ChevronUp,
 	ChevronDown,
+	Loader2,
 } from "lucide-react";
 import Image from "next/image";
 import Button from "@/components/shared/button";
@@ -26,12 +27,36 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import { ReplyIcon } from "@/components/icons/reply-icon";
 import { SendIcon } from "@/components/icons/send-icon";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {toast} from "@/hooks/use-toast";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+
+const formSchema = z.object({
+    comment: z.string().min(1, { message: "Comment is required" }),
+});
 
 export default function SourcingDetails() {
 	const params = useParams();
 	const [sourcing, setSourcing] = useState(null);
 	const [showContact, setShowContact] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const [submittingComment, setSubmittingComment] = useState(false);
+
+	const form = useForm({
+		resolver: zodResolver(formSchema),
+		defaultValues: {
+			comment: "",
+		},
+	});
 
 	useEffect(() => {
 		const fetchSourcingDetails = async () => {
@@ -109,6 +134,58 @@ export default function SourcingDetails() {
 			fetchSourcingDetails();
 		}
 	}, [params.id]);
+
+	const onSubmit = async (data) => {
+		setSubmittingComment(true);
+		const { comment } = data;
+
+		try {
+			const result = await submitComment(params.id, comment, toast);
+			if (result.status && result.code === 201) {
+				form.reset();
+				
+				// Refresh the sourcing details to get the updated comments
+				const session = await getSession();
+				const token = session?.accessToken;
+				const updatedResponse = await getSourcingDetails(params.id, token);
+				
+				if (updatedResponse && updatedResponse.status) {
+					// Transform the API response to match the expected format
+					const transformedData = {
+						...sourcing,
+						comments: updatedResponse.message.comments?.map(comment => ({
+							id: comment.id,
+							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
+							user_avatar: null,
+							comment: comment.comment,
+							date: new Date(comment.created_at).toLocaleDateString('en-US', {
+								day: 'numeric',
+								month: 'short',
+								year: 'numeric'
+							}),
+							replies: comment.replies?.map(reply => ({
+								id: reply.id,
+								user_name: `${reply.user?.first_name} ${reply.user?.last_name}`.trim() || 'Anonymous',
+								user_avatar: null,
+								comment: reply.reply,
+								date: new Date(reply.created_at).toLocaleDateString('en-US', {
+									day: 'numeric',
+									month: 'short',
+									year: 'numeric'
+								}),
+							})) || []
+						})) || []
+					};
+					
+					setSourcing(transformedData);
+				}
+			}
+		} catch (error) {
+			console.error("Error submitting comment:", error);
+		} finally {
+			setSubmittingComment(false);
+		}
+	};
 
 	if (loading) {
 		return (
@@ -223,20 +300,46 @@ export default function SourcingDetails() {
 
 								{/* Add Comment */}
 								<div className="mb-6 border-b border-gray-100 pb-8">
-									<div className="flex gap-3 items-end">
-										<textarea
-											type="text"
-											placeholder="Add your comments..."
-											className="resize-none h-12 lg:h-[100px] flex-1 px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-										/>
-										<Button
-											secondary
-											className="!bg-gray-100 lg:!bg-white px-3 lg:px-6 !h-12"
-										>
-											<SendIcon className="lg:hidden" />
-											<span className="hidden lg:block">Submit</span>
-										</Button>
-									</div>
+									<Form {...form}>
+										<form onSubmit={form.handleSubmit(onSubmit)}>
+											<div className="flex gap-3 items-end">
+												<FormField
+													control={form.control}
+													name="comment"
+													render={({ field }) => (
+														<FormItem className="flex-1">
+															<FormControl>
+																<Textarea
+																	placeholder="Add your comments..."
+																	className="resize-none h-12 lg:h-[100px] px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+																	{...field}
+																/>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+												<Button
+													secondary
+													type="submit"
+													disabled={submittingComment}
+													className="!bg-gray-100 lg:!bg-white px-3 lg:px-6 !h-12"
+												>
+													{submittingComment ? (
+														<>
+															<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+															<span className="hidden lg:block">Please wait</span>
+														</>
+													) : (
+														<>
+															<SendIcon className="lg:hidden" />
+															<span className="hidden lg:block">Submit</span>
+														</>
+													)}
+												</Button>
+											</div>
+										</form>
+									</Form>
 								</div>
 
 								{/* Comments List */}
