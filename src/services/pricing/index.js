@@ -1,12 +1,9 @@
-import {apiRequest} from "@/utils/api";
+import { apiRequest } from "@/utils/api";
 
-export async function getPricingList(tabType) {
-    const endpoint = `pricing/list?type=${tabType}`;
+export async function getPricingList(type) {
+    const endpoint = `pricing/list?type=${type}`;
     const options = {
         method: 'GET',
-        next: { revalidate: 0 },
-        cache: "no-store"
     };
-    const result = await apiRequest(endpoint, options);
-    return result.data;
+    return await apiRequest(endpoint, options);
 }

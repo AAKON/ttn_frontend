@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/shared";
 import { CheckVerifiedIcon } from "@/components/icons/check-verified"; // Updated import
@@ -7,144 +7,54 @@ import { ChevronDownIcon } from "@/components/icons";
 import Button from "@/components/shared/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+
+import { getPricingList } from "@/services/pricing";
 
 function PricingTabs() {
-	// Functionally we use "Monthly Plan" and "Annual Plan" but structurally we use the previous styling
 	const arr = ["Monthly Plan", "Annual Plan"];
 	const [activeTab, setActiveTab] = useState(arr[0]);
+	const [pricings, setPricings] = useState({ "Monthly Plan": [], "Annual Plan": [] });
+	const [isLoading, setIsLoading] = useState(true);
 
-	const plans = {
-		"Monthly Plan": [
-			{
-				title: "Buying Support",
-				price: "Contact For Price",
-				isContact: true,
-				features: [
-					"Find the best suppliers for your needs",
-					"Collaborate with trusted industry partners",
-					"Optimize costs & sourcing efficiency",
-					"Build a sustainable, scalable supply chain",
-				],
-				buttonText: "Contact Us",
-				buttonLink: "/contact",
-			},
-			{
-				title: "Business Consultation",
-				price: "Contact For Price",
-				isContact: true,
-				features: [
-					"Expert guidance on apparel sourcing and supply chain management",
-					"Market research and trend analysis for strategic growth",
-					"Optimized B2B digital",
-					"Optimized B2B digital marketing strategies for brand visibility",
-					"Assistance in building strong supplier and buyer networks",
-					"Personalized consultation to enhance profitability",
-				],
-				buttonText: "Contact Us",
-				buttonLink: "/contact",
-			},
-			{
-				title: "Seller Verification",
-				prePrice: "Per Month",
-				price: "$9",
-				features: [
-					"Verified status for trust and credibility",
-					"Data updated 1—2 times per month",
-					"Recommended to potential clients for higher visibility and trust",
-					"Promote in social channels",
-				],
-				buttonText: "Get Started",
-				buttonLink: "/contact", // Adjusted to contact or signup
-			},
-			{
-				title: "Marketing Services",
-				prePrice: "Start From",
-				price: "$245",
-				features: [
-					"Profile Creation and Management",
-					"Branding and Marketing Materials Design",
-					"Content Creation",
-					"Social Media Marketing",
-					"Digital Ads Management",
-					"Website Development",
-					"SEO & Website Management",
-				],
-				hasMore: true,
-				moreFeatures: [
-					"Email Marketing Campaigns",
-					"Analytics & Reporting",
-					"Competitor Analysis",
-				],
-				buttonText: "Get Started",
-				buttonLink: "/contact",
-			},
-		],
-		"Annual Plan": [
-			// Using same data for Annual as placeholder, assuming identical features with potentially different pricing logic in future
-			{
-				title: "Buying Support",
-				price: "Contact For Price",
-				isContact: true,
-				features: [
-					"Find the best suppliers for your needs",
-					"Collaborate with trusted industry partners",
-					"Optimize costs & sourcing efficiency",
-					"Build a sustainable, scalable supply chain",
-				],
-				buttonText: "Contact Us",
-				buttonLink: "/contact",
-			},
-			{
-				title: "Business Consultation",
-				price: "Contact For Price",
-				isContact: true,
-				features: [
-					"Expert guidance on apparel sourcing and supply chain management",
-					"Market research and trend analysis for strategic growth",
-					"Optimized B2B digital",
-					"Optimized B2B digital marketing strategies for brand visibility",
-					"Assistance in building strong supplier and buyer networks",
-					"Personalized consultation to enhance profitability",
-				],
-				buttonText: "Contact Us",
-				buttonLink: "/contact",
-			},
-			{
-				title: "Seller Verification",
-				prePrice: "Per Month",
-				price: "$90", // Example annual price
-				features: [
-					"Verified status for trust and credibility",
-					"Data updated 1—2 times per month",
-					"Recommended to potential clients for higher visibility and trust",
-					"Promote in social channels",
-				],
-				buttonText: "Get Started",
-				buttonLink: "/contact",
-			},
-			{
-				title: "Marketing Services",
-				prePrice: "Start From",
-				price: "$2450", // Example annual price
-				features: [
-					"Profile Creation and Management",
-					"Branding and Marketing Materials Design",
-					"Content Creation",
-					"Social Media Marketing",
-					"Digital Ads Management",
-					"Website Development",
-					"SEO & Website Management",
-				],
-				hasMore: true,
-				moreFeatures: [
-					"Email Marketing Campaigns",
-					"Analytics & Reporting",
-					"Competitor Analysis",
-				],
-				buttonText: "Get Started",
-				buttonLink: "/contact",
-			},
-		],
+	useEffect(() => {
+		const fetchPricings = async () => {
+			setIsLoading(true);
+			try {
+				const type = activeTab === "Monthly Plan" ? "monthly" : "annual";
+				const response = await getPricingList(type);
+				if (response?.status) {
+					setPricings(prev => ({
+						...prev,
+						[activeTab]: response.data.pricings || []
+					}));
+				}
+			} catch (error) {
+				console.error("Error fetching pricings:", error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+		fetchPricings();
+	}, [activeTab]);
+
+	const getMappedPlans = (tab) => {
+		return pricings[tab].map((p) => ({
+			title: p.title,
+			price: p.price,
+			isContact: p.price?.toLowerCase().includes("contact") || p.price?.toLowerCase().includes("win-win"),
+			features: p.services || [],
+			moreFeatures: p.benefits || [],
+			hasMore: (p.benefits?.length || 0) > 0,
+			buttonText: p.price?.toLowerCase().includes("contact") || p.price?.toLowerCase().includes("win-win") ? "Contact Us" : "Get Started",
+			buttonLink: "/contact",
+			shortText: p.bt_short_text,
+		}));
+	};
+
+	const tabData = {
+		"Monthly Plan": getMappedPlans("Monthly Plan"),
+		"Annual Plan": getMappedPlans("Annual Plan"),
 	};
 
 	return (
@@ -154,34 +64,47 @@ function PricingTabs() {
 				className="pb-10"
 				onValueChange={setActiveTab}
 			>
-				<div className="md:py-10 py-6 bg-white sticky top-[70px] z-10">
-					<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
-						<div className="bg-gray-50 p-2 rounded-[12px] !inline-flex justify-center border border-gray-100">
-							{arr.map((el, idx) => {
-								return (
-									<TabsTrigger
-										key={idx}
-										value={el}
-										className={cn(
-											"!text-sm lg:!text-xl !px-3 !py-2 rounded-[8px] lg:!py-[10px] lg:!px-5 transition-all",
-											"data-[state=active]:font-semibold data-[state=active]:text-white data-[state=active]:bg-brand-600",
-											"data-[state=inactive]:font-medium data-[state=inactive]:text-gray-700 data-[state=inactive]:bg-transparent"
-										)}
-									>
-										{el}
-									</TabsTrigger>
-								);
-							})}
+				<div className="md:py-10 py-6 bg-white sticky top-[70px] z-10 text-center">
+					{isLoading ? (
+						<div className="flex justify-center items-center py-20">
+							<Loader2 className="w-10 h-10 animate-spin text-brand-600" />
+							<span className="ml-3 text-xl font-medium text-gray-600">Loading Pricings...</span>
 						</div>
-					</TabsList>
+					) : (
+						<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
+							<div className="bg-gray-50 p-2 rounded-[12px] !inline-flex justify-center border border-gray-100">
+								{arr.map((el, idx) => {
+									return (
+										<TabsTrigger
+											key={idx}
+											value={el}
+											className={cn(
+												"!text-sm lg:!text-xl !px-3 !py-2 rounded-[8px] lg:!py-[10px] lg:!px-5 transition-all",
+												"data-[state=active]:font-semibold data-[state=active]:text-white data-[state=active]:bg-brand-600",
+												"data-[state=inactive]:font-medium data-[state=inactive]:text-gray-700 data-[state=inactive]:bg-transparent"
+											)}
+										>
+											{el}
+										</TabsTrigger>
+									);
+								})}
+							</div>
+						</TabsList>
+					)}
 				</div>
 
-				{arr.map((tabName) => (
+				{!isLoading && arr.map((tabName) => (
 					<TabsContent key={tabName} value={tabName} className="mt-0">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-							{plans[tabName].map((plan, index) => (
-								<PricingCard key={index} plan={plan} />
-							))}
+							{tabData[tabName].length > 0 ? (
+								tabData[tabName].map((plan, index) => (
+									<PricingCard key={index} plan={plan} />
+								))
+							) : (
+								<div className="col-span-full py-20 text-center">
+									<p className="text-xl text-gray-500">No pricing plans available for this category.</p>
+								</div>
+							)}
 						</div>
 					</TabsContent>
 				))}
