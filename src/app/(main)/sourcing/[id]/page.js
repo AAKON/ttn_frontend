@@ -1,5 +1,5 @@
 "use client";
-import { Section } from "@/components/shared";
+import { Container, Section } from "@/components/shared";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSession } from "next-auth/react";
@@ -72,51 +72,67 @@ export default function SourcingDetails() {
 					const transformedData = {
 						id: response.data.id,
 						slug: response.data.id,
-						posted_date: new Date(response.data.created_at).toLocaleDateString('en-US', {
-							day: 'numeric',
-							month: 'short',
-							year: 'numeric'
-						}),
+						posted_date: new Date(response.data.created_at).toLocaleDateString(
+							"en-US",
+							{
+								day: "numeric",
+								month: "short",
+								year: "numeric",
+							}
+						),
 						title: response.data.title,
 						company_name: response.data.company_name,
-						category: response.data.product_categories?.map(cat => cat.name).join(', ') || '',
-						location: response.data.location || '',
-						country_flag: response.data.location?.flag_path || '',
+						category:
+							response.data.product_categories
+								?.map((cat) => cat.name)
+								.join(", ") || "",
+						location: response.data.location || "",
+						country_flag: response.data.location?.flag_path || "",
 						proposal_views: 0, // Not provided in API response
-						images: response.data.images_urls?.map(img => img.original) || [],
-						description: response.data.description || '',
+						images: response.data.images_urls?.map((img) => img.original) || [],
+						description: response.data.description || "",
 						quantity: `${response.data.quantity} ${response.data.unit}`,
 						target_price: `${response.data.currency} ${response.data.price}`,
-						payment_methods: response.data.payment_method?.replace('_', ' ') || '',
+						payment_methods:
+							response.data.payment_method?.replace("_", " ") || "",
 						is_favorite: response.data.is_favorited || false,
 						contact: {
-							email: response.data.email || '',
-							whatsapp: response.data.whatsapp || '',
-							phone: response.data.phone || '',
-							address: response.data.delivery_info || '',
+							email: response.data.email || "",
+							whatsapp: response.data.whatsapp || "",
+							phone: response.data.phone || "",
+							address: response.data.delivery_info || "",
 						},
-						comments: response.data.comments?.map(comment => ({
-							id: comment.id,
-							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
-							user_avatar: null,
-							comment: comment.comment,
-							date: new Date(comment.created_at).toLocaleDateString('en-US', {
-								day: 'numeric',
-								month: 'short',
-								year: 'numeric'
-							}),
-							replies: comment.replies?.map(reply => ({
-								id: reply.id,
-								user_name: `${reply.user?.first_name} ${reply.user?.last_name}`.trim() || 'Anonymous',
+						comments:
+							response.data.comments?.map((comment) => ({
+								id: comment.id,
+								user_name:
+									`${comment.user?.first_name} ${comment.user?.last_name}`.trim() ||
+									"Anonymous",
 								user_avatar: null,
-								comment: reply.reply,
-								date: new Date(reply.created_at).toLocaleDateString('en-US', {
-									day: 'numeric',
-									month: 'short',
-									year: 'numeric'
+								comment: comment.comment,
+								date: new Date(comment.created_at).toLocaleDateString("en-US", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
 								}),
-							})) || []
-						})) || []
+								replies:
+									comment.replies?.map((reply) => ({
+										id: reply.id,
+										user_name:
+											`${reply.user?.first_name} ${reply.user?.last_name}`.trim() ||
+											"Anonymous",
+										user_avatar: null,
+										comment: reply.reply,
+										date: new Date(reply.created_at).toLocaleDateString(
+											"en-US",
+											{
+												day: "numeric",
+												month: "short",
+												year: "numeric",
+											}
+										),
+									})) || [],
+							})) || [],
 					};
 
 					setSourcing(transformedData);
@@ -153,28 +169,37 @@ export default function SourcingDetails() {
 					// Transform the API response to match the expected format
 					const transformedData = {
 						...sourcing,
-						comments: updatedResponse.data.comments?.map(comment => ({
-							id: comment.id,
-							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
-							user_avatar: null,
-							comment: comment.comment,
-							date: new Date(comment.created_at).toLocaleDateString('en-US', {
-								day: 'numeric',
-								month: 'short',
-								year: 'numeric'
-							}),
-							replies: comment.replies?.map(reply => ({
-								id: reply.id,
-								user_name: `${reply.user?.first_name} ${reply.user?.last_name}`.trim() || 'Anonymous',
+						comments:
+							updatedResponse.data.comments?.map((comment) => ({
+								id: comment.id,
+								user_name:
+									`${comment.user?.first_name} ${comment.user?.last_name}`.trim() ||
+									"Anonymous",
 								user_avatar: null,
-								comment: reply.reply,
-								date: new Date(reply.created_at).toLocaleDateString('en-US', {
-									day: 'numeric',
-									month: 'short',
-									year: 'numeric'
+								comment: comment.comment,
+								date: new Date(comment.created_at).toLocaleDateString("en-US", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
 								}),
-							})) || []
-						})) || []
+								replies:
+									comment.replies?.map((reply) => ({
+										id: reply.id,
+										user_name:
+											`${reply.user?.first_name} ${reply.user?.last_name}`.trim() ||
+											"Anonymous",
+										user_avatar: null,
+										comment: reply.reply,
+										date: new Date(reply.created_at).toLocaleDateString(
+											"en-US",
+											{
+												day: "numeric",
+												month: "short",
+												year: "numeric",
+											}
+										),
+									})) || [],
+							})) || [],
 					};
 
 					setSourcing(transformedData);
@@ -228,33 +253,32 @@ export default function SourcingDetails() {
 	return (
 		<>
 			<Section className="bg-gray-50">
-				<div className="max-w-7xl mx-auto">
+				<div className="space-y-8">
 					{/* Header */}
 					<SourcingDetailsFrame
 						slug={sourcing.slug}
 						headerData={sourcing}
 						is_favorite={sourcing.is_favorite}
-						className="mb-8"
 					/>
 
 					{/* Main Content Grid */}
 					<div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8">
 						{/* Left Column */}
 						<div className="space-y-8">
-							<div className="bg-white p-4 rounded-lg border border-gray-100">
+							<div className="bg-white p-4 lg:p-6 xl:p-8 rounded-lg border border-gray-100">
 								{/* Image Slider by Splide slider */}
 								<div className="mb-8">
 									<div className="relative">
 										<Splide options={options}>
 											{sourcing?.images?.map((image, index) => (
 												<SplideSlide key={index}>
-													<div key={index} className="">
+													<div key={index}>
 														<Image
 															src={image}
 															alt={sourcing.title}
 															width={240}
 															height={180}
-															className="w-full h-auto object-cover rounded-lg"
+															className="w-full min-h-[100px] h-auto object-cover rounded-lg"
 														/>
 													</div>
 												</SplideSlide>
@@ -273,7 +297,7 @@ export default function SourcingDetails() {
 								</div>
 
 								{/* Details Grid */}
-								<div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+								<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 									<SourcingInfoCard
 										icon={<QuantityIcon stroke="#F7931E" />}
 										label="Quantity"
@@ -293,13 +317,13 @@ export default function SourcingDetails() {
 							</div>
 
 							{/* Comments Section */}
-							<div className="bg-white p-4 rounded-lg border border-gray-100">
+							<div className="bg-white p-4 lg:p-6 xl:p-8 rounded-lg border border-gray-100">
 								<h3 className="text-lg font-semibold text-gray-900 mb-4">
 									Comments ({sourcing.comments.length})
 								</h3>
 
 								{/* Add Comment */}
-								<div className="mb-6 border-b border-gray-100 pb-8">
+								<div>
 									<Form {...form}>
 										<form onSubmit={form.handleSubmit(onSubmit)}>
 											<div className="flex gap-3 items-end">
@@ -328,7 +352,9 @@ export default function SourcingDetails() {
 													{submittingComment ? (
 														<>
 															<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-															<span className="hidden lg:block">Please wait</span>
+															<span className="hidden lg:block">
+																Please wait
+															</span>
 														</>
 													) : (
 														<>
@@ -341,6 +367,11 @@ export default function SourcingDetails() {
 										</form>
 									</Form>
 								</div>
+
+								{/* Divider */}
+								{sourcing.comments.length > 0 && (
+									<div className="border-b border-gray-100 my-4 lg:my-6 xl:my-8" />
+								)}
 
 								{/* Comments List */}
 								<div className="space-y-4">
@@ -365,10 +396,7 @@ export default function SourcingDetails() {
 													<div className="flex justify-between items-center gap-4 text-xs text-gray-500">
 														<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg">
 															Reply
-															<ReplyIcon
-																stroke="#C67618"
-																className="w-4 h-4"
-															/>
+															<ReplyIcon stroke="#C67618" className="w-4 h-4" />
 														</button>
 														<span className="text-gray-500 text-sm md:text-md">
 															{comment.date}
