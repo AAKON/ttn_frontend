@@ -14,7 +14,10 @@ import { getPricingList } from "@/services/pricing";
 function PricingTabs() {
 	const arr = ["Monthly Plan", "Annual Plan"];
 	const [activeTab, setActiveTab] = useState(arr[0]);
-	const [pricings, setPricings] = useState({ "Monthly Plan": [], "Annual Plan": [] });
+	const [pricings, setPricings] = useState({
+		"Monthly Plan": [],
+		"Annual Plan": [],
+	});
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
@@ -24,9 +27,9 @@ function PricingTabs() {
 				const type = activeTab === "Monthly Plan" ? "monthly" : "annual";
 				const response = await getPricingList(type);
 				if (response?.status) {
-					setPricings(prev => ({
+					setPricings((prev) => ({
 						...prev,
-						[activeTab]: response.data.pricings || []
+						[activeTab]: response.data.pricings || [],
 					}));
 				}
 			} catch (error) {
@@ -42,11 +45,17 @@ function PricingTabs() {
 		return pricings[tab].map((p) => ({
 			title: p.title,
 			price: p.price,
-			isContact: p.price?.toLowerCase().includes("contact") || p.price?.toLowerCase().includes("win-win"),
+			isContact:
+				p.price?.toLowerCase().includes("contact") ||
+				p.price?.toLowerCase().includes("win-win"),
 			features: p.services || [],
 			moreFeatures: p.benefits || [],
 			hasMore: (p.benefits?.length || 0) > 0,
-			buttonText: p.price?.toLowerCase().includes("contact") || p.price?.toLowerCase().includes("win-win") ? "Contact Us" : "Get Started",
+			buttonText:
+				p.price?.toLowerCase().includes("contact") ||
+				p.price?.toLowerCase().includes("win-win")
+					? "Contact Us"
+					: "Get Started",
 			buttonLink: "/contact",
 			shortText: p.bt_short_text,
 		}));
@@ -68,7 +77,9 @@ function PricingTabs() {
 					{isLoading ? (
 						<div className="flex justify-center items-center py-20">
 							<Loader2 className="w-10 h-10 animate-spin text-brand-600" />
-							<span className="ml-3 text-xl font-medium text-gray-600">Loading Pricings...</span>
+							<span className="ml-3 text-xl font-medium text-gray-600">
+								Loading Pricings...
+							</span>
 						</div>
 					) : (
 						<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
@@ -93,21 +104,24 @@ function PricingTabs() {
 					)}
 				</div>
 
-				{!isLoading && arr.map((tabName) => (
-					<TabsContent key={tabName} value={tabName} className="mt-0">
-						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-							{tabData[tabName].length > 0 ? (
-								tabData[tabName].map((plan, index) => (
-									<PricingCard key={index} plan={plan} />
-								))
-							) : (
-								<div className="col-span-full py-20 text-center">
-									<p className="text-xl text-gray-500">No pricing plans available for this category.</p>
-								</div>
-							)}
-						</div>
-					</TabsContent>
-				))}
+				{!isLoading &&
+					arr.map((tabName) => (
+						<TabsContent key={tabName} value={tabName} className="mt-0">
+							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+								{tabData[tabName].length > 0 ? (
+									tabData[tabName].map((plan, index) => (
+										<PricingCard key={index} plan={plan} />
+									))
+								) : (
+									<div className="col-span-full py-20 text-center">
+										<p className="text-xl text-gray-500">
+											No pricing plans available for this category.
+										</p>
+									</div>
+								)}
+							</div>
+						</TabsContent>
+					))}
 			</Tabs>
 		</Container>
 	);
@@ -117,15 +131,15 @@ function PricingCard({ plan }) {
 	const [showMore, setShowMore] = useState(false);
 
 	return (
-		<div className="flex flex-col bg-white rounded-xl border border-gray-100 shadow-pricing-card-shadow p-4 lg:p-5 hover:border-[#F7931E] transition-colors duration-300">
+		<div className="flex flex-col bg-white rounded-xl border border-gray-100 hover:shadow-hover-pricing-card-shadow   p-4 lg:p-5 transition-colors duration-300 shadow-pricing-card-shadow">
 			<div className="mb-6 h-[156px] flex flex-col justify-between">
-				<h3 className="text-2xl font-normal text-gray-600 mb-4 flex items-center">
+				<h3 className="text-xl font-normal text-gray-600 mb-4 flex items-center">
 					{plan.title}
 				</h3>
 
 				<div className="mb-4 space-y-1">
 					{plan.prePrice && (
-						<div className="text-xl text-gray-500">{plan.prePrice}</div>
+						<div className="text-[18px] text-gray-500">{plan.prePrice}</div>
 					)}
 
 					{plan.isContact ? (
@@ -138,7 +152,9 @@ function PricingCard({ plan }) {
 							</div>
 						</div>
 					) : (
-						<div className="text-5xl font-bold text-gray-900">{plan.price}</div>
+						<div className="text-[26px] font-bold text-gray-900">
+							{plan.price}
+						</div>
 					)}
 				</div>
 			</div>

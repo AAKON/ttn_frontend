@@ -124,6 +124,8 @@ module.exports = {
 					"0px 8px 24px -4px rgba(16, 24, 40, 0.05), 0px 4px 8px -4px rgba(16, 24, 40, 0.02)",
 				"pricing-card-shadow":
 					"0px 1px 3px 0px rgba(0,0,0,0.10), 0px 1px 2px 0px rgba(0,0,0,0.06)",
+				"hover-pricing-card-shadow":
+					"0px 16px 24px -4px rgba(0,0,0,0.05), 0px 4px 8px -4px rgba(0,0,0,0.02)",
 			},
 		},
 	},

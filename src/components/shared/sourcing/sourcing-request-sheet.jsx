@@ -28,9 +28,12 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, CheckIcon, Loader2 } from "lucide-react";
 import StepFormDragDropFile from "@/components/shared/StepFormDragDropFile";
-import { getSourcingFilterOptions, createSourcingProposal } from "@/services/sourcing";
+import {
+	getSourcingFilterOptions,
+	createSourcingProposal,
+} from "@/services/sourcing";
 import { getSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -58,7 +61,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const { toast } = useToast();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [step, setStep] = useState(1);
-	const [filterOptions, setFilterOptions] = useState({ categories: [], locations: [] });
+	const [filterOptions, setFilterOptions] = useState({
+		categories: [],
+		locations: [],
+	});
 	const [fetchingOptions, setFetchingOptions] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -139,11 +145,14 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 			// Map payment methods to expected snake_case keys if necessary
 			const paymentMapping = {
-				"Bank": "bank_transfer",
-				"Cash": "cash",
-				"LC": "lc"
+				Bank: "bank_transfer",
+				Cash: "cash",
+				LC: "lc",
 			};
-			formData.append("payment_method", paymentMapping[data.payment_method] || data.payment_method.toLowerCase());
+			formData.append(
+				"payment_method",
+				paymentMapping[data.payment_method] || data.payment_method.toLowerCase()
+			);
 
 			formData.append("company_name", data.company_name);
 			formData.append("email", data.email);
@@ -192,10 +201,11 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		<Sheet open={open} onOpenChange={onOpenChange}>
 			<SheetContent
 				side={isDesktop ? "right" : "bottom"}
-				className={`w-full ${isDesktop
-					? "sm:max-w-[600px] sm:border-l border-gray-200"
-					: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
-					} p-0 flex flex-col gap-0 bg-white`}
+				className={`w-full ${
+					isDesktop
+						? "sm:max-w-[600px] sm:border-l border-gray-200"
+						: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
+				} p-0 flex flex-col gap-0 bg-white`}
 			>
 				{/* Content Wrapper to handle scrolling properly */}
 				<div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -215,16 +225,20 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => setStep(1)}
 								>
 									<div
-										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${step >= 1 ? "border-brand-600" : "border-gray-300"
-											}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+											step >= 1 ? "border-brand-700" : "border-gray-300"
+										}`}
 									>
 										{step >= 1 && (
-											<div className="w-2.5 h-2.5 rounded-full bg-brand-600" />
+											<CheckIcon className="w-3 h-3 text-brand-700" />
 										)}
 									</div>
 									<span
-										className={`text-sm font-medium ${step === 1 ? "text-gray-900" : "text-gray-500"
-											}`}
+										className={`text-sm font-medium ${
+											step === 1 || step === 2
+												? "text-brand-700"
+												: "text-gray-500"
+										}`}
 									>
 										Basic Info
 									</span>
@@ -236,16 +250,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => step > 1 && setStep(2)}
 								>
 									<div
-										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${step === 2 ? "border-brand-600" : "border-gray-300"
-											}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+											step === 2 ? "border-brand-700" : "border-gray-300"
+										}`}
 									>
 										{step === 2 && (
-											<div className="w-2.5 h-2.5 rounded-full bg-brand-600" />
+											<CheckIcon className="w-3 h-3 text-brand-700" />
 										)}
 									</div>
 									<span
-										className={`text-sm font-medium ${step === 2 ? "text-gray-900" : "text-gray-500"
-											}`}
+										className={`text-sm font-medium ${
+											step === 2 ? "text-brand-700" : "text-gray-500"
+										}`}
 									>
 										Inquiry Details
 									</span>
@@ -256,13 +272,17 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 						{/* Progress Bar under tabs (Orange bar) */}
 						<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
 							<div
-								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${step === 1 ? "w-1/2" : "w-full"
-									}`}
+								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
+									step === 1 ? "w-1/2" : "w-full"
+								}`}
 							/>
 						</div>
 
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+							<form
+								onSubmit={form.handleSubmit(onSubmit)}
+								className="space-y-6"
+							>
 								{step === 1 && (
 									<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
 										<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
@@ -281,13 +301,22 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																value={field.value}
 															>
 																<FormControl>
-																	<SelectTrigger className="text-gray-500">
-																		<SelectValue placeholder={fetchingOptions ? "Loading..." : "Select category"} />
+																	<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																		<SelectValue
+																			placeholder={
+																				fetchingOptions
+																					? "Loading..."
+																					: "Select category"
+																			}
+																		/>
 																	</SelectTrigger>
 																</FormControl>
 																<SelectContent>
 																	{filterOptions.categories?.map((cat) => (
-																		<SelectItem key={cat.id} value={cat.id.toString()}>
+																		<SelectItem
+																			key={cat.id}
+																			value={cat.id.toString()}
+																		>
 																			{cat.name}
 																		</SelectItem>
 																	))}
@@ -311,13 +340,22 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																value={field.value}
 															>
 																<FormControl>
-																	<SelectTrigger className="text-gray-500">
-																		<SelectValue placeholder={fetchingOptions ? "Loading..." : "Select country"} />
+																	<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																		<SelectValue
+																			placeholder={
+																				fetchingOptions
+																					? "Loading..."
+																					: "Select country"
+																			}
+																		/>
 																	</SelectTrigger>
 																</FormControl>
 																<SelectContent>
 																	{filterOptions.locations?.map((loc) => (
-																		<SelectItem key={loc.id} value={loc.id.toString()}>
+																		<SelectItem
+																			key={loc.id}
+																			value={loc.id.toString()}
+																		>
 																			{loc.name}
 																		</SelectItem>
 																	))}
@@ -339,6 +377,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 														</FormLabel>
 														<FormControl>
 															<Input
+																className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 																placeholder="Type your company name"
 																{...field}
 															/>
@@ -359,7 +398,11 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 															Email
 														</FormLabel>
 														<FormControl>
-															<Input placeholder="Ex: demo@email.com" {...field} />
+															<Input
+																className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																placeholder="Ex: demo@email.com"
+																{...field}
+															/>
 														</FormControl>
 														<FormMessage />
 													</FormItem>
@@ -381,7 +424,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		value={field.value}
 																	>
 																		<FormControl>
-																			<SelectTrigger className="w-[80px] text-gray-500">
+																			<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
 																				<SelectValue />
 																			</SelectTrigger>
 																		</FormControl>
@@ -409,6 +452,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																<FormItem className="flex-1">
 																	<FormControl>
 																		<Input
+																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 																			placeholder="Ex: 123654789"
 																			{...field}
 																		/>
@@ -439,7 +483,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		value={field.value}
 																	>
 																		<FormControl>
-																			<SelectTrigger className="w-[80px] text-gray-500">
+																			<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
 																				<SelectValue />
 																			</SelectTrigger>
 																		</FormControl>
@@ -467,6 +511,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																<FormItem className="flex-1">
 																	<FormControl>
 																		<Input
+																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 																			placeholder="Ex: 123654789"
 																			{...field}
 																		/>
@@ -495,7 +540,11 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 														Proposal Title
 													</FormLabel>
 													<FormControl>
-														<Input placeholder="Type proposal title" {...field} />
+														<Input
+															className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+															placeholder="Type proposal title"
+															{...field}
+														/>
 													</FormControl>
 													<FormMessage />
 												</FormItem>
@@ -513,7 +562,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													<FormControl>
 														<Textarea
 															placeholder="Enter a description..."
-															className="min-h-[100px]"
+															className="min-h-[100px] focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 															{...field}
 														/>
 													</FormControl>
@@ -538,7 +587,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
 																			qty
 																		</span>
-																		<Input className="pl-10" {...field} />
+																		<Input
+																			className="pl-10 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																			{...field}
+																		/>
 																	</div>
 																</FormControl>
 															</FormItem>
@@ -555,19 +607,23 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																	value={field.value}
 																>
 																	<FormControl>
-																		<SelectTrigger className="w-[100px] text-gray-500">
+																		<SelectTrigger className="w-[100px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
 																			<SelectValue />
 																		</SelectTrigger>
 																	</FormControl>
 																	<SelectContent>
-																		<SelectItem value="pieces">Pieces</SelectItem>
+																		<SelectItem value="pieces">
+																			Pieces
+																		</SelectItem>
 																		<SelectItem value="kg">Kg</SelectItem>
 																		<SelectItem value="meter">Meter</SelectItem>
 																		<SelectItem value="yard">Yard</SelectItem>
 																		<SelectItem value="ton">Ton</SelectItem>
 																		<SelectItem value="liter">Liter</SelectItem>
 																		<SelectItem value="box">Box</SelectItem>
-																		<SelectItem value="container">Container</SelectItem>
+																		<SelectItem value="container">
+																			Container
+																		</SelectItem>
 																	</SelectContent>
 																</Select>
 															</FormItem>
@@ -595,7 +651,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
 																			$
 																		</span>
-																		<Input className="pl-6" {...field} />
+																		<Input
+																			className="pl-6 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																			{...field}
+																		/>
 																	</div>
 																</FormControl>
 															</FormItem>
@@ -612,13 +671,26 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																	value={field.value}
 																>
 																	<FormControl>
-																		<SelectTrigger className="w-[85px] text-gray-500">
+																		<SelectTrigger className="w-[85px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
 																			<SelectValue />
 																		</SelectTrigger>
 																	</FormControl>
 																	<SelectContent>
-																		{['USD', 'EUR', 'GBP', 'JPY', 'CNY', 'INR', 'BDT', 'AUD', 'CAD', 'CHF'].map(curr => (
-																			<SelectItem key={curr} value={curr}>{curr}</SelectItem>
+																		{[
+																			"USD",
+																			"EUR",
+																			"GBP",
+																			"JPY",
+																			"CNY",
+																			"INR",
+																			"BDT",
+																			"AUD",
+																			"CAD",
+																			"CHF",
+																		].map((curr) => (
+																			<SelectItem key={curr} value={curr}>
+																				{curr}
+																			</SelectItem>
 																		))}
 																	</SelectContent>
 																</Select>
@@ -643,23 +715,32 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													</FormLabel>
 													<Select
 														onValueChange={field.onChange}
-														defaultValue={field.value}
 														value={field.value}
 													>
 														<FormControl>
-															<SelectTrigger>
+															<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
 																<SelectValue placeholder="Select payment method" />
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent>
 															<SelectItem value="cash">Cash</SelectItem>
-															<SelectItem value="bank_transfer">Bank Transfer</SelectItem>
-															<SelectItem value="letter_of_credit">Letter of Credit</SelectItem>
+															<SelectItem value="bank_transfer">
+																Bank Transfer
+															</SelectItem>
+															<SelectItem value="letter_of_credit">
+																Letter of Credit
+															</SelectItem>
 															<SelectItem value="paypal">PayPal</SelectItem>
 															<SelectItem value="escrow">Escrow</SelectItem>
-															<SelectItem value="credit_card">Credit Card</SelectItem>
-															<SelectItem value="advance_payment">Advance Payment</SelectItem>
-															<SelectItem value="payment_on_delivery">Payment on Delivery</SelectItem>
+															<SelectItem value="credit_card">
+																Credit Card
+															</SelectItem>
+															<SelectItem value="advance_payment">
+																Advance Payment
+															</SelectItem>
+															<SelectItem value="payment_on_delivery">
+																Payment on Delivery
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage />
@@ -677,6 +758,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													</FormLabel>
 													<FormControl>
 														<Input
+															className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 															placeholder="Type your delivery details"
 															{...field}
 														/>
@@ -687,7 +769,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 										/>
 
 										<div className="space-y-2">
-											<StepFormDragDropFile name="images" control={form.control} />
+											<StepFormDragDropFile
+												name="images"
+												control={form.control}
+											/>
 										</div>
 									</div>
 								)}
@@ -730,7 +815,8 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 							>
 								{isSubmitting ? (
 									<>
-										Submitting... <Loader2 className="w-4 h-4 ml-1 animate-spin" />
+										Submitting...{" "}
+										<Loader2 className="w-4 h-4 ml-1 animate-spin" />
 									</>
 								) : (
 									<>
