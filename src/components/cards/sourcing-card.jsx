@@ -96,10 +96,10 @@ const SourcingCard = ({ sourcing }) => {
         >
           Contact Supplier
         </Button>
-        <Button 
-          TagName={Link} 
-          href={`/sourcing/${sourcing?.slug}`}
-          type="button" 
+        <Button
+          TagName={Link}
+          href={`/sourcing/${sourcing?.id}`}
+          type="button"
           primaryOutline
         >
           View Details

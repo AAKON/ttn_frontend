@@ -30,18 +30,18 @@ import { SendIcon } from "@/components/icons/send-icon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {toast} from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
-    comment: z.string().min(1, { message: "Comment is required" }),
+	comment: z.string().min(1, { message: "Comment is required" }),
 });
 
 export default function SourcingDetails() {
@@ -66,36 +66,36 @@ export default function SourcingDetails() {
 
 			try {
 				const response = await getSourcingDetails(params.id, token);
-				
+
 				if (response && response.status) {
 					// Transform the API response to match the expected format
 					const transformedData = {
-						id: response.message.id,
-						slug: response.message.id,
-						posted_date: new Date(response.message.created_at).toLocaleDateString('en-US', { 
-							day: 'numeric', 
-							month: 'short', 
-							year: 'numeric' 
+						id: response.data.id,
+						slug: response.data.id,
+						posted_date: new Date(response.data.created_at).toLocaleDateString('en-US', {
+							day: 'numeric',
+							month: 'short',
+							year: 'numeric'
 						}),
-						title: response.message.title,
-						company_name: response.message.company_name,
-						category: response.message.product_categories?.map(cat => cat.name).join(', ') || '',
-						location: response.message.location || '',
-						country_flag: response.message.location?.flag_path || '',
+						title: response.data.title,
+						company_name: response.data.company_name,
+						category: response.data.product_categories?.map(cat => cat.name).join(', ') || '',
+						location: response.data.location || '',
+						country_flag: response.data.location?.flag_path || '',
 						proposal_views: 0, // Not provided in API response
-						images: response.message.images_urls?.map(img => img.original) || [],
-						description: response.message.description || '',
-						quantity: `${response.message.quantity} ${response.message.unit}`,
-						target_price: `${response.message.currency} ${response.message.price}`,
-						payment_methods: response.message.payment_method?.replace('_', ' ') || '',
-						is_favorite: response.message.is_favorited || false,
+						images: response.data.images_urls?.map(img => img.original) || [],
+						description: response.data.description || '',
+						quantity: `${response.data.quantity} ${response.data.unit}`,
+						target_price: `${response.data.currency} ${response.data.price}`,
+						payment_methods: response.data.payment_method?.replace('_', ' ') || '',
+						is_favorite: response.data.is_favorited || false,
 						contact: {
-							email: response.message.email || '',
-							whatsapp: response.message.whatsapp || '',
-							phone: response.message.phone || '',
-							address: response.message.delivery_info || '',
+							email: response.data.email || '',
+							whatsapp: response.data.whatsapp || '',
+							phone: response.data.phone || '',
+							address: response.data.delivery_info || '',
 						},
-						comments: response.message.comments?.map(comment => ({
+						comments: response.data.comments?.map(comment => ({
 							id: comment.id,
 							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
 							user_avatar: null,
@@ -143,17 +143,17 @@ export default function SourcingDetails() {
 			const result = await submitComment(params.id, comment, toast);
 			if (result.status && result.code === 201) {
 				form.reset();
-				
+
 				// Refresh the sourcing details to get the updated comments
 				const session = await getSession();
 				const token = session?.accessToken;
 				const updatedResponse = await getSourcingDetails(params.id, token);
-				
+
 				if (updatedResponse && updatedResponse.status) {
 					// Transform the API response to match the expected format
 					const transformedData = {
 						...sourcing,
-						comments: updatedResponse.message.comments?.map(comment => ({
+						comments: updatedResponse.data.comments?.map(comment => ({
 							id: comment.id,
 							user_name: `${comment.user?.first_name} ${comment.user?.last_name}`.trim() || 'Anonymous',
 							user_avatar: null,
@@ -176,7 +176,7 @@ export default function SourcingDetails() {
 							})) || []
 						})) || []
 					};
-					
+
 					setSourcing(transformedData);
 				}
 			}

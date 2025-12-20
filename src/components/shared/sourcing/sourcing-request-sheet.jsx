@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
 	Sheet,
 	SheetContent,
@@ -16,67 +18,169 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useMediaQuery } from "@/hooks/use-media-query";
-// import DragDropFile from "../DragDropFile"; // Need to check path
-import { Check, ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import StepFormDragDropFile from "@/components/shared/StepFormDragDropFile";
+import { getSourcingFilterOptions, createSourcingProposal } from "@/services/sourcing";
+import { getSession } from "next-auth/react";
+import { useToast } from "@/hooks/use-toast";
+
+const formSchema = z.object({
+	category: z.string().min(1, "Category is required"),
+	country: z.string().min(1, "Country is required"),
+	company_name: z.string().min(1, "Company Name is required"),
+	email: z.string().email("Invalid email address").min(1, "Email is required"),
+	phone_code: z.string().min(1, "Phone code is required"),
+	phone: z.string().min(1, "Phone is required"),
+	whatsapp_code: z.string().optional(),
+	whatsapp: z.string().optional(),
+	title: z.string().min(1, "Proposal Title is required"),
+	description: z.string().min(1, "Description is required"),
+	quantity: z.string().min(1, "Quantity is required"),
+	quantity_unit: z.string().min(1, "Unit is required"),
+	target_price: z.string().min(1, "Target price is required"),
+	currency: z.string().min(1, "Currency is required"),
+	payment_method: z.string().min(1, "Payment method is required"),
+	delivery_info: z.string().min(1, "Delivery info is required"),
+	images: z.array(z.any()).optional(),
+});
 
 export default function SourcingRequestSheet({ open, onOpenChange }) {
+	const { toast } = useToast();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [step, setStep] = useState(1);
+	const [filterOptions, setFilterOptions] = useState({ categories: [], locations: [] });
+	const [fetchingOptions, setFetchingOptions] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
-		if (!open) {
+		if (open) {
+			const fetchOptions = async () => {
+				setFetchingOptions(true);
+				try {
+					const response = await getSourcingFilterOptions();
+					if (response?.status) {
+						setFilterOptions(response.data);
+					}
+				} catch (error) {
+					console.error("Error fetching filter options:", error);
+				} finally {
+					setFetchingOptions(false);
+				}
+			};
+			fetchOptions();
+		} else {
 			const timer = setTimeout(() => {
 				setStep(1);
+				form.reset();
 			}, 500); // Reset after closing animation
 			return () => clearTimeout(timer);
 		}
 	}, [open]);
 
-	const {
-		control,
-		handleSubmit,
-		register,
-		trigger,
-		formState: { errors },
-	} = useForm({
+	const form = useForm({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			category: "",
-			country: "America",
+			country: "",
 			company_name: "",
 			email: "",
 			phone_code: "US",
 			phone: "",
 			whatsapp_code: "US",
 			whatsapp: "",
-			title: "America",
+			title: "",
 			description: "",
-			quantity: "20,000",
-			quantity_unit: "yd",
-			target_price: "10.00",
+			quantity: "",
+			quantity_unit: "yard",
+			target_price: "",
 			currency: "USD",
-			payment_method: "Bank",
+			payment_method: "bank_transfer",
 			delivery_info: "",
 			images: [],
 		},
 	});
 
-	const onSubmit = (data) => {
-		console.log("Form Data:", data);
-		// TODO: Implement submission logic
-		onOpenChange(false);
+	const onSubmit = async (data) => {
+		setIsSubmitting(true);
+		try {
+			const session = await getSession();
+			const token = session?.accessToken;
+
+			if (!token) {
+				toast({
+					variant: "destructive",
+					title: "Authentication required",
+					description: "Please log in to submit a sourcing proposal.",
+				});
+				return;
+			}
+
+			const formData = new FormData();
+
+			// Map values according to API requirements
+			formData.append("product_category_ids[0]", data.category);
+			formData.append("location_id", data.country);
+			formData.append("title", data.title);
+			formData.append("description", data.description);
+			formData.append("quantity", data.quantity);
+			formData.append("unit", data.quantity_unit);
+			formData.append("price", data.target_price);
+			formData.append("currency", data.currency);
+
+			// Map payment methods to expected snake_case keys if necessary
+			const paymentMapping = {
+				"Bank": "bank_transfer",
+				"Cash": "cash",
+				"LC": "lc"
+			};
+			formData.append("payment_method", paymentMapping[data.payment_method] || data.payment_method.toLowerCase());
+
+			formData.append("company_name", data.company_name);
+			formData.append("email", data.email);
+			formData.append("phone", data.phone);
+			formData.append("whatsapp", data.whatsapp || "");
+			formData.append("delivery_info", data.delivery_info);
+
+			// Append images
+			if (data.images && data.images.length > 0) {
+				data.images.forEach((file, index) => {
+					if (file instanceof File) {
+						formData.append(`images[${index}]`, file);
+					}
+				});
+			}
+
+			const response = await createSourcingProposal(formData, toast, token);
+
+			if (response?.status) {
+				form.reset();
+				onOpenChange(false);
+			}
+		} catch (error) {
+			console.error("Submission error:", error);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const nextStep = async () => {
-		const result = await trigger([
+		const result = await form.trigger([
 			"category",
 			"country",
 			"company_name",
 			"email",
+			"phone_code",
 			"phone",
-			"whatsapp",
 		]);
 		if (result) {
 			setStep(2);
@@ -88,11 +192,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		<Sheet open={open} onOpenChange={onOpenChange}>
 			<SheetContent
 				side={isDesktop ? "right" : "bottom"}
-				className={`w-full ${
-					isDesktop
-						? "sm:max-w-[600px] sm:border-l border-gray-200"
-						: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
-				} p-0 flex flex-col gap-0 bg-white`}
+				className={`w-full ${isDesktop
+					? "sm:max-w-[600px] sm:border-l border-gray-200"
+					: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
+					} p-0 flex flex-col gap-0 bg-white`}
 			>
 				{/* Content Wrapper to handle scrolling properly */}
 				<div className="flex-1 overflow-y-auto scrollbar-hide">
@@ -112,18 +215,16 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => setStep(1)}
 								>
 									<div
-										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-											step >= 1 ? "border-brand-600" : "border-gray-300"
-										}`}
+										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${step >= 1 ? "border-brand-600" : "border-gray-300"
+											}`}
 									>
 										{step >= 1 && (
 											<div className="w-2.5 h-2.5 rounded-full bg-brand-600" />
 										)}
 									</div>
 									<span
-										className={`text-sm font-medium ${
-											step === 1 ? "text-gray-900" : "text-gray-500"
-										}`}
+										className={`text-sm font-medium ${step === 1 ? "text-gray-900" : "text-gray-500"
+											}`}
 									>
 										Basic Info
 									</span>
@@ -135,335 +236,467 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => step > 1 && setStep(2)}
 								>
 									<div
-										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-											step === 2 ? "border-brand-600" : "border-gray-300"
-										}`}
+										className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${step === 2 ? "border-brand-600" : "border-gray-300"
+											}`}
 									>
 										{step === 2 && (
 											<div className="w-2.5 h-2.5 rounded-full bg-brand-600" />
 										)}
 									</div>
 									<span
-										className={`text-sm font-medium ${
-											step === 2 ? "text-gray-900" : "text-gray-500"
-										}`}
+										className={`text-sm font-medium ${step === 2 ? "text-gray-900" : "text-gray-500"
+											}`}
 									>
 										Inquiry Details
 									</span>
 								</div>
 							</div>
-							<div className="absolute -bottom-2 left-0 w-full h-[2px] bg-gray-100 hidden" />
 						</div>
 
 						{/* Progress Bar under tabs (Orange bar) */}
 						<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
 							<div
-								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
-									step === 1 ? "w-1/2" : "w-full"
-								}`}
+								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${step === 1 ? "w-1/2" : "w-full"
+									}`}
 							/>
 						</div>
 
-						<form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-							{step === 1 && (
-								<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-									<div className="bg-gray-50 p-4 rounded-[8px] space-y-2">
-										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-											<div className="space-y-2">
-												<label className="text-sm text-gray-900">
-													Category
-												</label>
-												<Controller
+						<Form {...form}>
+							<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+								{step === 1 && (
+									<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+										<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+												<FormField
+													control={form.control}
 													name="category"
-													control={control}
 													render={({ field }) => (
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<SelectTrigger className="text-gray-500">
-																<SelectValue placeholder="Select category" />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="T-shirt">T-shirt</SelectItem>
-																<SelectItem value="Yarn">Yarn</SelectItem>
-																<SelectItem value="Fabric">Fabric</SelectItem>
-															</SelectContent>
-														</Select>
+														<FormItem>
+															<FormLabel className="text-sm text-gray-900">
+																Category
+															</FormLabel>
+															<Select
+																onValueChange={field.onChange}
+																defaultValue={field.value}
+																value={field.value}
+															>
+																<FormControl>
+																	<SelectTrigger className="text-gray-500">
+																		<SelectValue placeholder={fetchingOptions ? "Loading..." : "Select category"} />
+																	</SelectTrigger>
+																</FormControl>
+																<SelectContent>
+																	{filterOptions.categories?.map((cat) => (
+																		<SelectItem key={cat.id} value={cat.id.toString()}>
+																			{cat.name}
+																		</SelectItem>
+																	))}
+																</SelectContent>
+															</Select>
+															<FormMessage />
+														</FormItem>
 													)}
 												/>
-											</div>
-											<div className="space-y-2">
-												<label className="text-sm text-gray-900">Country</label>
-												<Controller
+												<FormField
+													control={form.control}
 													name="country"
-													control={control}
 													render={({ field }) => (
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<SelectTrigger className="text-gray-500">
-																<SelectValue placeholder="Select country" />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="America">America</SelectItem>
-																<SelectItem value="Bangladesh">
-																	Bangladesh
-																</SelectItem>
-																<SelectItem value="India">India</SelectItem>
-															</SelectContent>
-														</Select>
-													)}
-												/>
-											</div>
-										</div>
-
-										<div className="space-y-2">
-											<label className="text-sm text-gray-900">
-												Company Name
-											</label>
-											<Input
-												{...register("company_name", {
-													required: "Company Name is required",
-												})}
-												placeholder="Type your company name"
-											/>
-											{errors.company_name && (
-												<span className="text-red-500 text-xs">
-													{errors.company_name.message}
-												</span>
-											)}
-										</div>
-									</div>
-
-									<div className="bg-gray-50 p-4 rounded-[8px] space-y-2">
-										<div className="space-y-2">
-											<label className="text-sm text-gray-900">Email</label>
-											<Input
-												{...register("email", {
-													required: "Email is required",
-													pattern: {
-														value: /^\S+@\S+$/i,
-														message: "Invalid email",
-													},
-												})}
-												placeholder="Ex: demo@email.com"
-											/>
-											{errors.email && (
-												<span className="text-red-500 text-xs">
-													{errors.email.message}
-												</span>
-											)}
-										</div>
-
-										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-											<div className="space-y-2">
-												<label className="text-sm text-gray-900">Phone</label>
-												<div className="flex gap-2">
-													<Controller
-														name="phone_code"
-														control={control}
-														render={({ field }) => (
+														<FormItem>
+															<FormLabel className="text-sm text-gray-900">
+																Country
+															</FormLabel>
 															<Select
 																onValueChange={field.onChange}
 																defaultValue={field.value}
+																value={field.value}
 															>
-																<SelectTrigger className="w-[80px] text-gray-500">
-																	<SelectValue />
-																</SelectTrigger>
+																<FormControl>
+																	<SelectTrigger className="text-gray-500">
+																		<SelectValue placeholder={fetchingOptions ? "Loading..." : "Select country"} />
+																	</SelectTrigger>
+																</FormControl>
 																<SelectContent>
-																	<SelectItem value="US">US</SelectItem>
-																	<SelectItem value="BD">BD</SelectItem>
+																	{filterOptions.locations?.map((loc) => (
+																		<SelectItem key={loc.id} value={loc.id.toString()}>
+																			{loc.name}
+																		</SelectItem>
+																	))}
 																</SelectContent>
 															</Select>
-														)}
-													/>
-													<Input
-														{...register("phone", {
-															required: "Phone is required",
-														})}
-														placeholder="Ex: 123654789"
-														className="flex-1"
-													/>
-												</div>
-												{errors.phone && (
-													<span className="text-red-500 text-xs">
-														{errors.phone.message}
-													</span>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+											</div>
+
+											<FormField
+												control={form.control}
+												name="company_name"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel className="text-sm text-gray-900">
+															Company Name
+														</FormLabel>
+														<FormControl>
+															<Input
+																placeholder="Type your company name"
+																{...field}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
 												)}
-											</div>
-											<div className="space-y-2">
-												<label className="text-sm font-medium text-gray-900">
-													WhatsApp
-												</label>
-												<div className="flex gap-2">
-													<Controller
-														name="whatsapp_code"
-														control={control}
-														render={({ field }) => (
-															<Select
-																onValueChange={field.onChange}
-																defaultValue={field.value}
-															>
-																<SelectTrigger className="w-[80px] text-gray-500">
-																	<SelectValue />
-																</SelectTrigger>
-																<SelectContent>
-																	<SelectItem value="US">US</SelectItem>
-																	<SelectItem value="BD">BD</SelectItem>
-																</SelectContent>
-															</Select>
-														)}
-													/>
-													<Input
-														{...register("whatsapp")}
-														placeholder="Ex: 123654789"
-														className="flex-1"
-													/>
+											/>
+										</div>
+
+										<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
+											<FormField
+												control={form.control}
+												name="email"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel className="text-sm text-gray-900">
+															Email
+														</FormLabel>
+														<FormControl>
+															<Input placeholder="Ex: demo@email.com" {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+
+											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+												<div className="space-y-2">
+													<label className="text-sm text-gray-900">Phone</label>
+													<div className="flex gap-2">
+														<FormField
+															control={form.control}
+															name="phone_code"
+															render={({ field }) => (
+																<FormItem>
+																	<Select
+																		onValueChange={field.onChange}
+																		defaultValue={field.value}
+																		value={field.value}
+																	>
+																		<FormControl>
+																			<SelectTrigger className="w-[80px] text-gray-500">
+																				<SelectValue />
+																			</SelectTrigger>
+																		</FormControl>
+																		<SelectContent>
+																			{Array.from(
+																				new Set(
+																					filterOptions.locations
+																						?.map((loc) => loc.country_code)
+																						.filter(Boolean)
+																				)
+																			).map((code) => (
+																				<SelectItem key={code} value={code}>
+																					{code}
+																				</SelectItem>
+																			))}
+																		</SelectContent>
+																	</Select>
+																</FormItem>
+															)}
+														/>
+														<FormField
+															control={form.control}
+															name="phone"
+															render={({ field }) => (
+																<FormItem className="flex-1">
+																	<FormControl>
+																		<Input
+																			placeholder="Ex: 123654789"
+																			{...field}
+																		/>
+																	</FormControl>
+																</FormItem>
+															)}
+														/>
+													</div>
+													<FormMessage>
+														{form.formState.errors.phone?.message ||
+															form.formState.errors.phone_code?.message}
+													</FormMessage>
+												</div>
+
+												<div className="space-y-2">
+													<label className="text-sm font-medium text-gray-900">
+														WhatsApp
+													</label>
+													<div className="flex gap-2">
+														<FormField
+															control={form.control}
+															name="whatsapp_code"
+															render={({ field }) => (
+																<FormItem>
+																	<Select
+																		onValueChange={field.onChange}
+																		defaultValue={field.value}
+																		value={field.value}
+																	>
+																		<FormControl>
+																			<SelectTrigger className="w-[80px] text-gray-500">
+																				<SelectValue />
+																			</SelectTrigger>
+																		</FormControl>
+																		<SelectContent>
+																			{Array.from(
+																				new Set(
+																					filterOptions.locations
+																						?.map((loc) => loc.country_code)
+																						.filter(Boolean)
+																				)
+																			).map((code) => (
+																				<SelectItem key={code} value={code}>
+																					{code}
+																				</SelectItem>
+																			))}
+																		</SelectContent>
+																	</Select>
+																</FormItem>
+															)}
+														/>
+														<FormField
+															control={form.control}
+															name="whatsapp"
+															render={({ field }) => (
+																<FormItem className="flex-1">
+																	<FormControl>
+																		<Input
+																			placeholder="Ex: 123654789"
+																			{...field}
+																		/>
+																	</FormControl>
+																</FormItem>
+															)}
+														/>
+													</div>
+													<FormMessage>
+														{form.formState.errors.whatsapp?.message}
+													</FormMessage>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-							)}
+								)}
 
-							{step === 2 && (
-								<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-900">
-											Proposal Title
-										</label>
-										<Input
-											{...register("title")}
-											placeholder="Type proposal title"
-										/>
-									</div>
-
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-900">
-											Proposal Description
-										</label>
-										<Textarea
-											{...register("description")}
-											placeholder="Enter a description..."
-											className="min-h-[100px]"
-										/>
-									</div>
-
-									<div className="grid grid-cols-2 gap-4">
-										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-900">
-												Quantity
-											</label>
-											<div className="flex gap-2">
-												<div className="flex-1 relative">
-													<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
-														yd
-													</span>
-													<Input {...register("quantity")} className="pl-8" />
-												</div>
-												<Controller
-													name="quantity_unit"
-													control={control}
-													render={({ field }) => (
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<SelectTrigger className="w-[80px] text-gray-500">
-																<SelectValue />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="yd">Unit</SelectItem>
-																<SelectItem value="pc">Pcs</SelectItem>
-															</SelectContent>
-														</Select>
-													)}
-												/>
-											</div>
-										</div>
-										<div className="space-y-2">
-											<label className="text-sm font-medium text-gray-900">
-												Target Price Per Unit
-											</label>
-											<div className="flex gap-2">
-												<div className="flex-1 relative">
-													<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
-														$
-													</span>
-													<Input
-														{...register("target_price")}
-														className="pl-6"
-													/>
-												</div>
-												<Controller
-													name="currency"
-													control={control}
-													render={({ field }) => (
-														<Select
-															onValueChange={field.onChange}
-															defaultValue={field.value}
-														>
-															<SelectTrigger className="w-[80px] text-gray-500">
-																<SelectValue />
-															</SelectTrigger>
-															<SelectContent>
-																<SelectItem value="USD">USD</SelectItem>
-																<SelectItem value="BDT">BDT</SelectItem>
-															</SelectContent>
-														</Select>
-													)}
-												/>
-											</div>
-										</div>
-									</div>
-
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-900">
-											Payment Methods
-										</label>
-										<Controller
-											name="payment_method"
-											control={control}
+								{step === 2 && (
+									<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+										<FormField
+											control={form.control}
+											name="title"
 											render={({ field }) => (
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
-													<SelectTrigger>
-														<SelectValue placeholder="Select payment method" />
-													</SelectTrigger>
-													<SelectContent>
-														<SelectItem value="Bank">Bank</SelectItem>
-														<SelectItem value="Cash">Cash</SelectItem>
-														<SelectItem value="LC">LC</SelectItem>
-													</SelectContent>
-												</Select>
+												<FormItem>
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Proposal Title
+													</FormLabel>
+													<FormControl>
+														<Input placeholder="Type proposal title" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
 											)}
 										/>
-									</div>
 
-									<div className="space-y-2">
-										<label className="text-sm font-medium text-gray-900">
-											Delivery Information
-										</label>
-										<Input
-											{...register("delivery_info")}
-											placeholder="Type your delivery details"
+										<FormField
+											control={form.control}
+											name="description"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Proposal Description
+													</FormLabel>
+													<FormControl>
+														<Textarea
+															placeholder="Enter a description..."
+															className="min-h-[100px]"
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
 										/>
-									</div>
 
-									<div className="space-y-2">
-										<StepFormDragDropFile name="images" control={control} />
+										<div className="grid grid-cols-2 gap-4">
+											<div className="space-y-2">
+												<FormLabel className="text-sm font-medium text-gray-900">
+													Quantity
+												</FormLabel>
+												<div className="flex gap-2">
+													<FormField
+														control={form.control}
+														name="quantity"
+														render={({ field }) => (
+															<FormItem className="flex-1">
+																<FormControl>
+																	<div className="relative">
+																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
+																			qty
+																		</span>
+																		<Input className="pl-10" {...field} />
+																	</div>
+																</FormControl>
+															</FormItem>
+														)}
+													/>
+													<FormField
+														control={form.control}
+														name="quantity_unit"
+														render={({ field }) => (
+															<FormItem>
+																<Select
+																	onValueChange={field.onChange}
+																	defaultValue={field.value}
+																	value={field.value}
+																>
+																	<FormControl>
+																		<SelectTrigger className="w-[100px] text-gray-500">
+																			<SelectValue />
+																		</SelectTrigger>
+																	</FormControl>
+																	<SelectContent>
+																		<SelectItem value="pieces">Pieces</SelectItem>
+																		<SelectItem value="kg">Kg</SelectItem>
+																		<SelectItem value="meter">Meter</SelectItem>
+																		<SelectItem value="yard">Yard</SelectItem>
+																		<SelectItem value="ton">Ton</SelectItem>
+																		<SelectItem value="liter">Liter</SelectItem>
+																		<SelectItem value="box">Box</SelectItem>
+																		<SelectItem value="container">Container</SelectItem>
+																	</SelectContent>
+																</Select>
+															</FormItem>
+														)}
+													/>
+												</div>
+												<FormMessage>
+													{form.formState.errors.quantity?.message ||
+														form.formState.errors.quantity_unit?.message}
+												</FormMessage>
+											</div>
+
+											<div className="space-y-2">
+												<FormLabel className="text-sm font-medium text-gray-900">
+													Target Price Per Unit
+												</FormLabel>
+												<div className="flex gap-2">
+													<FormField
+														control={form.control}
+														name="target_price"
+														render={({ field }) => (
+															<FormItem className="flex-1">
+																<FormControl>
+																	<div className="relative">
+																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
+																			$
+																		</span>
+																		<Input className="pl-6" {...field} />
+																	</div>
+																</FormControl>
+															</FormItem>
+														)}
+													/>
+													<FormField
+														control={form.control}
+														name="currency"
+														render={({ field }) => (
+															<FormItem>
+																<Select
+																	onValueChange={field.onChange}
+																	defaultValue={field.value}
+																	value={field.value}
+																>
+																	<FormControl>
+																		<SelectTrigger className="w-[85px] text-gray-500">
+																			<SelectValue />
+																		</SelectTrigger>
+																	</FormControl>
+																	<SelectContent>
+																		{['USD', 'EUR', 'GBP', 'JPY', 'CNY', 'INR', 'BDT', 'AUD', 'CAD', 'CHF'].map(curr => (
+																			<SelectItem key={curr} value={curr}>{curr}</SelectItem>
+																		))}
+																	</SelectContent>
+																</Select>
+															</FormItem>
+														)}
+													/>
+												</div>
+												<FormMessage>
+													{form.formState.errors.target_price?.message ||
+														form.formState.errors.currency?.message}
+												</FormMessage>
+											</div>
+										</div>
+
+										<FormField
+											control={form.control}
+											name="payment_method"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Payment Methods
+													</FormLabel>
+													<Select
+														onValueChange={field.onChange}
+														defaultValue={field.value}
+														value={field.value}
+													>
+														<FormControl>
+															<SelectTrigger>
+																<SelectValue placeholder="Select payment method" />
+															</SelectTrigger>
+														</FormControl>
+														<SelectContent>
+															<SelectItem value="cash">Cash</SelectItem>
+															<SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+															<SelectItem value="letter_of_credit">Letter of Credit</SelectItem>
+															<SelectItem value="paypal">PayPal</SelectItem>
+															<SelectItem value="escrow">Escrow</SelectItem>
+															<SelectItem value="credit_card">Credit Card</SelectItem>
+															<SelectItem value="advance_payment">Advance Payment</SelectItem>
+															<SelectItem value="payment_on_delivery">Payment on Delivery</SelectItem>
+														</SelectContent>
+													</Select>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<FormField
+											control={form.control}
+											name="delivery_info"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Delivery Information
+													</FormLabel>
+													<FormControl>
+														<Input
+															placeholder="Type your delivery details"
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+
+										<div className="space-y-2">
+											<StepFormDragDropFile name="images" control={form.control} />
+										</div>
 									</div>
-								</div>
-							)}
-						</form>
+								)}
+							</form>
+						</Form>
 					</div>
 				</div>
 
-				{/* Footer fixed at bottom (or just at bottom of content) */}
+				{/* Footer fixed at bottom */}
 				<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-10">
 					{step === 1 ? (
 						<div className="grid grid-cols-2 gap-4">
@@ -486,11 +719,24 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								secondary
 								className="w-full cursor-pointer"
 								onClick={prevStep}
+								disabled={isSubmitting}
 							>
 								Back
 							</Button>
-							<Button className="w-full" onClick={handleSubmit(onSubmit)}>
-								Submit <ArrowRight className="w-4 h-4 ml-1" />
+							<Button
+								className="w-full"
+								onClick={form.handleSubmit(onSubmit)}
+								disabled={isSubmitting}
+							>
+								{isSubmitting ? (
+									<>
+										Submitting... <Loader2 className="w-4 h-4 ml-1 animate-spin" />
+									</>
+								) : (
+									<>
+										Submit <ArrowRight className="w-4 h-4 ml-1" />
+									</>
+								)}
 							</Button>
 						</div>
 					)}

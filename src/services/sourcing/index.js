@@ -16,7 +16,7 @@ export async function submitComment(id, comment, toast) {
     const endpoint = `sourcing-proposals/${id}/comments`;
     const formData = new FormData();
     formData.append('comment', comment);
-    
+
     const options = {
         method: 'POST',
         body: formData,
@@ -24,3 +24,22 @@ export async function submitComment(id, comment, toast) {
     };
     return await apiRequest(endpoint, options, toast, token);
 }
+
+export async function getSourcingFilterOptions() {
+    const endpoint = `filter-options/sourcing-proposals`;
+    const options = {
+        method: 'GET',
+    };
+    return await apiRequest(endpoint, options, null, null);
+}
+
+export async function createSourcingProposal(formData, toast, token) {
+    const endpoint = `my/sourcing-proposals/store`;
+    const options = {
+        method: 'POST',
+        body: formData,
+        isFormData: true,
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
