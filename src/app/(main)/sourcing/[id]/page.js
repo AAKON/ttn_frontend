@@ -3,7 +3,11 @@ import { Container, Section } from "@/components/shared";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSession } from "next-auth/react";
-import { getSourcingDetails, submitComment } from "@/services/sourcing";
+import {
+	getSourcingDetails,
+	submitComment,
+	submitReply,
+} from "@/services/sourcing";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import {
 	MapPin,
@@ -50,6 +54,9 @@ export default function SourcingDetails() {
 	const [showContact, setShowContact] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [submittingComment, setSubmittingComment] = useState(false);
+	const [activeReplyId, setActiveReplyId] = useState(null);
+	const [replyText, setReplyText] = useState("");
+	const [submittingReply, setSubmittingReply] = useState(false);
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -212,6 +219,64 @@ export default function SourcingDetails() {
 		}
 	};
 
+	const handleReplySubmit = async (commentId) => {
+		if (!replyText.trim()) return;
+		setSubmittingReply(true);
+		try {
+			const result = await submitReply(commentId, replyText, toast);
+			if (result.status && result.code === 201) {
+				setReplyText("");
+				setActiveReplyId(null);
+				// Refresh details
+				const session = await getSession();
+				const token = session?.accessToken;
+				const updatedResponse = await getSourcingDetails(params.id, token);
+				if (updatedResponse && updatedResponse.status) {
+					// Transform logic (same as in onSubmit)
+					const transformedData = {
+						...sourcing,
+						comments:
+							updatedResponse.data.comments?.map((comment) => ({
+								id: comment.id,
+								user_name:
+									`${comment.user?.first_name} ${comment.user?.last_name}`.trim() ||
+									"Anonymous",
+								user_avatar: null,
+								comment: comment.comment,
+								date: new Date(comment.created_at).toLocaleDateString("en-US", {
+									day: "numeric",
+									month: "short",
+									year: "numeric",
+								}),
+								replies:
+									comment.replies?.map((reply) => ({
+										id: reply.id,
+										user_name:
+											`${reply.user?.first_name} ${reply.user?.last_name}`.trim() ||
+											"Anonymous",
+										user_avatar: null,
+										comment: reply.reply,
+										date: new Date(reply.created_at).toLocaleDateString(
+											"en-US",
+											{
+												day: "numeric",
+												month: "short",
+												year: "numeric",
+											}
+										),
+									})) || [],
+							})) || [],
+					};
+					setSourcing(transformedData);
+				}
+			}
+		} catch (error) {
+			console.error("Error submitting reply:", error);
+		} finally {
+			setSubmittingReply(false);
+		}
+	};
+
 	if (loading) {
 		return (
 			<Section>
@@ -340,8 +405,12 @@ export default function SourcingDetails() {
 															<FormControl>
 																<Textarea
 																	placeholder="Add your comments..."
-																	className="resize-none h-12 lg:h-[100px] px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+																	className="resize-none min-h-[48px] h-[48px] max-h-[100px] lg:max-h-[100px] px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-gray-500 overflow-y-auto focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 																	{...field}
+																	onInput={(e) => {
+																		e.target.style.height = "48px";
+																		e.target.style.height = `${e.target.scrollHeight}px`;
+																	}}
 																/>
 															</FormControl>
 															<FormMessage />
@@ -399,7 +468,16 @@ export default function SourcingDetails() {
 														)}
 													</p>
 													<div className="flex justify-between items-center gap-4 text-xs text-gray-500">
-														<button className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg">
+														<button
+															onClick={() =>
+																setActiveReplyId(
+																	activeReplyId === comment.id
+																		? null
+																		: comment.id
+																)
+															}
+															className="flex items-center gap-1 ml-2 p-0 bg-transparent text-brand-600 text-md md:text-md lg:text-lg hover:underline"
+														>
 															Reply
 															<ReplyIcon stroke="#C67618" className="w-4 h-4" />
 														</button>
@@ -409,6 +487,39 @@ export default function SourcingDetails() {
 													</div>
 												</div>
 											</div>
+
+											{/* Reply Form */}
+											{activeReplyId === comment.id && (
+												<div className="ml-12 mb-6 flex gap-3 items-end animate-in fade-in slide-in-from-top-2 duration-200">
+													<div className="size-12 rounded-full border border-gray-300 bg-gray-200 flex items-center justify-center flex-shrink-0">
+														<User className="w-6 h-6 text-gray-600" />
+													</div>
+													<div className="flex-1 flex gap-3 items-end">
+														<Textarea
+															placeholder="Add your comments..."
+															className="resize-none min-h-[48px] h-[48px] max-h-[100px] px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500 overflow-y-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+															value={replyText}
+															onChange={(e) => setReplyText(e.target.value)}
+															onInput={(e) => {
+																e.target.style.height = "48px";
+																e.target.style.height = `${e.target.scrollHeight}px`;
+															}}
+														/>
+														<Button
+															secondary
+															onClick={() => handleReplySubmit(comment.id)}
+															disabled={submittingReply || !replyText.trim()}
+															className="!bg-gray-100 px-6 !h-12 border border-gray-200 cursor-pointer"
+														>
+															{submittingReply ? (
+																<Loader2 className="h-4 w-4 animate-spin" />
+															) : (
+																"Submit"
+															)}
+														</Button>
+													</div>
+												</div>
+											)}
 											{comment.replies && comment.replies.length > 0 && (
 												<div className="pl-12 mb-4 last:border-0 space-y-3 last:mb-0">
 													{comment.replies.map((reply) => (
