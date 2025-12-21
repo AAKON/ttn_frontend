@@ -8,13 +8,24 @@ import Button from "@/components/shared/button";
 import { MarkerPinIcon, LoveIcon } from "@/icons";
 import Link from "next/link";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { toggleFavsSourcingProposal } from "@/services/company";
 
 const SourcingCard = ({ sourcing }) => {
-  const [isFavorite, setIsFavorite] = useState(sourcing?.is_favorite || false);
+  const [isFavorite, setIsFavorite] = useState(sourcing?.is_favorited || false);
 
-  const handleToggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-    // TODO: Add API call to save favorite
+  const { toast } = useToast();
+  const handleToggleFavorite = async () => {
+    const previousFavorite = isFavorite;
+    setIsFavorite(!previousFavorite);
+    try {
+      const success = await toggleFavsSourcingProposal(sourcing?.id, toast);
+      if (!success) {
+        setIsFavorite(previousFavorite);
+      }
+    } catch (err) {
+      setIsFavorite(previousFavorite);
+    }
   };
 
   return (

@@ -13,7 +13,7 @@ import {
 } from "@/icons";
 import Link from "next/link";
 import TagsView from "@/app/(main)/company/[slug]/components/tags-view";
-import BookmarkCompany from "@/app/(main)/company/[slug]/components/bookmarkCompany";
+import BookmarkProposal from "./bookmarkProposal";
 import Claim from "@/app/(main)/company/[slug]/components/claim";
 import ShareModal from "@/components/company/share-modal";
 
@@ -35,8 +35,8 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 						<p>{posted_date}</p>
 						<div className="flex lg:gap-4 gap-2">
 							<ShareModal />
-							<BookmarkCompany
-								slug={slug}
+							<BookmarkProposal
+								id={slug}
 								is_favorite={is_favorite}
 								heartIcon
 							/>

@@ -1,7 +1,7 @@
 // services/company/index.js
-import {apiRequest} from "@/utils/api";
-import {getSession} from "next-auth/react";
-import {getSSToken} from "@/utils/getSSToken";
+import { apiRequest } from "@/utils/api";
+import { getSession } from "next-auth/react";
+import { getSSToken } from "@/utils/getSSToken";
 
 export async function getDataPreBasic() {
 
@@ -94,6 +94,32 @@ export async function delFavsCompanyFaq(slug, toast) {
         method: 'GET',
         next: { revalidate: 60 },
         cache: "force-cache"
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
+
+// own favourite sourcing proposal list
+export async function getMyFavsSourcingProposals() {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `favorites/sourcing-proposals`;
+    const options = {
+        method: 'GET',
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data?.data;
+}
+
+// toggle favourite sourcing proposal
+export async function toggleFavsSourcingProposal(id, toast) {
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `favorites/sourcing-proposals/${id}/toggle`;
+    const options = {
+        method: 'POST'
     };
     const result = await apiRequest(endpoint, options, toast, token);
     return result?.status && result?.code === 200;

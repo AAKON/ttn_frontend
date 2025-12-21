@@ -216,7 +216,12 @@ export default function SourcingDetails() {
 		return (
 			<Section>
 				<div className="flex items-center justify-center min-h-[400px]">
-					<div className="text-gray-500">Loading...</div>
+					<div className="flex justify-center items-center py-20">
+						<Loader2 className="w-10 h-10 animate-spin text-brand-600" />
+						<span className="ml-3 text-xl font-medium text-gray-600">
+							Loading sourcing details...
+						</span>
+					</div>
 				</div>
 			</Section>
 		);
