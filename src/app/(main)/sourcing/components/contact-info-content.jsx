@@ -12,9 +12,14 @@ const ContactInfoContent = ({ sourcing }) => {
 					<div className="space-y-2 w-full">
 						<div className="flex justify-between gap-2">
 							<span className="text-gray-500 text-sm">Address</span>
-							<span className="text-primary text-sm underline text-brand-700 font-semibold mt-1 hover:underline cursor-pointer">
+							<a
+								href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(sourcing.contact.address)}`}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="text-primary text-sm underline text-brand-700 font-semibold mt-1 hover:underline cursor-pointer"
+							>
 								View On Map
-							</span>
+							</a>
 						</div>
 						<div className="flex gap-2">
 							<MapPin className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5" />
@@ -85,10 +90,22 @@ const ContactInfoContent = ({ sourcing }) => {
 
 			{/* Action Buttons */}
 			<div className="grid grid-cols-2 gap-4">
-				<Button primaryOutline className="w-full">
+				<Button
+					TagName="a"
+					href={`mailto:${sourcing.contact.email}`}
+					primaryOutline
+					className="w-full"
+				>
 					Send Email
 				</Button>
-				<Button primary className="w-full">
+				<Button
+					TagName="a"
+					href={`https://wa.me/${sourcing.contact.whatsapp?.replace(/\D/g, "")}`}
+					target="_blank"
+					rel="noopener noreferrer"
+					primary
+					className="w-full"
+				>
 					WhatsApp
 				</Button>
 			</div>

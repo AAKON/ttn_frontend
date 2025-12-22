@@ -2,7 +2,7 @@
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import {useRouter, useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSession } from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
@@ -93,14 +93,14 @@ const CompanyList = () => {
         }
       );
       const data = await response.json();
-      if(data?.status) {
+      if (data?.status) {
         if (data && data?.data) {
           setCompanies((prev) => [...prev, ...data?.data?.data]);
           setPagination(data?.data?.pagination);
           setTotalResults(data?.data?.pagination?.total);
           setHasMore(page < data?.data?.pagination.last_page);
         }
-      }else{
+      } else {
         setLoading(false);
         setHasMore(false);
       }
@@ -138,8 +138,8 @@ const CompanyList = () => {
     }
     if (filters.businessCategoryIds.length > 0) {
       params.set(
-          "businessCategoryIds",
-          filters.businessCategoryIds.join(",")
+        "businessCategoryIds",
+        filters.businessCategoryIds.join(",")
       );
     }
     if (filters.keyword) {
@@ -174,8 +174,6 @@ const CompanyList = () => {
   };
 
   const handleSearchSubmit = (data) => {
-
-    console.log(data, '=======src submit data');
 
     setFilters((prevFilters) => {
       const businessCategoryIds = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
@@ -219,20 +217,20 @@ const CompanyList = () => {
     // Map business types
     if (filters.businessTypeIds.length > 0) {
       const selectedBtypes = filters.businessTypeIds
-          .map((id) => {
-            const type = filterOptions?.business_types?.find(
-                (cat) => cat.id === id
-            );
-            return type ? { id, name: type.name } : null;
-          })
-          .filter(Boolean);
+        .map((id) => {
+          const type = filterOptions?.business_types?.find(
+            (cat) => cat.id === id
+          );
+          return type ? { id, name: type.name } : null;
+        })
+        .filter(Boolean);
 
       selected.push(
-          ...selectedBtypes.map(({ id, name }) => ({
-            key: "businessTypeIds",
-            id,
-            name,
-          }))
+        ...selectedBtypes.map(({ id, name }) => ({
+          key: "businessTypeIds",
+          id,
+          name,
+        }))
       );
     }
 
@@ -296,11 +294,11 @@ const CompanyList = () => {
         }
       } else if (key === "manpower") {
         updatedFilters[key] = updatedFilters[key].filter(
-            (value) => value !== id
+          (value) => value !== id
         );
       } else {
         updatedFilters[key] = updatedFilters[key].filter(
-            (itemId) => itemId !== id
+          (itemId) => itemId !== id
         );
       }
 
@@ -368,9 +366,8 @@ const CompanyList = () => {
               </h3>
               <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
                 <span
-                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                    view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
-                  }`}
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
+                    }`}
                   onClick={() => setView("list")}
                 >
                   <ListIcon
@@ -380,9 +377,8 @@ const CompanyList = () => {
                   />
                 </span>
                 <span
-                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                    view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
-                  }`}
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
+                    }`}
                   onClick={() => setView("grid")}
                 >
                   <GridIcon
@@ -412,9 +408,8 @@ const CompanyList = () => {
               scrollThreshold={0.5}
             >
               <div
-                className={`mt-8 grid gap-3 lg:gap-8 ${
-                  view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
-                }`}
+                className={`mt-8 grid gap-3 lg:gap-8 ${view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                  }`}
               >
                 {Array.isArray(companies) &&
                   companies?.length > 0 &&
@@ -431,7 +426,7 @@ const CompanyList = () => {
 };
 
 const Company = () => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<div className="container"><FilterCardSkeleton /></div>}>
     <CompanyList />
   </Suspense>
 );
