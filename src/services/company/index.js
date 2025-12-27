@@ -70,6 +70,50 @@ export async function getMyCompanies() {
     return result?.data;
 }
 
+// search companies with keyword
+export async function searchMyCompanies(keyword = "") {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `my/company/list`;
+    const payload = {
+        locationId: null,
+        manpower: [],
+        certificateIds: [],
+        businessCategoryIds: [],
+        businessTypeIds: [],
+        keyword: keyword
+    };
+    const options = {
+        method: 'POST',
+        body: payload,
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result;
+}
+
+// search all companies with keyword (for autocomplete)
+export async function searchCompanies(keyword = "") {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `company/list`;
+    const payload = {
+        locationId: null,
+        manpower: [],
+        certificateIds: [],
+        businessCategoryIds: [],
+        businessTypeIds: [],
+        keyword: keyword
+    };
+    const options = {
+        method: 'POST',
+        body: payload,
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result;
+}
+
 // own favourite company list
 export async function getMyFavsCompanies() {
     const session = await getSession();

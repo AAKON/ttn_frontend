@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,8 +34,14 @@ import {
 	getSourcingFilterOptions,
 	createSourcingProposal,
 } from "@/services/sourcing";
+import { searchCompanies } from "@/services/company";
 import { getSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 
 const formSchema = z.object({
 	category: z.string().min(1, "Category is required"),
@@ -67,6 +73,12 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	});
 	const [fetchingOptions, setFetchingOptions] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	
+	// Company autocomplete states
+	const [companySuggestions, setCompanySuggestions] = useState([]);
+	const [loadingCompanies, setLoadingCompanies] = useState(false);
+	const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
+	const [searchTimeout, setSearchTimeout] = useState(null);
 
 	useEffect(() => {
 		if (open) {
@@ -88,10 +100,38 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			const timer = setTimeout(() => {
 				setStep(1);
 				form.reset();
+				setCompanySuggestions([]);
+				setShowCompanySuggestions(false);
 			}, 500); // Reset after closing animation
 			return () => clearTimeout(timer);
 		}
 	}, [open]);
+
+	// Cleanup timeout on unmount
+	useEffect(() => {
+		return () => {
+			if (searchTimeout) {
+				clearTimeout(searchTimeout);
+			}
+		};
+	}, [searchTimeout]);
+
+	// Close suggestions when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (showCompanySuggestions && !event.target.closest('.company-autocomplete-container')) {
+				setShowCompanySuggestions(false);
+			}
+		};
+
+		if (showCompanySuggestions) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [showCompanySuggestions]);
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -115,6 +155,61 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			images: [],
 		},
 	});
+
+	// Fetch companies based on search term
+	const fetchCompanySuggestions = async (searchTerm) => {
+		if (!searchTerm || searchTerm.length < 2) {
+			setCompanySuggestions([]);
+			setShowCompanySuggestions(false);
+			return;
+		}
+
+		setLoadingCompanies(true);
+		try {
+			const response = await searchCompanies(searchTerm);
+			
+			// API returns data in response.data.data format
+			const companies = response?.data?.data;
+			
+			if (companies && Array.isArray(companies)) {
+				setCompanySuggestions(companies);
+				setShowCompanySuggestions(companies.length > 0);
+			} else {
+				setCompanySuggestions([]);
+				setShowCompanySuggestions(false);
+			}
+		} catch (error) {
+			console.error("Error fetching companies:", error);
+			setCompanySuggestions([]);
+			setShowCompanySuggestions(false);
+		} finally {
+			setLoadingCompanies(false);
+		}
+	};
+
+	// Handle company name input change with debounce
+	const handleCompanyNameChange = (value, onChange) => {
+		onChange(value);
+		
+		// Clear previous timeout
+		if (searchTimeout) {
+			clearTimeout(searchTimeout);
+		}
+
+		// Set new timeout for debounced search
+		const timeout = setTimeout(() => {
+			fetchCompanySuggestions(value);
+		}, 300);
+		
+		setSearchTimeout(timeout);
+	};
+
+	// Handle selecting a company from suggestions
+	const handleSelectCompany = (company, onChange) => {
+		onChange(company.name);
+		setShowCompanySuggestions(false);
+		setCompanySuggestions([]);
+	};
 
 	const onSubmit = async (data) => {
 		setIsSubmitting(true);
@@ -376,11 +471,44 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 															Company Name
 														</FormLabel>
 														<FormControl>
-															<Input
-																className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																placeholder="Type your company name"
-																{...field}
-															/>
+															<div className="relative company-autocomplete-container">
+																<Input
+																	className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																	placeholder="Type your company name"
+																	{...field}
+																	onChange={(e) =>
+																		handleCompanyNameChange(e.target.value, field.onChange)
+																	}
+																	onFocus={() => {
+																		if (field.value && companySuggestions.length > 0) {
+																			setShowCompanySuggestions(true);
+																		}
+																	}}
+																	autoComplete="off"
+																/>
+																{loadingCompanies && (
+																	<div className="absolute right-3 top-2.5">
+																		<Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+																	</div>
+																)}
+																
+																{/* Suggestions Dropdown */}
+																{showCompanySuggestions && companySuggestions.length > 0 && (
+																	<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+																		{companySuggestions.map((company) => (
+																			<div
+																				key={company.id}
+																				className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
+																				onClick={() =>
+																					handleSelectCompany(company, field.onChange)
+																				}
+																			>
+																				{company.name}
+																			</div>
+																		))}
+																	</div>
+																)}
+															</div>
 														</FormControl>
 														<FormMessage />
 													</FormItem>
