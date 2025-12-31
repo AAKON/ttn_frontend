@@ -73,7 +73,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	});
 	const [fetchingOptions, setFetchingOptions] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	
+
 	// Company autocomplete states
 	const [companySuggestions, setCompanySuggestions] = useState([]);
 	const [loadingCompanies, setLoadingCompanies] = useState(false);
@@ -119,17 +119,20 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Close suggestions when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (showCompanySuggestions && !event.target.closest('.company-autocomplete-container')) {
+			if (
+				showCompanySuggestions &&
+				!event.target.closest(".company-autocomplete-container")
+			) {
 				setShowCompanySuggestions(false);
 			}
 		};
 
 		if (showCompanySuggestions) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener("mousedown", handleClickOutside);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [showCompanySuggestions]);
 
@@ -167,10 +170,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		setLoadingCompanies(true);
 		try {
 			const response = await searchCompanies(searchTerm);
-			
+
 			// API returns data in response.data.data format
 			const companies = response?.data?.data;
-			
+
 			if (companies && Array.isArray(companies)) {
 				setCompanySuggestions(companies);
 				setShowCompanySuggestions(companies.length > 0);
@@ -190,7 +193,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Handle company name input change with debounce
 	const handleCompanyNameChange = (value, onChange) => {
 		onChange(value);
-		
+
 		// Clear previous timeout
 		if (searchTimeout) {
 			clearTimeout(searchTimeout);
@@ -200,7 +203,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		const timeout = setTimeout(() => {
 			fetchCompanySuggestions(value);
 		}, 300);
-		
+
 		setSearchTimeout(timeout);
 	};
 
@@ -406,7 +409,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		/>
 																	</SelectTrigger>
 																</FormControl>
-																<SelectContent>
+																<SelectContent className="max-h-[300px] overflow-y-auto">
 																	{filterOptions.categories?.map((cat) => (
 																		<SelectItem
 																			key={cat.id}
@@ -445,7 +448,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		/>
 																	</SelectTrigger>
 																</FormControl>
-																<SelectContent>
+																<SelectContent className="max-h-[300px] overflow-y-auto">
 																	{filterOptions.locations?.map((loc) => (
 																		<SelectItem
 																			key={loc.id}
@@ -477,10 +480,16 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																	placeholder="Type your company name"
 																	{...field}
 																	onChange={(e) =>
-																		handleCompanyNameChange(e.target.value, field.onChange)
+																		handleCompanyNameChange(
+																			e.target.value,
+																			field.onChange
+																		)
 																	}
 																	onFocus={() => {
-																		if (field.value && companySuggestions.length > 0) {
+																		if (
+																			field.value &&
+																			companySuggestions.length > 0
+																		) {
 																			setShowCompanySuggestions(true);
 																		}
 																	}}
@@ -491,23 +500,27 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		<Loader2 className="w-4 h-4 animate-spin text-gray-400" />
 																	</div>
 																)}
-																
+
 																{/* Suggestions Dropdown */}
-																{showCompanySuggestions && companySuggestions.length > 0 && (
-																	<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-																		{companySuggestions.map((company) => (
-																			<div
-																				key={company.id}
-																				className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
-																				onClick={() =>
-																					handleSelectCompany(company, field.onChange)
-																				}
-																			>
-																				{company.name}
-																			</div>
-																		))}
-																	</div>
-																)}
+																{showCompanySuggestions &&
+																	companySuggestions.length > 0 && (
+																		<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+																			{companySuggestions.map((company) => (
+																				<div
+																					key={company.id}
+																					className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
+																					onClick={() =>
+																						handleSelectCompany(
+																							company,
+																							field.onChange
+																						)
+																					}
+																				>
+																					{company.name}
+																				</div>
+																			))}
+																		</div>
+																	)}
 															</div>
 														</FormControl>
 														<FormMessage />
@@ -556,7 +569,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																				<SelectValue />
 																			</SelectTrigger>
 																		</FormControl>
-																		<SelectContent>
+																		<SelectContent className="max-h-[300px] overflow-y-auto">
 																			{Array.from(
 																				new Set(
 																					filterOptions.locations
@@ -615,7 +628,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																				<SelectValue />
 																			</SelectTrigger>
 																		</FormControl>
-																		<SelectContent>
+																		<SelectContent className="max-h-[300px] overflow-y-auto">
 																			{Array.from(
 																				new Set(
 																					filterOptions.locations
@@ -739,7 +752,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			<SelectValue />
 																		</SelectTrigger>
 																	</FormControl>
-																	<SelectContent>
+																	<SelectContent className="max-h-[300px] overflow-y-auto">
 																		<SelectItem value="pieces">
 																			Pieces
 																		</SelectItem>
@@ -803,7 +816,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			<SelectValue />
 																		</SelectTrigger>
 																	</FormControl>
-																	<SelectContent>
+																	<SelectContent className="max-h-[300px] overflow-y-auto">
 																		{[
 																			"USD",
 																			"EUR",
@@ -850,7 +863,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																<SelectValue placeholder="Select payment method" />
 															</SelectTrigger>
 														</FormControl>
-														<SelectContent>
+														<SelectContent className="max-h-[300px] overflow-y-auto">
 															<SelectItem value="cash">Cash</SelectItem>
 															<SelectItem value="bank_transfer">
 																Bank Transfer
