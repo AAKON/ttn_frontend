@@ -3,12 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-} from "@/components/ui/sheet";
+import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Button from "@/components/shared/button";
 import {
@@ -296,252 +291,405 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const prevStep = () => setStep(1);
 
 	return (
-		<Sheet open={open} onOpenChange={onOpenChange}>
-			<SheetContent
-				side={isDesktop ? "right" : "bottom"}
-				className={`w-full ${
-					isDesktop
-						? "sm:max-w-[600px] sm:border-l border-gray-200"
-						: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
-				} p-0 flex flex-col gap-0 bg-white`}
-			>
-				{/* Content Wrapper to handle scrolling properly */}
-				<div className="flex-1 overflow-y-auto scrollbar-hide">
-					<SheetHeader className="py-4 px-8 flex-row justify-between items-center space-y-0 text-left border-b border-gray-200">
-						<SheetTitle className="text-lg font-bold">
-							Sourcing Proposal
-						</SheetTitle>
-					</SheetHeader>
+		open && (
+			<>
+				<div
+					className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+					onClick={() => onOpenChange(false)}
+				/>
+				<div
+					className={`fixed z-50 gap-4 bg-white p-0 flex flex-col transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500 ${
+						isDesktop
+							? "inset-y-0 right-0 h-full w-full sm:max-w-[600px] sm:border-l border-gray-200 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right"
+							: "inset-x-0 bottom-0 h-[90vh] rounded-t-[20px] border-t border-gray-200 data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom"
+					}`}
+				>
+					<button
+						className="absolute text-slate-700 right-4 top-4 rounded-sm bg-transparent p-1 z-10"
+						onClick={() => onOpenChange(false)}
+					>
+						<X className="h-4 w-4" />
+						<span className="sr-only">Close</span>
+					</button>
+					{/* Content Wrapper to handle scrolling properly */}
+					<div className="flex-1 overflow-y-auto scrollbar-hide">
+						<div className="py-4 px-8 flex-row justify-between items-center text-left border-b border-gray-200">
+							<h2 className="text-lg font-bold">Sourcing Proposal</h2>
+						</div>
 
-					{/* Stepper */}
-					<div className="p-6">
-						<div className="flex items-center justify-center p-6 relative">
-							<div className="flex justify-between w-full relative z-0">
-								{/* Step 1 Indicator */}
-								<div
-									className="flex items-center gap-2 cursor-pointer bg-white px-2"
-									onClick={() => setStep(1)}
-								>
+						{/* Stepper */}
+						<div className="p-6">
+							<div className="flex items-center justify-center p-6 relative">
+								<div className="flex justify-between w-full relative z-0">
+									{/* Step 1 Indicator */}
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											step >= 1 ? "border-brand-700" : "border-gray-300"
-										}`}
+										className="flex items-center gap-2 cursor-pointer bg-white px-2"
+										onClick={() => setStep(1)}
 									>
-										{step >= 1 && (
-											<CheckIcon className="w-3 h-3 text-brand-700" />
-										)}
+										<div
+											className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+												step >= 1 ? "border-brand-700" : "border-gray-300"
+											}`}
+										>
+											{step >= 1 && (
+												<CheckIcon className="w-3 h-3 text-brand-700" />
+											)}
+										</div>
+										<span
+											className={`text-sm font-medium ${
+												step === 1 || step === 2
+													? "text-brand-700"
+													: "text-gray-500"
+											}`}
+										>
+											Basic Info
+										</span>
 									</div>
-									<span
-										className={`text-sm font-medium ${
-											step === 1 || step === 2
-												? "text-brand-700"
-												: "text-gray-500"
-										}`}
-									>
-										Basic Info
-									</span>
-								</div>
 
-								{/* Step 2 Indicator */}
-								<div
-									className="flex items-center gap-2 cursor-pointer bg-white px-2"
-									onClick={() => step > 1 && setStep(2)}
-								>
+									{/* Step 2 Indicator */}
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											step === 2 ? "border-brand-700" : "border-gray-300"
-										}`}
+										className="flex items-center gap-2 cursor-pointer bg-white px-2"
+										onClick={() => step > 1 && setStep(2)}
 									>
-										{step === 2 && (
-											<CheckIcon className="w-3 h-3 text-brand-700" />
-										)}
+										<div
+											className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+												step === 2 ? "border-brand-700" : "border-gray-300"
+											}`}
+										>
+											{step === 2 && (
+												<CheckIcon className="w-3 h-3 text-brand-700" />
+											)}
+										</div>
+										<span
+											className={`text-sm font-medium ${
+												step === 2 ? "text-brand-700" : "text-gray-500"
+											}`}
+										>
+											Inquiry Details
+										</span>
 									</div>
-									<span
-										className={`text-sm font-medium ${
-											step === 2 ? "text-brand-700" : "text-gray-500"
-										}`}
-									>
-										Inquiry Details
-									</span>
 								</div>
 							</div>
-						</div>
 
-						{/* Progress Bar under tabs (Orange bar) */}
-						<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
-							<div
-								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
-									step === 1 ? "w-1/2" : "w-full"
-								}`}
-							/>
-						</div>
+							{/* Progress Bar under tabs (Orange bar) */}
+							<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
+								<div
+									className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
+										step === 1 ? "w-1/2" : "w-full"
+									}`}
+								/>
+							</div>
 
-						<Form {...form}>
-							<form
-								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-6"
-							>
-								{step === 1 && (
-									<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-										<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<Form {...form}>
+								<form
+									onSubmit={form.handleSubmit(onSubmit)}
+									className="space-y-6"
+								>
+									{step === 1 && (
+										<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+											<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
+												<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+													<FormField
+														control={form.control}
+														name="category"
+														render={({ field }) => (
+															<FormItem>
+																<FormLabel className="text-sm text-gray-900">
+																	Category
+																</FormLabel>
+																<Select
+																	onValueChange={field.onChange}
+																	defaultValue={field.value}
+																	value={field.value}
+																>
+																	<FormControl>
+																		<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																			<SelectValue
+																				placeholder={
+																					fetchingOptions
+																						? "Loading..."
+																						: "Select category"
+																				}
+																			/>
+																		</SelectTrigger>
+																	</FormControl>
+																	<SelectContent className="max-h-[300px] overflow-y-auto">
+																		{filterOptions.categories?.map((cat) => (
+																			<SelectItem
+																				key={cat.id}
+																				value={cat.id.toString()}
+																			>
+																				{cat.name}
+																			</SelectItem>
+																		))}
+																	</SelectContent>
+																</Select>
+																<FormMessage />
+															</FormItem>
+														)}
+													/>
+													<FormField
+														control={form.control}
+														name="country"
+														render={({ field }) => (
+															<FormItem>
+																<FormLabel className="text-sm text-gray-900">
+																	Country
+																</FormLabel>
+																<Select
+																	onValueChange={field.onChange}
+																	defaultValue={field.value}
+																	value={field.value}
+																>
+																	<FormControl>
+																		<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																			<SelectValue
+																				placeholder={
+																					fetchingOptions
+																						? "Loading..."
+																						: "Select country"
+																				}
+																			/>
+																		</SelectTrigger>
+																	</FormControl>
+																	<SelectContent className="max-h-[300px] overflow-y-auto">
+																		{filterOptions.locations?.map((loc) => (
+																			<SelectItem
+																				key={loc.id}
+																				value={loc.id.toString()}
+																			>
+																				{loc.name}
+																			</SelectItem>
+																		))}
+																	</SelectContent>
+																</Select>
+																<FormMessage />
+															</FormItem>
+														)}
+													/>
+												</div>
+
 												<FormField
 													control={form.control}
-													name="category"
+													name="company_name"
 													render={({ field }) => (
 														<FormItem>
 															<FormLabel className="text-sm text-gray-900">
-																Category
+																Company Name
 															</FormLabel>
-															<Select
-																onValueChange={field.onChange}
-																defaultValue={field.value}
-																value={field.value}
-															>
-																<FormControl>
-																	<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																		<SelectValue
-																			placeholder={
-																				fetchingOptions
-																					? "Loading..."
-																					: "Select category"
+															<FormControl>
+																<div className="relative company-autocomplete-container">
+																	<Input
+																		className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																		placeholder="Type your company name"
+																		{...field}
+																		onChange={(e) =>
+																			handleCompanyNameChange(
+																				e.target.value,
+																				field.onChange
+																			)
+																		}
+																		onFocus={() => {
+																			if (
+																				field.value &&
+																				companySuggestions.length > 0
+																			) {
+																				setShowCompanySuggestions(true);
 																			}
-																		/>
-																	</SelectTrigger>
-																</FormControl>
-																<SelectContent className="max-h-[300px] overflow-y-auto">
-																	{filterOptions.categories?.map((cat) => (
-																		<SelectItem
-																			key={cat.id}
-																			value={cat.id.toString()}
-																		>
-																			{cat.name}
-																		</SelectItem>
-																	))}
-																</SelectContent>
-															</Select>
-															<FormMessage />
-														</FormItem>
-													)}
-												/>
-												<FormField
-													control={form.control}
-													name="country"
-													render={({ field }) => (
-														<FormItem>
-															<FormLabel className="text-sm text-gray-900">
-																Country
-															</FormLabel>
-															<Select
-																onValueChange={field.onChange}
-																defaultValue={field.value}
-																value={field.value}
-															>
-																<FormControl>
-																	<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																		<SelectValue
-																			placeholder={
-																				fetchingOptions
-																					? "Loading..."
-																					: "Select country"
-																			}
-																		/>
-																	</SelectTrigger>
-																</FormControl>
-																<SelectContent className="max-h-[300px] overflow-y-auto">
-																	{filterOptions.locations?.map((loc) => (
-																		<SelectItem
-																			key={loc.id}
-																			value={loc.id.toString()}
-																		>
-																			{loc.name}
-																		</SelectItem>
-																	))}
-																</SelectContent>
-															</Select>
+																		}}
+																		autoComplete="off"
+																	/>
+																	{loadingCompanies && (
+																		<div className="absolute right-3 top-2.5">
+																			<Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+																		</div>
+																	)}
+
+																	{/* Suggestions Dropdown */}
+																	{showCompanySuggestions &&
+																		companySuggestions.length > 0 && (
+																			<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+																				{companySuggestions.map((company) => (
+																					<div
+																						key={company.id}
+																						className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
+																						onClick={() =>
+																							handleSelectCompany(
+																								company,
+																								field.onChange
+																							)
+																						}
+																					>
+																						{company.name}
+																					</div>
+																				))}
+																			</div>
+																		)}
+																</div>
+															</FormControl>
 															<FormMessage />
 														</FormItem>
 													)}
 												/>
 											</div>
 
-											<FormField
-												control={form.control}
-												name="company_name"
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel className="text-sm text-gray-900">
-															Company Name
-														</FormLabel>
-														<FormControl>
-															<div className="relative company-autocomplete-container">
+											<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
+												<FormField
+													control={form.control}
+													name="email"
+													render={({ field }) => (
+														<FormItem>
+															<FormLabel className="text-sm text-gray-900">
+																Email
+															</FormLabel>
+															<FormControl>
 																<Input
 																	className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																	placeholder="Type your company name"
+																	placeholder="Ex: demo@email.com"
 																	{...field}
-																	onChange={(e) =>
-																		handleCompanyNameChange(
-																			e.target.value,
-																			field.onChange
-																		)
-																	}
-																	onFocus={() => {
-																		if (
-																			field.value &&
-																			companySuggestions.length > 0
-																		) {
-																			setShowCompanySuggestions(true);
-																		}
-																	}}
-																	autoComplete="off"
 																/>
-																{loadingCompanies && (
-																	<div className="absolute right-3 top-2.5">
-																		<Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-																	</div>
+															</FormControl>
+															<FormMessage />
+														</FormItem>
+													)}
+												/>
+
+												<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+													<div className="space-y-2">
+														<label className="text-sm text-gray-900">
+															Phone
+														</label>
+														<div className="flex gap-2">
+															<FormField
+																control={form.control}
+																name="phone_code"
+																render={({ field }) => (
+																	<FormItem>
+																		<Select
+																			onValueChange={field.onChange}
+																			defaultValue={field.value}
+																			value={field.value}
+																		>
+																			<FormControl>
+																				<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																					<SelectValue />
+																				</SelectTrigger>
+																			</FormControl>
+																			<SelectContent className="max-h-[300px] overflow-y-auto">
+																				{Array.from(
+																					new Set(
+																						filterOptions.locations
+																							?.map((loc) => loc.country_code)
+																							.filter(Boolean)
+																					)
+																				).map((code) => (
+																					<SelectItem key={code} value={code}>
+																						{code}
+																					</SelectItem>
+																				))}
+																			</SelectContent>
+																		</Select>
+																	</FormItem>
 																)}
+															/>
+															<FormField
+																control={form.control}
+																name="phone"
+																render={({ field }) => (
+																	<FormItem className="flex-1">
+																		<FormControl>
+																			<Input
+																				className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																				placeholder="Ex: 123654789"
+																				{...field}
+																			/>
+																		</FormControl>
+																	</FormItem>
+																)}
+															/>
+														</div>
+														<FormMessage>
+															{form.formState.errors.phone?.message ||
+																form.formState.errors.phone_code?.message}
+														</FormMessage>
+													</div>
 
-																{/* Suggestions Dropdown */}
-																{showCompanySuggestions &&
-																	companySuggestions.length > 0 && (
-																		<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-																			{companySuggestions.map((company) => (
-																				<div
-																					key={company.id}
-																					className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
-																					onClick={() =>
-																						handleSelectCompany(
-																							company,
-																							field.onChange
-																						)
-																					}
-																				>
-																					{company.name}
-																				</div>
-																			))}
-																		</div>
-																	)}
-															</div>
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
+													<div className="space-y-2">
+														<label className="text-sm font-medium text-gray-900">
+															WhatsApp
+														</label>
+														<div className="flex gap-2">
+															<FormField
+																control={form.control}
+																name="whatsapp_code"
+																render={({ field }) => (
+																	<FormItem>
+																		<Select
+																			onValueChange={field.onChange}
+																			defaultValue={field.value}
+																			value={field.value}
+																		>
+																			<FormControl>
+																				<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																					<SelectValue />
+																				</SelectTrigger>
+																			</FormControl>
+																			<SelectContent className="max-h-[300px] overflow-y-auto">
+																				{Array.from(
+																					new Set(
+																						filterOptions.locations
+																							?.map((loc) => loc.country_code)
+																							.filter(Boolean)
+																					)
+																				).map((code) => (
+																					<SelectItem key={code} value={code}>
+																						{code}
+																					</SelectItem>
+																				))}
+																			</SelectContent>
+																		</Select>
+																	</FormItem>
+																)}
+															/>
+															<FormField
+																control={form.control}
+																name="whatsapp"
+																render={({ field }) => (
+																	<FormItem className="flex-1">
+																		<FormControl>
+																			<Input
+																				className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																				placeholder="Ex: 123654789"
+																				{...field}
+																			/>
+																		</FormControl>
+																	</FormItem>
+																)}
+															/>
+														</div>
+														<FormMessage>
+															{form.formState.errors.whatsapp?.message}
+														</FormMessage>
+													</div>
+												</div>
+											</div>
 										</div>
+									)}
 
-										<div className="bg-gray-50 p-4 rounded-[8px] space-y-4">
+									{step === 2 && (
+										<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
 											<FormField
 												control={form.control}
-												name="email"
+												name="title"
 												render={({ field }) => (
 													<FormItem>
-														<FormLabel className="text-sm text-gray-900">
-															Email
+														<FormLabel className="text-sm font-medium text-gray-900">
+															Proposal Title
 														</FormLabel>
 														<FormControl>
 															<Input
 																className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																placeholder="Ex: demo@email.com"
+																placeholder="Type proposal title"
 																{...field}
 															/>
 														</FormControl>
@@ -550,425 +698,288 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 												)}
 											/>
 
-											<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-												<div className="space-y-2">
-													<label className="text-sm text-gray-900">Phone</label>
-													<div className="flex gap-2">
-														<FormField
-															control={form.control}
-															name="phone_code"
-															render={({ field }) => (
-																<FormItem>
-																	<Select
-																		onValueChange={field.onChange}
-																		defaultValue={field.value}
-																		value={field.value}
-																	>
-																		<FormControl>
-																			<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																				<SelectValue />
-																			</SelectTrigger>
-																		</FormControl>
-																		<SelectContent className="max-h-[300px] overflow-y-auto">
-																			{Array.from(
-																				new Set(
-																					filterOptions.locations
-																						?.map((loc) => loc.country_code)
-																						.filter(Boolean)
-																				)
-																			).map((code) => (
-																				<SelectItem key={code} value={code}>
-																					{code}
-																				</SelectItem>
-																			))}
-																		</SelectContent>
-																	</Select>
-																</FormItem>
-															)}
-														/>
-														<FormField
-															control={form.control}
-															name="phone"
-															render={({ field }) => (
-																<FormItem className="flex-1">
-																	<FormControl>
-																		<Input
-																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																			placeholder="Ex: 123654789"
-																			{...field}
-																		/>
-																	</FormControl>
-																</FormItem>
-															)}
-														/>
-													</div>
-													<FormMessage>
-														{form.formState.errors.phone?.message ||
-															form.formState.errors.phone_code?.message}
-													</FormMessage>
-												</div>
-
-												<div className="space-y-2">
-													<label className="text-sm font-medium text-gray-900">
-														WhatsApp
-													</label>
-													<div className="flex gap-2">
-														<FormField
-															control={form.control}
-															name="whatsapp_code"
-															render={({ field }) => (
-																<FormItem>
-																	<Select
-																		onValueChange={field.onChange}
-																		defaultValue={field.value}
-																		value={field.value}
-																	>
-																		<FormControl>
-																			<SelectTrigger className="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																				<SelectValue />
-																			</SelectTrigger>
-																		</FormControl>
-																		<SelectContent className="max-h-[300px] overflow-y-auto">
-																			{Array.from(
-																				new Set(
-																					filterOptions.locations
-																						?.map((loc) => loc.country_code)
-																						.filter(Boolean)
-																				)
-																			).map((code) => (
-																				<SelectItem key={code} value={code}>
-																					{code}
-																				</SelectItem>
-																			))}
-																		</SelectContent>
-																	</Select>
-																</FormItem>
-															)}
-														/>
-														<FormField
-															control={form.control}
-															name="whatsapp"
-															render={({ field }) => (
-																<FormItem className="flex-1">
-																	<FormControl>
-																		<Input
-																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																			placeholder="Ex: 123654789"
-																			{...field}
-																		/>
-																	</FormControl>
-																</FormItem>
-															)}
-														/>
-													</div>
-													<FormMessage>
-														{form.formState.errors.whatsapp?.message}
-													</FormMessage>
-												</div>
-											</div>
-										</div>
-									</div>
-								)}
-
-								{step === 2 && (
-									<div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-										<FormField
-											control={form.control}
-											name="title"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="text-sm font-medium text-gray-900">
-														Proposal Title
-													</FormLabel>
-													<FormControl>
-														<Input
-															className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-															placeholder="Type proposal title"
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<FormField
-											control={form.control}
-											name="description"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="text-sm font-medium text-gray-900">
-														Proposal Description
-													</FormLabel>
-													<FormControl>
-														<Textarea
-															placeholder="Enter a description..."
-															className="min-h-[100px] focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<div className="grid grid-cols-2 gap-4">
-											<div className="space-y-2">
-												<FormLabel className="text-sm font-medium text-gray-900">
-													Quantity
-												</FormLabel>
-												<div className="flex gap-2">
-													<FormField
-														control={form.control}
-														name="quantity"
-														render={({ field }) => (
-															<FormItem className="flex-1">
-																<FormControl>
-																	<div className="relative">
-																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
-																			qty
-																		</span>
-																		<Input
-																			className="pl-10 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																			{...field}
-																		/>
-																	</div>
-																</FormControl>
-															</FormItem>
-														)}
-													/>
-													<FormField
-														control={form.control}
-														name="quantity_unit"
-														render={({ field }) => (
-															<FormItem>
-																<Select
-																	onValueChange={field.onChange}
-																	defaultValue={field.value}
-																	value={field.value}
-																>
-																	<FormControl>
-																		<SelectTrigger className="w-[100px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																			<SelectValue />
-																		</SelectTrigger>
-																	</FormControl>
-																	<SelectContent className="max-h-[300px] overflow-y-auto">
-																		<SelectItem value="pieces">
-																			Pieces
-																		</SelectItem>
-																		<SelectItem value="kg">Kg</SelectItem>
-																		<SelectItem value="meter">Meter</SelectItem>
-																		<SelectItem value="yard">Yard</SelectItem>
-																		<SelectItem value="ton">Ton</SelectItem>
-																		<SelectItem value="liter">Liter</SelectItem>
-																		<SelectItem value="box">Box</SelectItem>
-																		<SelectItem value="container">
-																			Container
-																		</SelectItem>
-																	</SelectContent>
-																</Select>
-															</FormItem>
-														)}
-													/>
-												</div>
-												<FormMessage>
-													{form.formState.errors.quantity?.message ||
-														form.formState.errors.quantity_unit?.message}
-												</FormMessage>
-											</div>
-
-											<div className="space-y-2">
-												<FormLabel className="text-sm font-medium text-gray-900">
-													Target Price Per Unit
-												</FormLabel>
-												<div className="flex gap-2">
-													<FormField
-														control={form.control}
-														name="target_price"
-														render={({ field }) => (
-															<FormItem className="flex-1">
-																<FormControl>
-																	<div className="relative">
-																		<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
-																			$
-																		</span>
-																		<Input
-																			className="pl-6 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-																			{...field}
-																		/>
-																	</div>
-																</FormControl>
-															</FormItem>
-														)}
-													/>
-													<FormField
-														control={form.control}
-														name="currency"
-														render={({ field }) => (
-															<FormItem>
-																<Select
-																	onValueChange={field.onChange}
-																	defaultValue={field.value}
-																	value={field.value}
-																>
-																	<FormControl>
-																		<SelectTrigger className="w-[85px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																			<SelectValue />
-																		</SelectTrigger>
-																	</FormControl>
-																	<SelectContent className="max-h-[300px] overflow-y-auto">
-																		{[
-																			"USD",
-																			"EUR",
-																			"GBP",
-																			"JPY",
-																			"CNY",
-																			"INR",
-																			"BDT",
-																			"AUD",
-																			"CAD",
-																			"CHF",
-																		].map((curr) => (
-																			<SelectItem key={curr} value={curr}>
-																				{curr}
-																			</SelectItem>
-																		))}
-																	</SelectContent>
-																</Select>
-															</FormItem>
-														)}
-													/>
-												</div>
-												<FormMessage>
-													{form.formState.errors.target_price?.message ||
-														form.formState.errors.currency?.message}
-												</FormMessage>
-											</div>
-										</div>
-
-										<FormField
-											control={form.control}
-											name="payment_method"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="text-sm font-medium text-gray-900">
-														Payment Methods
-													</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														value={field.value}
-													>
-														<FormControl>
-															<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
-																<SelectValue placeholder="Select payment method" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent className="max-h-[300px] overflow-y-auto">
-															<SelectItem value="cash">Cash</SelectItem>
-															<SelectItem value="bank_transfer">
-																Bank Transfer
-															</SelectItem>
-															<SelectItem value="letter_of_credit">
-																Letter of Credit
-															</SelectItem>
-															<SelectItem value="paypal">PayPal</SelectItem>
-															<SelectItem value="escrow">Escrow</SelectItem>
-															<SelectItem value="credit_card">
-																Credit Card
-															</SelectItem>
-															<SelectItem value="advance_payment">
-																Advance Payment
-															</SelectItem>
-															<SelectItem value="payment_on_delivery">
-																Payment on Delivery
-															</SelectItem>
-														</SelectContent>
-													</Select>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<FormField
-											control={form.control}
-											name="delivery_info"
-											render={({ field }) => (
-												<FormItem>
-													<FormLabel className="text-sm font-medium text-gray-900">
-														Delivery Information
-													</FormLabel>
-													<FormControl>
-														<Input
-															className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-															placeholder="Type your delivery details"
-															{...field}
-														/>
-													</FormControl>
-													<FormMessage />
-												</FormItem>
-											)}
-										/>
-
-										<div className="space-y-2">
-											<StepFormDragDropFile
-												name="images"
+											<FormField
 												control={form.control}
+												name="description"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel className="text-sm font-medium text-gray-900">
+															Proposal Description
+														</FormLabel>
+														<FormControl>
+															<Textarea
+																placeholder="Enter a description..."
+																className="min-h-[100px] focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																{...field}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
 											/>
+
+											<div className="grid grid-cols-2 gap-4">
+												<div className="space-y-2">
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Quantity
+													</FormLabel>
+													<div className="flex gap-2">
+														<FormField
+															control={form.control}
+															name="quantity"
+															render={({ field }) => (
+																<FormItem className="flex-1">
+																	<FormControl>
+																		<div className="relative">
+																			<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
+																				qty
+																			</span>
+																			<Input
+																				className="pl-10 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																				{...field}
+																			/>
+																		</div>
+																	</FormControl>
+																</FormItem>
+															)}
+														/>
+														<FormField
+															control={form.control}
+															name="quantity_unit"
+															render={({ field }) => (
+																<FormItem>
+																	<Select
+																		onValueChange={field.onChange}
+																		defaultValue={field.value}
+																		value={field.value}
+																	>
+																		<FormControl>
+																			<SelectTrigger className="w-[100px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																				<SelectValue />
+																			</SelectTrigger>
+																		</FormControl>
+																		<SelectContent className="max-h-[300px] overflow-y-auto">
+																			<SelectItem value="pieces">
+																				Pieces
+																			</SelectItem>
+																			<SelectItem value="kg">Kg</SelectItem>
+																			<SelectItem value="meter">
+																				Meter
+																			</SelectItem>
+																			<SelectItem value="yard">Yard</SelectItem>
+																			<SelectItem value="ton">Ton</SelectItem>
+																			<SelectItem value="liter">
+																				Liter
+																			</SelectItem>
+																			<SelectItem value="box">Box</SelectItem>
+																			<SelectItem value="container">
+																				Container
+																			</SelectItem>
+																		</SelectContent>
+																	</Select>
+																</FormItem>
+															)}
+														/>
+													</div>
+													<FormMessage>
+														{form.formState.errors.quantity?.message ||
+															form.formState.errors.quantity_unit?.message}
+													</FormMessage>
+												</div>
+
+												<div className="space-y-2">
+													<FormLabel className="text-sm font-medium text-gray-900">
+														Target Price Per Unit
+													</FormLabel>
+													<div className="flex gap-2">
+														<FormField
+															control={form.control}
+															name="target_price"
+															render={({ field }) => (
+																<FormItem className="flex-1">
+																	<FormControl>
+																		<div className="relative">
+																			<span className="absolute left-3 top-2.5 text-gray-500 text-sm">
+																				$
+																			</span>
+																			<Input
+																				className="pl-6 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																				{...field}
+																			/>
+																		</div>
+																	</FormControl>
+																</FormItem>
+															)}
+														/>
+														<FormField
+															control={form.control}
+															name="currency"
+															render={({ field }) => (
+																<FormItem>
+																	<Select
+																		onValueChange={field.onChange}
+																		defaultValue={field.value}
+																		value={field.value}
+																	>
+																		<FormControl>
+																			<SelectTrigger className="w-[85px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																				<SelectValue />
+																			</SelectTrigger>
+																		</FormControl>
+																		<SelectContent className="max-h-[300px] overflow-y-auto">
+																			{[
+																				"USD",
+																				"EUR",
+																				"GBP",
+																				"JPY",
+																				"CNY",
+																				"INR",
+																				"BDT",
+																				"AUD",
+																				"CAD",
+																				"CHF",
+																			].map((curr) => (
+																				<SelectItem key={curr} value={curr}>
+																					{curr}
+																				</SelectItem>
+																			))}
+																		</SelectContent>
+																	</Select>
+																</FormItem>
+															)}
+														/>
+													</div>
+													<FormMessage>
+														{form.formState.errors.target_price?.message ||
+															form.formState.errors.currency?.message}
+													</FormMessage>
+												</div>
+											</div>
+
+											<FormField
+												control={form.control}
+												name="payment_method"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel className="text-sm font-medium text-gray-900">
+															Payment Methods
+														</FormLabel>
+														<Select
+															onValueChange={field.onChange}
+															value={field.value}
+														>
+															<FormControl>
+																<SelectTrigger className="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none">
+																	<SelectValue placeholder="Select payment method" />
+																</SelectTrigger>
+															</FormControl>
+															<SelectContent className="max-h-[300px] overflow-y-auto">
+																<SelectItem value="cash">Cash</SelectItem>
+																<SelectItem value="bank_transfer">
+																	Bank Transfer
+																</SelectItem>
+																<SelectItem value="letter_of_credit">
+																	Letter of Credit
+																</SelectItem>
+																<SelectItem value="paypal">PayPal</SelectItem>
+																<SelectItem value="escrow">Escrow</SelectItem>
+																<SelectItem value="credit_card">
+																	Credit Card
+																</SelectItem>
+																<SelectItem value="advance_payment">
+																	Advance Payment
+																</SelectItem>
+																<SelectItem value="payment_on_delivery">
+																	Payment on Delivery
+																</SelectItem>
+															</SelectContent>
+														</Select>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+
+											<FormField
+												control={form.control}
+												name="delivery_info"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel className="text-sm font-medium text-gray-900">
+															Delivery Information
+														</FormLabel>
+														<FormControl>
+															<Input
+																className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
+																placeholder="Type your delivery details"
+																{...field}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+
+											<div className="space-y-2">
+												<StepFormDragDropFile
+													name="images"
+													control={form.control}
+												/>
+											</div>
 										</div>
-									</div>
-								)}
-							</form>
-						</Form>
+									)}
+								</form>
+							</Form>
+						</div>
+					</div>
+
+					{/* Footer fixed at bottom */}
+					<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-10">
+						{step === 1 ? (
+							<div className="grid grid-cols-2 gap-4">
+								<Button
+									TagName="div"
+									secondary
+									className="w-full cursor-pointer"
+									onClick={() => onOpenChange(false)}
+								>
+									Cancel
+								</Button>
+								<Button className="w-full" onClick={nextStep}>
+									Next <ArrowRight className="w-4 h-4 ml-1" />
+								</Button>
+							</div>
+						) : (
+							<div className="grid grid-cols-2 gap-4">
+								<Button
+									TagName="div"
+									secondary
+									className="w-full cursor-pointer"
+									onClick={prevStep}
+									disabled={isSubmitting}
+								>
+									Back
+								</Button>
+								<Button
+									className="w-full"
+									onClick={form.handleSubmit(onSubmit)}
+									disabled={isSubmitting}
+								>
+									{isSubmitting ? (
+										<>
+											Submitting...{" "}
+											<Loader2 className="w-4 h-4 ml-1 animate-spin" />
+										</>
+									) : (
+										<>
+											Submit <ArrowRight className="w-4 h-4 ml-1" />
+										</>
+									)}
+								</Button>
+							</div>
+						)}
 					</div>
 				</div>
-
-				{/* Footer fixed at bottom */}
-				<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-10">
-					{step === 1 ? (
-						<div className="grid grid-cols-2 gap-4">
-							<Button
-								TagName="div"
-								secondary
-								className="w-full cursor-pointer"
-								onClick={() => onOpenChange(false)}
-							>
-								Cancel
-							</Button>
-							<Button className="w-full" onClick={nextStep}>
-								Next <ArrowRight className="w-4 h-4 ml-1" />
-							</Button>
-						</div>
-					) : (
-						<div className="grid grid-cols-2 gap-4">
-							<Button
-								TagName="div"
-								secondary
-								className="w-full cursor-pointer"
-								onClick={prevStep}
-								disabled={isSubmitting}
-							>
-								Back
-							</Button>
-							<Button
-								className="w-full"
-								onClick={form.handleSubmit(onSubmit)}
-								disabled={isSubmitting}
-							>
-								{isSubmitting ? (
-									<>
-										Submitting...{" "}
-										<Loader2 className="w-4 h-4 ml-1 animate-spin" />
-									</>
-								) : (
-									<>
-										Submit <ArrowRight className="w-4 h-4 ml-1" />
-									</>
-								)}
-							</Button>
-						</div>
-					)}
-				</div>
-			</SheetContent>
-		</Sheet>
+			</>
+		)
 	);
 }

@@ -17,7 +17,7 @@ function AuthNavbar({ showMobileNav, setShowMobileNav }) {
 	const [showSourcingSheet, setShowSourcingSheet] = React.useState(false);
 
 	return (
-		<div className="flex justify-end items-center gap-3 md:gap-4 ">
+		<div className="flex justify-end items-center gap-3 md:gap-4">
 			<SourcingRequestSheet
 				open={showSourcingSheet}
 				onOpenChange={setShowSourcingSheet}
