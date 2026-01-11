@@ -299,16 +299,44 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Don't render if not open
 	if (!open) return null;
 
+	// Watch Step 1 fields
+	const step1Values = form.watch([
+		"category",
+		"country",
+		"company_name",
+		"email",
+		"phone",
+	]);
+	const isStep1Complete = step1Values.every((val) => val && val.length > 0);
+
+	// Watch Step 2 fields to determine completion status color
+	const step2Values = form.watch([
+		"title",
+		"description",
+		"quantity",
+		"quantity_unit",
+		"target_price",
+		"currency",
+		"payment_method",
+		"delivery_info",
+		"images",
+	]);
+	const isStep2Complete = step2Values.every((val) => val && val.length > 0);
+
 	const content = (
 		<>
 			{/* Overlay */}
 			<div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" />
 			{/* Custom Sheet Container */}
 			<div
-				className={`fixed z-[10001] bg-white shadow-2xl transition-all duration-300 ease-in-out animate-in ${
+				className={`fixed inset-y-0 right-0 z-[10001] w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out transform ${
 					isDesktop
-						? "inset-y-0 right-0 w-full max-w-[600px] border-l border-gray-200 slide-in-from-right"
-						: "inset-x-0 bottom-0 h-[90vh] rounded-t-[20px] border-t border-gray-200 slide-in-from-bottom"
+						? "sm:max-w-[540px]"
+						: "h-[85vh] sm:h-full bottom-0 top-auto rounded-t-[20px]"
+				} ${
+					mounted
+						? "translate-x-0 translate-y-0"
+						: "translate-x-full translate-y-full"
 				} flex flex-col overflow-hidden`}
 			>
 				{/* Close Button */}
@@ -338,18 +366,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								>
 									<div
 										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											step >= 1 ? "border-brand-700" : "border-gray-300"
+											step > 1 || isStep1Complete
+												? "border-brand-700 text-brand-700"
+												: "border-gray-600 text-transparent"
 										}`}
 									>
-										{step >= 1 && (
-											<CheckIcon className="w-3 h-3 text-brand-700" />
-										)}
+										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
 										className={`text-sm font-medium ${
-											step === 1 || step === 2
+											step > 1 || isStep1Complete
 												? "text-brand-700"
-												: "text-gray-500"
+												: "text-gray-600"
 										}`}
 									>
 										Basic Info
@@ -363,16 +391,16 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								>
 									<div
 										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											step === 2 ? "border-brand-700" : "border-gray-300"
+											isStep2Complete
+												? "border-brand-600 text-brand-600"
+												: "border-gray-600 text-transparent"
 										}`}
 									>
-										{step === 2 && (
-											<CheckIcon className="w-3 h-3 text-brand-700" />
-										)}
+										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
 										className={`text-sm font-medium ${
-											step === 2 ? "text-brand-700" : "text-gray-500"
+											isStep2Complete ? "text-brand-600" : "text-gray-600"
 										}`}
 									>
 										Inquiry Details
@@ -382,11 +410,15 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 						</div>
 
 						{/* Progress Bar under tabs (Orange bar) */}
-						<div className="w-full h-2 bg-gray-100 rounded-full mb-8 relative overflow-hidden">
+						<div
+							className={`w-full h-2 rounded-full mb-8 relative overflow-hidden ${
+								step === 1 ? "bg-gray-300" : "bg-brand-600"
+							}`}
+						>
 							<div
-								className={`absolute top-0 left-0 h-full bg-brand-600 transition-all duration-300 ease-in-out rounded-full ${
-									step === 1 ? "w-1/2" : "w-full"
-								}`}
+								className={`absolute top-0 h-full transition-all duration-300 ease-in-out rounded-full ${
+									step === 1 ? "bg-brand-600" : "bg-brand-700"
+								} ${!isStep2Complete ? "w-1/2" : "w-full"}`}
 							/>
 						</div>
 
