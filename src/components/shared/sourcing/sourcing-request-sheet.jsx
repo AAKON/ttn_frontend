@@ -1,14 +1,10 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-} from "@/components/ui/sheet";
+
 import { Input } from "@/components/ui/input";
 import Button from "@/components/shared/button";
 import {
@@ -28,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ArrowRight, CheckIcon, Loader2 } from "lucide-react";
+import { ArrowRight, CheckIcon, Loader2, X as XIcon } from "lucide-react";
 import StepFormDragDropFile from "@/components/shared/StepFormDragDropFile";
 import {
 	getSourcingFilterOptions,
@@ -67,13 +63,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const { toast } = useToast();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [step, setStep] = useState(1);
+	const [mounted, setMounted] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
 	const [filterOptions, setFilterOptions] = useState({
 		categories: [],
 		locations: [],
 	});
 	const [fetchingOptions, setFetchingOptions] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	
+
 	// Company autocomplete states
 	const [companySuggestions, setCompanySuggestions] = useState([]);
 	const [loadingCompanies, setLoadingCompanies] = useState(false);
@@ -119,17 +120,20 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Close suggestions when clicking outside
 	useEffect(() => {
 		const handleClickOutside = (event) => {
-			if (showCompanySuggestions && !event.target.closest('.company-autocomplete-container')) {
+			if (
+				showCompanySuggestions &&
+				!event.target.closest(".company-autocomplete-container")
+			) {
 				setShowCompanySuggestions(false);
 			}
 		};
 
 		if (showCompanySuggestions) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener("mousedown", handleClickOutside);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, [showCompanySuggestions]);
 
@@ -167,10 +171,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		setLoadingCompanies(true);
 		try {
 			const response = await searchCompanies(searchTerm);
-			
+
 			// API returns data in response.data.data format
 			const companies = response?.data?.data;
-			
+
 			if (companies && Array.isArray(companies)) {
 				setCompanySuggestions(companies);
 				setShowCompanySuggestions(companies.length > 0);
@@ -190,7 +194,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Handle company name input change with debounce
 	const handleCompanyNameChange = (value, onChange) => {
 		onChange(value);
-		
+
 		// Clear previous timeout
 		if (searchTimeout) {
 			clearTimeout(searchTimeout);
@@ -200,7 +204,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		const timeout = setTimeout(() => {
 			fetchCompanySuggestions(value);
 		}, 300);
-		
+
 		setSearchTimeout(timeout);
 	};
 
@@ -292,24 +296,37 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	};
 	const prevStep = () => setStep(1);
 
-	return (
-		<Sheet open={open} onOpenChange={onOpenChange}>
-			<SheetContent
-				side={isDesktop ? "right" : "bottom"}
-				className={`w-full ${
-					isDesktop
-						? "sm:max-w-[600px] sm:border-l border-gray-200"
-						: "h-[90vh] rounded-t-[20px] border-t border-gray-200"
-				} p-0 flex flex-col gap-0 bg-white`}
-			>
-				{/* Content Wrapper to handle scrolling properly */}
-				<div className="flex-1 overflow-y-auto scrollbar-hide">
-					<SheetHeader className="py-4 px-8 flex-row justify-between items-center space-y-0 text-left border-b border-gray-200">
-						<SheetTitle className="text-lg font-bold">
-							Sourcing Proposal
-						</SheetTitle>
-					</SheetHeader>
+	// Don't render if not open
+	if (!open) return null;
 
+	const content = (
+		<>
+			{/* Overlay */}
+			<div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" />
+			{/* Custom Sheet Container */}
+			<div
+				className={`fixed z-[10001] bg-white shadow-2xl transition-all duration-300 ease-in-out animate-in ${
+					isDesktop
+						? "inset-y-0 right-0 w-full max-w-[600px] border-l border-gray-200 slide-in-from-right"
+						: "inset-x-0 bottom-0 h-[90vh] rounded-t-[20px] border-t border-gray-200 slide-in-from-bottom"
+				} flex flex-col overflow-hidden`}
+			>
+				{/* Close Button */}
+				<button
+					onClick={() => onOpenChange(false)}
+					className="absolute size-5 p-1 right-4 top-4 rounded-sm bg-transparent text-gray-700"
+				>
+					<XIcon className="w-5 h-5 text-foreground" />
+				</button>
+
+				{/* Header */}
+				<div className="flex sm:text-left py-4 px-8 flex-row justify-between items-center space-y-0 text-left border-b border-gray-200">
+					<h2 className="text-foreground text-lg font-bold">
+						Sourcing Proposal
+					</h2>
+				</div>
+
+				<div className="flex-1 overflow-y-auto scrollbar-hide pb-24">
 					{/* Stepper */}
 					<div className="p-6">
 						<div className="flex items-center justify-center p-6 relative">
@@ -477,10 +494,16 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																	placeholder="Type your company name"
 																	{...field}
 																	onChange={(e) =>
-																		handleCompanyNameChange(e.target.value, field.onChange)
+																		handleCompanyNameChange(
+																			e.target.value,
+																			field.onChange
+																		)
 																	}
 																	onFocus={() => {
-																		if (field.value && companySuggestions.length > 0) {
+																		if (
+																			field.value &&
+																			companySuggestions.length > 0
+																		) {
 																			setShowCompanySuggestions(true);
 																		}
 																	}}
@@ -491,23 +514,27 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																		<Loader2 className="w-4 h-4 animate-spin text-gray-400" />
 																	</div>
 																)}
-																
+
 																{/* Suggestions Dropdown */}
-																{showCompanySuggestions && companySuggestions.length > 0 && (
-																	<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-																		{companySuggestions.map((company) => (
-																			<div
-																				key={company.id}
-																				className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
-																				onClick={() =>
-																					handleSelectCompany(company, field.onChange)
-																				}
-																			>
-																				{company.name}
-																			</div>
-																		))}
-																	</div>
-																)}
+																{showCompanySuggestions &&
+																	companySuggestions.length > 0 && (
+																		<div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+																			{companySuggestions.map((company) => (
+																				<div
+																					key={company.id}
+																					className="px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm text-gray-900"
+																					onClick={() =>
+																						handleSelectCompany(
+																							company,
+																							field.onChange
+																						)
+																					}
+																				>
+																					{company.name}
+																				</div>
+																			))}
+																		</div>
+																	)}
 															</div>
 														</FormControl>
 														<FormMessage />
@@ -910,7 +937,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 				</div>
 
 				{/* Footer fixed at bottom */}
-				<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-10">
+				<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-[10002]">
 					{step === 1 ? (
 						<div className="grid grid-cols-2 gap-4">
 							<Button
@@ -955,7 +982,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 						</div>
 					)}
 				</div>
-			</SheetContent>
-		</Sheet>
+			</div>
+		</>
 	);
+
+	if (!mounted) return null;
+	return createPortal(content, document.body);
 }

@@ -42,13 +42,11 @@ function AuthNavbar({ showMobileNav, setShowMobileNav }) {
 					>
 						Sourcing
 					</DropdownMenuItem>
-					<DropdownMenuItem asChild className="cursor-pointer py-3">
-						<Link
-							href="/myaccount/company/add"
-							className="w-full font-semibold text-md text-gray-900"
-						>
-							Listing
-						</Link>
+					<DropdownMenuItem
+						asChild
+						className="cursor-pointer py-3 rounded-xl border-b border-gray-200 font-semibold text-md text-gray-900"
+					>
+						<Link href="/myaccount/company/add">Listing</Link>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
