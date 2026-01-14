@@ -2,7 +2,7 @@ import React from "react";
 import img from "@/assets/blog1.jpg";
 import Image from "next/image";
 import righttopiocn from "@/assets/right-top-icon.svg";
-import avatar from "@/assets/avatar.png";
+import avatar from "@/assets/avatar.svg";
 import DateFormatter from "@/utils/dateFormatter";
 import Link from "next/link";
 
@@ -16,6 +16,7 @@ const ResourceCard = ({ item }) => {
     author,
     publish_date,
   } = item;
+
   return (
     <div className="group max-w-[445px]">
       <Link href={`/blog/${slug}`}>
@@ -38,7 +39,7 @@ const ResourceCard = ({ item }) => {
               ))}
           </span>
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-xl lg:text-2xl text-gray-900">
+            <h3 className="font-semibold text-xl lg:text-2xl text-gray-900 line-clamp-1 pr-6">
               {title}
             </h3>
             <span>

@@ -1,14 +1,15 @@
 // services/company/index.js
-import {apiRequest} from "@/utils/api";
-import {getSession} from "next-auth/react";
-import {getSSToken} from "@/utils/getSSToken";
+import { apiRequest } from "@/utils/api";
+import { getSession } from "next-auth/react";
+import { getSSToken } from "@/utils/getSSToken";
 
 export async function getDataPreBasic() {
 
     const token = await getSSToken();
     const endpoint = `my/company/preparation-data/for-basic`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -20,7 +21,8 @@ export async function getDataPreOverview() {
     const token = await getSSToken();
     const endpoint = `my/company/preparation-data/for-overview`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -34,7 +36,9 @@ export async function getCompanyDetails(slug) {
     const token = await getSSToken();
     const endpoint = `company/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -46,7 +50,8 @@ export async function getCompanyBasic(slug) {
     const token = await getSSToken();
     const endpoint = `my/company/edit/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     return await apiRequest(endpoint, options, null, token);
 }
@@ -57,10 +62,56 @@ export async function getMyCompanies() {
     const token = session?.accessToken;
     const endpoint = `my/company/list`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
+}
+
+// search companies with keyword
+export async function searchMyCompanies(keyword = "") {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `my/company/list`;
+    const payload = {
+        locationId: null,
+        manpower: [],
+        certificateIds: [],
+        businessCategoryIds: [],
+        businessTypeIds: [],
+        keyword: keyword
+    };
+    const options = {
+        method: 'POST',
+        body: payload,
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result;
+}
+
+// search all companies with keyword (for autocomplete)
+export async function searchCompanies(keyword = "") {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `company/list`;
+    const payload = {
+        locationId: null,
+        manpower: [],
+        certificateIds: [],
+        businessCategoryIds: [],
+        businessTypeIds: [],
+        keyword: keyword
+    };
+    const options = {
+        method: 'POST',
+        body: payload,
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result;
 }
 
 // own favourite company list
@@ -69,7 +120,9 @@ export async function getMyFavsCompanies() {
     const token = session?.accessToken;
     const endpoint = `my/favorite`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -82,7 +135,35 @@ export async function delFavsCompanyFaq(slug, toast) {
 
     const endpoint = `my/favorite/${slug}`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        next: { revalidate: 60 },
+        cache: "force-cache"
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}
+
+// own favourite sourcing proposal list
+export async function getMyFavsSourcingProposals() {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `favorites/sourcing-proposals`;
+    const options = {
+        method: 'GET',
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data?.data;
+}
+
+// toggle favourite sourcing proposal
+export async function toggleFavsSourcingProposal(id, toast) {
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `favorites/sourcing-proposals/${id}/toggle`;
+    const options = {
+        method: 'POST'
     };
     const result = await apiRequest(endpoint, options, toast, token);
     return result?.status && result?.code === 200;
@@ -134,7 +215,8 @@ export async function getCompanyOverview(slug) {
     const token = session?.accessToken;
     const endpoint = `my/company/${slug}/overview`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -146,7 +228,8 @@ export async function getBusinessContact(slug) {
     const token = session?.accessToken;
     const endpoint = `my/company/${slug}/contact`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -190,7 +273,8 @@ export async function getDecissionMakers(slug) {
 
     const endpoint = `my/company/${slug}/decision-maker`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -249,7 +333,8 @@ export async function getCompanyFaqs(slug) {
 
     const endpoint = `my/company/${slug}/faq`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;
@@ -284,6 +369,22 @@ export async function companyClientReq(slug, data, toast) {
     return await apiRequest(endpoint, options, toast, token);
 }
 
+// client create
+export async function companyCertificateReq(slug, data, toast) {
+
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/company/certificates/${slug}`;
+
+    const options = {
+        method: 'POST',
+        body: data,
+        isFormData: true
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
+
 export async function getCompanyClients(slug) {
 
     const session = await getSession();
@@ -291,7 +392,8 @@ export async function getCompanyClients(slug) {
 
     const endpoint = `my/company/${slug}/client`;
     const options = {
-        method: 'GET'
+        method: 'GET',
+        cache: "no-store"
     };
     const result = await apiRequest(endpoint, options, null, token);
     return result?.data;

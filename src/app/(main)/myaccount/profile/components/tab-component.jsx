@@ -3,7 +3,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import "./profile-tabs.css";
 import ProfileInfoForm from "./profile-info-form";
 import MyCompanies from "./my-companies";
-import {useEffect, useState} from "react";
+import Sourcing from "./sourcing";
+import { useEffect, useState } from "react";
+import PasswordForm from "@/app/(main)/myaccount/profile/components/password-form";
 
 const TabComponents = () => {
 
@@ -31,12 +33,12 @@ const TabComponents = () => {
   return (
     <>
       <Tabs
-          value={currentTab}
-          onValueChange={(value) => {
-            setCurrentTab(value);
-            window.location.hash = value; // Update the URL hash when a tab is clicked
-          }}
-        className="profile-tabs w-full overflow-hidden"
+        value={currentTab}
+        onValueChange={(value) => {
+          setCurrentTab(value);
+          window.location.hash = value; // Update the URL hash when a tab is clicked
+        }}
+        className="profile-tabs w-full"
       >
         <TabsList className="justify-start rounded-2xl border border-gray-200 bg-white px-6 py-0 w-full h-[64px] overflow-x-scroll xl:overflow-hidden">
           <TabsTrigger
@@ -53,9 +55,15 @@ const TabComponents = () => {
           </TabsTrigger>
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
+            value="sourcing"
+          >
+            My Sourcing
+          </TabsTrigger>
+          <TabsTrigger
+            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="danger-zone"
           >
-            Danger Zone
+            Settings
           </TabsTrigger>
         </TabsList>
 
@@ -67,11 +75,15 @@ const TabComponents = () => {
         <TabsContent value="my-companies">
           <MyCompanies />
         </TabsContent>
+        <TabsContent value="sourcing">
+          <Sourcing />
+        </TabsContent>
         <TabsContent value="danger-zone">
           <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
-            <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-              Danger Zone
+            <h3 className="text-sm mb-6 md:text-lg font-semibold text-gray-900">
+              Change Password
             </h3>
+            <PasswordForm />
           </div>
         </TabsContent>
       </Tabs>

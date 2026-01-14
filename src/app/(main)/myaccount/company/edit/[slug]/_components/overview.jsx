@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,12 +17,10 @@ import { formLabelClasses, inputClasses } from "@/utils/input-style";
 import { companyOverviewReq, getCompanyOverview } from "@/services/company";
 import Button from "@/components/shared/button";
 import { DeleteIcon } from "@/components/icons";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-10 bg-gray-50";
-
-import Image from "next/image";
-import marketShare from "@/assets/marketShare.svg";
 
 import {
   BarChart,
@@ -45,20 +42,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { getCompanyProducts } from "@/services/product";
 
 const formSchema = z.object({
+  is_manufacturer: z.union([z.literal(0), z.literal(1)]),
   manpower: z.string().optional(),
   production_capacity: z.string().optional(),
   total_units: z.string().optional(),
   moq: z.string().optional(),
   lead_time: z.string().optional(),
-  shipment_term: z.string().min(1, {
-    message: "Delivery terms is required",
-  }),
-  payment_policy: z.string().min(1, {
-    message: "Payment policy is required",
-  }),
+  shipment_term: z.string().optional(),
+  payment_policy: z.string().optional(),
   market_share: z.array(
     z.object({
       location_id: z.string().min(1, "Country is required"),
@@ -95,6 +88,7 @@ const OverviewForm = ({ slug, locations }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      is_manufacturer: 0,
       manpower: "",
       production_capacity: "",
       total_units: "",
@@ -154,6 +148,7 @@ const OverviewForm = ({ slug, locations }) => {
   useEffect(() => {
     if (overviewData) {
       const {
+        is_manufacturer,
         moq,
         lead_time,
         shipment_term,
@@ -166,6 +161,7 @@ const OverviewForm = ({ slug, locations }) => {
 
       // Reset all form fields with the data
       reset({
+        is_manufacturer,
         moq,
         lead_time,
         shipment_term,
@@ -178,12 +174,15 @@ const OverviewForm = ({ slug, locations }) => {
     }
   }, [overviewData, reset]);
 
+  const isManufacturer = form.watch("is_manufacturer");
+
   // Function to handle form submission
   const onSubmit = async (data) => {
 
     const {
       moq,
       lead_time,
+      is_manufacturer,
       shipment_term,
       payment_policy,
       total_units,
@@ -193,10 +192,11 @@ const OverviewForm = ({ slug, locations }) => {
     } = data;
 
     const formData = {
-      shipment_term,
-      payment_policy,
-      total_units,
-      production_capacity,
+      is_manufacturer,
+      shipment_term: shipment_term || "",
+      payment_policy: payment_policy || "",
+      total_units: total_units || "",
+      production_capacity: production_capacity || "",
       market_share,
       yearly_turnover,
     };
@@ -221,6 +221,43 @@ const OverviewForm = ({ slug, locations }) => {
         <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-8 mt-12">
           <h3 className="text-base font-semibold text-gray-900">Overview</h3>
           <div className="grid grid-cols-1 gap-3 lg:gap-3">
+            <div className="mb-3">
+              <FormField
+                  control={form.control}
+                  name="is_manufacturer"
+                  render={({ field }) => (
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormLabel className="font-medium text-base">Are You Manufacturer?</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                              onValueChange={(val) => field.onChange(parseInt(val))}
+                              value={String(field.value)}
+                              className="flex space-x-3 space-y-0"
+                          >
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem className="cs_radio_inp" value="1" />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                Yes
+                              </FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-3 space-y-0">
+                              <FormControl>
+                                <RadioGroupItem className="cs_radio_inp" value="0" />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                No
+                              </FormLabel>
+                            </FormItem>
+
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )}
+              />
+            </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               <FormField
                 control={form.control}
@@ -228,14 +265,15 @@ const OverviewForm = ({ slug, locations }) => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Production Capacity
+                      Capacity
                     </FormLabel>
                     <FormControl>
                       <Input
                         className={inputStyle}
-                        placeholder="Enter production capacity"
+                        placeholder="Enter capacity"
                         type="text"
                         {...field}
+                        disabled={isManufacturer}
                       />
                     </FormControl>
                     <FormMessage />
@@ -254,6 +292,7 @@ const OverviewForm = ({ slug, locations }) => {
                         placeholder="Enter number"
                         type="text"
                         {...field}
+                        disabled={isManufacturer}
                       />
                     </FormControl>
                     <FormMessage />
@@ -267,13 +306,14 @@ const OverviewForm = ({ slug, locations }) => {
                 name="moq"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={labelStyle}>MOQ</FormLabel>
+                    <FormLabel className={labelStyle}>Minimum Order Quantity(MOQ)</FormLabel>
                     <FormControl>
                       <Input
                         className={inputStyle}
                         placeholder="Enter Min. Order quantity"
                         type="text"
                         {...field}
+                        disabled={isManufacturer}
                       />
                     </FormControl>
                     <FormMessage />
@@ -292,6 +332,7 @@ const OverviewForm = ({ slug, locations }) => {
                         placeholder="90 Days"
                         type="text"
                         {...field}
+                        disabled={isManufacturer}
                       />
                     </FormControl>
                     <FormMessage />
@@ -301,12 +342,33 @@ const OverviewForm = ({ slug, locations }) => {
             </div>
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
               <FormField
+                  control={form.control}
+                  name="payment_policy"
+                  render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={labelStyle}>
+                          Payment Policy
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                              className={inputStyle}
+                              placeholder="LC, TT, Bank Transfer etc"
+                              type="text"
+                              {...field}
+                              disabled={isManufacturer}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                  )}
+              />
+              <FormField
                 control={form.control}
                 name="shipment_term"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className={labelStyle}>
-                      Delivery Terms <span className="text-red-600">*</span>
+                      Delivery Terms
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -314,26 +376,7 @@ const OverviewForm = ({ slug, locations }) => {
                         placeholder="FOB, CF, CIF etc."
                         type="text"
                         {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="payment_policy"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className={labelStyle}>
-                      Payment Policy <span className="text-red-600">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className={inputStyle}
-                        placeholder="LC, TT, Bank Transfer etc"
-                        type="text"
-                        {...field}
+                        disabled={isManufacturer}
                       />
                     </FormControl>
                     <FormMessage />

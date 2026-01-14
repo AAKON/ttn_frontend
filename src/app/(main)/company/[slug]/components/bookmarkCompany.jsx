@@ -4,8 +4,9 @@ import { BookmarkIcon } from "@/icons";
 import Button from "@/components/shared/button";
 import { delFavsCompanyFaq } from "@/services/company";
 import { useToast } from "@/hooks/use-toast";
+import { HeartIcon } from "lucide-react";
 
-function BookmarkCompany({ slug, is_favorite: initialFavorite }) {
+function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false }) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState(null);
@@ -27,11 +28,11 @@ function BookmarkCompany({ slug, is_favorite: initialFavorite }) {
     <div className="flex gap-1">
       <Button
           secondary={!isFavorite}
-          className={`${isFavorite ? 'border-brand-600' : 'border-brand-300'} lg:text-[16px] text-[14px] !font-semibold lg:!h-[48px] h-9`}
+          className={`${isFavorite ? 'border-brand-600' : 'border-brand-300'} lg:text-[16px] text-[14px] !font-semibold lg:!size-[48px] !p-3`}
           disabled={isAdding}
           onClick={() => handleAddFavourite(slug)}
       >
-        <BookmarkIcon stroke={isFavorite ? '#ffffff' : '#f7931e'} />
+        {heartIcon ? <HeartIcon stroke={isFavorite ? '#ffffff' : '#98A2B3'} /> : <BookmarkIcon stroke={isFavorite ? '#ffffff' : '#f7931e'} />}
       </Button>
     </div>
   );

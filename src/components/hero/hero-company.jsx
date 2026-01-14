@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Button from "@/components/shared/button";
 import { FilterIcon, WorldMap } from "@/icons";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import PopupFilterCard from "@/app/(main)/company/components/popup-filter-card";
 
 const style = {
   boxShadow: "0px 4px 12px 0px rgba(0,0,0,0.04)",
@@ -27,23 +28,34 @@ const formSchema = z.object({
 export default function HeroCompanyForm({
   categories,
   locations,
-                                          keyword,
+  keyword,
   onSearchSubmit, // Add a prop for handling search submit
   className,
+  // for only mobile filter
+  filterOptions,
+  filters,
+  onFilterChange,
+  onResetFilter,
+  PopupFilterComponent, // Custom popup filter component
 }) {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      businessCategoryIds: "",
-      locationIds: "",
+      businessCategoryIds: 'all',
+      locationIds: filters?.locationId,
       keyword: keyword ? keyword : "",
     },
   });
 
   const onSubmit = async (data) => {
     if (onSearchSubmit) {
-      onSearchSubmit(data); // Pass form data to the parent handler
+      const searchData = {
+        locationId : data?.locationIds,
+        businessCategoryIds : data?.businessCategoryIds,
+        keyword: data?.keyword
+      }
+      onSearchSubmit(searchData);
     }
   };
 
@@ -52,10 +64,10 @@ export default function HeroCompanyForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap md:flex-nowrap"
+          className="flex items-center justify-between gap-y-3 gap-x-2 flex-wrap lg:flex-nowrap"
         >
           {/* Search Input */}
-          <div className="flex w-full items-center gap-2 rounded-lg py-1 px-6 md:order-2">
+          <div className="flex w-full items-center gap-2 rounded-lg py-1 px-6 lg:order-2">
             <span>
               <svg
                 width={24}
@@ -92,7 +104,7 @@ export default function HeroCompanyForm({
 
           {/* Category Dropdown */}
           {categories && Array.isArray(categories) && categories.length > 0 && (
-            <div className="md:order-1 lg:border-r lg:border-r-gray-300">
+            <div className="lg:order-1 lg:border-r lg:border-r-gray-300">
               <FormField
                 control={form.control}
                 name="businessCategoryIds"
@@ -100,16 +112,15 @@ export default function HeroCompanyForm({
                   <FormItem>
                     <Select
                       onValueChange={(value) => field.onChange(Number(value))}
+                      defaultValue={filters?.businessCategoryIds?.toString()}
                     >
                       <FormControl>
-                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent">
+                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
                           <SelectValue placeholder="All Categories" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value={'all'}>
-                          All Categories
-                        </SelectItem>
+                        <SelectItem value={"all"}>All Categories</SelectItem>
                         {categories.map((category) => (
                           <SelectItem
                             key={category.id}
@@ -127,7 +138,7 @@ export default function HeroCompanyForm({
           )}
 
           {/* Location Dropdown */}
-          <div className="md:order-3">
+          <div className="lg:order-3">
             {locations && Array.isArray(locations) && locations?.length > 0 && (
               <FormField
                 control={form.control}
@@ -137,6 +148,7 @@ export default function HeroCompanyForm({
                     <Select
                       className={className}
                       onValueChange={(value) => field.onChange(Number(value))}
+                      defaultValue={filters?.locationId?.toString()}
                     >
                       <SelectTrigger
                         className={`text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
@@ -168,10 +180,26 @@ export default function HeroCompanyForm({
           </div>
 
           {/* Submit Button */}
-          <div className="md:order-4 w-full md:w-auto">
-            <Button className="w-full md:w-[210px]" type="submit">
+          <div className="lg:order-4 grid grid-cols-[1fr_87px] lg:grid-cols-[1fr] gap-2 lg:gap-0 w-full lg:w-auto">
+            <Button className="" type="submit">
               Search
             </Button>
+            <div className="lg:hidden">
+              {PopupFilterComponent ? (
+                <PopupFilterComponent
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={onFilterChange}
+                />
+              ) : (
+                <PopupFilterCard
+                  filterOptions={filterOptions}
+                  filters={filters}
+                  onFilterChange={onFilterChange}
+                  onResetFilter={onResetFilter}
+                />
+              )}
+            </div>
           </div>
         </form>
       </Form>

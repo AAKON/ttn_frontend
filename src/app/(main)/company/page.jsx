@@ -1,9 +1,9 @@
 "use client";
 import { GridIcon, ListIcon } from "@/components/icons";
 import { Section } from "@/components/shared";
-import React, {Suspense, useEffect, useRef, useState} from "react";
-import { useSearchParams } from "next/navigation";
-import {getSession} from "next-auth/react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getSession } from "next-auth/react";
 
 import FilterAccordion from "./components/filter-accordion";
 import CompanyCardFilter from "@/components/cards/company-card-filter";
@@ -15,6 +15,7 @@ import TextAnimator from "@/components/hero/text-animatior";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const CompanyList = () => {
+  const router = useRouter();
   const [view, setView] = useState("grid");
   const [filterOptionLoading, setFilterOptionLoading] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -24,22 +25,24 @@ const CompanyList = () => {
 
   // Extract query parameters
   const businessCategoryIds = searchParams.get("businessCategoryIds");
-  const locationIds = searchParams.get("locationIds");
+  const locationId = searchParams.get("locationIds");
   const keyword = searchParams.get("keyword");
 
   const initialFilters = {
-    locationIds: locationIds ? [parseInt(locationIds, 10)] : [],
+    locationId: locationId ? parseInt(locationId, 10) : null,
     manpower: [],
-    complianceIds: [],
+    certificateIds: [],
     businessCategoryIds: businessCategoryIds
       ? [parseInt(businessCategoryIds, 10)]
       : [],
+    businessTypeIds: [],
     keyword: keyword ? keyword : "",
   };
 
   const [filters, setFilters] = useState(initialFilters);
   const [filterOptions, setFilterOptions] = useState(null);
   const [companies, setCompanies] = useState([]);
+  const [totalResults, setTotalResults] = useState(0);
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -54,8 +57,7 @@ const CompanyList = () => {
       setFilterOptionLoading(true);
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
-        );
+          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`);
         const data = await response.json();
         setFilterOptions(data.data);
       } catch (error) {
@@ -68,33 +70,46 @@ const CompanyList = () => {
     fetchFilterOptions();
   }, []);
 
-  const categories = filterOptions?.categories || [];
-  const locations = filterOptions?.locations || [];
+  const categories = filterOptions?.business_categories || [];
+  const locations = filterOptions?.locations || null;
 
   const fetchCompanies = async (page) => {
     if (page > pagination.last_page || loadingCompanies) return;
     setLoading(true);
     setLoadingCompanies(true);
+    const session = await getSession();
+    const token = session?.accessToken;
     try {
       const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(filters),
-          }
+        `${process.env.NEXT_PUBLIC_API_URL}/company/list?page=${page}`,
+        {
+          method: "POST",
+          cache: 'no-store',
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(filters),
+        }
       );
       const data = await response.json();
-      if (data && data?.data) {
-        setCompanies((prev) => [...prev, ...data?.data?.data]);
-        setPagination(data?.data?.pagination);
-        setHasMore(page < data?.data?.pagination.last_page);
+      if (data?.status) {
+        if (data && data?.data) {
+          setCompanies((prev) => [...prev, ...data?.data?.data]);
+          setPagination(data?.data?.pagination);
+          setTotalResults(data?.data?.pagination?.total);
+          setHasMore(page < data?.data?.pagination.last_page);
+        }
+      } else {
+        setLoading(false);
+        setHasMore(false);
       }
+
     } catch (error) {
       console.error("Error fetching companies:", error);
     } finally {
       setLoading(false);
-      setLoadingCompanies(false)
+      setLoadingCompanies(false);
     }
   };
 
@@ -111,28 +126,49 @@ const CompanyList = () => {
       if (!loadingCompanies && hasMore) {
         fetchCompanies(pagination.current_page + 1);
       }
-    }, 2000); // 2 seconds delay
+    }, 1000); // 1 seconds delay
   };
 
+  // Track when the filters change and update the URL params
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (filters.locationId) {
+      params.set("locationIds", filters.locationId);
+    }
+    if (filters.businessCategoryIds.length > 0) {
+      params.set(
+        "businessCategoryIds",
+        filters.businessCategoryIds.join(",")
+      );
+    }
+    if (filters.keyword) {
+      params.set("keyword", filters.keyword);
+    }
+
+    // Update the URL using shallow routing
+    router.push(`/company?${params.toString()}`, undefined, { shallow: true });
+  }, [filters, router]); // Trigger this effect only when filters change
 
   const handleFilterChange = (key, id, isChecked) => {
     setFilters((prev) => {
       const updatedFilters = { ...prev };
-      if (id === "all" || isNaN(id)) {
+      if (id === "all" || (!isNaN(id) === false && key !== "manpower")) {
         updatedFilters[key] = [];
-      }else {
-        if (key === "locationIds") {
-          updatedFilters[key] = isChecked ? [id] : [];
+      } else {
+        if (key === "locationId") {
+          updatedFilters[key] = isChecked ? id : null;
         } else {
           if (isChecked) {
             updatedFilters[key] = [...(updatedFilters[key] || []), id];
           } else {
             updatedFilters[key] = updatedFilters[key].filter(
-                (item) => item !== id
+              (item) => item !== id
             );
           }
         }
       }
+
       return updatedFilters;
     });
   };
@@ -140,21 +176,21 @@ const CompanyList = () => {
   const handleSearchSubmit = (data) => {
 
     setFilters((prevFilters) => {
-      const businessCategoryIds = isNaN(data.businessCategoryIds) ? [] : [data.businessCategoryIds];
-      const locationIds = isNaN(data.locationIds) ? [] : [data.locationIds];
+      const businessCategoryIds = data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
+        ? []
+        : [data?.businessCategoryIds];
+      const locationId = isNaN(data.locationId) ? null : data.locationId;
       return {
         ...prevFilters,
         ...data,
         businessCategoryIds: businessCategoryIds,
-        locationIds: locationIds,
+        locationId: locationId,
         keyword: data.keyword,
       };
     });
   };
 
-
   // display selected options functions
-
   const getSelectedOptions = () => {
     const selected = [];
 
@@ -162,7 +198,7 @@ const CompanyList = () => {
     if (filters.businessCategoryIds.length > 0) {
       const selectedCategories = filters.businessCategoryIds
         .map((id) => {
-          const category = filterOptions?.categories?.find(
+          const category = filterOptions?.business_categories?.find(
             (cat) => cat.id === id
           );
           return category ? { id, name: category.name } : null;
@@ -178,40 +214,55 @@ const CompanyList = () => {
       );
     }
 
-    // Map locationIds
-    if (filters.locationIds.length > 0) {
-      const selectedLocations = filters.locationIds
+    // Map business types
+    if (filters.businessTypeIds.length > 0) {
+      const selectedBtypes = filters.businessTypeIds
         .map((id) => {
-          const location = filterOptions?.locations?.find(
-            (loc) => loc.id === id
+          const type = filterOptions?.business_types?.find(
+            (cat) => cat.id === id
           );
-          return location ? { id, name: location.name } : null;
+          return type ? { id, name: type.name } : null;
         })
         .filter(Boolean);
 
       selected.push(
-        ...selectedLocations.map(({ id, name }) => ({
-          key: "locationIds",
+        ...selectedBtypes.map(({ id, name }) => ({
+          key: "businessTypeIds",
           id,
           name,
         }))
       );
     }
 
+    // Map locationIds
+    if (filters.locationId) {
+      const location = filterOptions?.locations?.find(
+        (loc) => loc.id === filters.locationId
+      );
+
+      if (location) {
+        selected.push({
+          key: "locationId",
+          id: location.id,
+          name: location.name,
+        });
+      }
+    }
+
     // Map complianceIds
-    if (filters.complianceIds.length > 0) {
-      const selectedCompliance = filters.complianceIds
+    if (filters.certificateIds.length > 0) {
+      const selectedCertificate = filters.certificateIds
         .map((id) => {
-          const compliance = filterOptions?.compliances?.find(
+          const certificate = filterOptions?.certificates?.find(
             (comp) => comp.id === id
           );
-          return compliance ? { id, name: compliance.name } : null;
+          return certificate ? { id, name: certificate.name } : null;
         })
         .filter(Boolean);
 
       selected.push(
-        ...selectedCompliance.map(({ id, name }) => ({
-          key: "complianceIds",
+        ...selectedCertificate.map(({ id, name }) => ({
+          key: "certificateIds",
           id,
           name,
         }))
@@ -237,7 +288,11 @@ const CompanyList = () => {
     setFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
 
-      if (key === "manpower") {
+      if (key === "locationId") {
+        if (updatedFilters[key] === id) {
+          updatedFilters[key] = null;
+        }
+      } else if (key === "manpower") {
         updatedFilters[key] = updatedFilters[key].filter(
           (value) => value !== id
         );
@@ -277,14 +332,19 @@ const CompanyList = () => {
               locations={locations}
               keyword={filters.keyword}
               onSearchSubmit={handleSearchSubmit}
+              //Only for mobile filter
+              filterOptions={filterOptions}
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onResetFilter={resetFilterSelection}
             />
           </div>
         </div>
       </Section>
 
       <Section>
-        <div className="grid grid-cols-1 md:grid-cols-[250px_1fr] xl:grid-cols-[336px_1fr] gap-8">
-          <div className="relative">
+        <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] xl:grid-cols-[336px_1fr] gap-8">
+          <div className="hidden lg:block relative">
             {filterOptionLoading ? (
               <AccordionSkeleton />
             ) : (
@@ -302,13 +362,12 @@ const CompanyList = () => {
           <div>
             <div className="grid grid-cols-[1fr_auto] gap-3 items-center">
               <h3 className="text-gray-900 text-sm md:text-xl font-semibold">
-                Search Results: <span>{resultsCount}</span> Results found
+                Showing <span>{resultsCount}</span> companies of <span>{totalResults}</span>
               </h3>
-              <div className="h-8 bg-gray-100 rounded-full border border-gray-200 p-1 flex items-center justify-center gap1">
+              <div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
                 <span
-                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                    view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
-                  }`}
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
+                    }`}
                   onClick={() => setView("list")}
                 >
                   <ListIcon
@@ -318,9 +377,8 @@ const CompanyList = () => {
                   />
                 </span>
                 <span
-                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-                    view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
-                  }`}
+                  className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
+                    }`}
                   onClick={() => setView("grid")}
                 >
                   <GridIcon
@@ -336,41 +394,40 @@ const CompanyList = () => {
               selectedOptions={getSelectedOptions()}
               onRemove={handleRemoveFilter}
             />
-              {loading && <FilterCardSkeleton /> }
+            {loading && <FilterCardSkeleton />}
             <InfiniteScroll
-                dataLength={companies.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                loader={<FilterCardSkeleton />}
-                endMessage={
-                  <p className="text-center text-lg text-gray-500 mt-10">No more results</p>
-                }
-                scrollThreshold={.1}
+              dataLength={companies.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<FilterCardSkeleton />}
+              endMessage={
+                <p className="text-center text-lg text-gray-500 mt-10">
+                  No more results
+                </p>
+              }
+              scrollThreshold={0.5}
             >
               <div
-                  className={`mt-8 grid gap-3 lg:gap-8 ${
-                      view === "list" ? "grid-cols-1" : "grid-cols-1 lg:grid-cols-2"
+                className={`mt-8 grid gap-3 lg:gap-8 ${view === "list" ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
                   }`}
               >
-                {Array.isArray(companies) && companies?.length > 0 && companies?.map((company, index) => (
-                    <CompanyCardFilter
-                        key={index}
-                        company={company}
-                    />
-                ))}
+                {Array.isArray(companies) &&
+                  companies?.length > 0 &&
+                  companies?.map((company, index) => (
+                    <CompanyCardFilter key={index} company={company} />
+                  ))}
               </div>
             </InfiniteScroll>
+          </div>
         </div>
-      </div>
-    </Section>
-</>
-)
-  ;
+      </Section>
+    </>
+  );
 };
 
 const Company = () => (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CompanyList />
+  <Suspense fallback={<div className="container"><FilterCardSkeleton /></div>}>
+    <CompanyList />
   </Suspense>
 );
 

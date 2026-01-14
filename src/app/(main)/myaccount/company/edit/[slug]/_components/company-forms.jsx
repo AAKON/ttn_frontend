@@ -6,11 +6,9 @@ import ContactWithBusinessOwner
     from "@/app/(main)/myaccount/company/edit/[slug]/_components/contact-with-business-owner";
 import EditTabs from "@/app/(main)/myaccount/company/edit/[slug]/_components/tabs";
 import {getCompanyProducts} from "@/services/product";
-import {Skeleton} from "@/components/ui/skeleton";
 import ProductSkeleton from "@/components/shared/skelton/productSkeleton";
-import {getProductPreData} from "@/services/company";
 
-function CompanyForms({slug, preData}) {
+function CompanyForms({slug, basic, preData}) {
 
     const [productData, setProductData] = useState(null);
     const [productCategories, setProductCategories] = useState([]);
@@ -41,7 +39,7 @@ function CompanyForms({slug, preData}) {
 
     return (
         <div
-            className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] xl:gap-x-12 xl:gap-y-8">
+            className="mt-8 grid grid-cols-1 gap-6 xl:gap-x-12 xl:gap-y-8">
             <div className="bg-white border border-gray-100 p-6 rounded-2xl">
                 <ProductsForm
                     slug={slug}
@@ -59,10 +57,10 @@ function CompanyForms({slug, preData}) {
                 />)}
             </div>
             <div>
-                <ContactWithBusinessOwner/>
+                {/* <ContactWithBusinessOwner/> */}
             </div>
             <div>
-                <EditTabs slug={slug} preData={preData}/>
+                <EditTabs slug={slug} basic={basic} preData={preData}/>
             </div>
         </div>
     );

@@ -1,8 +1,6 @@
 "use client";
 import {Section} from "@/shared";
-import avatar from "@/assets/avatar.png";
 import Image from "next/image";
-import star from "@/assets/star.svg";
 import arrow from "@/assets/arrow.png";
 import Forms from "@/components/shared/form";
 

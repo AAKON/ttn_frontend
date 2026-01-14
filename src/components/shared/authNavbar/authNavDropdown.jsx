@@ -14,14 +14,19 @@ import { useToast } from "@/hooks/use-toast";
 import { signOut } from "next-auth/react";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
-import {UserIcon} from "@/icons";
+import { UserIcon } from "@/icons";
 
 function AuthNavDropdown({ userInfo }) {
   const { toast } = useToast();
+  const router = useRouter();
+
+  const handleNavigate = (path) => {
+    router.push(path);
+  };
 
   const handleSignout = () => {
     try {
-      signOut({ callbackUrl: "/", redirect:true });
+      signOut({ callbackUrl: "/", redirect: true });
       // Clear session cookies explicitly
       document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
       document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
@@ -37,11 +42,13 @@ function AuthNavDropdown({ userInfo }) {
     <>
       <DropdownMenu className="left-auto right-0 z-[10000]" modal={false}>
         <DropdownMenuTrigger
-            className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0"
-            asChild
+          className="size-[36px] lg:size-12 rounded-full bg-gray-100 border border-gray-200 flex item-center justify-center p-0 focus:outline-none focus:ring-0"
+          asChild
         >
           <Image
-            src={userInfo?.profile_image ? userInfo?.profile_image : <UserIcon />}
+            src={
+              userInfo?.profile_image ? userInfo?.profile_image : <UserIcon />
+            }
             width={48}
             height={48}
             alt="profile"
@@ -56,14 +63,12 @@ function AuthNavDropdown({ userInfo }) {
             {userInfo?.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator className="bg-gray-200" />
-          <DropdownMenuItem className="p-0">
-            <Link
-              className="flex items-center w-full px-2 leading-8 gap-1 text-gray-500"
-              href="/myaccount/profile"
-            >
-              <User />
-              <span>Profile</span>
-            </Link>
+          <DropdownMenuItem
+            className="p-0 flex items-center w-full px-2 leading-8 gap-1 text-gray-500 cursor-pointer"
+            onClick={() => handleNavigate("/myaccount/profile")}
+          >
+            <User />
+            <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator className="bg-gray-200" />
           <DropdownMenuItem

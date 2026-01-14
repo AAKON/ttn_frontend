@@ -1,9 +1,8 @@
 import {Section} from "@/shared";
 import ResourceCard from "@/ui/resource-card";
-import blog1 from "@/assets/blog1.jpg";
-import avatar from "@/assets/avatar.png";
 import Button from "@/components/shared/button";
 import Link from "next/link";
+import ResourceSlider from "@/components/resources/resourceSlider";
 
 const Resources = async ({blogsPromise}) => {
     const homeBlogs = await blogsPromise;
@@ -19,13 +18,9 @@ const Resources = async ({blogsPromise}) => {
                                 Resources
                             </h5>
                             <p className="font-semibold text-center pb-8 lg:hidden text-2xl text-gray-900">
-                                Lastest blog posts
+                                Resources
                             </p>
-                            <div className="flex gap-x-4 flex-col md:flex-row gap-y-6 items-center justify-between">
-                                {homeBlogs?.TNN_picks.map((item) => (
-                                    <ResourceCard key={item?.id} item={item}/>
-                                ))}
-                            </div>
+                            <ResourceSlider homeBlogsData={homeBlogs?.TNN_picks} />
                             <div className="flex items-center justify-center">
                                 <Button
                                     TagName={Link}
