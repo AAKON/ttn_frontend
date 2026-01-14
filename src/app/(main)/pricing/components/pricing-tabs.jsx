@@ -24,13 +24,13 @@ function PricingTabs() {
 		const fetchPricings = async () => {
 			setIsLoading(true);
 			try {
-				const type = activeTab === "Monthly Plan" ? "monthly" : "annual";
-				const response = await getPricingList(type);
+				const response = await getPricingList();
 				if (response?.status) {
-					setPricings((prev) => ({
-						...prev,
-						[activeTab]: response.data.pricings || [],
-					}));
+					const allPricings = response.data.pricings || [];
+					setPricings({
+						"Monthly Plan": allPricings.filter((p) => p.type === "monthly"),
+						"Annual Plan": allPricings.filter((p) => p.type === "annual"),
+					});
 				}
 			} catch (error) {
 				console.error("Error fetching pricings:", error);
@@ -39,26 +39,31 @@ function PricingTabs() {
 			}
 		};
 		fetchPricings();
-	}, [activeTab]);
+	}, []);
 
 	const getMappedPlans = (tab) => {
-		return pricings[tab].map((p) => ({
-			title: p.title,
-			price: p.price,
-			isContact:
-				p.price?.toLowerCase().includes("contact") ||
-				p.price?.toLowerCase().includes("win-win"),
-			features: p.services || [],
-			moreFeatures: p.benefits || [],
-			hasMore: (p.benefits?.length || 0) > 0,
-			buttonText:
-				p.price?.toLowerCase().includes("contact") ||
-				p.price?.toLowerCase().includes("win-win")
-					? "Contact Us"
-					: "Get Started",
-			buttonLink: "/contact",
-			shortText: p.bt_short_text,
-		}));
+		return pricings[tab].map((p) => {
+			const services = p.services || [];
+			const benefits = p.benefits || [];
+
+			return {
+				title: p.title,
+				price: p.price,
+				isContact:
+					p.price?.toLowerCase().includes("contact") ||
+					p.price?.toLowerCase().includes("win-win"),
+				features: services.slice(0, 3),
+				moreFeatures: [...services.slice(3), ...benefits],
+				hasMore: services.length > 3 || benefits.length > 0,
+				buttonText:
+					p.price?.toLowerCase().includes("contact") ||
+						p.price?.toLowerCase().includes("win-win")
+						? "Contact Us"
+						: "Get Started",
+				buttonLink: "/contact",
+				shortText: p.bt_short_text,
+			};
+		});
 	};
 
 	const tabData = {
