@@ -56,10 +56,12 @@ function PricingTabs() {
 				moreFeatures: [...services.slice(3), ...benefits],
 				hasMore: services.length > 3 || benefits.length > 0,
 				buttonText:
-					p.price?.toLowerCase().includes("contact") ||
+					(
+						p.price?.toLowerCase().includes("contact") ||
 						p.price?.toLowerCase().includes("win-win")
-						? "Contact Us"
-						: "Get Started",
+					) ?
+						"Contact Us"
+					:	"Get Started",
 				buttonLink: "/contact",
 				shortText: p.bt_short_text,
 			};
@@ -78,16 +80,15 @@ function PricingTabs() {
 				className="pb-10"
 				onValueChange={setActiveTab}
 			>
-				<div className="md:py-10 py-6 bg-white sticky top-[70px] z-10 text-center">
-					{isLoading ? (
+				<div className="md:py-10 py-6 bg-white sticky top-[70px] z-10 text-center w-[calc(100%+4px)] -ml-[2px]">
+					{isLoading ?
 						<div className="flex justify-center items-center py-20">
 							<Loader2 className="w-10 h-10 animate-spin text-brand-600" />
 							<span className="ml-3 text-xl font-medium text-gray-600">
 								Loading Pricings...
 							</span>
 						</div>
-					) : (
-						<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
+					:	<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
 							<div className="bg-gray-50 p-2 rounded-[12px] !inline-flex justify-center border border-gray-100">
 								{arr.map((el, idx) => {
 									return (
@@ -97,7 +98,7 @@ function PricingTabs() {
 											className={cn(
 												"!text-sm lg:!text-xl !px-3 !py-2 rounded-[8px] lg:!py-[10px] lg:!px-5 transition-all",
 												"data-[state=active]:font-semibold data-[state=active]:text-white data-[state=active]:bg-brand-600",
-												"data-[state=inactive]:font-medium data-[state=inactive]:text-gray-700 data-[state=inactive]:bg-transparent"
+												"data-[state=inactive]:font-medium data-[state=inactive]:text-gray-700 data-[state=inactive]:bg-transparent",
 											)}
 										>
 											{el}
@@ -106,24 +107,23 @@ function PricingTabs() {
 								})}
 							</div>
 						</TabsList>
-					)}
+					}
 				</div>
 
 				{!isLoading &&
 					arr.map((tabName) => (
 						<TabsContent key={tabName} value={tabName} className="mt-0">
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-								{tabData[tabName].length > 0 ? (
+								{tabData[tabName].length > 0 ?
 									tabData[tabName].map((plan, index) => (
 										<PricingCard key={index} plan={plan} />
 									))
-								) : (
-									<div className="col-span-full py-20 text-center">
+								:	<div className="col-span-full py-20 text-center">
 										<p className="text-xl text-gray-500">
 											No pricing plans available for this category.
 										</p>
 									</div>
-								)}
+								}
 							</div>
 						</TabsContent>
 					))}
@@ -147,7 +147,7 @@ function PricingCard({ plan }) {
 						<div className="text-[18px] text-gray-500">{plan.prePrice}</div>
 					)}
 
-					{plan.isContact ? (
+					{plan.isContact ?
 						<div>
 							<div className="text-2xl font-bold text-gray-900 leading-tight">
 								Contact
@@ -156,11 +156,10 @@ function PricingCard({ plan }) {
 								For Price
 							</div>
 						</div>
-					) : (
-						<div className="text-[26px] font-bold text-gray-900">
+					:	<div className="text-[26px] font-bold text-gray-900">
 							{plan.price}
 						</div>
-					)}
+					}
 				</div>
 			</div>
 
@@ -201,7 +200,7 @@ function PricingCard({ plan }) {
 							stroke="#C67618"
 							className={cn(
 								"w-4 h-4 transition-transform",
-								showMore && "rotate-180"
+								showMore && "rotate-180",
 							)}
 						/>
 					</button>
