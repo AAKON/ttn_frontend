@@ -23,7 +23,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
+import { TiptapEditor } from "@/components/ui/tiptap-editor";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { ArrowRight, CheckIcon, Loader2, X as XIcon } from "lucide-react";
 import StepFormDragDropFile from "@/components/shared/StepFormDragDropFile";
@@ -708,10 +708,11 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 														Proposal Description
 													</FormLabel>
 													<FormControl>
-														<Textarea
+														<TiptapEditor
 															placeholder="Enter a description..."
 															className="min-h-[100px] focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
-															{...field}
+															value={field.value}
+															onChange={field.onChange}
 														/>
 													</FormControl>
 													<FormMessage />

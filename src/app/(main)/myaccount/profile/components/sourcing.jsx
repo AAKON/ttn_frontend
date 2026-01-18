@@ -2,9 +2,11 @@
 import React, { useEffect, useState } from 'react'
 import FavProposal from './fav-proposal'
 import { getMyFavsSourcingProposals } from "@/services/company";
+import MySourcing from './my-sourcing';
 
 const Sourcing = () => {
 
+    const [companies, setCompanies] = useState([]);
     const [favProposals, setFavProposals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -28,6 +30,7 @@ const Sourcing = () => {
 
     return (
         <div className='space-y-4'>
+            <MySourcing heading={'My Sourcing Proposal'} type={'myCompanies'} companies={companies} />
             <FavProposal
                 heading={'My Favourites'}
                 type={'myFavourites'}

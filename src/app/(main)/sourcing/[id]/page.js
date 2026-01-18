@@ -140,9 +140,10 @@ export default async function SourcingDetails({ params }) {
 
 								{/* Description - Server Rendered */}
 								<div className="mb-8">
-									<p className="text-gray-700 leading-relaxed text-md md:text-lg">
-										{sourcing.description}
-									</p>
+									<div
+										className="html_desc text-gray-700 leading-relaxed text-md md:text-lg prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2 prose-ol:my-2 prose-li:my-1"
+										dangerouslySetInnerHTML={{ __html: sourcing.description }}
+									/>
 								</div>
 
 								{/* Details Grid - Server Rendered */}

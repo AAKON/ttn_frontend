@@ -239,3 +239,55 @@ html body[data-scroll-locked] {
 .cs_radio_inp {
 	@apply !p-2.5 !m-0 !bg-transparent;
 }
+
+/* Tiptap Editor Styles */
+.tiptap-content .ProseMirror {
+	min-height: 100px;
+	outline: none;
+}
+
+.tiptap-content .ProseMirror p.is-editor-empty:first-child::before {
+	content: attr(data-placeholder);
+	float: left;
+	color: #9ca3af;
+	pointer-events: none;
+	height: 0;
+}
+
+.tiptap-content .ProseMirror ul,
+.tiptap-content .ProseMirror ol {
+	padding-left: 1.5rem;
+	margin: 0.5rem 0;
+}
+
+.tiptap-content .ProseMirror ul {
+	list-style-type: disc;
+}
+
+.tiptap-content .ProseMirror ol {
+	list-style-type: decimal;
+}
+
+.tiptap-content .ProseMirror li {
+	margin: 0.25rem 0;
+}
+
+.tiptap-content .ProseMirror p {
+	margin: 0.5rem 0;
+}
+
+.tiptap-content .ProseMirror strong {
+	font-weight: bold;
+}
+
+.tiptap-content .ProseMirror em {
+	font-style: italic;
+}
+
+.html_desc ul{
+	list-style: disc;
+	margin-left: 20px;
+}
+.html_desc ul li::marker{
+	@apply text-primary;
+}
