@@ -11,6 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import SourcingCard from "@/components/cards/sourcing-card";
 import { Tags } from "@/components/hero/hero";
 import { GridIcon, ListIcon } from "lucide-react";
@@ -211,7 +212,14 @@ const SourcingClient = ({
 				<div className="mx-auto">
 					{/* Horizontal Dropdown Filters */}
 					<div className="hidden lg:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-						<Select
+						<SearchableSelect
+							options={[
+								{ value: "all", label: "By Country" },
+								...locations?.map((location) => ({
+									value: location.id.toString(),
+									label: location.name,
+								})),
+							]}
 							value={filters.location_id?.toString() || "all"}
 							onValueChange={(value) => {
 								setFilters((prev) => ({
@@ -219,21 +227,18 @@ const SourcingClient = ({
 									location_id: value === "all" ? null : parseInt(value, 10),
 								}));
 							}}
-						>
-							<SelectTrigger className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none">
-								<SelectValue placeholder="By Country" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">By Country</SelectItem>
-								{locations?.map((location) => (
-									<SelectItem key={location.id} value={location.id.toString()}>
-										{location.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+							placeholder="By Country"
+							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-auto"
+						/>
 
-						<Select
+						<SearchableSelect
+							options={[
+								{ value: "all", label: "By Category" },
+								...categories?.map((category) => ({
+									value: category.id.toString(),
+									label: category.name,
+								})),
+							]}
 							value={filters.product_category_id?.toString() || "all"}
 							onValueChange={(value) => {
 								setFilters((prev) => ({
@@ -242,19 +247,9 @@ const SourcingClient = ({
 										value === "all" ? null : parseInt(value, 10),
 								}));
 							}}
-						>
-							<SelectTrigger className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none">
-								<SelectValue placeholder="By Category" />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="all">By Category</SelectItem>
-								{categories?.map((category) => (
-									<SelectItem key={category.id} value={category.id.toString()}>
-										{category.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+							placeholder="By Category"
+							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-auto"
+						/>
 
 						<Select
 							value={filters.price_range || "all"}
