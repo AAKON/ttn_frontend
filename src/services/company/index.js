@@ -156,6 +156,19 @@ export async function getMyFavsSourcingProposals() {
     return result?.data?.data;
 }
 
+// own sourcing proposals list
+export async function getMySourcingProposals() {
+    const session = await getSession();
+    const token = session?.accessToken;
+    const endpoint = `my/sourcing-proposals`;
+    const options = {
+        method: 'GET',
+        cache: "no-store"
+    };
+    const result = await apiRequest(endpoint, options, null, token);
+    return result?.data?.data;
+}
+
 // toggle favourite sourcing proposal
 export async function toggleFavsSourcingProposal(id, toast) {
     const session = await getSession();

@@ -1,11 +1,10 @@
 "use client";
-import CompanyCardProfile from "./company-card-profile";
-import Profile_pic from "@/assets/CodeBlue.svg";
+import ProposalCardProfile from "./proposal-card-profile";
 
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 
-const MySourcing = ({ heading, type, onItemRemove, companies }) => {
+const MySourcing = ({ heading, type, onItemRemove, proposals }) => {
   let splideRef = null;
   const handlePrev = () => {
     if (splideRef) splideRef.go("<");
@@ -44,13 +43,11 @@ const MySourcing = ({ heading, type, onItemRemove, companies }) => {
     },
   };
 
-  console.log(companies, 'get fav');
-
   return (
     <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">
       <div className="flex items-center justify-between gap-5 pb-9">
         <h3 className="text-sm md:text-lg font-semibold text-gray-900">
-          {heading} (<span>{companies?.length}</span>)
+          {heading} (<span>{proposals?.length || 0}</span>)
         </h3>
         <div className="flex justify-end gap-3">
           <button
@@ -97,20 +94,19 @@ const MySourcing = ({ heading, type, onItemRemove, companies }) => {
           </button>
         </div>
       </div>
-      {companies && Array.isArray(companies) && companies.length > 0 && (
+      {proposals && Array.isArray(proposals) && proposals.length > 0 && (
         <Splide
           className="company-slider side_shadow_r"
           options={options}
           ref={(splide) => (splideRef = splide)}
         >
-          {companies?.map((company) => (
-            <SplideSlide key={company.id}>
-              <CompanyCardProfile type={type} data={company} onItemRemove={onItemRemove} />
+          {proposals?.map((proposal) => (
+            <SplideSlide key={proposal.id}>
+              <ProposalCardProfile type={type} data={proposal} onItemRemove={onItemRemove} />
             </SplideSlide>
           ))}
         </Splide>
       )}
-      {/* <CompanyCardProfile key={company.id} data={company} /> */}
     </div>
   );
 };

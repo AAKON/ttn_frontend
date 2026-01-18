@@ -1,22 +1,38 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import FavProposal from './fav-proposal'
-import { getMyFavsSourcingProposals } from "@/services/company";
+import { getMyFavsSourcingProposals, getMySourcingProposals } from "@/services/company";
 import MySourcing from './my-sourcing';
 
 const Sourcing = () => {
 
-    const [companies, setCompanies] = useState([]);
+    const [myProposals, setMyProposals] = useState([]);
     const [favProposals, setFavProposals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchMyProposals = async () => {
+        try {
+            const response = await getMySourcingProposals();
+            setMyProposals(response || []);
+        } catch (err) {
+            console.error("Error fetching my proposals:", err);
+        }
+    };
+
+    const fetchFavProposals = async () => {
+        try {
+            const response = await getMyFavsSourcingProposals();
+            setFavProposals(response || []);
+        } catch (err) {
+            console.error("Error fetching fav proposals:", err);
+        }
+    };
 
     const fetchSourcingData = async () => {
         setLoading(true);
         try {
-            const response = await getMyFavsSourcingProposals();
-            setFavProposals(response);
+            await Promise.all([fetchMyProposals(), fetchFavProposals()]);
         } catch (err) {
             setError(err.message || "Something went wrong");
         } finally {
@@ -30,12 +46,12 @@ const Sourcing = () => {
 
     return (
         <div className='space-y-4'>
-            <MySourcing heading={'My Sourcing Proposal'} type={'myCompanies'} companies={companies} />
+            <MySourcing heading={'My Sourcing Proposal'} type={'mySourcing'} proposals={myProposals} />
             <FavProposal
                 heading={'My Favourites'}
                 type={'myFavourites'}
                 proposals={favProposals}
-                onItemRemove={fetchSourcingData}
+                onItemRemove={fetchFavProposals}
             />
         </div>
     )

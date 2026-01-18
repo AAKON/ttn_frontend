@@ -80,7 +80,7 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
 
             <CardContent className="flex gap-x-2">
                 <p className="text-gray-500 text-md font-normal leading-6 line-clamp-3">
-                    {data?.description}
+                    {data?.description?.replace(/<[^>]*>/g, '') || ''}
                 </p>
             </CardContent>
 
