@@ -39,6 +39,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
+import RequiredStar from "../required-star";
 
 const formSchema = z.object({
 	category: z.string().min(1, "Category is required"),
@@ -251,7 +252,8 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			};
 			formData.append(
 				"payment_method",
-				paymentMapping[data.payment_method] || data.payment_method.toLowerCase()
+				paymentMapping[data.payment_method] ||
+					data.payment_method.toLowerCase(),
 			);
 
 			formData.append("company_name", data.company_name);
@@ -330,13 +332,15 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			<div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" />
 			{/* Custom Sheet Container */}
 			<div
-				className={`fixed inset-y-0 right-0 z-[10001] w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out transform ${isDesktop
-					? "sm:max-w-[540px]"
-					: "h-[85vh] sm:h-full bottom-0 top-auto rounded-t-[20px]"
-					} ${mounted
-						? "translate-x-0 translate-y-0"
-						: "translate-x-full translate-y-full"
-					} flex flex-col overflow-hidden`}
+				className={`fixed inset-y-0 right-0 z-[10001] w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out transform ${
+					isDesktop ? "sm:max-w-[540px]" : (
+						"h-[85vh] sm:h-full bottom-0 top-auto rounded-t-[20px]"
+					)
+				} ${
+					mounted ?
+						"translate-x-0 translate-y-0"
+					:	"translate-x-full translate-y-full"
+				} flex flex-col overflow-hidden`}
 			>
 				{/* Close Button */}
 				<button
@@ -364,18 +368,20 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => setStep(1)}
 								>
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${step > 1 || isStep1Complete
-											? "border-brand-700 text-brand-700"
-											: "border-gray-600 text-transparent"
-											}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+											step > 1 || isStep1Complete ?
+												"border-brand-700 text-brand-700"
+											:	"border-gray-600 text-transparent"
+										}`}
 									>
 										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
-										className={`text-sm font-medium ${step > 1 || isStep1Complete
-											? "text-brand-700"
-											: "text-gray-600"
-											}`}
+										className={`text-sm font-medium ${
+											step > 1 || isStep1Complete ?
+												"text-brand-700"
+											:	"text-gray-600"
+										}`}
 									>
 										Basic Info
 									</span>
@@ -387,16 +393,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => step > 1 && setStep(2)}
 								>
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isStep2Complete
-											? "border-brand-600 text-brand-600"
-											: "border-gray-600 text-transparent"
-											}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+											isStep2Complete ?
+												"border-brand-600 text-brand-600"
+											:	"border-gray-600 text-transparent"
+										}`}
 									>
 										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
-										className={`text-sm font-medium ${isStep2Complete ? "text-brand-600" : "text-gray-600"
-											}`}
+										className={`text-sm font-medium ${
+											isStep2Complete ? "text-brand-600" : "text-gray-600"
+										}`}
 									>
 										Inquiry Details
 									</span>
@@ -406,12 +414,14 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 						{/* Progress Bar under tabs (Orange bar) */}
 						<div
-							className={`w-full h-2 rounded-full mb-8 relative overflow-hidden ${step === 1 ? "bg-gray-300" : "bg-brand-600"
-								}`}
+							className={`w-full h-2 rounded-full mb-8 relative overflow-hidden ${
+								step === 1 ? "bg-gray-300" : "bg-brand-600"
+							}`}
 						>
 							<div
-								className={`absolute top-0 h-full transition-all duration-300 ease-in-out rounded-full ${step === 1 ? "bg-brand-600" : "bg-brand-700"
-									} ${!isStep2Complete ? "w-1/2" : "w-full"}`}
+								className={`absolute top-0 h-full transition-all duration-300 ease-in-out rounded-full ${
+									step === 1 ? "bg-brand-600" : "bg-brand-700"
+								} ${!isStep2Complete ? "w-1/2" : "w-full"}`}
 							/>
 						</div>
 
@@ -430,20 +440,22 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													render={({ field }) => (
 														<FormItem>
 															<FormLabel className="text-sm text-gray-900">
-																Category
+																Category <RequiredStar />
 															</FormLabel>
 															<FormControl>
 																<SearchableSelect
-																	options={filterOptions.categories?.map((cat) => ({
-																		value: cat.id.toString(),
-																		label: cat.name,
-																	}))}
+																	options={filterOptions.categories?.map(
+																		(cat) => ({
+																			value: cat.id.toString(),
+																			label: cat.name,
+																		}),
+																	)}
 																	onValueChange={field.onChange}
 																	value={field.value}
 																	placeholder={
-																		fetchingOptions
-																			? "Loading..."
-																			: "Select category"
+																		fetchingOptions ? "Loading..." : (
+																			"Select category"
+																		)
 																	}
 																	triggerClassName="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none bg-white h-10"
 																/>
@@ -458,20 +470,22 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													render={({ field }) => (
 														<FormItem>
 															<FormLabel className="text-sm text-gray-900">
-																Country
+																Country <RequiredStar />
 															</FormLabel>
 															<FormControl>
 																<SearchableSelect
-																	options={filterOptions.locations?.map((loc) => ({
-																		value: loc.id.toString(),
-																		label: loc.name,
-																	}))}
+																	options={filterOptions.locations?.map(
+																		(loc) => ({
+																			value: loc.id.toString(),
+																			label: loc.name,
+																		}),
+																	)}
 																	onValueChange={field.onChange}
 																	value={field.value}
 																	placeholder={
-																		fetchingOptions
-																			? "Loading..."
-																			: "Select country"
+																		fetchingOptions ? "Loading..." : (
+																			"Select country"
+																		)
 																	}
 																	triggerClassName="text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none bg-white h-10"
 																/>
@@ -488,7 +502,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel className="text-sm text-gray-900">
-															Company Name
+															Company Name <RequiredStar />
 														</FormLabel>
 														<FormControl>
 															<div className="relative company-autocomplete-container">
@@ -499,7 +513,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																	onChange={(e) =>
 																		handleCompanyNameChange(
 																			e.target.value,
-																			field.onChange
+																			field.onChange,
 																		)
 																	}
 																	onFocus={() => {
@@ -529,7 +543,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																					onClick={() =>
 																						handleSelectCompany(
 																							company,
-																							field.onChange
+																							field.onChange,
 																						)
 																					}
 																				>
@@ -553,7 +567,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel className="text-sm text-gray-900">
-															Email
+															Email <RequiredStar />
 														</FormLabel>
 														<FormControl>
 															<Input
@@ -581,11 +595,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			options={Array.from(
 																				new Set(
 																					filterOptions.locations
-																						?.map(
-																							(loc) => loc.country_code
-																						)
-																						.filter(Boolean)
-																				)
+																						?.map((loc) => loc.country_code)
+																						.filter(Boolean),
+																				),
 																			).map((code) => ({
 																				value: code,
 																				label: code,
@@ -635,11 +647,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			options={Array.from(
 																				new Set(
 																					filterOptions.locations
-																						?.map(
-																							(loc) => loc.country_code
-																						)
-																						.filter(Boolean)
-																				)
+																						?.map((loc) => loc.country_code)
+																						.filter(Boolean),
+																				),
 																			).map((code) => ({
 																				value: code,
 																				label: code,
@@ -846,7 +856,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 													<SearchableSelect
 														options={[
 															{ value: "cash", label: "Cash" },
-															{ value: "bank_transfer", label: "Bank Transfer" },
+															{
+																value: "bank_transfer",
+																label: "Bank Transfer",
+															},
 															{
 																value: "letter_of_credit",
 																label: "Letter of Credit",
@@ -908,7 +921,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 				{/* Footer fixed at bottom */}
 				<div className="p-6 border-t border-gray-100 bg-white sticky bottom-0 z-[10002]">
-					{step === 1 ? (
+					{step === 1 ?
 						<div className="grid grid-cols-2 gap-4">
 							<Button
 								TagName="div"
@@ -922,8 +935,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								Next <ArrowRight className="w-4 h-4 ml-1" />
 							</Button>
 						</div>
-					) : (
-						<div className="grid grid-cols-2 gap-4">
+					:	<div className="grid grid-cols-2 gap-4">
 							<Button
 								TagName="div"
 								secondary
@@ -938,19 +950,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								onClick={form.handleSubmit(onSubmit)}
 								disabled={isSubmitting}
 							>
-								{isSubmitting ? (
+								{isSubmitting ?
 									<>
 										Submitting...{" "}
 										<Loader2 className="w-4 h-4 ml-1 animate-spin" />
 									</>
-								) : (
-									<>
+								:	<>
 										Submit <ArrowRight className="w-4 h-4 ml-1" />
 									</>
-								)}
+								}
 							</Button>
 						</div>
-					)}
+					}
 				</div>
 			</div>
 		</>
