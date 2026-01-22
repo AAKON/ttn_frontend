@@ -57,7 +57,10 @@ export const SearchableSelect = React.forwardRef(
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent
-					className={cn("w-full p-0 z-[10005]", className)}
+					className={cn(
+						"w-[var(--radix-popover-trigger-width)] p-0 z-[10005]",
+						className,
+					)}
 					align="start"
 				>
 					<div className="flex items-center border-b px-3">
@@ -75,13 +78,13 @@ export const SearchableSelect = React.forwardRef(
 								<div className="py-6 text-center text-sm text-muted-foreground">
 									{emptyMessage}
 								</div>
-							:	filteredOptions.map((option) => (
+								: filteredOptions.map((option) => (
 									<div
 										key={option.value}
 										className={cn(
 											"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
 											value === option.value &&
-												"bg-accent text-accent-foreground",
+											"bg-accent text-accent-foreground",
 										)}
 										onClick={() => {
 											onValueChange(option.value);
