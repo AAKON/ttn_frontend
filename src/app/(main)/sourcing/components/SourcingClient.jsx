@@ -131,7 +131,7 @@ const SourcingClient = ({
 		const product_category_id =
 			data.businessCategoryIds == null || isNaN(data.businessCategoryIds) ?
 				null
-			:	data?.businessCategoryIds;
+				: data?.businessCategoryIds;
 		const location_id = isNaN(data.locationId) ? null : data.locationId;
 
 		setFilters((prevFilters) => ({
@@ -228,7 +228,7 @@ const SourcingClient = ({
 								}));
 							}}
 							placeholder="By Country"
-							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-auto"
+							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-4 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-11"
 						/>
 
 						<SearchableSelect
@@ -248,7 +248,7 @@ const SourcingClient = ({
 								}));
 							}}
 							placeholder="By Category"
-							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-auto"
+							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-11"
 						/>
 
 						<Select
@@ -260,7 +260,7 @@ const SourcingClient = ({
 								}));
 							}}
 						>
-							<SelectTrigger className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none">
+							<SelectTrigger className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 h-11 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none">
 								<SelectValue placeholder="By Price Per Unit ($)" />
 							</SelectTrigger>
 							<SelectContent>
@@ -281,9 +281,8 @@ const SourcingClient = ({
 							</h3>
 							<div className="hidden h-8 bg-gray-100 rounded-full border border-gray-200 p-1 md:flex items-center justify-center gap-1 ">
 								<span
-									className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-										view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
-									}`}
+									className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "list" ? "bg-[#D0D5DD]" : "bg-transparent"
+										}`}
 									onClick={() => setView("list")}
 								>
 									<ListIcon
@@ -293,9 +292,8 @@ const SourcingClient = ({
 									/>
 								</span>
 								<span
-									className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${
-										view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
-									}`}
+									className={`h-6 w-10 cursor-pointer px-3 py-1 rounded-full flex items-center justify-center ${view === "grid" ? "bg-[#D0D5DD]" : "bg-transparent"
+										}`}
 									onClick={() => setView("grid")}
 								>
 									<GridIcon
@@ -322,11 +320,10 @@ const SourcingClient = ({
 							scrollThreshold={0.5}
 						>
 							<div
-								className={`mt-8 grid gap-3 lg:gap-8 ${
-									view === "list" ? "grid-cols-1" : (
-										"grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-									)
-								}`}
+								className={`mt-8 grid gap-3 lg:gap-8 ${view === "list" ? "grid-cols-1" : (
+									"grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
+								)
+									}`}
 							>
 								{Array.isArray(sourcings) &&
 									sourcings?.length > 0 &&
