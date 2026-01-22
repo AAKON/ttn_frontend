@@ -41,6 +41,7 @@ module.exports = {
 					500: "#f9a94b",
 					600: "#f7931e",
 					700: "#c67618",
+					900: "#945812",
 				},
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",

@@ -136,7 +136,9 @@ export default async function SourcingDetails({ params }) {
 						<div className="space-y-8">
 							<div className="bg-white p-4 lg:p-6 xl:p-8 rounded-lg border border-gray-100">
 								{/* Image Slider - Client Component */}
-								<ImageSlider images={sourcing.images} title={sourcing.title} />
+								{sourcing.images && sourcing.images.length > 0 && (
+									<ImageSlider images={sourcing.images} title={sourcing.title} />
+								)}
 
 								{/* Description - Server Rendered */}
 								<div className="mb-8">

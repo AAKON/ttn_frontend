@@ -59,9 +59,9 @@ const TiptapEditor = React.forwardRef(
 						type="button"
 						onClick={() => editor.chain().focus().toggleBold().run()}
 						disabled={!editor.can().chain().focus().toggleBold().run()}
-						className={`p-2 rounded hover:bg-muted transition-colors ${editor.isActive("bold")
-							? "bg-muted text-foreground"
-							: "text-muted-foreground"
+						className={`p-2 rounded bg-brand-200 transition-colors ${editor.isActive("bold")
+							? "bg-brand-700 text-white"
+							: "text-brand-900"
 							}`}
 						title="Bold"
 					>
@@ -72,9 +72,9 @@ const TiptapEditor = React.forwardRef(
 						type="button"
 						onClick={() => editor.chain().focus().toggleItalic().run()}
 						disabled={!editor.can().chain().focus().toggleItalic().run()}
-						className={`p-2 rounded hover:bg-muted transition-colors ${editor.isActive("italic")
-							? "bg-muted text-foreground"
-							: "text-muted-foreground"
+						className={`p-2 rounded bg-brand-200 transition-colors ${editor.isActive("italic")
+							? "bg-brand-700 text-white"
+							: "text-brand-900"
 							}`}
 						title="Italic"
 					>
@@ -86,9 +86,9 @@ const TiptapEditor = React.forwardRef(
 					<button
 						type="button"
 						onClick={() => editor.chain().focus().toggleBulletList().run()}
-						className={`p-2 rounded hover:bg-muted transition-colors ${editor.isActive("bulletList")
-							? "bg-muted text-foreground"
-							: "text-muted-foreground"
+						className={`p-2 rounded bg-brand-200 transition-colors ${editor.isActive("bulletList")
+							? "bg-brand-700 text-white"
+							: "text-brand-900"
 							}`}
 						title="Bullet List"
 					>
@@ -98,9 +98,9 @@ const TiptapEditor = React.forwardRef(
 					<button
 						type="button"
 						onClick={() => editor.chain().focus().toggleOrderedList().run()}
-						className={`p-2 rounded hover:bg-muted transition-colors ${editor.isActive("orderedList")
-							? "bg-muted text-foreground"
-							: "text-muted-foreground"
+						className={`p-2 rounded bg-brand-200 transition-colors ${editor.isActive("orderedList")
+							? "bg-brand-700 text-white"
+							: "text-brand-900"
 							}`}
 						title="Numbered List"
 					>

@@ -46,18 +46,18 @@ const formSchema = z.object({
 	country: z.string().min(1, "Country is required"),
 	company_name: z.string().min(1, "Company Name is required"),
 	email: z.string().email("Invalid email address").min(1, "Email is required"),
-	phone_code: z.string().min(1, "Phone code is required"),
-	phone: z.string().min(1, "Phone is required"),
+	phone_code: z.string().optional(),
+	phone: z.string().optional(),
 	whatsapp_code: z.string().optional(),
 	whatsapp: z.string().optional(),
 	title: z.string().min(1, "Proposal Title is required"),
 	description: z.string().min(1, "Description is required"),
-	quantity: z.string().min(1, "Quantity is required"),
-	quantity_unit: z.string().min(1, "Unit is required"),
-	target_price: z.string().min(1, "Target price is required"),
-	currency: z.string().min(1, "Currency is required"),
-	payment_method: z.string().min(1, "Payment method is required"),
-	delivery_info: z.string().min(1, "Delivery info is required"),
+	quantity: z.string().optional(),
+	quantity_unit: z.string().optional(),
+	target_price: z.string().optional(),
+	currency: z.string().optional(),
+	payment_method: z.string().optional(),
+	delivery_info: z.string().optional(),
 	images: z.array(z.any()).optional(),
 });
 
@@ -239,10 +239,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			formData.append("location_id", data.country);
 			formData.append("title", data.title);
 			formData.append("description", data.description);
-			formData.append("quantity", data.quantity);
-			formData.append("unit", data.quantity_unit);
-			formData.append("price", data.target_price);
-			formData.append("currency", data.currency);
+			formData.append("quantity", data.quantity || "");
+			formData.append("unit", data.quantity_unit || "");
+			formData.append("price", data.target_price || "");
+			formData.append("currency", data.currency || "");
 
 			// Map payment methods to expected snake_case keys if necessary
 			const paymentMapping = {
@@ -252,15 +252,17 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			};
 			formData.append(
 				"payment_method",
-				paymentMapping[data.payment_method] ||
-					data.payment_method.toLowerCase(),
+				data.payment_method ?
+					paymentMapping[data.payment_method] ||
+					data.payment_method.toLowerCase()
+					: "",
 			);
 
 			formData.append("company_name", data.company_name);
 			formData.append("email", data.email);
-			formData.append("phone", data.phone);
+			formData.append("phone", data.phone || "");
 			formData.append("whatsapp", data.whatsapp || "");
-			formData.append("delivery_info", data.delivery_info);
+			formData.append("delivery_info", data.delivery_info || "");
 
 			// Append images
 			if (data.images && data.images.length > 0) {
@@ -290,8 +292,6 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			"country",
 			"company_name",
 			"email",
-			"phone_code",
-			"phone",
 		]);
 		if (result) {
 			setStep(2);
@@ -303,28 +303,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	if (!open) return null;
 
 	// Watch Step 1 fields
-	const step1Values = form.watch([
+	const isStep1Complete = form.watch([
 		"category",
 		"country",
 		"company_name",
 		"email",
-		"phone",
-	]);
-	const isStep1Complete = step1Values.every((val) => val && val.length > 0);
+	]).every((val) => val && val.length > 0);
 
 	// Watch Step 2 fields to determine completion status color
-	const step2Values = form.watch([
+	const isStep2Complete = form.watch([
 		"title",
 		"description",
-		"quantity",
-		"quantity_unit",
-		"target_price",
-		"currency",
-		"payment_method",
-		"delivery_info",
-		"images",
-	]);
-	const isStep2Complete = step2Values.every((val) => val && val.length > 0);
+	]).every((val) => val && val.length > 0);
 
 	const content = (
 		<>
@@ -332,15 +322,13 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			<div className="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm transition-opacity duration-300 animate-in fade-in" />
 			{/* Custom Sheet Container */}
 			<div
-				className={`fixed inset-y-0 right-0 z-[10001] w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out transform ${
-					isDesktop ? "sm:max-w-[540px]" : (
-						"h-[85vh] sm:h-full bottom-0 top-auto rounded-t-[20px]"
-					)
-				} ${
-					mounted ?
+				className={`fixed inset-y-0 right-0 z-[10001] w-full bg-white shadow-2xl transition-transform duration-300 ease-in-out transform ${isDesktop ? "sm:max-w-[540px]" : (
+					"h-[85vh] sm:h-full bottom-0 top-auto rounded-t-[20px]"
+				)
+					} ${mounted ?
 						"translate-x-0 translate-y-0"
-					:	"translate-x-full translate-y-full"
-				} flex flex-col overflow-hidden`}
+						: "translate-x-full translate-y-full"
+					} flex flex-col overflow-hidden`}
 			>
 				{/* Close Button */}
 				<button
@@ -368,20 +356,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => setStep(1)}
 								>
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											step > 1 || isStep1Complete ?
-												"border-brand-700 text-brand-700"
-											:	"border-gray-600 text-transparent"
-										}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${step > 1 || isStep1Complete ?
+											"border-brand-700 text-brand-700"
+											: "border-gray-600 text-transparent"
+											}`}
 									>
 										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
-										className={`text-sm font-medium ${
-											step > 1 || isStep1Complete ?
-												"text-brand-700"
-											:	"text-gray-600"
-										}`}
+										className={`text-sm font-medium ${step > 1 || isStep1Complete ?
+											"text-brand-700"
+											: "text-gray-600"
+											}`}
 									>
 										Basic Info
 									</span>
@@ -393,18 +379,16 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 									onClick={() => step > 1 && setStep(2)}
 								>
 									<div
-										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-											isStep2Complete ?
-												"border-brand-600 text-brand-600"
-											:	"border-gray-600 text-transparent"
-										}`}
+										className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isStep2Complete ?
+											"border-brand-600 text-brand-600"
+											: "border-gray-600 text-transparent"
+											}`}
 									>
 										<CheckIcon className="w-3.5 h-3.5" strokeWidth={3} />
 									</div>
 									<span
-										className={`text-sm font-medium ${
-											isStep2Complete ? "text-brand-600" : "text-gray-600"
-										}`}
+										className={`text-sm font-medium ${isStep2Complete ? "text-brand-600" : "text-gray-600"
+											}`}
 									>
 										Inquiry Details
 									</span>
@@ -414,14 +398,12 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 						{/* Progress Bar under tabs (Orange bar) */}
 						<div
-							className={`w-full h-2 rounded-full mb-8 relative overflow-hidden ${
-								step === 1 ? "bg-gray-300" : "bg-brand-600"
-							}`}
+							className={`w-full h-2 rounded-full mb-8 relative overflow-hidden ${step === 1 ? "bg-gray-300" : "bg-brand-600"
+								}`}
 						>
 							<div
-								className={`absolute top-0 h-full transition-all duration-300 ease-in-out rounded-full ${
-									step === 1 ? "bg-brand-600" : "bg-brand-700"
-								} ${!isStep2Complete ? "w-1/2" : "w-full"}`}
+								className={`absolute top-0 h-full transition-all duration-300 ease-in-out rounded-full ${step === 1 ? "bg-brand-600" : "bg-brand-700"
+									} ${!isStep2Complete ? "w-1/2" : "w-full"}`}
 							/>
 						</div>
 
@@ -935,7 +917,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 								Next <ArrowRight className="w-4 h-4 ml-1" />
 							</Button>
 						</div>
-					:	<div className="grid grid-cols-2 gap-4">
+						: <div className="grid grid-cols-2 gap-4">
 							<Button
 								TagName="div"
 								secondary
@@ -955,7 +937,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 										Submitting...{" "}
 										<Loader2 className="w-4 h-4 ml-1 animate-spin" />
 									</>
-								:	<>
+									: <>
 										Submit <ArrowRight className="w-4 h-4 ml-1" />
 									</>
 								}
