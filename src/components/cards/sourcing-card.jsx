@@ -49,12 +49,14 @@ const SourcingCard = ({ sourcing }) => {
 									{sourcing?.location?.name || sourcing?.location}
 								</span>
 							</div>
-							<div className="flex items-center text-gray-500 mb-3">
-								<span className="font-normal pr-2 border-r border-gray-200">
-									{sourcing?.company_name}
-								</span>
-								<span className="pl-2">{sourcing?.posted_date}</span>
-							</div>
+							{sourcing?.company_name && (
+								<div className="flex items-center text-gray-500 mb-3">
+									<span className="font-normal pr-2 border-r border-gray-200">
+										{sourcing?.company_name}
+									</span>
+									<span className="pl-2">{sourcing?.posted_date}</span>
+								</div>
+							)}
 						</div>
 						{/* Favorite Button - matching company card style */}
 						{isFavorite ? (
