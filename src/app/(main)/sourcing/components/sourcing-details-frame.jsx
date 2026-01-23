@@ -63,7 +63,7 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 					<LdtCard
 						icon={<EyeIcon />}
 						text={"Views"}
-						title={proposal_views?.toString() || "0"}
+						title={proposal_views?.toString()}
 					/>
 				</div>
 			</div>

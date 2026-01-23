@@ -18,6 +18,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import ContactInfoContent from "@/app/(main)/sourcing/components/contact-info-content";
+import { formatDateTime } from "@/utils/dateFormatter";
 
 const SourcingCard = ({ sourcing }) => {
 	const [isFavorite, setIsFavorite] = useState(sourcing?.is_favorited || false);
@@ -50,11 +51,11 @@ const SourcingCard = ({ sourcing }) => {
 								</span>
 							</div>
 							{sourcing?.company_name && (
-								<div className="flex items-center text-gray-500 mb-3">
+								<div className="flex flex-wrap gap-2 items-center text-gray-500 mb-3">
 									<span className="font-normal pr-2 border-r border-gray-200">
 										{sourcing?.company_name}
 									</span>
-									<span className="pl-2">{sourcing?.posted_date}</span>
+									<span>{formatDateTime(sourcing?.created_at)}</span>
 								</div>
 							)}
 						</div>

@@ -32,7 +32,7 @@ function transformSourcingData(response) {
 			response.data.product_categories?.map((cat) => cat.name).join(", ") || "",
 		location: response.data.location || "",
 		country_flag: response.data.location?.flag_path || "",
-		proposal_views: 0,
+		proposal_views: response.data.view_count || 0,
 		images: response.data.images_urls?.map((img) => img.original) || [],
 		description: response.data.description || "",
 		quantity: `${response.data.quantity} ${response.data.unit}`,
@@ -96,6 +96,7 @@ export default async function SourcingDetails({ params }) {
 		console.error("Error fetching sourcing details:", err);
 		error = "An error occurred while loading the sourcing proposal";
 	}
+
 
 	// Error state
 	if (error) {

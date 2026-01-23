@@ -47,9 +47,34 @@ const formSchema = z.object({
 	company_name: z.string().min(1, "Company Name is required"),
 	email: z.string().email("Invalid email address").min(1, "Email is required"),
 	phone_code: z.string().optional(),
-	phone: z.string().optional(),
+	phone: z
+		.string()
+		.optional()
+		.refine(
+			(val) => {
+				if (!val) return true;
+				const clean = val.replace(/\s/g, "");
+				// Allow only if it has at least 7 digits after the optional leading '+'
+				return /^\+?[0-9]{10,15}$/.test(clean);
+			},
+			{
+				message: "Invalid phone number",
+			},
+		),
 	whatsapp_code: z.string().optional(),
-	whatsapp: z.string().optional(),
+	whatsapp: z
+		.string()
+		.optional()
+		.refine(
+			(val) => {
+				if (!val) return true;
+				const clean = val.replace(/\s/g, "");
+				return /^\+?[0-9]{10,15}$/.test(clean);
+			},
+			{
+				message: "Invalid WhatsApp number",
+			},
+		),
 	title: z.string().min(1, "Proposal Title is required"),
 	description: z.string().min(1, "Description is required"),
 	quantity: z.string().optional(),
@@ -141,6 +166,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 	const form = useForm({
 		resolver: zodResolver(formSchema),
+		mode: "onBlur",
 		defaultValues: {
 			category: "",
 			country: "",
@@ -292,6 +318,8 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			"country",
 			"company_name",
 			"email",
+			"phone",
+			"whatsapp",
 		]);
 		if (result) {
 			setStep(2);
@@ -584,7 +612,15 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																				value: code,
 																				label: code,
 																			}))}
-																			onValueChange={field.onChange}
+																			onValueChange={(val) => {
+																				field.onChange(val);
+																				const location = filterOptions.locations?.find(
+																					(loc) => loc.country_code === val,
+																				);
+																				if (location?.phone_code) {
+																					form.setValue("phone", location.phone_code);
+																				}
+																			}}
 																			value={field.value}
 																			triggerClassName="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none bg-white h-10"
 																		/>
@@ -602,6 +638,24 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 																			placeholder="Ex: 123654789"
 																			{...field}
+																			onChange={(e) => {
+																				const countryCode =
+																					form.getValues("phone_code");
+																				const location =
+																					filterOptions.locations?.find(
+																						(loc) =>
+																							loc.country_code === countryCode,
+																					);
+																				const prefix = location?.phone_code || "";
+																				const value = e.target.value;
+
+																				if (
+																					value.startsWith(prefix) &&
+																					/^[0-9]*$/.test(value.slice(prefix.length))
+																				) {
+																					field.onChange(value);
+																				}
+																			}}
 																		/>
 																	</FormControl>
 																</FormItem>
@@ -636,7 +690,15 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																				value: code,
 																				label: code,
 																			}))}
-																			onValueChange={field.onChange}
+																			onValueChange={(val) => {
+																				field.onChange(val);
+																				const location = filterOptions.locations?.find(
+																					(loc) => loc.country_code === val,
+																				);
+																				if (location?.phone_code) {
+																					form.setValue("whatsapp", location.phone_code);
+																				}
+																			}}
 																			value={field.value}
 																			triggerClassName="w-[80px] text-gray-500 focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none bg-white h-10"
 																		/>
@@ -654,6 +716,24 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			className="focus:ring-0 focus:ring-offset-0 focus:border-gray-500 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-gray-500 focus:shadow-none focus-visible:shadow-none"
 																			placeholder="Ex: 123654789"
 																			{...field}
+																			onChange={(e) => {
+																				const countryCode =
+																					form.getValues("whatsapp_code");
+																				const location =
+																					filterOptions.locations?.find(
+																						(loc) =>
+																							loc.country_code === countryCode,
+																					);
+																				const prefix = location?.phone_code || "";
+																				const value = e.target.value;
+
+																				if (
+																					value.startsWith(prefix) &&
+																					/^[0-9]*$/.test(value.slice(prefix.length))
+																				) {
+																					field.onChange(value);
+																				}
+																			}}
 																		/>
 																	</FormControl>
 																</FormItem>

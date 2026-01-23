@@ -27,10 +27,10 @@ const Hero = ({ categories, locations }) => {
 					</div>
 					<HeroForm categories={categories} locations={locations} />
 					<div className="mt-4 md:mt-10 flex justify-center items-center gap-3 md:gap-6 flex-wrap">
-						<Tags tagText="Sports Wear" TagName={Link} href="/" />
-						<Tags tagText="Hoodie" TagName={Link} href="/" />
-						<Tags tagText="Tops" TagName={Link} href="/" />
-						<Tags tagText="Cotton Yarn" TagName={Link} href="/" />
+						<Tags tagText="Sports Wear" TagName={Link} href="/sourcing?keyword=Sports+Wear" />
+						<Tags tagText="Hoodie" TagName={Link} href="/sourcing?keyword=Hoodie" />
+						<Tags tagText="Tops" TagName={Link} href="/sourcing?keyword=Tops" />
+						<Tags tagText="Cotton Yarn" TagName={Link} href="/sourcing?keyword=Cotton+Yarn" />
 					</div>
 				</div>
 			</Container>
@@ -50,7 +50,7 @@ export function Tags({ TagName = "div", tagText, outline = false, ...props }) {
 			className={
 				outline ?
 					"text-sm flex gap-[6px] items-center rounded-md border border-gray-300 px-[14px] py-2 text-gray-900 bg-transparent"
-				:	"text-sm flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20"
+					: "text-sm flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20"
 			}
 		>
 			<span>
