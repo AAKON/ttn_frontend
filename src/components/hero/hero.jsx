@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { Container } from "@/shared";
+import { cn } from "@/lib/utils";
 import HeroForm from "./hero-form";
 import Link from "next/link";
 
@@ -43,15 +44,16 @@ import TextAnimator from "./text-animatior";
 // Form Design
 
 // label text
-export function Tags({ TagName = "div", tagText, outline = false, ...props }) {
+export function Tags({ TagName = "div", tagText, outline = false, className, ...props }) {
 	return (
 		<TagName
 			{...props}
-			className={
+			className={cn(
 				outline ?
 					"text-sm flex gap-[6px] items-center rounded-md border border-gray-300 px-[14px] py-2 text-gray-900 bg-transparent"
-					: "text-sm flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20"
-			}
+					: "text-sm flex gap-[6px] items-center rounded-md border-border px-[14px] py-2 text-white bg-black/20",
+				className
+			)}
 		>
 			<span>
 				<svg

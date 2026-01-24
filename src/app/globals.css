@@ -35,6 +35,7 @@ body {
 		--chart-5: 27 87% 67%;
 		--radius: 0.5rem;
 	}
+
 	.dark {
 		--background: 0 0% 3.9%;
 		--foreground: 0 0% 98%;
@@ -61,6 +62,7 @@ body {
 		--chart-4: 280 65% 60%;
 		--chart-5: 340 75% 55%;
 	}
+
 	.border-t,
 	.border-r,
 	.border-b,
@@ -76,21 +78,27 @@ body {
 	* {
 		@apply border-border;
 	}
+
 	body {
 		@apply bg-background text-foreground;
 	}
+
 	button {
 		@apply px-3 py-2 md:px-4 md:py-[10px] rounded-sm md:rounded-[8px] text-sm md:text-base leading-5 md:leading-6 text-white bg-primary flex items-center gap-2 justify-center font-semibold md:font-bold;
 	}
+
 	h1 {
 		@apply text-3xl md:text-5xl font-semibold leading-[44px] md:leading-[60px] text-gray-900;
 	}
+
 	h2 {
 		@apply text-2xl md:text-4xl font-semibold md:leading-[44px] text-gray-900;
 	}
+
 	h5 {
 		@apply text-xs md:text-sm font-bold leading-tight text-gray-100 tracking-[2px] uppercase;
 	}
+
 	p {
 		@apply text-base font-normal leading-6 text-gray-500;
 	}
@@ -100,6 +108,7 @@ body {
 	.text_18 {
 		@apply text-base md:text-lg font-semibold leading-6 text-gray-100;
 	}
+
 	/* .slider_both_side_shadow {
     @apply relative before:absolute before:content-[''] before:h-full before:w-[6%] before:bg-gradient-to-r from-white to-transparent before:top-0 before:left-0 before:z-[3] after:absolute after:content-[''] after:h-full after:w-[6%] after:bg-gradient-to-l  after:top-0 after:right-0;
   }
@@ -115,10 +124,14 @@ body {
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
 	}
+
 	.no-scrollbar {
-		-ms-overflow-style: none; /* IE and Edge */
-		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none;
+		/* IE and Edge */
+		scrollbar-width: none;
+		/* Firefox */
 	}
+
 	.header_style {
 		@apply bg-white border-b border-b-gray-100 z-[9999];
 	}
@@ -126,6 +139,7 @@ body {
 	body .input_style {
 		@apply bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 h-10 md:h-11 block w-full border border-gray-200 rounded-md px-[14px] py-[10px] focus-visible:ring-0 focus-visible:ring-offset-0;
 	}
+
 	.formLabelClasses {
 		@apply !text-sm !text-gray-900 !font-normal;
 	}
@@ -140,9 +154,11 @@ body {
 .splide__arrow.splide__arrow--next {
 	z-index: 30;
 }
+
 .bg-detailBennar {
 	background-color: rgba(254, 244, 232, 0.5);
 }
+
 .pricing-accordion .lucide-chevron-down {
 	display: none !important;
 }
@@ -163,6 +179,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 	.Partner_Benefits p {
 		font-size: 22px;
 	}
+
 	.Partner_Benefits p.active {
 		font-size: 24px;
 	}
@@ -171,6 +188,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 html .with-scroll-bars-hidden {
 	overflow: auto !important;
 }
+
 html body[data-scroll-locked] {
 	overflow: auto !important;
 	margin-right: 0 !important;
@@ -182,6 +200,7 @@ html body[data-scroll-locked] {
 		font-size: 20px;
 	}
 }
+
 @media (max-width: 375px) {
 	.main-title {
 		font-size: 16px;
@@ -191,19 +210,24 @@ html body[data-scroll-locked] {
 .paragraph ul {
 	@apply list-disc ml-5;
 }
+
 .paragraph ol {
 	@apply list-decimal ml-5;
 }
+
 .paragraph ol li,
 .paragraph ul li::marker {
 	@apply text-gray-600;
 }
+
 .blog-details-container .paragraph p {
 	@apply mb-2.5;
 }
+
 .blog-details-container .paragraph p {
 	@apply mb-3.5;
 }
+
 .blog-details-container .paragraph h2,
 .blog-details-container .paragraph h3,
 .blog-details-container .paragraph h4,
@@ -211,27 +235,35 @@ html body[data-scroll-locked] {
 .blog-details-container .paragraph h6 {
 	@apply mt-7 mb-3.5 font-semibold;
 }
+
 .blog-details-container .paragraph h2 {
 	@apply text-4xl;
 }
+
 .blog-details-container .paragraph h3 {
 	@apply text-3xl;
 }
+
 .blog-details-container .paragraph h4 {
 	@apply text-2xl;
 }
+
 .blog-details-container .paragraph h5 {
 	@apply text-xl;
 }
+
 .blog-details-container .paragraph h6 {
 	@apply text-lg;
 }
+
 .blog-details-container .paragraph img {
 	@apply mb-3.5 object-contain;
 }
+
 .blog-details-container .paragraph strong {
 	@apply font-semibold;
 }
+
 .blog-details-container .paragraph a {
 	@apply !text-brand-600;
 }
@@ -284,10 +316,19 @@ html body[data-scroll-locked] {
 	font-style: italic;
 }
 
-.html_desc ul{
+.html_desc ul {
 	list-style: disc;
 	margin-left: 20px;
 }
-.html_desc ul li::marker{
+
+.html_desc ul li::marker {
 	@apply text-primary;
+}
+
+.tag-active {
+	@apply bg-primary text-white border-primary cursor-default;
+}
+
+.tag-active svg path {
+	stroke: white;
 }

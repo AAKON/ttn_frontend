@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { getSession } from "next-auth/react";
 import { Section } from "@/components/shared";
 import HeroCompanyForm from "@/components/hero/hero-company";
@@ -25,7 +26,9 @@ const SourcingClient = ({
 	initialSourcings,
 	initialPagination,
 	initialFilterOptions,
+	initialKeyword,
 }) => {
+	const searchParams = useSearchParams();
 	const [view, setView] = useState("grid");
 	const [filterOptions, setFilterOptions] = useState(initialFilterOptions);
 	const [sourcings, setSourcings] = useState(initialSourcings);
@@ -41,9 +44,17 @@ const SourcingClient = ({
 		product_category_id: null,
 		currency: null,
 		price_range: null,
-		title: "",
+		title: initialKeyword || "",
 		company_name: "",
 	});
+
+	// Sync keyword from URL params to filters
+	useEffect(() => {
+		const keyword = searchParams.get("keyword");
+		if (keyword !== null && keyword !== filters.title) {
+			setFilters((prev) => ({ ...prev, title: keyword }));
+		}
+	}, [searchParams]);
 
 	const categories = filterOptions?.categories || [];
 	const locations = filterOptions?.locations || [];
@@ -193,15 +204,29 @@ const SourcingClient = ({
 							outline
 							tagText="Sports Wear"
 							TagName={Link}
-							href="/sourcing"
+							href="/sourcing?keyword=Sports+Wear"
+							className={filters.title === "Sports Wear" ? "tag-active" : ""}
 						/>
-						<Tags outline tagText="Hoodie" TagName={Link} href="/sourcing" />
-						<Tags outline tagText="Tops" TagName={Link} href="/sourcing" />
+						<Tags
+							outline
+							tagText="Hoodie"
+							TagName={Link}
+							href="/sourcing?keyword=Hoodie"
+							className={filters.title === "Hoodie" ? "tag-active" : ""}
+						/>
+						<Tags
+							outline
+							tagText="Tops"
+							TagName={Link}
+							href="/sourcing?keyword=Tops"
+							className={filters.title === "Tops" ? "tag-active" : ""}
+						/>
 						<Tags
 							outline
 							tagText="Cotton Yarn"
 							TagName={Link}
-							href="/sourcing"
+							href="/sourcing?keyword=Cotton+Yarn"
+							className={filters.title === "Cotton Yarn" ? "tag-active" : ""}
 						/>
 					</div>
 				</div>
