@@ -23,7 +23,7 @@ function ConfirmDeleteDialogSm({ open, isDelCompany=false, setOpen, onConfirm, i
 
 
     return (
-        <AlertDialog className="z-50" onOpenChange={setOpen}>
+        <AlertDialog className="z-50" open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 {isDelCompany ? (
                     <Button type="button" deleteOutline className="group text-red-600 border-red-600">

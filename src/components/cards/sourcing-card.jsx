@@ -20,6 +20,11 @@ import {
 import ContactInfoContent from "@/app/(main)/sourcing/components/contact-info-content";
 import { formatDateTime } from "@/utils/dateFormatter";
 
+const stripHtml = (html) => {
+	if (!html) return "";
+	return html.replace(/<[^>]*>?/gm, "");
+};
+
 const SourcingCard = ({ sourcing }) => {
 	const [isFavorite, setIsFavorite] = useState(sourcing?.is_favorited || false);
 
@@ -53,7 +58,7 @@ const SourcingCard = ({ sourcing }) => {
 							{sourcing?.company_name && (
 								<div className="flex flex-wrap gap-2 items-center text-gray-500 mb-3">
 									<span className="font-normal pr-2 border-r border-gray-200">
-										{sourcing?.company_name}
+										<Link href={`/company/${sourcing?.company_slug}`}>{sourcing?.company_name}</Link>
 									</span>
 									<span>{formatDateTime(sourcing?.created_at)}</span>
 								</div>
@@ -104,7 +109,7 @@ const SourcingCard = ({ sourcing }) => {
 
 					{/* Description */}
 					<p className="text-gray-500 text-md font-normal leading-6 line-clamp-3">
-						{sourcing?.description}
+						{stripHtml(sourcing?.description)}
 					</p>
 				</CardContent>
 			</div>

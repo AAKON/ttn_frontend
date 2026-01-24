@@ -18,9 +18,12 @@ import { useToast } from "@/hooks/use-toast";
 import { delSourcingProposal } from "@/services/company";
 import { View } from "lucide-react";
 
+import SourcingEditSheet from "@/components/shared/sourcing/sourcing-edit-sheet";
+
 const ProposalCardProfile = ({ type, onItemRemove, data }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
     const [error, setError] = useState(null);
     const { toast } = useToast();
 
@@ -29,13 +32,13 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
         try {
             const response = await delSourcingProposal(id, toast);
             if (response) {
-                setOpenDialog(false);
                 onItemRemove();
             }
         } catch (err) {
-            setError(err.message);
+            setError(err.message || "Something went wrong");
         } finally {
             setIsDeleting(false);
+            setOpenDialog(false);
         }
     };
 
@@ -60,15 +63,9 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
                         </CardDescription>
                     </div>
                 </div>
-                {/* Proposals don't have view count in the snippet, commented out if not present */}
-                {/* <span className="flex items-center gap-[6px] bg-gray-50 rounded-sm !h-6 px-[6px] py-1 border border-brand-200">
-          <ViewAs stroke="#F7931E" width={14} height={10} />
-          <span className="text-brand-600 text-sm">{data?.view_count}</span>
-        </span> */}
             </CardHeader>
 
             <CardContent className="flex gap-x-2 mr-2 w-full">
-                {/* Categories could be added here if needed */}
                 {data?.product_categories && Array.isArray(data.product_categories) && data.product_categories.slice(0, 2).map((category) => (
                     <span
                         className="py-[3px] pt-[5px] px-2 text-xs font-medium text-gray-500 rounded-[6px] border border-gray-300 inline-block"
@@ -101,7 +98,7 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
                 <Button TagName={Link} prefetch={false} href={`/sourcing/${data?.id}`} secondary>
                     <View stroke="#F7931E" size={24} /> View
                 </Button>
-                <Button TagName={Link} prefetch={false} href={`/sourcing/${data?.id}`} secondary>
+                <Button onClick={() => setOpenEdit(true)} secondary>
                     <EditIcon stroke="#F7931E" size={24} /> Edit
                 </Button>
                 <ConfirmDeleteDialogSm
@@ -112,6 +109,12 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
                     isDeleting={isDeleting}
                 />
             </CardFooter>
+            <SourcingEditSheet
+                open={openEdit}
+                onOpenChange={setOpenEdit}
+                proposalId={data?.id}
+                onSuccess={onItemRemove}
+            />
         </Card>
     );
 };

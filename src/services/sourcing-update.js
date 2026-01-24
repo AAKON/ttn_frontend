@@ -1,0 +1,11 @@
+import { apiRequest } from "@/utils/api";
+
+export async function updateSourcingProposal(id, formData, toast, token) {
+    const endpoint = `my/sourcing-proposals/${id}/update`;
+    const options = {
+        method: "POST",
+        body: formData,
+        isFormData: true,
+    };
+    return await apiRequest(endpoint, options, toast, token);
+}
