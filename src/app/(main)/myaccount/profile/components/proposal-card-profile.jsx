@@ -15,7 +15,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 import ConfirmDeleteDialogSm from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialogSm";
 import { useToast } from "@/hooks/use-toast";
-import { toggleFavsSourcingProposal } from "@/services/company";
+import { delSourcingProposal } from "@/services/company";
+import { View } from "lucide-react";
 
 const ProposalCardProfile = ({ type, onItemRemove, data }) => {
     const [isDeleting, setIsDeleting] = useState(false);
@@ -26,7 +27,7 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
     const handleRemove = async (id) => {
         setIsDeleting(true);
         try {
-            const response = await toggleFavsSourcingProposal(id, toast);
+            const response = await delSourcingProposal(id, toast);
             if (response) {
                 setOpenDialog(false);
                 onItemRemove();
@@ -96,19 +97,20 @@ const ProposalCardProfile = ({ type, onItemRemove, data }) => {
                 )}
             </CardContent>
 
-            <CardFooter className="grid grid-cols-2 gap-2">
+            <CardFooter className="grid grid-cols-3 gap-2">
                 <Button TagName={Link} prefetch={false} href={`/sourcing/${data?.id}`} secondary>
-                    View Proposal
+                    <View stroke="#F7931E" size={24} /> View
                 </Button>
-                {type === "myFavourites" && (
-                    <ConfirmDeleteDialogSm
-                        isDelCompany
-                        open={openDialog}
-                        setOpen={setOpenDialog}
-                        onConfirm={() => handleRemove(data?.id)}
-                        isDeleting={isDeleting}
-                    />
-                )}
+                <Button TagName={Link} prefetch={false} href={`/sourcing/${data?.id}`} secondary>
+                    <EditIcon stroke="#F7931E" size={24} /> Edit
+                </Button>
+                <ConfirmDeleteDialogSm
+                    isDelCompany
+                    open={openDialog}
+                    setOpen={setOpenDialog}
+                    onConfirm={() => handleRemove(data?.id)}
+                    isDeleting={isDeleting}
+                />
             </CardFooter>
         </Card>
     );

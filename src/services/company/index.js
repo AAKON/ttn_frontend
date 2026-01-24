@@ -425,3 +425,14 @@ export async function delCompanyClient(id, slug, toast) {
     return result?.status && result?.code === 200;
 }
 
+export async function delSourcingProposal(id, toast) {
+    const session = await getSession();
+    const token = session?.accessToken;
+
+    const endpoint = `my/sourcing-proposals/${id}`;
+    const options = {
+        method: 'DELETE'
+    };
+    const result = await apiRequest(endpoint, options, toast, token);
+    return result?.status && result?.code === 200;
+}

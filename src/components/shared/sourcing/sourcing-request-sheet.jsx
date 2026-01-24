@@ -107,6 +107,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const [loadingCompanies, setLoadingCompanies] = useState(false);
 	const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
 	const [searchTimeout, setSearchTimeout] = useState(null);
+	const [selectedCompanySlug, setSelectedCompanySlug] = useState("");
 
 	useEffect(() => {
 		if (open) {
@@ -130,6 +131,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 				form.reset();
 				setCompanySuggestions([]);
 				setShowCompanySuggestions(false);
+				setSelectedCompanySlug("");
 			}, 500); // Reset after closing animation
 			return () => clearTimeout(timer);
 		}
@@ -239,6 +241,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	// Handle selecting a company from suggestions
 	const handleSelectCompany = (company, onChange) => {
 		onChange(company.name);
+		setSelectedCompanySlug(company.slug || "");
 		setShowCompanySuggestions(false);
 		setCompanySuggestions([]);
 	};
@@ -285,6 +288,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			);
 
 			formData.append("company_name", data.company_name);
+			formData.append("company_slug", selectedCompanySlug);
 			formData.append("email", data.email);
 			formData.append("phone", data.phone || "");
 			formData.append("whatsapp", data.whatsapp || "");
@@ -303,6 +307,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 
 			if (response?.status) {
 				form.reset();
+				setSelectedCompanySlug("");
 				onOpenChange(false);
 			}
 		} catch (error) {
