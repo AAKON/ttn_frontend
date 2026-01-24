@@ -33,7 +33,7 @@ function transformSourcingData(response) {
 		location: response.data.location || "",
 		country_flag: response.data.location?.flag_path || "",
 		proposal_views: response.data.view_count || 0,
-		images: response.data.images_urls?.map((img) => img.original) || [],
+		images: response.data.images_urls || [],
 		description: response.data.description || "",
 		quantity: `${response.data.quantity} ${response.data.unit}`,
 		target_price: `${response.data.currency} ${response.data.price}`,
