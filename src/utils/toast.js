@@ -4,7 +4,7 @@ export const showSuccessToast = (toast, message) => {
     const displayMessage = (typeof message === 'object' && message !== null)
         ? 'Submitted successfully!'
         : (message || 'Submitted successfully!');
-    
+
     toast({
         title: 'Success',
         description: displayMessage,
@@ -17,7 +17,7 @@ export const showErrorToast = (toast, message) => {
     const displayMessage = (typeof message === 'object' && message !== null)
         ? 'Request failed!'
         : (message || 'Request failed!');
-    
+
     toast({
         title: 'Error',
         description: displayMessage,

@@ -33,11 +33,11 @@ async function apiRequest(endpoint, options = {}, toast, token) {
             return data;
         } else {
             if (toast) showErrorToast(toast, data?.message || 'Request failed!');
-            //throw new Error(data.message || 'Request faild!');
+            return data;
         }
     } catch (error) {
         if (toast) showErrorToast(toast, error.message || 'An error occurred');
-        //throw error;
+        return { status: false, message: error.message || 'An error occurred' };
     }
 }
 

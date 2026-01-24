@@ -24,10 +24,13 @@ import {
     getSourcingFilterOptions,
     getSourcingDetails,
 } from "@/services/sourcing/index";
-import { updateSourcingProposal } from "@/services/sourcing-update";
+
+import { updateSourcingProposal, deleteSourcingImage } from "@/services/sourcing-update";
+
 import { searchCompanies } from "@/services/company";
 import { getSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
+import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import RequiredStar from "../required-star";
 
 const formSchema = z.object({
@@ -97,6 +100,7 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
     const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [selectedCompanySlug, setSelectedCompanySlug] = useState("");
+    const [alertMessage, setAlertMessage] = useState(null); // { type: 'success' | 'error', text: string }
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -165,7 +169,12 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                             currency: data.currency || "USD",
                             payment_method: data.payment_method || "bank_transfer",
                             delivery_info: data.delivery_info || "",
-                            images: [], // New images only for edit
+                            images: data.images_urls?.map((img) => ({
+                                id: img.id,
+                                url: img.original,
+                                isExisting: true,
+                                name: img.file_name
+                            })) || [],
                         });
                     }
                 } catch (error) {
@@ -184,6 +193,7 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
             setStep(1);
             form.reset();
             setSelectedCompanySlug("");
+            setAlertMessage(null);
         }
     }, [open, proposalId]);
 
@@ -261,9 +271,11 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
             formData.append("delivery_info", data.delivery_info || "");
 
             if (data.images && data.images.length > 0) {
-                data.images.forEach((file, index) => {
-                    if (file instanceof File) {
-                        formData.append(`images[${index}]`, file);
+                let imgIndex = 0;
+                data.images.forEach((item) => {
+                    if (item instanceof File) {
+                        formData.append(`images[${imgIndex}]`, item);
+                        imgIndex++;
                     }
                 });
             }
@@ -279,6 +291,35 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleImageRemove = async (file) => {
+        setAlertMessage(null);
+        if (file && file.isExisting && file.id) {
+            try {
+                const session = await getSession();
+                const token = session?.accessToken;
+                if (!token) {
+                    setAlertMessage({ type: 'error', text: "Authentication required to delete images." });
+                    return false;
+                }
+
+                const response = await deleteSourcingImage(proposalId, file.id, null, token);
+
+                if (response?.status) {
+                    setAlertMessage({ type: 'success', text: response?.message || "Image deleted successfully." });
+                    return true;
+                } else {
+                    setAlertMessage({ type: 'error', text: response?.message || "Failed to delete image. You might not have permission." });
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error deleting image:", error);
+                setAlertMessage({ type: 'error', text: "An unexpected error occurred while deleting the image." });
+                return false;
+            }
+        }
+        return true;
     };
 
     const nextStep = async () => {
@@ -721,7 +762,19 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                             />
 
                                             <div className="space-y-2">
-                                                <StepFormDragDropFile name="images" control={form.control} />
+                                                {alertMessage && (
+                                                    <div className={`mb-4 p-3 rounded-lg flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-300 ${alertMessage.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
+                                                        <span className="text-sm font-medium">{alertMessage.text}</span>
+                                                        <button type="button" onClick={() => setAlertMessage(null)} className="ml-2 p-1 hover:bg-black/5 rounded">
+                                                            <XIcon className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                <StepFormDragDropFile
+                                                    name="images"
+                                                    control={form.control}
+                                                    onRemove={handleImageRemove}
+                                                />
                                                 <p className="text-xs text-gray-500 mt-1">Leave empty to keep existing images.</p>
                                             </div>
                                         </div>

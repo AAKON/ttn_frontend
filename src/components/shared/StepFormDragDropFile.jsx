@@ -17,6 +17,7 @@ const StepFormDragDropFile = ({
 	},
 	maxSize = 10 * 1024 * 1024, // 10MB
 	multiple = true,
+	onRemove = null,
 }) => {
 	const {
 		field: { onChange, value },
@@ -44,6 +45,15 @@ const StepFormDragDropFile = ({
 						url: file,
 						isExternal: true,
 						name: file,
+					});
+				} else if (file && typeof file === "object" && file.url) {
+					// Metadata object (e.g., from Edit Form)
+					newPreviews.push({
+						type: "image",
+						url: file.url,
+						isExternal: true,
+						name: file.name || file.url,
+						meta: file,
 					});
 				} else if (file instanceof File) {
 					// New File
@@ -85,8 +95,15 @@ const StepFormDragDropFile = ({
 		onChange(newFiles);
 	};
 
-	const removeFile = (index) => {
+	const removeFile = async (index) => {
 		const currentFiles = Array.isArray(value) ? value : [];
+		const fileToRemove = currentFiles[index];
+
+		if (onRemove) {
+			const success = await onRemove(fileToRemove, index);
+			if (success === false) return;
+		}
+
 		const newFiles = currentFiles.filter((_, i) => i !== index);
 		onChange(newFiles);
 	};
@@ -106,9 +123,8 @@ const StepFormDragDropFile = ({
 			{/* Dropzone Area */}
 			<div
 				{...getRootProps({
-					className: `relative group w-full h-[160px] border-2 border-dashed rounded-xl flex flex-col justify-center items-center transition-all cursor-pointer bg-gray-50 hover:bg-gray-100 ${
-						isDragActive ? "border-brand-500 bg-brand-50" : "border-gray-200"
-					}`,
+					className: `relative group w-full h-[160px] border-2 border-dashed rounded-xl flex flex-col justify-center items-center transition-all cursor-pointer bg-gray-50 hover:bg-gray-100 ${isDragActive ? "border-brand-500 bg-brand-50" : "border-gray-200"
+						}`,
 				})}
 			>
 				<input {...getInputProps()} />
