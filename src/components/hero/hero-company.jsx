@@ -1,18 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@/components/shared/button";
-import { FilterIcon, WorldMap } from "@/icons";
+import { WorldMap } from "@/icons";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import PopupFilterCard from "@/app/(main)/company/components/popup-filter-card";
@@ -30,7 +22,6 @@ export default function HeroCompanyForm({
   locations,
   keyword,
   onSearchSubmit, // Add a prop for handling search submit
-  className,
   // for only mobile filter
   filterOptions,
   filters,
@@ -51,8 +42,8 @@ export default function HeroCompanyForm({
   const onSubmit = async (data) => {
     if (onSearchSubmit) {
       const searchData = {
-        locationId : data?.locationIds,
-        businessCategoryIds : data?.businessCategoryIds,
+        locationId: data?.locationIds,
+        businessCategoryIds: data?.businessCategoryIds,
         keyword: data?.keyword
       }
       onSearchSubmit(searchData);
@@ -110,27 +101,23 @@ export default function HeroCompanyForm({
                 name="businessCategoryIds"
                 render={({ field }) => (
                   <FormItem>
-                    <Select
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      defaultValue={filters?.businessCategoryIds?.toString()}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
-                          <SelectValue placeholder="All Categories" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={"all"}>All Categories</SelectItem>
-                        {categories.map((category) => (
-                          <SelectItem
-                            key={category.id}
-                            value={String(category.id)}
-                          >
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <SearchableSelect
+                        options={[
+                          { value: "all", label: "All Categories" },
+                          ...categories.map((category) => ({
+                            value: String(category.id),
+                            label: category.name,
+                          })),
+                        ]}
+                        value={field.value?.toString() || "all"}
+                        onValueChange={(value) => {
+                          field.onChange(value === "all" ? "all" : Number(value));
+                        }}
+                        placeholder="All Categories"
+                        triggerClassName="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left hover:bg-transparent"
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />
@@ -145,34 +132,28 @@ export default function HeroCompanyForm({
                 name="locationIds"
                 render={({ field }) => (
                   <FormItem>
-                    <Select
-                      className={className}
-                      onValueChange={(value) => field.onChange(Number(value))}
-                      defaultValue={filters?.locationId?.toString()}
-                    >
-                      <SelectTrigger
-                        className={`text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11`}
-                      >
-                        <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
+                    <FormControl>
+                      <div className="relative">
+                        <span className="absolute top-1/2 -translate-y-1/2 left-[18px] z-10 pointer-events-none">
                           <WorldMap />
                         </span>
-                        <SelectValue
+                        <SearchableSelect
+                          options={[
+                            { value: "anywhere", label: "Anywhere" },
+                            ...locations.map((country) => ({
+                              value: String(country?.id || country),
+                              label: country?.name || country,
+                            })),
+                          ]}
+                          value={field.value?.toString() || "anywhere"}
+                          onValueChange={(value) => {
+                            field.onChange(value === "anywhere" ? "anywhere" : Number(value));
+                          }}
                           placeholder="Anywhere"
-                          className="text_16 text-red-400"
+                          triggerClassName="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none pl-11 hover:bg-transparent"
                         />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="anywhere">Anywhere</SelectItem>
-                        {locations?.map((country, index) => (
-                          <SelectItem
-                            key={country?.id || index}
-                            value={String(country?.id || country)}
-                          >
-                            {country?.name || country}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                      </div>
+                    </FormControl>
                   </FormItem>
                 )}
               />
