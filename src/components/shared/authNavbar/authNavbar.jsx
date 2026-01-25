@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Button from "@/components/shared/button";
 import { Bars, Cross } from "@/icons";
 import AuthNavDropdown from "@/components/shared/authNavbar/authNavDropdown";
@@ -14,6 +15,7 @@ import SourcingRequestSheet from "@/components/shared/sourcing/sourcing-request-
 
 function AuthNavbar({ showMobileNav, setShowMobileNav }) {
 	const { data, status } = useSession();
+	const router = useRouter();
 	const [showSourcingSheet, setShowSourcingSheet] = React.useState(false);
 
 	return (
@@ -35,9 +37,13 @@ function AuthNavbar({ showMobileNav, setShowMobileNav }) {
 					<DropdownMenuItem
 						className="cursor-pointer py-3 rounded-xl border-b border-gray-200 font-semibold text-md text-gray-900"
 						onSelect={() => {
-							setTimeout(() => {
-								setShowSourcingSheet(true);
-							}, 200);
+							if (status !== "authenticated") {
+								router.push("/login");
+							} else {
+								setTimeout(() => {
+									setShowSourcingSheet(true);
+								}, 200);
+							}
 						}}
 					>
 						Sourcing

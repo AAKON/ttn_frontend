@@ -32,7 +32,7 @@ import {
 	createSourcingProposal,
 } from "@/services/sourcing";
 import { searchCompanies } from "@/services/company";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import RequiredStar from "../required-star";
@@ -95,6 +95,7 @@ const createFormSchema = (locations) => {
 };
 
 export default function SourcingRequestSheet({ open, onOpenChange }) {
+	const { status } = useSession();
 	const { toast } = useToast();
 	const isDesktop = useMediaQuery("(min-width: 768px)");
 	const [step, setStep] = useState(1);
@@ -116,6 +117,17 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
 	const [searchTimeout, setSearchTimeout] = useState(null);
 	const [selectedCompanySlug, setSelectedCompanySlug] = useState("");
+
+	useEffect(() => {
+		if (open && status !== "loading" && status !== "authenticated") {
+			toast({
+				variant: "destructive",
+				title: "Authentication required",
+				description: "Please log in to submit a sourcing proposal.",
+			});
+			onOpenChange(false);
+		}
+	}, [open, status, onOpenChange]);
 
 	useEffect(() => {
 		if (open) {
