@@ -167,17 +167,28 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
 
                         // Determine phone/whatsapp codes if possible, or use defaults
                         // For simplicity, we can try to match the prefix with locations
-                        const phoneCode = data.location?.country_code || "US";
+                        const parseContact = (val, fallbackIso) => {
+                            if (!val) return { code: fallbackIso || "US", number: "" };
+                            // Matches 2-3 uppercase letters at start followed by a + (e.g. BD+880...)
+                            const match = val.match(/^([A-Z]{2,3})(\+.*)$/);
+                            if (match) {
+                                return { code: match[1], number: match[2] };
+                            }
+                            return { code: fallbackIso || "US", number: val };
+                        };
+
+                        const phoneData = parseContact(data.phone, data.location?.country_code);
+                        const whatsappData = parseContact(data.whatsapp, data.location?.country_code);
 
                         form.reset({
                             category: data.product_categories?.[0]?.id?.toString() || "",
                             country: data.location_id?.toString() || "",
                             company_name: data.company_name || "",
                             email: data.email || "",
-                            phone_code: phoneCode,
-                            phone: data.phone || "",
-                            whatsapp_code: phoneCode,
-                            whatsapp: data.whatsapp || "",
+                            phone_code: phoneData.code,
+                            phone: phoneData.number,
+                            whatsapp_code: whatsappData.code,
+                            whatsapp: whatsappData.number,
                             title: data.title || "",
                             description: data.description || "",
                             quantity: data.quantity || "",
@@ -293,8 +304,10 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                 return "";
             };
 
-            formData.append("phone", cleanContactValue(data.phone));
-            formData.append("whatsapp", cleanContactValue(data.whatsapp));
+            const countryCode = data.phone_code || "";
+            formData.append("country_code", countryCode);
+            formData.append("phone", countryCode + cleanContactValue(data.phone));
+            formData.append("whatsapp", (data.whatsapp_code || "") + cleanContactValue(data.whatsapp));
             formData.append("delivery_info", data.delivery_info || "");
 
             if (data.images && data.images.length > 0) {

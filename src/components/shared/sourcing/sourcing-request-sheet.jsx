@@ -326,8 +326,10 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 				return "";
 			};
 
-			formData.append("phone", cleanContactValue(data.phone));
-			formData.append("whatsapp", cleanContactValue(data.whatsapp));
+			const countryCode = data.phone_code || "";
+			formData.append("country_code", countryCode);
+			formData.append("phone", countryCode + cleanContactValue(data.phone));
+			formData.append("whatsapp", (data.whatsapp_code || "") + cleanContactValue(data.whatsapp));
 			formData.append("delivery_info", data.delivery_info || "");
 
 			// Append images

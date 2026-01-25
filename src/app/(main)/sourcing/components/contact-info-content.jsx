@@ -4,6 +4,19 @@ import { PhoneIcon, WhatsAppIcon } from "@/components/icons";
 import Button from "@/components/shared/button";
 
 const ContactInfoContent = ({ sourcing }) => {
+	const parseContactNumber = (val) => {
+		if (!val) return "";
+		// Matches 2-3 uppercase letters at start followed by a + (e.g. BD+880...)
+		const match = val.match(/^([A-Z]{2,3})(\+.*)$/);
+		if (match) {
+			return match[2];
+		}
+		return val;
+	};
+
+	const displayWhatsapp = parseContactNumber(sourcing.contact.whatsapp);
+	const displayPhone = parseContactNumber(sourcing.contact.phone);
+
 	return (
 		<div className="space-y-6">
 			{/* Address */}
@@ -66,7 +79,7 @@ const ContactInfoContent = ({ sourcing }) => {
 									className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5"
 								/>
 								<p className="text-md font-medium text-gray-900">
-									{sourcing.contact.whatsapp}
+									{displayWhatsapp}
 								</p>
 							</div>
 						</div>
@@ -88,7 +101,7 @@ const ContactInfoContent = ({ sourcing }) => {
 									className="w-5 h-5 text-brand-600 flex-shrink-0 mt-0.5"
 								/>
 								<p className="text-md font-medium text-gray-900">
-									{sourcing.contact.phone}
+									{displayPhone}
 								</p>
 							</div>
 						</div>
@@ -111,7 +124,7 @@ const ContactInfoContent = ({ sourcing }) => {
 				{sourcing.contact.whatsapp && (
 					<Button
 						TagName="a"
-						href={`https://wa.me/${sourcing.contact.whatsapp?.replace(/\D/g, "")}`}
+						href={`https://wa.me/${displayWhatsapp.replace(/\D/g, "")}`}
 						target="_blank"
 						rel="noopener noreferrer"
 						primary
