@@ -21,6 +21,7 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 	const {
 		title,
 		company_name,
+		company_slug,
 		category,
 		location,
 		posted_date,
@@ -52,6 +53,7 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 						icon={<BuildingTwoIcon />}
 						text={"Company Name"}
 						title={company_name}
+						href={company_slug ? `/company/${company_slug}` : null}
 					/>
 					<LdtCard icon={<GridIcon />} text={"Category"} title={category} />
 					<LdtCard
@@ -72,7 +74,7 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 };
 
 // LTD Card
-export function LdtCard({ icon, text, title, ExtSrc }) {
+export function LdtCard({ icon, text, title, ExtSrc, href }) {
 	return (
 		<div className="flex flex-col gap-1">
 			<div className="flex items-center lg:gap-[11px] gap-2">
@@ -82,7 +84,13 @@ export function LdtCard({ icon, text, title, ExtSrc }) {
 				</p>
 			</div>
 			<div className="flex items-center gap-2.5">
-				<h3>{title}</h3>
+				{href ? (
+					<Link href={href} className="hover:text-primary hover:underline">
+						<h3>{title}</h3>
+					</Link>
+				) : (
+					<h3>{title}</h3>
+				)}
 				{ExtSrc && (
 					<div className="w-6 h-6 overflow-hidden rounded-full">
 						<img src={ExtSrc} alt="flag" />

@@ -34,57 +34,65 @@ import {
 import { searchCompanies } from "@/services/company";
 import { getSession } from "next-auth/react";
 import { useToast } from "@/hooks/use-toast";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import RequiredStar from "../required-star";
 
-const formSchema = z.object({
-	category: z.string().min(1, "Category is required"),
-	country: z.string().min(1, "Country is required"),
-	company_name: z.string().min(1, "Company Name is required"),
-	email: z.string().email("Invalid email address").min(1, "Email is required"),
-	phone_code: z.string().optional(),
-	phone: z
-		.string()
-		.optional()
-		.refine(
-			(val) => {
-				if (!val) return true;
-				const clean = val.replace(/\s/g, "");
-				// Allow only if it has at least 7 digits after the optional leading '+'
-				return /^\+?[0-9]{10,15}$/.test(clean);
-			},
-			{
-				message: "Invalid phone number",
-			},
-		),
-	whatsapp_code: z.string().optional(),
-	whatsapp: z
-		.string()
-		.optional()
-		.refine(
-			(val) => {
-				if (!val) return true;
-				const clean = val.replace(/\s/g, "");
-				return /^\+?[0-9]{10,15}$/.test(clean);
-			},
-			{
-				message: "Invalid WhatsApp number",
-			},
-		),
-	title: z.string().min(1, "Proposal Title is required"),
-	description: z.string().min(1, "Description is required"),
-	quantity: z.string().optional(),
-	quantity_unit: z.string().optional(),
-	target_price: z.string().optional(),
-	currency: z.string().optional(),
-	payment_method: z.string().optional(),
-	delivery_info: z.string().optional(),
-	images: z.array(z.any()).optional(),
-});
+// Move formSchema inside the component to access dynamic prefixes
+const createFormSchema = (locations) => {
+	const validateWithPrefix = (val, codeField) => {
+		if (!val || val.trim() === "") return true;
+		const location = locations?.find((loc) => loc.country_code === codeField);
+		const prefix = location?.phone_code || "";
+
+		// Clean value for prefix check (remove spaces and hyphens)
+		const cleanVal = val.replace(/[\s-]/g, "");
+		if (prefix && !cleanVal.startsWith(prefix)) return false;
+
+		const digits = val.replace(/\D/g, "");
+		return digits.length >= 10 && digits.length <= 15;
+	};
+
+	return z
+		.object({
+			category: z.string().min(1, "Category is required"),
+			country: z.string().min(1, "Country is required"),
+			company_name: z.string().min(1, "Company Name is required"),
+			email: z.string().email("Invalid email address").min(1, "Email is required"),
+			phone_code: z.string().optional(),
+			phone: z.string().optional(),
+			whatsapp_code: z.string().optional(),
+			whatsapp: z.string().optional(),
+			title: z.string().min(1, "Proposal Title is required"),
+			description: z.string().min(1, "Description is required"),
+			quantity: z.string().optional(),
+			quantity_unit: z.string().optional(),
+			target_price: z.string().optional(),
+			currency: z.string().optional(),
+			payment_method: z.string().optional(),
+			delivery_info: z.string().optional(),
+			images: z.array(z.any()).optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.phone && !validateWithPrefix(data.phone, data.phone_code)) {
+				const loc = locations?.find((l) => l.country_code === data.phone_code);
+				const prefix = loc?.phone_code || "";
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: `Enter a valid number start with ${prefix}.`,
+					path: ["phone"],
+				});
+			}
+			if (data.whatsapp && !validateWithPrefix(data.whatsapp, data.whatsapp_code)) {
+				const loc = locations?.find((l) => l.country_code === data.whatsapp_code);
+				const prefix = loc?.phone_code || "";
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: `Enter a valid number start with ${prefix}.`,
+					path: ["whatsapp"],
+				});
+			}
+		});
+};
 
 export default function SourcingRequestSheet({ open, onOpenChange }) {
 	const { toast } = useToast();
@@ -166,8 +174,14 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 		};
 	}, [showCompanySuggestions]);
 
+	// Re-create schema when locations change
+	const dynamicSchema = React.useMemo(
+		() => createFormSchema(filterOptions.locations),
+		[filterOptions.locations],
+	);
+
 	const form = useForm({
-		resolver: zodResolver(formSchema),
+		resolver: zodResolver(dynamicSchema),
 		mode: "onBlur",
 		defaultValues: {
 			category: "",
@@ -290,8 +304,18 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			formData.append("company_name", data.company_name);
 			formData.append("company_slug", selectedCompanySlug);
 			formData.append("email", data.email);
-			formData.append("phone", data.phone || "");
-			formData.append("whatsapp", data.whatsapp || "");
+			const cleanContactValue = (val) => {
+				if (!val) return "";
+				const digits = val.replace(/\D/g, "");
+				// Only send if it matches the valid full number length (10-15 digits)
+				if (digits.length >= 10 && digits.length <= 15) {
+					return val.replace(/[\s-]/g, ""); // Strip spaces and hyphens for API
+				}
+				return "";
+			};
+
+			formData.append("phone", cleanContactValue(data.phone));
+			formData.append("whatsapp", cleanContactValue(data.whatsapp));
 			formData.append("delivery_info", data.delivery_info || "");
 
 			// Append images
@@ -303,12 +327,17 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 				});
 			}
 
-			const response = await createSourcingProposal(formData, toast, token);
+			const response = await createSourcingProposal(formData, null, token);
 
-			if (response?.status) {
-				form.reset();
-				setSelectedCompanySlug("");
-				onOpenChange(false);
+			if (response) {
+				if (response.status) {
+					showSuccessToast(toast, response.message || "Proposal created successfully.", { position: "left" });
+					form.reset();
+					setSelectedCompanySlug("");
+					onOpenChange(false);
+				} else {
+					showErrorToast(toast, response.message || "Failed to create proposal.", { position: "left" });
+				}
 			}
 		} catch (error) {
 			console.error("Submission error:", error);
@@ -623,7 +652,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																					(loc) => loc.country_code === val,
 																				);
 																				if (location?.phone_code) {
-																					form.setValue("phone", location.phone_code);
+																					form.setValue("phone", location.phone_code, {
+																						shouldValidate: true,
+																					});
 																				}
 																			}}
 																			value={field.value}
@@ -644,20 +675,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			placeholder="Ex: 123654789"
 																			{...field}
 																			onChange={(e) => {
-																				const countryCode =
-																					form.getValues("phone_code");
-																				const location =
-																					filterOptions.locations?.find(
-																						(loc) =>
-																							loc.country_code === countryCode,
-																					);
-																				const prefix = location?.phone_code || "";
 																				const value = e.target.value;
-
-																				if (
-																					value.startsWith(prefix) &&
-																					/^[0-9]*$/.test(value.slice(prefix.length))
-																				) {
+																				// Allow numbers, spaces, plus sign, and hyphens
+																				if (/^[0-9+\s-]*$/.test(value)) {
 																					field.onChange(value);
 																				}
 																			}}
@@ -701,7 +721,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																					(loc) => loc.country_code === val,
 																				);
 																				if (location?.phone_code) {
-																					form.setValue("whatsapp", location.phone_code);
+																					form.setValue("whatsapp", location.phone_code, {
+																						shouldValidate: true,
+																					});
 																				}
 																			}}
 																			value={field.value}
@@ -722,20 +744,9 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 																			placeholder="Ex: 123654789"
 																			{...field}
 																			onChange={(e) => {
-																				const countryCode =
-																					form.getValues("whatsapp_code");
-																				const location =
-																					filterOptions.locations?.find(
-																						(loc) =>
-																							loc.country_code === countryCode,
-																					);
-																				const prefix = location?.phone_code || "";
 																				const value = e.target.value;
-
-																				if (
-																					value.startsWith(prefix) &&
-																					/^[0-9]*$/.test(value.slice(prefix.length))
-																				) {
+																				// Allow numbers, spaces, plus sign, and hyphens
+																				if (/^[0-9+\s-]*$/.test(value)) {
 																					field.onChange(value);
 																				}
 																			}}

@@ -33,49 +33,61 @@ import { useToast } from "@/hooks/use-toast";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import RequiredStar from "../required-star";
 
-const formSchema = z.object({
-    category: z.string().min(1, "Category is required"),
-    country: z.string().min(1, "Country is required"),
-    company_name: z.string().min(1, "Company Name is required"),
-    email: z.string().email("Invalid email address").min(1, "Email is required"),
-    phone_code: z.string().optional(),
-    phone: z
-        .string()
-        .optional()
-        .refine(
-            (val) => {
-                if (!val) return true;
-                const clean = val.replace(/\s/g, "");
-                return /^\+?[0-9]{10,15}$/.test(clean);
-            },
-            {
-                message: "Invalid phone number",
-            },
-        ),
-    whatsapp_code: z.string().optional(),
-    whatsapp: z
-        .string()
-        .optional()
-        .refine(
-            (val) => {
-                if (!val) return true;
-                const clean = val.replace(/\s/g, "");
-                return /^\+?[0-9]{10,15}$/.test(clean);
-            },
-            {
-                message: "Invalid WhatsApp number",
-            },
-        ),
-    title: z.string().min(1, "Proposal Title is required"),
-    description: z.string().min(1, "Description is required"),
-    quantity: z.string().optional(),
-    quantity_unit: z.string().optional(),
-    target_price: z.string().optional(),
-    currency: z.string().optional(),
-    payment_method: z.string().optional(),
-    delivery_info: z.string().optional(),
-    images: z.array(z.any()).optional(),
-});
+// Move formSchema inside the component to access dynamic prefixes
+const createFormSchema = (locations) => {
+    const validateWithPrefix = (val, codeField) => {
+        if (!val || val.trim() === "") return true;
+        const location = locations?.find((loc) => loc.country_code === codeField);
+        const prefix = location?.phone_code || "";
+
+        const cleanVal = val.replace(/[\s-]/g, "");
+        if (prefix && !cleanVal.startsWith(prefix)) return false;
+
+        const digits = val.replace(/\D/g, "");
+        return digits.length >= 10 && digits.length <= 15;
+    };
+
+    return z
+        .object({
+            category: z.string().min(1, "Category is required"),
+            country: z.string().min(1, "Country is required"),
+            company_name: z.string().min(1, "Company Name is required"),
+            email: z.string().email("Invalid email address").min(1, "Email is required"),
+            phone_code: z.string().optional(),
+            phone: z.string().optional(),
+            whatsapp_code: z.string().optional(),
+            whatsapp: z.string().optional(),
+            title: z.string().min(1, "Proposal Title is required"),
+            description: z.string().min(1, "Description is required"),
+            quantity: z.string().optional(),
+            quantity_unit: z.string().optional(),
+            target_price: z.string().optional(),
+            currency: z.string().optional(),
+            payment_method: z.string().optional(),
+            delivery_info: z.string().optional(),
+            images: z.array(z.any()).optional(),
+        })
+        .superRefine((data, ctx) => {
+            if (!validateWithPrefix(data.phone, data.phone_code)) {
+                const loc = locations?.find((l) => l.country_code === data.phone_code);
+                const prefix = loc?.phone_code || "";
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Enter a valid number start with ${prefix}.`,
+                    path: ["phone"],
+                });
+            }
+            if (!validateWithPrefix(data.whatsapp, data.whatsapp_code)) {
+                const loc = locations?.find((l) => l.country_code === data.whatsapp_code);
+                const prefix = loc?.phone_code || "";
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Enter a valid number start with ${prefix}.`,
+                    path: ["whatsapp"],
+                });
+            }
+        });
+};
 
 export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSuccess }) {
     const { toast } = useToast();
@@ -100,10 +112,15 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
     const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
     const [searchTimeout, setSearchTimeout] = useState(null);
     const [selectedCompanySlug, setSelectedCompanySlug] = useState("");
-    const [alertMessage, setAlertMessage] = useState(null); // { type: 'success' | 'error', text: string }
+
+    // Re-create schema when locations change
+    const dynamicSchema = React.useMemo(
+        () => createFormSchema(filterOptions.locations),
+        [filterOptions.locations],
+    );
 
     const form = useForm({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(dynamicSchema),
         mode: "onBlur",
         defaultValues: {
             category: "",
@@ -193,7 +210,6 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
             setStep(1);
             form.reset();
             setSelectedCompanySlug("");
-            setAlertMessage(null);
         }
     }, [open, proposalId]);
 
@@ -266,8 +282,19 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
             formData.append("company_name", data.company_name);
             formData.append("company_slug", selectedCompanySlug);
             formData.append("email", data.email);
-            formData.append("phone", data.phone || "");
-            formData.append("whatsapp", data.whatsapp || "");
+
+            const cleanContactValue = (val) => {
+                if (!val) return "";
+                const digits = val.replace(/\D/g, "");
+                // Only send if it matches the valid full number length (10-15 digits)
+                if (digits.length >= 10 && digits.length <= 15) {
+                    return val.replace(/[\s-]/g, ""); // Strip spaces and hyphens for API
+                }
+                return "";
+            };
+
+            formData.append("phone", cleanContactValue(data.phone));
+            formData.append("whatsapp", cleanContactValue(data.whatsapp));
             formData.append("delivery_info", data.delivery_info || "");
 
             if (data.images && data.images.length > 0) {
@@ -280,11 +307,16 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                 });
             }
 
-            const response = await updateSourcingProposal(proposalId, formData, toast, token);
+            const response = await updateSourcingProposal(proposalId, formData, null, token);
 
-            if (response?.status) {
-                onOpenChange(false);
-                if (onSuccess) onSuccess();
+            if (response) {
+                if (response.status) {
+                    showSuccessToast(toast, response.message || "Proposal updated successfully.", { position: "left" });
+                    onOpenChange(false);
+                    if (onSuccess) onSuccess();
+                } else {
+                    showErrorToast(toast, response.message || "Failed to update proposal.", { position: "left" });
+                }
             }
         } catch (error) {
             console.error("Update error:", error);
@@ -294,28 +326,27 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
     };
 
     const handleImageRemove = async (file) => {
-        setAlertMessage(null);
         if (file && file.isExisting && file.id) {
             try {
                 const session = await getSession();
                 const token = session?.accessToken;
                 if (!token) {
-                    setAlertMessage({ type: 'error', text: "Authentication required to delete images." });
+                    showErrorToast(toast, "Authentication required to delete images.", { position: "left" });
                     return false;
                 }
 
                 const response = await deleteSourcingImage(proposalId, file.id, null, token);
 
                 if (response?.status) {
-                    setAlertMessage({ type: 'success', text: response?.message || "Image deleted successfully." });
+                    showSuccessToast(toast, response?.message || "Image deleted successfully.", { position: "left" });
                     return true;
                 } else {
-                    setAlertMessage({ type: 'error', text: response?.message || "Failed to delete image. You might not have permission." });
+                    showErrorToast(toast, response?.message || "Failed to delete image. You might not have permission.", { position: "left" });
                     return false;
                 }
             } catch (error) {
                 console.error("Error deleting image:", error);
-                setAlertMessage({ type: 'error', text: "An unexpected error occurred while deleting the image." });
+                showErrorToast(toast, "An unexpected error occurred while deleting the image.", { position: "left" });
                 return false;
             }
         }
@@ -542,7 +573,9 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                                                                 onValueChange={(val) => {
                                                                                     field.onChange(val);
                                                                                     const loc = filterOptions.locations?.find((l) => l.country_code === val);
-                                                                                    if (loc?.phone_code) form.setValue("phone", loc.phone_code);
+                                                                                    if (loc?.phone_code) {
+                                                                                        form.setValue("phone", loc.phone_code, { shouldValidate: true });
+                                                                                    }
                                                                                 }}
                                                                                 value={field.value}
                                                                                 triggerClassName="w-[80px] text-gray-500 bg-white h-10"
@@ -557,12 +590,26 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                                                 render={({ field }) => (
                                                                     <FormItem className="flex-1">
                                                                         <FormControl>
-                                                                            <Input className="focus:ring-0" placeholder="Ex: 123654789" {...field} />
+                                                                            <Input
+                                                                                className="focus:ring-0"
+                                                                                placeholder="Ex: 123654789"
+                                                                                {...field}
+                                                                                onChange={(e) => {
+                                                                                    const value = e.target.value;
+                                                                                    if (/^[0-9+\s-]*$/.test(value)) {
+                                                                                        field.onChange(value);
+                                                                                    }
+                                                                                }}
+                                                                            />
                                                                         </FormControl>
                                                                     </FormItem>
                                                                 )}
                                                             />
                                                         </div>
+                                                        <FormMessage>
+                                                            {form.formState.errors.phone?.message ||
+                                                                form.formState.errors.phone_code?.message}
+                                                        </FormMessage>
                                                     </div>
 
                                                     <div className="space-y-2">
@@ -579,7 +626,9 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                                                                 onValueChange={(val) => {
                                                                                     field.onChange(val);
                                                                                     const loc = filterOptions.locations?.find((l) => l.country_code === val);
-                                                                                    if (loc?.phone_code) form.setValue("whatsapp", loc.phone_code);
+                                                                                    if (loc?.phone_code) {
+                                                                                        form.setValue("whatsapp", loc.phone_code, { shouldValidate: true });
+                                                                                    }
                                                                                 }}
                                                                                 value={field.value}
                                                                                 triggerClassName="w-[80px] text-gray-500 bg-white h-10"
@@ -594,12 +643,26 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                                                 render={({ field }) => (
                                                                     <FormItem className="flex-1">
                                                                         <FormControl>
-                                                                            <Input className="focus:ring-0" placeholder="Ex: 123654789" {...field} />
+                                                                            <Input
+                                                                                className="focus:ring-0"
+                                                                                placeholder="Ex: 123654789"
+                                                                                {...field}
+                                                                                onChange={(e) => {
+                                                                                    const value = e.target.value;
+                                                                                    if (/^[0-9+\s-]*$/.test(value)) {
+                                                                                        field.onChange(value);
+                                                                                    }
+                                                                                }}
+                                                                            />
                                                                         </FormControl>
                                                                     </FormItem>
                                                                 )}
                                                             />
                                                         </div>
+                                                        <FormMessage>
+                                                            {form.formState.errors.whatsapp?.message ||
+                                                                form.formState.errors.whatsapp_code?.message}
+                                                        </FormMessage>
                                                     </div>
                                                 </div>
                                             </div>
@@ -762,14 +825,6 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
                                             />
 
                                             <div className="space-y-2">
-                                                {alertMessage && (
-                                                    <div className={`mb-4 p-3 rounded-lg flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-300 ${alertMessage.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'}`}>
-                                                        <span className="text-sm font-medium">{alertMessage.text}</span>
-                                                        <button type="button" onClick={() => setAlertMessage(null)} className="ml-2 p-1 hover:bg-black/5 rounded">
-                                                            <XIcon className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                )}
                                                 <StepFormDragDropFile
                                                     name="images"
                                                     control={form.control}

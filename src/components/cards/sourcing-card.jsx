@@ -58,7 +58,7 @@ const SourcingCard = ({ sourcing }) => {
 							{sourcing?.company_name && (
 								<div className="flex flex-wrap gap-2 items-center text-gray-500 mb-3">
 									<span className="font-normal pr-2 border-r border-gray-200">
-										<Link href={`/company/${sourcing?.company_slug}`}>{sourcing?.company_name}</Link>
+										<Link className="hover:text-primary" href={`/company/${sourcing?.company_slug}`}>{sourcing?.company_name}</Link>
 									</span>
 									<span>{formatDateTime(sourcing?.created_at)}</span>
 								</div>

@@ -1,5 +1,5 @@
 // utils/toast.js
-export const showSuccessToast = (toast, message) => {
+export const showSuccessToast = (toast, message, options = {}) => {
     // If message is an object (like API response with comment data), use default message
     const displayMessage = (typeof message === 'object' && message !== null)
         ? 'Submitted successfully!'
@@ -9,10 +9,11 @@ export const showSuccessToast = (toast, message) => {
         title: 'Success',
         description: displayMessage,
         variant: 'success',
+        ...options,
     });
 };
 
-export const showErrorToast = (toast, message) => {
+export const showErrorToast = (toast, message, options = {}) => {
     // If message is an object, use default error message
     const displayMessage = (typeof message === 'object' && message !== null)
         ? 'Request failed!'
@@ -21,6 +22,7 @@ export const showErrorToast = (toast, message) => {
     toast({
         title: 'Error',
         description: displayMessage,
-        variant: 'error',
+        variant: 'destructive',
+        ...options,
     });
 };

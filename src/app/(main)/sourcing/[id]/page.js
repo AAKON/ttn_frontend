@@ -28,6 +28,7 @@ function transformSourcingData(response) {
 		),
 		title: response.data.title,
 		company_name: response.data.company_name,
+		company_slug: response.data.company_slug,
 		category:
 			response.data.product_categories?.map((cat) => cat.name).join(", ") || "",
 		location: response.data.location || "",

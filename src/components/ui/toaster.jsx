@@ -12,10 +12,11 @@ import {
 
 export function Toaster() {
   const { toasts } = useToast()
+  const positionClass = toasts.some((t) => t.position === "left") ? "left-0" : "right-0";
 
   return (
     (<ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({ id, title, description, action, position, ...props }) {
         return (
           (<Toast key={id} {...props}>
             <div className="grid gap-1">
@@ -29,7 +30,7 @@ export function Toaster() {
           </Toast>)
         );
       })}
-      <ToastViewport />
+      <ToastViewport className={positionClass} />
     </ToastProvider>)
   );
 }
