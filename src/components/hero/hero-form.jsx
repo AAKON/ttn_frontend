@@ -2,22 +2,12 @@ import React from "react";
 import Button from "@/components/shared/button";
 import { FilterIcon, WorldMap } from "@/icons";
 import { useRouter } from "next/navigation";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/ui/searchable-select";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,7 +30,6 @@ function HeroForm({
   isFilterIcon = false,
   categories,
   locations,
-  className = "",
 }) {
   const router = useRouter();
   // Function to handle form submission
@@ -121,34 +110,23 @@ function HeroForm({
                     name="businessCategoryIds"
                     render={({ field }) => (
                       <FormItem>
-                        <Select
-                          className={className}
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                        >
-                          <FormControl>
-                            <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
-                              <SelectValue
-                                placeholder="All Categories"
-                                className="text_16"
-                              />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="all_categories">
-                              All Categories
-                            </SelectItem>
-                            {categories?.map((category, index) => (
-                              <SelectItem
-                                key={index}
-                                value={String(category.id)}
-                              >
-                                {category?.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormControl>
+                          <SearchableSelect
+                            options={[
+                              { value: "all", label: "All Categories" },
+                              ...categories.map((category) => ({
+                                value: String(category.id),
+                                label: category.name,
+                              })),
+                            ]}
+                            value={field.value?.toString() || "all"}
+                            onValueChange={(value) => {
+                              field.onChange(value === "all" ? "all" : Number(value));
+                            }}
+                            placeholder="All Categories"
+                            triggerClassName="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left hover:bg-transparent"
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
@@ -158,24 +136,19 @@ function HeroForm({
               Array.isArray(categories) &&
               categories?.length > 0 && (
                 <div className="hidden md:block md:order-1 lg:border-r lg:border-r-gray-300">
-                  <Select className={className}>
-                    <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left">
-                      <SelectValue
-                        placeholder="All Categories"
-                        className="text_16"
-                      />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all_categories">
-                        All Categories
-                      </SelectItem>
-                      {categories?.map((category, index) => (
-                        <SelectItem key={index} value={String(category.id)}>
-                          {category?.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <SearchableSelect
+                    options={[
+                      { value: "all", label: "All Categories" },
+                      ...categories.map((category) => ({
+                        value: String(category.id),
+                        label: category.name,
+                      })),
+                    ]}
+                    value="all"
+                    onValueChange={() => {}}
+                    placeholder="All Categories"
+                    triggerClassName="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-none border-r border-r-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-offset-none bg-transparent text-left hover:bg-transparent"
+                  />
                 </div>
               )}
 
@@ -189,33 +162,28 @@ function HeroForm({
                     name="locationIds"
                     render={({ field }) => (
                       <FormItem>
-                        <Select
-                          className={className}
-                          onValueChange={(value) =>
-                            field.onChange(Number(value))
-                          }
-                        >
-                          <SelectTrigger className="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none relative pl-11  text-left">
-                            <span className="absolute top-0 translate-y-1/2  left-[18px] z-0">
+                        <FormControl>
+                          <div className="relative">
+                            <span className="absolute top-1/2 -translate-y-1/2 left-[18px] z-10 pointer-events-none">
                               <WorldMap />
                             </span>
-                            <SelectValue
+                            <SearchableSelect
+                              options={[
+                                { value: "anywhere", label: "Anywhere" },
+                                ...locations.map((country) => ({
+                                  value: String(country?.id),
+                                  label: country?.name,
+                                })),
+                              ]}
+                              value={field.value?.toString() || "anywhere"}
+                              onValueChange={(value) => {
+                                field.onChange(value === "anywhere" ? "anywhere" : Number(value));
+                              }}
                               placeholder="Anywhere"
-                              className="text_16"
+                              triggerClassName="text-gray-700 font-semibold text-sm leading-5 xs:w-[180px] border-border focus:ring-0 focus:ring-offset-0 focus:ring-offset-none pl-11 text-left hover:bg-transparent"
                             />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="anywhere">Anywhere</SelectItem>
-                            {locations?.map((country) => (
-                              <SelectItem
-                                key={country?.id}
-                                value={String(country?.id)}
-                              >
-                                {country?.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          </div>
+                        </FormControl>
                       </FormItem>
                     )}
                   />
