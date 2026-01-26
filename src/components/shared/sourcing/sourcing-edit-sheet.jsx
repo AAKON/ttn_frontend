@@ -306,8 +306,10 @@ export default function SourcingEditSheet({ open, onOpenChange, proposalId, onSu
 
             const countryCode = data.phone_code || "";
             formData.append("country_code", countryCode);
-            formData.append("phone", countryCode + cleanContactValue(data.phone));
-            formData.append("whatsapp", (data.whatsapp_code || "") + cleanContactValue(data.whatsapp));
+            const cleanPhone = cleanContactValue(data.phone);
+            const cleanWhatsapp = cleanContactValue(data.whatsapp);
+            formData.append("phone", cleanPhone ? countryCode + cleanPhone : "");
+            formData.append("whatsapp", cleanWhatsapp ? (data.whatsapp_code || "") + cleanWhatsapp : "");
             formData.append("delivery_info", data.delivery_info || "");
 
             if (data.images && data.images.length > 0) {
