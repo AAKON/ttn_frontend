@@ -36,9 +36,9 @@ function transformSourcingData(response) {
 		proposal_views: response.data.view_count || 0,
 		images: response.data.images_urls || [],
 		description: response.data.description || "",
-		quantity: `${response.data.quantity} ${response.data.unit}`,
-		target_price: `${response.data.currency} ${response.data.price}`,
-		payment_methods: response.data.payment_method?.replace("_", " ") || "",
+		quantity: response.data.quantity ? `${response.data.quantity} ${response.data.unit || ''}`.trim() : null,
+		target_price: response.data.price ? `${response.data.currency || ''} ${response.data.price}`.trim() : null,
+		payment_methods: response.data.payment_method?.replace("_", " ") || null,
 		is_favorite: response.data.is_favorited || false,
 		contact: {
 			email: response.data.email || "",
@@ -151,23 +151,31 @@ export default async function SourcingDetails({ params }) {
 								</div>
 
 								{/* Details Grid - Server Rendered */}
-								<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-									<SourcingInfoCard
-										icon={<QuantityIcon stroke="#F7931E" />}
-										label="Quantity"
-										value={sourcing.quantity}
-									/>
-									<SourcingInfoCard
-										icon={<TargetIcon stroke="#F7931E" />}
-										label="Target Price/Unit"
-										value={sourcing.target_price}
-									/>
-									<SourcingInfoCard
-										icon={<PaymentIcon stroke="#F7931E" />}
-										label="Payment Methods"
-										value={sourcing.payment_methods}
-									/>
-								</div>
+								{(sourcing.quantity || sourcing.target_price || sourcing.payment_methods) && (
+									<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+										{sourcing.quantity && (
+											<SourcingInfoCard
+												icon={<QuantityIcon stroke="#F7931E" />}
+												label="Quantity"
+												value={sourcing.quantity}
+											/>
+										)}
+										{sourcing.target_price && (
+											<SourcingInfoCard
+												icon={<TargetIcon stroke="#F7931E" />}
+												label="Target Price/Unit"
+												value={sourcing.target_price}
+											/>
+										)}
+										{sourcing.payment_methods && (
+											<SourcingInfoCard
+												icon={<PaymentIcon stroke="#F7931E" />}
+												label="Payment Methods"
+												value={sourcing.payment_methods}
+											/>
+										)}
+									</div>
+								)}
 							</div>
 
 							{/* Client Components Wrapper - Contains Comments */}

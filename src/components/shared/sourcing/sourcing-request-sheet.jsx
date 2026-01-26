@@ -57,7 +57,7 @@ const createFormSchema = (locations) => {
 			category: z.string().min(1, "Category is required"),
 			country: z.string().min(1, "Country is required"),
 			company_name: z.string().min(1, "Company Name is required"),
-			email: z.string().email("Invalid email address").min(1, "Email is required"),
+			email: z.string().optional().refine((val) => !val || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), { message: "Invalid email address" }),
 			phone_code: z.string().optional(),
 			phone: z.string().optional(),
 			whatsapp_code: z.string().optional(),
@@ -372,6 +372,19 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 			"whatsapp",
 		]);
 		if (result) {
+			// Check if at least one contact field is filled
+			const email = form.getValues("email");
+			const phone = form.getValues("phone");
+			const whatsapp = form.getValues("whatsapp");
+
+			const hasValidPhone = phone && phone.replace(/\D/g, "").length >= 10;
+			const hasValidWhatsapp = whatsapp && whatsapp.replace(/\D/g, "").length >= 10;
+			const hasValidEmail = email && email.trim().length > 0;
+
+			if (!hasValidEmail && !hasValidPhone && !hasValidWhatsapp) {
+				showErrorToast(toast, "Please provide at least one contact method (Email, Phone, or WhatsApp).", { position: "left" });
+				return;
+			}
 			setStep(2);
 		}
 	};
@@ -627,7 +640,7 @@ export default function SourcingRequestSheet({ open, onOpenChange }) {
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel className="text-sm text-gray-900">
-															Email <RequiredStar />
+															Email
 														</FormLabel>
 														<FormControl>
 															<Input
