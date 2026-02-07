@@ -119,7 +119,7 @@ const SourcingCard = ({ sourcing }) => {
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button secondary className="w-full">
-							Contact Supplier
+							Contact Buyer
 						</Button>
 					</DialogTrigger>
 					<DialogContent className="sm:max-w-[400px] p-6 !rounded-2xl">
