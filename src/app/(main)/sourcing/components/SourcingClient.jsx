@@ -21,6 +21,7 @@ import PopupSourcingFilter from "./popup-sourcing-filter";
 import SourcingCardSkeleton from "@/components/shared/skelton/SourcingCardSkeleton";
 import GetInTouch from "@/components/get-in-touch/get-in-touch";
 import Link from "next/link";
+import SelectedOptionsSourcing from "./selectedOptionsSourcing";
 
 const SourcingClient = ({
 	initialSourcings,
@@ -165,6 +166,64 @@ const SourcingClient = ({
 				updatedFilters.price_range = isChecked ? id : null;
 			} else if (key === "businessCategoryIds") {
 				updatedFilters.product_category_id = isChecked ? id : null;
+			}
+			return updatedFilters;
+		});
+	};
+
+	// Get selected options for display
+	const getSelectedOptions = () => {
+		const selected = [];
+
+		// Map location
+		if (filters.location_id) {
+			const location = locations?.find((loc) => loc.id === filters.location_id);
+			if (location) {
+				selected.push({
+					key: "location_id",
+					id: location.id,
+					name: location.name,
+				});
+			}
+		}
+
+		// Map category
+		if (filters.product_category_id) {
+			const category = categories?.find(
+				(cat) => cat.id === filters.product_category_id
+			);
+			if (category) {
+				selected.push({
+					key: "product_category_id",
+					id: category.id,
+					name: category.name,
+				});
+			}
+		}
+
+		// Map price range
+		if (filters.price_range) {
+			const priceRange = priceRanges?.find(
+				(range) => range.id === filters.price_range
+			);
+			if (priceRange) {
+				selected.push({
+					key: "price_range",
+					id: priceRange.id,
+					name: priceRange.label,
+				});
+			}
+		}
+
+		return selected;
+	};
+
+	// Remove selected filter
+	const handleRemoveFilter = (key, id) => {
+		setFilters((prevFilters) => {
+			const updatedFilters = { ...prevFilters };
+			if (updatedFilters[key] === id || updatedFilters[key] === id.toString()) {
+				updatedFilters[key] = null;
 			}
 			return updatedFilters;
 		});
@@ -329,6 +388,12 @@ const SourcingClient = ({
 								</span>
 							</div>
 						</div>
+
+						{/* Selected Options */}
+						<SelectedOptionsSourcing
+							selectedOptions={getSelectedOptions()}
+							onRemove={handleRemoveFilter}
+						/>
 
 						{loading && <SourcingCardSkeleton />}
 
