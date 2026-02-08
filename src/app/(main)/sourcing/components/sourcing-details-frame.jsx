@@ -1,8 +1,15 @@
+"use client";
 import Image from "next/image";
 import Button from "@/components/shared/button";
 import { Container } from "@/shared";
 import AU from "@/assets/AU.png";
 import CodeBlue from "@/assets/CodeBlue.svg";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { delSourcingProposal } from "@/services/company";
+import ConfirmDeleteDialogSm from "@/app/(main)/myaccount/company/edit/[slug]/_components/confirmDeleteDialogSm";
+import SourcingEditSheet from "@/components/shared/sourcing/sourcing-edit-sheet";
 
 import {
 	BuildingTwoIcon,
@@ -17,7 +24,8 @@ import BookmarkProposal from "./bookmarkProposal";
 import Claim from "@/app/(main)/company/[slug]/components/claim";
 import ShareModal from "@/components/company/share-modal";
 
-const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
+
+const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className, isOwner }) => {
 	const {
 		title,
 		company_name,
@@ -25,16 +33,68 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 		category,
 		location,
 		posted_date,
+		status,
 		proposal_views,
 	} = headerData;
+
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
+	const { toast } = useToast();
+	const router = useRouter();
+
+	const handleRemove = async () => {
+		setIsDeleting(true);
+		try {
+			const response = await delSourcingProposal(slug, toast);
+			if (response) {
+				router.push("/myaccount/profile#sourcing");
+			}
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setIsDeleting(false);
+			setOpenDialog(false);
+		}
+	};
+
+
+	const statusStyles = {
+		pending: "bg-status-pending text-status-pending",
+		approved: "bg-status-approved text-status-approved",
+		rejected: "bg-status-rejected text-status-rejected",
+	};
 
 	return (
 		<div className={`relative ${className}`}>
 			<div className="bg-white border border-gray-100 p-4 lg:p-6 xl:p-8 rounded-2xl grid grid-cols-1 gap-6 xl:gap-8">
 				<div className="">
 					<div className="grid grid-cols-[1fr_auto] gap-2">
-						<p>{posted_date}</p>
+						<div className="flex items-center gap-2">
+							<p>{posted_date}</p>
+							<p className={`text-sm font-medium capitalize ${statusStyles[status] || statusStyles.pending} bg-opacity-5 px-2 py-1 rounded-[6px]`}>{status}</p>
+						</div>
 						<div className="flex lg:gap-4 gap-2">
+							{isOwner && (
+								<ConfirmDeleteDialogSm
+									isDelCompany
+									showLabel={false}
+									open={openDialog}
+									setOpen={setOpenDialog}
+									onConfirm={handleRemove}
+									isDeleting={isDeleting}
+									triggerVariant="secondary"
+									triggerClassName="!p-3 lg:!size-[48px] !text-gray-400"
+								/>
+							)}
+							{isOwner && (
+								<Button
+									secondary className="!p-3 lg:!size-[48px] !text-gray-400"
+									onClick={() => setOpenEdit(true)}
+								>
+									<EditIcon />
+								</Button>
+							)}
 							<ShareModal />
 							<BookmarkProposal
 								id={slug}
@@ -69,6 +129,12 @@ const SourcingDetailsFrame = ({ slug, headerData, is_favorite, className }) => {
 					/>
 				</div>
 			</div>
+			<SourcingEditSheet
+				open={openEdit}
+				onOpenChange={setOpenEdit}
+				proposalId={slug}
+				onSuccess={() => router.refresh()}
+			/>
 		</div>
 	);
 };
@@ -93,7 +159,7 @@ export function LdtCard({ icon, text, title, ExtSrc, href }) {
 				)}
 				{ExtSrc && (
 					<div className="w-6 h-6 overflow-hidden rounded-full">
-						<img src={ExtSrc} alt="flag" />
+						<img className="size-6 object-cover" src={ExtSrc} alt="flag" />
 					</div>
 				)}
 			</div>

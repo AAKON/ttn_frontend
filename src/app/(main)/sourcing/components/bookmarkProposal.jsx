@@ -36,12 +36,12 @@ function BookmarkProposal({ id, is_favorite: initialFavorite, heartIcon = false 
     return (
         <div className="flex gap-1">
             <Button
-                secondary={!isFavorite}
-                className={`${isFavorite ? 'border-brand-600' : 'border-brand-300'} lg:text-[16px] text-[14px] !font-semibold lg:!size-[48px] !p-3`}
+                secondary
+                className={`${isFavorite ? '!border-brand-100' : ''} lg:text-[16px] text-[14px] !font-semibold lg:!size-[48px] !p-3 text-gray-400`}
                 disabled={isAdding}
                 onClick={() => handleToggleFavourite(id)}
             >
-                {heartIcon ? <HeartIcon stroke={isFavorite ? '#ffffff' : '#98A2B3'} fill={isFavorite ? '#ffffff' : 'none'} /> : <BookmarkIcon stroke={isFavorite ? '#ffffff' : '#f7931e'} />}
+                {heartIcon ? <HeartIcon stroke={isFavorite ? '#C67618' : '#98A2B3'} fill={isFavorite ? '#ffffff' : 'none'} /> : <BookmarkIcon stroke={isFavorite ? '#C67618' : '#f7931e'} />}
             </Button>
         </div>
     );

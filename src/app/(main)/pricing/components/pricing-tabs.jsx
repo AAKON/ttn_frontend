@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/shared";
 import { CheckVerifiedIcon } from "@/components/icons/check-verified"; // Updated import
-import { ChevronDownIcon } from "@/components/icons";
 import Button from "@/components/shared/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronDown, ChevronUp } from "lucide-react";
 
 import { getPricingList } from "@/services/pricing";
 
@@ -52,16 +51,16 @@ function PricingTabs() {
 				isContact:
 					p.price?.toLowerCase().includes("contact") ||
 					p.price?.toLowerCase().includes("win-win"),
-				features: services.slice(0, 3),
-				moreFeatures: [...services.slice(3), ...benefits],
-				hasMore: services.length > 3 || benefits.length > 0,
+				features: services.slice(0, 5),
+				moreFeatures: [...services.slice(5), ...benefits],
+				hasMore: services.length > 5 || benefits.length > 0,
 				buttonText:
 					(
 						p.price?.toLowerCase().includes("contact") ||
 						p.price?.toLowerCase().includes("win-win")
 					) ?
 						"Contact Us"
-					:	"Get Started",
+						: "Get Started",
 				buttonLink: "/contact",
 				shortText: p.bt_short_text,
 			};
@@ -88,7 +87,7 @@ function PricingTabs() {
 								Loading Pricings...
 							</span>
 						</div>
-					:	<TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
+						: <TabsList className="!h-auto flex justify-center !bg-transparent pl-0">
 							<div className="bg-gray-50 p-2 rounded-[12px] !inline-flex justify-center border border-gray-100">
 								{arr.map((el, idx) => {
 									return (
@@ -118,7 +117,7 @@ function PricingTabs() {
 									tabData[tabName].map((plan, index) => (
 										<PricingCard key={index} plan={plan} />
 									))
-								:	<div className="col-span-full py-20 text-center">
+									: <div className="col-span-full py-20 text-center">
 										<p className="text-xl text-gray-500">
 											No pricing plans available for this category.
 										</p>
@@ -156,7 +155,7 @@ function PricingCard({ plan }) {
 								For Price
 							</div>
 						</div>
-					:	<div className="text-[26px] font-bold text-gray-900">
+						: <div className="text-[26px] font-bold text-gray-900">
 							{plan.price}
 						</div>
 					}
@@ -196,13 +195,11 @@ function PricingCard({ plan }) {
 						className="bg-transparent p-1 flex items-center gap-1.5 text-brand-700 text-sm font-medium mt-4 hover:underline"
 					>
 						{showMore ? "Show Less Services" : "Show More Services"}
-						<ChevronDownIcon
-							stroke="#C67618"
-							className={cn(
-								"w-4 h-4 transition-transform",
-								showMore && "rotate-180",
-							)}
-						/>
+						{showMore ? (
+							<ChevronUp className="w-4 h-4" color="#C67618" />
+						) : (
+							<ChevronDown className="w-4 h-4" color="#C67618" />
+						)}
 					</button>
 				)}
 			</div>

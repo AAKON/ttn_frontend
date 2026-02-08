@@ -9,18 +9,20 @@ export default function ContactSheet({ sourcing }) {
 	return (
 		<>
 			{/* Mobile Contact Button */}
-			<div className="lg:hidden">
-				<button
-					onClick={() => setShowContact(true)}
-					className="w-full bg-brand-600 text-white py-3 px-4 rounded-xl flex items-center justify-between cursor-pointer shadow-sm hover:bg-brand-700 transition-colors"
-				>
-					<span className="font-semibold">Contact With Business Owner</span>
-					<ChevronUp className="w-5 h-5 text-white" />
-				</button>
-			</div>
+			{sourcing.status !== "pending" && (
+				<div className="lg:hidden">
+					<button
+						onClick={() => setShowContact(true)}
+						className="w-full bg-brand-600 text-white py-3 px-4 rounded-xl flex items-center justify-between cursor-pointer shadow-sm hover:bg-brand-700 transition-colors"
+					>
+						<span className="font-semibold">Contact Buyer</span>
+						<ChevronUp className="w-5 h-5 text-white" />
+					</button>
+				</div>
+			)}
 
 			{/* Mobile Bottom Sheet/Modal */}
-			{showContact && (
+			{showContact && sourcing.status !== "pending" && (
 				<div className="fixed inset-0 z-[9999] lg:hidden flex items-end justify-center sm:items-center mx-5 lg:mx-0 mb-5 lg:mb-0">
 					{/* Backdrop */}
 					<div
@@ -31,7 +33,7 @@ export default function ContactSheet({ sourcing }) {
 					<div className="relative bg-white w-full sm:w-[480px] sm:rounded-2xl rounded-2xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300 max-h-[90vh] overflow-y-auto">
 						<div className="flex justify-between items-center mb-6">
 							<h3 className="text-lg font-bold text-gray-900">
-								Contact With Business Owner
+								Contact Buyer
 							</h3>
 							<button
 								onClick={() => setShowContact(false)}

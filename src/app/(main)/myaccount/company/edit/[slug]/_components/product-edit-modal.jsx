@@ -1,5 +1,5 @@
 "use client";
-import {EditIcon} from "@/components/icons";
+import { EditIcon } from "@/components/icons";
 import Button from "@/components/shared/button";
 import {
     Dialog,
@@ -10,11 +10,11 @@ import {
     DialogOverlay
 } from "@/components/ui/dialog";
 
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useForm} from "react-hook-form";
-import {string, z} from "zod";
-import {useToast} from "@/hooks/use-toast";
-import {useState} from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { string, z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 import {
     Form,
@@ -31,36 +31,36 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {Input} from "@/components/ui/input";
-import {Loader2} from "lucide-react";
-import {formLabelClasses, inputClasses} from "@/utils/input-style";
-import {ScrollArea} from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
+import { formLabelClasses, inputClasses } from "@/utils/input-style";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import DragDropFile from "@/components/shared/DragDropFile";
-import {updateProductReq, uploadProductReq} from "@/services/product";
+import { updateProductReq, uploadProductReq } from "@/services/product";
 
 const labelStyle = formLabelClasses;
 const inputStyle = inputClasses + " " + "h-9 bg-gray-50";
 
 const formSchema = z.object({
-    product_category_id: z.string({required_error: "Please select category."}),
+    product_category_id: z.string({ required_error: "Please select category." }),
     image: z.any().optional(),
-    name: z.string().min(3, {message: "Product name is required"}),
-    price_min: z.coerce.number().min(1, {message: "Minimum price is required"}),
+    name: z.string().min(3, { message: "Product name is required" }),
+    price_min: z.coerce.number().min(1, { message: "Minimum price is required" }),
     price_max: z.union([z.coerce.number(), z.nan()]).optional(),
-    moq: z.coerce.number().min(1, {message: "Minimum order is required"})
+    moq: z.coerce.number().min(1, { message: "Minimum order is required" })
 });
 
 const ProductEditModal = ({
-                              children = (
-                                  <Button secondary type="button">
-                                      <EditIcon stroke="#667085"/>
-                                  </Button>
-                              ),
-                              preData,
-                              slug,
-                              data,
-                              onSuccess,
-                          }) => {
+    children = (
+        <Button secondary type="button">
+            <EditIcon stroke="#667085" />
+        </Button>
+    ),
+    preData,
+    slug,
+    data,
+    onSuccess,
+}) => {
     const [isOpen, setIsOpen] = useState(false);
     const handleDialogClose = () => {
         setIsOpen(false);
@@ -69,7 +69,7 @@ const ProductEditModal = ({
     return (
         <Dialog>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] z-50">
+            <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
                     <DialogTitle>Edit product</DialogTitle>
                 </DialogHeader>
@@ -96,9 +96,9 @@ const ProductEditModal = ({
     );
 };
 
-const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
+const ProductUpdateForm = ({ preData, slug, data, onUpdateSuccess }) => {
     const [loading, setLoading] = useState(false);
-    const {toast} = useToast();
+    const { toast } = useToast();
 
     const id = data?.id;
 
@@ -131,7 +131,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
     const {
         control,
         handleSubmit,
-        formState: {errors},
+        formState: { errors },
     } = form;
 
     const onSubmit = async (data) => {
@@ -176,7 +176,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                 <FormField
                     control={form.control}
                     name="product_category_id"
-                    render={({field}) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel>
                                 Category <span className="text-red-600">*</span>
@@ -225,7 +225,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                 <FormField
                     control={form.control}
                     name="name"
-                    render={({field}) => (
+                    render={({ field }) => (
                         <FormItem>
                             <FormLabel className={labelStyle}>
                                 Product Title <span className="text-red-600">*</span>
@@ -238,7 +238,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                                     {...field}
                                 />
                             </FormControl>
-                            <FormMessage/>
+                            <FormMessage />
                         </FormItem>
                     )}
                 />
@@ -248,7 +248,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                         control={form.control}
                         name="price_min"
                         onValueChange={(value) => field.onChange(value)}
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className={labelStyle}>
                                     Product Price (Min) <span className="text-red-600">*</span>
@@ -278,24 +278,23 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                                         }}
                                     />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
                     <div className="w-2.5 flex item-center">
                         <div
-                            className={`h-[1px] bg-gray-300 self-center w-full ${
-                                form.formState.errors.price_min ||
+                            className={`h-[1px] bg-gray-300 self-center w-full ${form.formState.errors.price_min ||
                                 form.formState.errors.price_max
-                                    ? "mt-[-15px]"
-                                    : "mt-[30px]"
-                            }`}
+                                ? "mt-[-15px]"
+                                : "mt-[30px]"
+                                }`}
                         ></div>
                     </div>
                     <FormField
                         control={form.control}
                         name="price_max"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className={labelStyle}>
                                     Product Price (Max)
@@ -325,7 +324,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                                         }}
                                     />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
@@ -334,7 +333,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                     <FormField
                         control={form.control}
                         name="moq"
-                        render={({field}) => (
+                        render={({ field }) => (
                             <FormItem className="w-full">
                                 <FormLabel className={labelStyle}>
                                     Minimum Order Quantity (MOQ) <span className="text-red-600">*</span>
@@ -365,17 +364,16 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                                         }}
                                     />
                                 </FormControl>
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
                     <div className="w-2.5 flex item-center">
                         <div
-                            className={`h-[1px] bg-gray-300 self-center w-full ${
-                                form.formState.errors.moq_min || form.formState.errors.moq_max
-                                    ? "mt-[-15px]"
-                                    : "mt-[30px]"
-                            }`}
+                            className={`h-[1px] bg-gray-300 self-center w-full ${form.formState.errors.moq_min || form.formState.errors.moq_max
+                                ? "mt-[-15px]"
+                                : "mt-[30px]"
+                                }`}
                         ></div>
                     </div>
                 </div>
@@ -388,7 +386,7 @@ const ProductUpdateForm = ({preData, slug, data, onUpdateSuccess}) => {
                     >
                         {loading ? (
                             <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Please wait
                             </>
                         ) : (

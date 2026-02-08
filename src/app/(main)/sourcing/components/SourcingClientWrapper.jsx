@@ -12,6 +12,11 @@ export default function SourcingClientWrapper({ initialSourcing, sourcingId }) {
 		}));
 	};
 
+	// Don't show comments section when status is pending
+	if (sourcing.status === "pending") {
+		return null;
+	}
+
 	return (
 		<CommentsSection
 			sourcingId={sourcingId}

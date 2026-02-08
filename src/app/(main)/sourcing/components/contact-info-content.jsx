@@ -110,30 +110,32 @@ const ContactInfoContent = ({ sourcing }) => {
 			)}
 
 			{/* Action Buttons */}
-			<div className="grid grid-cols-2 gap-4">
-				{sourcing.contact.email && (
-					<Button
-						TagName="a"
-						href={`mailto:${sourcing.contact.email}`}
-						primaryOutline
-						className="w-full"
-					>
-						Send Email
-					</Button>
-				)}
-				{sourcing.contact.whatsapp && (
-					<Button
-						TagName="a"
-						href={`https://wa.me/${displayWhatsapp.replace(/\D/g, "")}`}
-						target="_blank"
-						rel="noopener noreferrer"
-						primary
-						className="w-full relative left-0"
-					>
-						WhatsApp
-					</Button>
-				)}
-			</div>
+			{sourcing.status !== "pending" && (
+				<div className="grid grid-cols-2 gap-4">
+					{sourcing.contact.email && (
+						<Button
+							TagName="a"
+							href={`mailto:${sourcing.contact.email}`}
+							primaryOutline
+							className="w-full"
+						>
+							Send Email
+						</Button>
+					)}
+					{sourcing.contact.whatsapp && (
+						<Button
+							TagName="a"
+							href={`https://wa.me/${displayWhatsapp.replace(/\D/g, "")}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							primary
+							className="w-full relative left-0"
+						>
+							WhatsApp
+						</Button>
+					)}
+				</div>
+			)}
 		</div>
 	);
 };

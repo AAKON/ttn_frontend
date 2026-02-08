@@ -46,12 +46,13 @@ const Sourcing = () => {
 
     return (
         <div className='space-y-4'>
-            <MySourcing heading={'My Sourcing Proposal'} type={'mySourcing'} proposals={myProposals} onItemRemove={fetchMyProposals} />
+            <MySourcing heading={'My Proposal'} type={'mySourcing'} proposals={myProposals} onItemRemove={fetchMyProposals} />
             <FavProposal
                 heading={'My Favourites'}
                 type={'myFavourites'}
                 proposals={favProposals}
                 onItemRemove={fetchFavProposals}
+                onFavoriteToggle={fetchFavProposals}
             />
         </div>
     )

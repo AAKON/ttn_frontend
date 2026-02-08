@@ -35,6 +35,7 @@ module.exports = {
 				},
 				brand: {
 					50: "#FEF4E8",
+					100: "#FCD4A5",
 					200: "#FDDFBB",
 					300: "#f9a94b",
 					400: "#f9a94b",
@@ -42,6 +43,11 @@ module.exports = {
 					600: "#f7931e",
 					700: "#c67618",
 					900: "#945812",
+				},
+				status: {
+					pending: "#0044CC",
+					approved: "#17B26A",
+					rejected: "#F04438",
 				},
 				background: "hsl(var(--background))",
 				foreground: "hsl(var(--foreground))",

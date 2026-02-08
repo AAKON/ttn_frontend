@@ -46,7 +46,7 @@ export const SearchableSelect = React.forwardRef(
 						role="combobox"
 						aria-expanded={open}
 						className={cn(
-							"w-full justify-between font-normal",
+							"w-full h-11 justify-between font-normal",
 							!value && "text-muted-foreground",
 							triggerClassName,
 						)}
@@ -69,7 +69,7 @@ export const SearchableSelect = React.forwardRef(
 							placeholder={searchPlaceholder}
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
-							className="flex h-10 w-full !border-none !outline-none !ring-0 !ring-offset-0 !ring-offset-transparent"
+							className="flex h-11 w-full !border-none !outline-none !ring-0 !ring-offset-0 !ring-offset-transparent"
 						/>
 					</div>
 					<ScrollArea className="h-60">

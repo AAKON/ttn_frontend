@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -11,11 +11,11 @@ import {
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import Button from "@/components/shared/button";
-import {DeleteIcon} from "@/icons";
+import { DeleteIcon } from "@/icons";
 import { Loader2 } from "lucide-react";
-import {Trash} from "lucide-react";
+import { Trash } from "lucide-react";
 
-function ConfirmDeleteDialogSm({ open, isDelCompany=false, setOpen, onConfirm, isDeleting }) {
+function ConfirmDeleteDialogSm({ open, isDelCompany = false, setOpen, onConfirm, isDeleting, showLabel = true, triggerClassName, triggerVariant = "deleteOutline" }) {
 
     const handleConfirm = () => {
         onConfirm();
@@ -26,17 +26,22 @@ function ConfirmDeleteDialogSm({ open, isDelCompany=false, setOpen, onConfirm, i
         <AlertDialog className="z-50" open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
                 {isDelCompany ? (
-                    <Button type="button" deleteOutline className="group text-red-600 border-red-600">
+                    <Button
+                        type="button"
+                        deleteOutline={triggerVariant === "deleteOutline"}
+                        secondary={triggerVariant === "secondary"}
+                        className={triggerClassName || "group text-red-600 border-red-600"}
+                    >
                         <Trash width={20} />
-                        Remove
+                        {showLabel && "Remove"}
                     </Button>) : (
-                <Button
-                    secondary
-                    className="size-7 !p-1 !rounded-none border-none"
-                    type="button"
-                >
-                    <DeleteIcon stroke="#F04438" />
-                </Button>)}
+                    <Button
+                        secondary
+                        className="size-7 !p-1 !rounded-none border-none"
+                        type="button"
+                    >
+                        <DeleteIcon stroke="#F04438" />
+                    </Button>)}
 
             </AlertDialogTrigger>
             <AlertDialogContent>

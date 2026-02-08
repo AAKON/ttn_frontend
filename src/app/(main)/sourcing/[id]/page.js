@@ -12,20 +12,16 @@ import { PaymentIcon } from "@/components/icons/payment-icon";
 import ImageSlider from "../components/ImageSlider";
 import SourcingClientWrapper from "../components/SourcingClientWrapper";
 import ContactSheet from "../components/ContactSheet";
+import { formatDateTime } from "@/utils/dateFormatter";
 
 // Server Component - Data transformation helper
 function transformSourcingData(response) {
 	return {
 		id: response.data.id,
 		slug: response.data.id,
-		posted_date: new Date(response.data.created_at).toLocaleDateString(
-			"en-US",
-			{
-				day: "numeric",
-				month: "short",
-				year: "numeric",
-			}
-		),
+		user_email: response.data.user?.email,
+		posted_date: formatDateTime(response.data.created_at),
+		status: response.data.status,
 		title: response.data.title,
 		company_name: response.data.company_name,
 		company_slug: response.data.company_slug,
@@ -98,7 +94,6 @@ export default async function SourcingDetails({ params }) {
 		error = "An error occurred while loading the sourcing proposal";
 	}
 
-
 	// Error state
 	if (error) {
 		return (
@@ -130,6 +125,7 @@ export default async function SourcingDetails({ params }) {
 						slug={sourcing.slug}
 						headerData={sourcing}
 						is_favorite={sourcing.is_favorite}
+						isOwner={session?.user?.email === sourcing.user_email}
 					/>
 
 					{/* Main Content Grid */}

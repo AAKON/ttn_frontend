@@ -19,11 +19,12 @@ export default function ImageSlider({ images, title }) {
 		type: "slide",
 		autoplay: false,
 		rewind: false,
+		heightRatio: 0.36,
 		perPage: 3,
 		perMove: 1,
 		gap: "20px",
 		pagination: false,
-		arrows: true,
+		arrows: images?.length > 3,
 		padding: { right: "80px" },
 		drag: true,
 		snap: true,
@@ -31,6 +32,7 @@ export default function ImageSlider({ images, title }) {
 			768: {
 				perPage: 2,
 				padding: { right: "60px" },
+				arrows: images?.length > 2,
 			},
 		},
 	};
@@ -53,14 +55,14 @@ export default function ImageSlider({ images, title }) {
 							<SplideSlide key={index}>
 								<div
 									onClick={() => handleImageClick(image)}
-									className="cursor-pointer hover:opacity-90 transition-opacity"
+									className="h-full cursor-pointer hover:opacity-90 transition-opacity"
 								>
 									<Image
 										src={image.thumbnail}
 										alt={title}
 										width={240}
 										height={180}
-										className="w-full min-h-[100px] h-auto object-cover rounded-lg"
+										className="w-full h-full min-h-[100px] object-cover rounded-lg"
 									/>
 									{image.mime_type === "application/pdf" && (
 										<div className="absolute inset-0 flex items-center justify-center bg-black/5 backdrop-blur-[1px] rounded-lg">

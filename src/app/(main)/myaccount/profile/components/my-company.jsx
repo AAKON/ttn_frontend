@@ -7,12 +7,14 @@ import "@splidejs/react-splide/css";
 
 const MyCompany = ({ heading, type, onItemRemove, companies }) => {
   let splideRef = null;
+  const isDisabled = !companies || companies.length <= 2;
+
   const handlePrev = () => {
-    if (splideRef) splideRef.go("<");
+    if (splideRef && !isDisabled) splideRef.go("<");
   };
 
   const handleNext = () => {
-    if (splideRef) splideRef.go(">");
+    if (splideRef && !isDisabled) splideRef.go(">");
   };
 
   const options = {
@@ -54,8 +56,9 @@ const MyCompany = ({ heading, type, onItemRemove, companies }) => {
         </h3>
         <div className="flex justify-end gap-3">
           <button
-            className="custom-arrow prev-arrow border border-gray-300 p-1 size-9 bg-white text-gray-900 hover:bg-brand-600 hover:border-brand-600 transition-all group"
+            className={`custom-arrow prev-arrow border border-gray-300 p-1 size-9 bg-white text-gray-900 transition-all group ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-brand-600 hover:border-brand-600'}`}
             onClick={handlePrev}
+            disabled={isDisabled}
           >
             <svg
               width={8}
@@ -70,13 +73,14 @@ const MyCompany = ({ heading, type, onItemRemove, companies }) => {
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="stroke-gray-900 group-hover:stroke-white transition-all"
+                className={`stroke-gray-900 transition-all ${!isDisabled && 'group-hover:stroke-white'}`}
               />
             </svg>
           </button>
           <button
-            className="custom-arrow next-arrow border border-gray-300 p-1 size-9 bg-white text-gray-900 hover:bg-brand-600 hover:border-brand-600 transition-all group"
+            className={`custom-arrow next-arrow border border-gray-300 p-1 size-9 bg-white text-gray-900 transition-all group ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-brand-600 hover:border-brand-600'}`}
             onClick={handleNext}
+            disabled={isDisabled}
           >
             <svg
               width={8}
@@ -91,7 +95,7 @@ const MyCompany = ({ heading, type, onItemRemove, companies }) => {
                 strokeWidth={2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="stroke-gray-900 group-hover:stroke-white transition-all"
+                className={`stroke-gray-900 transition-all ${!isDisabled && 'group-hover:stroke-white'}`}
               />
             </svg>
           </button>
