@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@/components/shared/button";
 import { WorldMap } from "@/icons";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -38,6 +38,13 @@ export default function HeroCompanyForm({
       keyword: keyword ? keyword : "",
     },
   });
+
+  // Sync keyword field when keyword prop changes (from URL or Tags click)
+  useEffect(() => {
+    if (keyword !== undefined) {
+      form.setValue("keyword", keyword || "");
+    }
+  }, [keyword, form]);
 
   const onSubmit = async (data) => {
     if (onSearchSubmit) {

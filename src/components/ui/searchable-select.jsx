@@ -23,6 +23,7 @@ export const SearchableSelect = React.forwardRef(
 			emptyMessage = "No item found.",
 			className,
 			triggerClassName,
+			multiple = false,
 			...props
 		},
 		ref,
@@ -34,7 +35,52 @@ export const SearchableSelect = React.forwardRef(
 			option.label?.toLowerCase().includes(searchTerm.toLowerCase()),
 		);
 
+		// For single select
 		const selectedOption = options.find((option) => option.value === value);
+
+		// For multi-select: check if a value is selected
+		const isSelected = (optionValue) => {
+			if (multiple) {
+				return Array.isArray(value) && value.includes(optionValue);
+			}
+			return value === optionValue;
+		};
+
+		// Get display text for trigger button
+		const getDisplayText = () => {
+			if (multiple) {
+				if (!Array.isArray(value) || value.length === 0) {
+					return placeholder;
+				}
+				const selectedLabels = options
+					.filter((opt) => value.includes(opt.value))
+					.map((opt) => opt.label);
+				if (selectedLabels.length === 1) {
+					return selectedLabels[0];
+				}
+				return `${selectedLabels.length} selected`;
+			}
+			return selectedOption ? selectedOption.label : placeholder;
+		};
+
+		// Handle option click
+		const handleOptionClick = (optionValue) => {
+			if (multiple) {
+				const currentValues = Array.isArray(value) ? value : [];
+				if (currentValues.includes(optionValue)) {
+					// Remove if already selected
+					onValueChange(currentValues.filter((v) => v !== optionValue));
+				} else {
+					// Add if not selected
+					onValueChange([...currentValues, optionValue]);
+				}
+				// Don't close popover for multi-select
+			} else {
+				onValueChange(optionValue);
+				setOpen(false);
+				setSearchTerm("");
+			}
+		};
 
 		return (
 			<Popover open={open} onOpenChange={setOpen}>
@@ -48,11 +94,12 @@ export const SearchableSelect = React.forwardRef(
 						className={cn(
 							"w-full h-11 justify-between font-normal",
 							!value && "text-muted-foreground",
+							multiple && Array.isArray(value) && value.length === 0 && "text-muted-foreground",
 							triggerClassName,
 						)}
 						{...props}
 					>
-						{selectedOption ? selectedOption.label : placeholder}
+						{getDisplayText()}
 						<ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 					</Button>
 				</PopoverTrigger>
@@ -83,17 +130,13 @@ export const SearchableSelect = React.forwardRef(
 										key={option.value}
 										className={cn(
 											"relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-											value === option.value &&
+											isSelected(option.value) &&
 											"bg-accent text-accent-foreground",
 										)}
-										onClick={() => {
-											onValueChange(option.value);
-											setOpen(false);
-											setSearchTerm("");
-										}}
+										onClick={() => handleOptionClick(option.value)}
 									>
 										<span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
-											{value === option.value && <Check className="h-4 w-4" />}
+											{isSelected(option.value) && <Check className="h-4 w-4" />}
 										</span>
 										{option.label}
 									</div>

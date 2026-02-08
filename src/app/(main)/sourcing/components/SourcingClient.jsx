@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getSession } from "next-auth/react";
 import { Section } from "@/components/shared";
 import HeroCompanyForm from "@/components/hero/hero-company";
@@ -29,6 +29,7 @@ const SourcingClient = ({
 	initialFilterOptions,
 	initialKeyword,
 }) => {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [view, setView] = useState("grid");
 	const [filterOptions, setFilterOptions] = useState(initialFilterOptions);
@@ -42,7 +43,7 @@ const SourcingClient = ({
 
 	const [filters, setFilters] = useState({
 		location_id: null,
-		product_category_id: null,
+		product_category_ids: [],
 		currency: null,
 		price_range: null,
 		title: initialKeyword || "",
@@ -56,6 +57,18 @@ const SourcingClient = ({
 			setFilters((prev) => ({ ...prev, title: keyword }));
 		}
 	}, [searchParams]);
+
+	// Update URL when keyword changes (from search input)
+	useEffect(() => {
+		const currentKeyword = searchParams.get("keyword") || "";
+		if (filters.title !== currentKeyword) {
+			const params = new URLSearchParams();
+			if (filters.title) {
+				params.set("keyword", filters.title);
+			}
+			router.push(`/sourcing${params.toString() ? `?${params.toString()}` : ""}`, { scroll: false });
+		}
+	}, [filters.title, router, searchParams]);
 
 	const categories = filterOptions?.categories || [];
 	const locations = filterOptions?.locations || [];
@@ -74,8 +87,8 @@ const SourcingClient = ({
 			...(currentFilters.location_id && {
 				location_id: currentFilters.location_id.toString(),
 			}),
-			...(currentFilters.product_category_id && {
-				product_category_id: currentFilters.product_category_id.toString(),
+			...(currentFilters.product_category_ids?.length > 0 && {
+				product_category_ids: currentFilters.product_category_ids.join(","),
 			}),
 			...(currentFilters.currency && { currency: currentFilters.currency }),
 			...(currentFilters.price_range && {
@@ -140,16 +153,16 @@ const SourcingClient = ({
 	};
 
 	const handleSearchSubmit = (data) => {
-		const product_category_id =
-			data.businessCategoryIds == null || isNaN(data.businessCategoryIds) ?
-				null
-				: data?.businessCategoryIds;
+		const product_category_ids =
+			data.businessCategoryIds == null || isNaN(data.businessCategoryIds)
+				? []
+				: [data?.businessCategoryIds];
 		const location_id = isNaN(data.locationId) ? null : data.locationId;
 
 		setFilters((prevFilters) => ({
 			...prevFilters,
 			location_id: location_id,
-			product_category_id: product_category_id,
+			product_category_ids: product_category_ids,
 			title: data.keyword || "",
 			company_name: "",
 			currency: null,
@@ -165,7 +178,16 @@ const SourcingClient = ({
 			} else if (key === "priceRange") {
 				updatedFilters.price_range = isChecked ? id : null;
 			} else if (key === "businessCategoryIds") {
-				updatedFilters.product_category_id = isChecked ? id : null;
+				if (isChecked) {
+					updatedFilters.product_category_ids = [
+						...(updatedFilters.product_category_ids || []),
+						id,
+					];
+				} else {
+					updatedFilters.product_category_ids = (
+						updatedFilters.product_category_ids || []
+					).filter((catId) => catId !== id);
+				}
 			}
 			return updatedFilters;
 		});
@@ -187,18 +209,18 @@ const SourcingClient = ({
 			}
 		}
 
-		// Map category
-		if (filters.product_category_id) {
-			const category = categories?.find(
-				(cat) => cat.id === filters.product_category_id
-			);
-			if (category) {
-				selected.push({
-					key: "product_category_id",
-					id: category.id,
-					name: category.name,
-				});
-			}
+		// Map categories (multiple)
+		if (filters.product_category_ids?.length > 0) {
+			filters.product_category_ids.forEach((catId) => {
+				const category = categories?.find((cat) => cat.id === catId);
+				if (category) {
+					selected.push({
+						key: "product_category_ids",
+						id: category.id,
+						name: category.name,
+					});
+				}
+			});
 		}
 
 		// Map price range
@@ -222,7 +244,15 @@ const SourcingClient = ({
 	const handleRemoveFilter = (key, id) => {
 		setFilters((prevFilters) => {
 			const updatedFilters = { ...prevFilters };
-			if (updatedFilters[key] === id || updatedFilters[key] === id.toString()) {
+			if (key === "product_category_ids") {
+				// Handle array removal for categories
+				updatedFilters.product_category_ids = (
+					updatedFilters.product_category_ids || []
+				).filter((catId) => catId !== id);
+			} else if (
+				updatedFilters[key] === id ||
+				updatedFilters[key] === id.toString()
+			) {
 				updatedFilters[key] = null;
 			}
 			return updatedFilters;
@@ -316,22 +346,19 @@ const SourcingClient = ({
 						/>
 
 						<SearchableSelect
-							options={[
-								{ value: "all", label: "By Category" },
-								...categories?.map((category) => ({
-									value: category.id.toString(),
-									label: category.name,
-								})),
-							]}
-							value={filters.product_category_id?.toString() || "all"}
-							onValueChange={(value) => {
+							options={categories?.map((category) => ({
+								value: category.id.toString(),
+								label: category.name,
+							}))}
+							value={filters.product_category_ids?.map((id) => id.toString()) || []}
+							onValueChange={(values) => {
 								setFilters((prev) => ({
 									...prev,
-									product_category_id:
-										value === "all" ? null : parseInt(value, 10),
+									product_category_ids: values.map((v) => parseInt(v, 10)),
 								}));
 							}}
 							placeholder="By Category"
+							multiple={true}
 							triggerClassName="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium focus:outline-none focus:ring-0 focus:ring-offset-0 focus:shadow-none h-11"
 						/>
 
