@@ -5,6 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/shared";
 import ExproHeroSearch from "./components/expro-hero-search";
 import ExproCategoryStrip from "./components/expro-category-strip";
+import ExproResultsToolbar from "./components/expro-results-toolbar";
+import ExproListSection from "./components/expro-list-section";
 
 const ExproPage = () => {
   const router = useRouter();
@@ -70,6 +72,8 @@ const ExproPage = () => {
           selectedCategoryId={selectedCategoryId}
           onCategorySelect={handleCategorySelect}
         />
+        <ExproResultsToolbar />
+        <ExproListSection />
       </Container>
     </section>
   );

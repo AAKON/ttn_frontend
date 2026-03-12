@@ -31,8 +31,10 @@ const ExproCategoryStrip = ({
     >
       <div
         ref={barRef}
-        className={`z-20 border-b border-gray-200 bg-500 ${
-          stickyState.isPinned ? "fixed" : "relative"
+        className={`z-20 border-b border-gray-200 transition-colors ${
+          stickyState.isPinned
+            ? "fixed bg-[#ffffff] shadow-sm"
+            : "relative bg-transparent"
         }`}
         style={
           stickyState.isPinned
