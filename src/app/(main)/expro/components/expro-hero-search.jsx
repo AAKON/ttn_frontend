@@ -1,22 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 
 const ExproHeroSearch = () => {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [keyword, setKeyword] = useState("");
+
+  useEffect(() => {
+    setKeyword(searchParams.get("keyword") || "");
+  }, [searchParams]);
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
 
     const trimmedKeyword = keyword.trim();
-    const queryString = trimmedKeyword
-      ? `?${new URLSearchParams({ keyword: trimmedKeyword }).toString()}`
-      : "";
+    const params = new URLSearchParams(searchParams.toString());
 
-    router.push(`/expro${queryString}`);
+    if (trimmedKeyword) {
+      params.set("keyword", trimmedKeyword);
+    } else {
+      params.delete("keyword");
+    }
+
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   return (
