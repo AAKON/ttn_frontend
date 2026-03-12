@@ -1,6 +1,6 @@
 import ExproCard from "./expro-card";
 
-const exproList = [
+const exproListFake = [
   {
     id: 1,
     posterWord: "Index",
@@ -38,17 +38,32 @@ const exproList = [
     variant: "plum",
   },
 ];
+const formatExproData = (apiData) => {
+  return apiData.map((item) => ({
+    id: item.id,
+    posterWord: item.poster_word,
+    posterTagline: item.poster_tagline,
+    posterDate: item.poster_date,
+    posterCta: item.poster_cta,
+    dateRange: item.date_range,
+    title: item.title,
+    country: item.country,
+    organizer: item.organizer,
+    variant: item.variant,
+  }));
+};
 
-const ExproListSection = () => {
-  return (
-    <section className="mt-2">
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {exproList.map((expro) => (
-          <ExproCard key={expro.id} expro={expro} />
-        ))}
-      </div>
-    </section>
-  );
+  const ExproListSection = () => {
+    const exproList = formatExproData(exproListFake);
+    return (
+      <section className="mt-2">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {exproList.map((expro) => (
+            <ExproCard key={expro.id} expro={expro} />
+          ))}
+        </div>
+      </section>
+    );
 };
 
 export default ExproListSection;
