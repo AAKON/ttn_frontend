@@ -68,7 +68,7 @@ const ExproCategoryStrip = () => {
           onScroll={updateScrollState}
           className="no-scrollbar overflow-x-auto"
         >
-          <div className="flex min-w-max items-center  gap-4 md:gap-8 px-1 py-3 md:gap-10 md:px-16">
+          <div className="flex min-w-max items-center  gap-4 md:gap-8 px-1 py-3 md:gap-10 md:px-2">
             {categories.map((category, index) => {
               const isActive = index === 0;
 
@@ -76,10 +76,10 @@ const ExproCategoryStrip = () => {
                 <button
                   key={`${category}-${index}`}
                   type="button"
-                  className={`!rounded-none !bg-transparent !px-0 !py-0 whitespace-nowrap border-b-[3px] !text[14px] md:!text-[16px] !leading-none transition-colors ${
+                  className={`!rounded-none !bg-transparent !px-0 !py-0 !pb-1 whitespace-nowrap border-b-[3px] !text[14px] md:!text-[15px] !leading-none transition-colors ${
                     isActive
-                      ? "pb-[20px] border-[#111827] !font-semibold !text-[#111827]"
-                      : "pb-[10px] border-transparent !font-[500] !text-[#667085] hover:!text-[#111827]"
+                      ? "pb-[10px] border-[#111827] !font-semibold !text-[#111827]"
+                      : "pb-[10px] border-transparent !font-[400] !text-[#667085] hover:!text-[#111827]"
                   }`}
                 >
                   {category}
