@@ -1,11 +1,13 @@
 import { Container } from "@/shared";
 import ExproHeroSearch from "./components/expro-hero-search";
+import ExproCategoryStrip from "./components/expro-category-strip";
 
 const ExproPage = () => {
   return (
-    <section className="bg-[#FCFCFD] py-12 md:py-20 lg:py-24">
+    <section className="bg-[#FCFCFD] py-8 md:py-20 lg:py-24">
       <Container>
         <ExproHeroSearch />
+        <ExproCategoryStrip />
       </Container>
     </section>
   );

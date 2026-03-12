@@ -24,12 +24,12 @@ const ExproHeroSearch = () => {
       <h1 className="text-2xl md:text-4xl lg:text-5xl font-semibold leading-tight text-[#0f172a]">
         Apparel & Textile Expo Network
       </h1>
-      <p className="mt-3 text-[14px] md:text-[18px] text-gray-500 leading-[28px]">
+      <p className="mt-2 md:mt-3 text-[14px] md:text-[18px] text-gray-500 leading-[20px] md:leading-[28px]">
         Where Exhibitors, Buyers & Brands Connect Worldwide
       </p>
 
       <form
-        className="mt-8 md:mt-10 max-w-2xl mx-auto"
+        className="mt-6 md:mt-10 max-w-2xl mx-auto"
         onSubmit={handleSearchSubmit}
       >
         <label className="sr-only" htmlFor="expro-search">
