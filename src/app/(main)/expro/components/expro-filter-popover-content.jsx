@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, X } from "lucide-react";
 import * as React from "react";
 
-const initialData = {
+export const initialData = {
     country: [
         { id: "bangladesh", label: "Bangladesh", count: 12 },
         { id: "india", label: "India", count: 8 },
@@ -33,15 +33,47 @@ const initialData = {
     ],
 };
 
-export function ExproFilterPopoverContent({ onClose }) {
+export function ExproFilterPopoverContent({
+    onClose,
+    selectedFilters = { country: [], year: [], organizer: [] },
+    onApply
+}) {
     const [searchQueries, setSearchQueries] = React.useState({
         country: "",
         year: "",
         organizer: "",
     });
 
+    const [tempFilters, setTempFilters] = React.useState(selectedFilters);
+
+    // Sync temp state with props whenever the popover opens or props change
+    React.useEffect(() => {
+        setTempFilters(selectedFilters);
+    }, [selectedFilters]);
+
     const handleSearchChange = (section, value) => {
         setSearchQueries((prev) => ({ ...prev, [section]: value }));
+    };
+
+    const handleToggle = (section, id) => {
+        setTempFilters((prev) => {
+            const currentSection = prev[section] || [];
+            const isSelected = currentSection.includes(id);
+            return {
+                ...prev,
+                [section]: isSelected
+                    ? currentSection.filter((item) => item !== id)
+                    : [...currentSection, id],
+            };
+        });
+    };
+
+    const handleReset = () => {
+        setTempFilters({
+            country: [],
+            year: [],
+            organizer: [],
+        });
     };
 
     const renderFilterList = (section, data) => {
@@ -57,7 +89,7 @@ export function ExproFilterPopoverContent({ onClose }) {
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                     <Input
                         placeholder={`Search ${section}`}
-                        className="pl-10 border-[#D0D5DD] bg-transparent"
+                        className="pl-10 border-[#D0D5DD] bg-transparent focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-gray-400"
                         value={searchQueries[section]}
                         onChange={(e) => handleSearchChange(section, e.target.value)}
                     />
@@ -70,7 +102,9 @@ export function ExproFilterPopoverContent({ onClose }) {
                             <div className="flex items-center space-x-3">
                                 <Checkbox
                                     id={`${section}-${item.id}`}
-                                    className="border-[#D0D5DD] data-[state=checked]:border-[#ED8A19] data-[state=checked]:text-[#ED8A19] data-[state=checked]:bg-transparent"
+                                    className="w-2 h-2 border-[#D0D5DD] data-[state=checked]:border-[#ED8A19] data-[state=checked]:text-[#ED8A19] !bg-transparent"
+                                    checked={tempFilters[section]?.includes(item.id)}
+                                    onCheckedChange={() => handleToggle(section, item.id)}
                                 />
                                 <label
                                     htmlFor={`${section}-${item.id}`}
@@ -152,9 +186,7 @@ export function ExproFilterPopoverContent({ onClose }) {
                 <Button
                     variant="outline"
                     className="w-full border-[#D0D5DD] text-[#344054] font-semibold h-11 hover:bg-gray-50 bg-white"
-                    onClick={() => {
-                        // Reset logic
-                    }}
+                    onClick={handleReset}
                 >
                     Reset
                 </Button>
@@ -162,7 +194,7 @@ export function ExproFilterPopoverContent({ onClose }) {
                     variant="outline"
                     className="w-full border-[#ED8A19] text-[#ED8A19] font-semibold h-11 hover:bg-orange-50 bg-white"
                     onClick={() => {
-                        // Filter logic
+                        onApply(tempFilters);
                         onClose();
                     }}
                 >

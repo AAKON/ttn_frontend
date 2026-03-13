@@ -1,4 +1,5 @@
 import { Building2, MapPin } from "lucide-react";
+import Link from "next/link";
 
 const posterVariants = {
   emerald: {
@@ -89,12 +90,12 @@ const ExproCard = ({ expro }) => {
           >
             Register Now
           </button>
-          <button
-            type="button"
-            className="h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
+          <Link
+            href={`/expro/${expro.id}`}
+            className="flex items-center justify-center h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
           >
             View Details
-          </button>
+          </Link>
         </div>
       </div>
     </article>

@@ -62,6 +62,16 @@ const ExproPage = () => {
     router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
+  const [appliedFilters, setAppliedFilters] = useState({
+    country: [],
+    year: [],
+    organizer: [],
+  });
+
+  const handleApplyFilters = (newFilters) => {
+    setAppliedFilters(newFilters);
+  };
+
   return (
     <section className="bg-500 py-8 md:py-20 lg:py-24">
       <Container>
@@ -72,7 +82,10 @@ const ExproPage = () => {
           selectedCategoryId={selectedCategoryId}
           onCategorySelect={handleCategorySelect}
         />
-        <ExproResultsToolbar />
+        <ExproResultsToolbar
+          appliedFilters={appliedFilters}
+          onApply={handleApplyFilters}
+        />
         <ExproListSection />
       </Container>
     </section>
