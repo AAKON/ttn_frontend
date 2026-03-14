@@ -1,66 +1,125 @@
-"use client";
-
-import React, { use } from "react";
+import React from "react";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Container } from "@/shared";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import ExproDetailsTopSection from "../components/expro-details-top-section";
 import ExproDetailsContent from "../components/expro-details-content";
 import ExproDetailsSidebar from "../components/expro-details-sidebar";
 
-// Mock data for initial development (matching ExproCard formats)
-const exproListFake = [
-    {
-        id: 1,
-        posterWord: "Index",
-        posterTagline: "The world's leading nonwovens exhibition",
-        posterDate: "19-22 May 2026",
-        posterCta: "Register Today!",
-        dateRange: "7 Feb, 2026 - 9 Feb, 2026",
-        title: "INDEXTM26 - The World's Leading Nonwovens Exhibition",
-        country: "Bangladesh",
-        organizer: "Intex South Asia",
-        variant: "emerald",
-        location: "Guangzhou Exhibition Centre, Guangzhou, China",
-        description: "<h3>What information do we collect?</h3><p>Mi tincidunt elit, id quisque ligula ac diam, amet. Vel etiam suspendisse morbi eleifend faucibus eget vestibulum felis. Dictum quis montes, sit sit. Tellus aliquam enim urna, etiam. Mauris posuere vulputate arcu amet, vitae nisi, tellus tincidunt. At feugiat sapien varius id.</p><p>Eget quis mi enim, leo lacinia pharetra, semper. Eget in volutpat mollis at volutpat lectus velit, sed auctor. Porttitor fames arcu quis fusce augue enim. Quis at habitant diam at. Suscipit tristique risus, at donec. In turpis vel et quam imperdiet. Ipsum molestie aliquet sodales id est ac volutpat.</p><h3>How do we use your information?</h3><p>Dolor enim eu tortor urna sed duis nulla. Aliquam vestibulum, nulla odio nisl vitae. In aliquet pellentesque aenean hac vestibulum turpis mi bibendum diam. Tempor integer aliquam in vitae malesuada fringilla.</p><p>Elit nisi in eleifend sed nisi. Pulvinar at orci, proin imperdiet commodo consectetur convallis risus. Sed condimentum enim dignissim adipiscing faucibus consequat, urna. Viverra purus et erat auctor aliquam. Risus, volutpat vulputate posuere purus sit congue convallis aliquet. Arcu id augue ut feugiat donec porttitor neque. Mauris, neque ultricies eu vestibulum, bibendum quam lorem id. Dolor lacus, eget nunc lectus in tellus, pharetra, porttitor.</p>",
-    },
-    {
-        id: 2,
-        posterWord: "Intex",
-        posterTagline: "The premier international textile sourcing show of South Asia",
-        posterDate: "25-27 June, 2025",
-        posterCta: "",
-        dateRange: "25 June, 2025 - 27 June, 2025",
-        title: "Intex Bangladesh 2025",
-        country: "Bangladesh",
-        organizer: "Intex South Asia",
-        variant: "crimson",
-        location: "ICCB, Dhaka, Bangladesh",
-        description: "Intex South Asia is the largest international textile sourcing show in South Asia, showcasing a wide range of products including yarns, fabrics, and accessories.",
-    },
-    {
-        id: 3,
-        posterWord: "Intertextile",
-        posterTagline: "Shanghai apparel fabrics",
-        posterDate: "7-9 Feb, 2026",
-        posterCta: "",
-        dateRange: "7 Feb, 2026 - 9 Feb, 2026",
-        title: "Inter Textile Shanghai Apparel Fabrics Expo",
-        country: "China",
-        organizer: "Shanghai Apparel Fabrics Expo",
-        variant: "plum",
-        location: "NECC, Shanghai, China",
-        description: "Intertextile Shanghai Apparel Fabrics is a comprehensive platform to showcase your apparel fabrics and accessories to a wide range of potential customers.",
-    },
-];
+const formatDateRange = (startDate, endDate) => {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
 
-const ExproDetailsPage = ({ params }) => {
-    const resolvedParams = use(params);
-    const { slug } = resolvedParams;
+    const parseDate = (value) => {
+        if (!value) return null;
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return formatter.format(date);
+    };
 
-    // Find the expro by ID (slug for now)
-    const expro = exproListFake.find(item => String(item.id) === slug) || exproListFake[0];
-    const similarExpros = exproListFake.filter(item => String(item.id) !== slug).slice(0, 2);
+    const formattedStart = parseDate(startDate);
+    const formattedEnd = parseDate(endDate);
+
+    if (formattedStart && formattedEnd) {
+        return `${formattedStart} - ${formattedEnd}`;
+    }
+    return formattedStart || formattedEnd || "Date not available";
+};
+
+const getExproDetails = async (token, slug) => {
+    try {
+        const headers = {
+            "Content-Type": "application/json",
+        };
+
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/expo/details/${slug}`,
+            {
+                method: "GET",
+                cache: "no-store",
+                headers,
+            }
+        );
+        const resData = await response.json();
+        return resData?.data?.expo || resData?.data || resData;
+    } catch (error) {
+        console.error("Error fetching expo details:", error);
+        return null;
+    }
+};
+
+const getSimilarExpros = async (token) => {
+    try {
+        const headers = {
+            "Content-Type": "application/json",
+        };
+
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/expo?per_page=3`,
+            {
+                method: "GET",
+                cache: "no-store",
+                headers,
+            }
+        );
+        const resData = await response.json();
+        return resData?.data?.data || resData?.data || [];
+    } catch (error) {
+        console.error("Error fetching similar expros:", error);
+        return [];
+    }
+};
+
+const ExproDetailsPage = async ({ params }) => {
+    const { slug } = await params;
+    const session = await getServerSession(authOptions);
+    const token = session?.accessToken;
+
+    const [exproData, similarExprosData] = await Promise.all([
+        getExproDetails(token, slug),
+        getSimilarExpros(token),
+    ]);
+
+    if (!exproData) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-gray-500">Expo details not found.</p>
+            </div>
+        );
+    }
+
+    // Map API data to component requirements
+    const expro = {
+        ...exproData,
+        title: exproData.title || exproData.name,
+        dateRange: formatDateRange(exproData.start_date || exproData.from_date, exproData.end_date || exproData.to_date),
+        location: exproData.location?.name || exproData.location_name || exproData.country,
+        organizer: exproData.company?.name || exproData.company_name || exproData.organizer,
+        description: exproData.description || exproData.short_description,
+    };
+
+    const similarExpros = similarExprosData
+        .filter(item => String(item.id) !== String(exproData.id) && String(item.slug) !== slug)
+        .slice(0, 3)
+        .map((item, index) => ({
+            ...item,
+            title: item.title || item.name,
+            dateRange: formatDateRange(item.start_date || item.from_date, item.end_date || item.to_date),
+            country: item.location?.name || item.location_name || item.country,
+            organizer: item.company?.name || item.company_name || item.organizer,
+            posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0]
+        }));
 
     return (
         <div className="min-h-screen pb-16 pt-8 md:pt-10">

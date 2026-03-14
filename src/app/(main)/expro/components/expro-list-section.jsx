@@ -56,6 +56,7 @@ const mapExpoFromApi = (item, index) => {
       item?.organizer ||
       "Unknown company",
     variant: ["emerald", "crimson", "plum"][index % 3],
+    slug: item?.slug || item?.id || String(index + 1),
     imageUrl:
       item?.cover_image ||
       item?.cover_image_url ||

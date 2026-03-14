@@ -102,7 +102,7 @@ const ExproCard = ({ expro }) => {
             Register Now
           </button>
           <Link
-            href={`/expro/${expro.id}`}
+            href={`/expro/${expro.slug}`}
             className="flex items-center justify-center h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
           >
             View Details
