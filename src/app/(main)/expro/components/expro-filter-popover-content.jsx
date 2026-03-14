@@ -49,7 +49,7 @@ export function ExproFilterPopoverContent({
     // Sync temp state with props whenever the popover opens or props change
     React.useEffect(() => {
         setTempFilters(selectedFilters);
-    }, [selectedFilters]);
+    }, [JSON.stringify(selectedFilters)]);
 
     const handleSearchChange = (section, value) => {
         setSearchQueries((prev) => ({ ...prev, [section]: value }));

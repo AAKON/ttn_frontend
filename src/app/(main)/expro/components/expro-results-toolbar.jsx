@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import * as React from "react";
 import { ExproFilterPopoverContent, initialData } from "./expro-filter-popover-content";
 
-const ExproResultsToolbar = ({ totalResults = 0, tags = [] }) => {
+const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onApply }) => {
   const [open, setOpen] = React.useState(false);
   return (
     <div className="mt-2 px-1 py-4">
@@ -39,9 +39,9 @@ const ExproResultsToolbar = ({ totalResults = 0, tags = [] }) => {
             >
               <SlidersHorizontal className="h-4 w-4" />
               <span>Filter</span>
-              {activeTags.length > 0 && (
+              {tags.length > 0 && (
                 <span className="absolute -right-[5px] -top-[5px] flex h-4 w-4 items-center justify-center rounded-full bg-[#ED8A19] text-[10px] font-bold text-white ring-2 ring-white">
-                  {activeTags.length}
+                  {tags.length}
                 </span>
               )}
             </button>
@@ -49,6 +49,8 @@ const ExproResultsToolbar = ({ totalResults = 0, tags = [] }) => {
           <PopoverContent className="w-[380px] p-0" align="end" sideOffset={8}>
             <ExproFilterPopoverContent
               onClose={() => setOpen(false)}
+              selectedFilters={selectedFilters}
+              onApply={onApply}
             />
           </PopoverContent>
         </Popover>

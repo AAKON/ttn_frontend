@@ -7,6 +7,7 @@ import ExproHeroSearch from "./expro-hero-search";
 import ExproCategoryStrip from "./expro-category-strip";
 import ExproResultsToolbar from "./expro-results-toolbar";
 import ExproListSection from "./expro-list-section";
+import { initialData } from "./expro-filter-popover-content";
 
 const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0 }) => {
   const router = useRouter();
@@ -19,6 +20,14 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
 
     const parsedId = Number(categoryId);
     return Number.isNaN(parsedId) ? "all" : parsedId;
+  }, [searchParams]);
+
+  const selectedFilters = useMemo(() => {
+    return {
+      country: searchParams.getAll("location_id[]"),
+      year: searchParams.getAll("year[]"),
+      organizer: searchParams.getAll("company_id[]"),
+    };
   }, [searchParams]);
 
   const activeTags = useMemo(() => {
@@ -39,11 +48,35 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
       tags.push(selectedCategory?.name || categoryId);
     }
 
-    locationIds.forEach((value) => tags.push(value));
-    companyIds.forEach((value) => tags.push(value));
+    locationIds.forEach((value) => {
+      const item = initialData.country.find(d => d.id === value);
+      tags.push(item?.label || value);
+    });
+
+    companyIds.forEach((value) => {
+      const item = initialData.organizer.find(d => d.id === value);
+      tags.push(item?.label || value);
+    });
 
     return tags;
   }, [searchParams, businessCategories]);
+
+  const handleApplyFilters = (filters) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.delete("location_id[]");
+    params.delete("year[]");
+    params.delete("company_id[]");
+
+    filters.country.forEach(id => params.append("location_id[]", id));
+    filters.year.forEach(id => params.append("year[]", id));
+    filters.organizer.forEach(id => params.append("company_id[]", id));
+
+    params.set("page", "1");
+
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
 
   const handleCategorySelect = (categoryId) => {
     const nextCategoryId = categoryId === "all" ? "all" : Number(categoryId);
@@ -71,7 +104,12 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
           selectedCategoryId={selectedCategoryId}
           onCategorySelect={handleCategorySelect}
         />
-        <ExproResultsToolbar totalResults={totalResults} tags={activeTags} />
+        <ExproResultsToolbar
+          totalResults={totalResults}
+          tags={activeTags}
+          selectedFilters={selectedFilters}
+          onApply={handleApplyFilters}
+        />
         <ExproListSection exproList={exproList} loading={false} />
       </Container>
     </section>
