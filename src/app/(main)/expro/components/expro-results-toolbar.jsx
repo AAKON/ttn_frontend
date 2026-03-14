@@ -5,7 +5,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import * as React from "react";
 import { ExproFilterPopoverContent, initialData } from "./expro-filter-popover-content";
 
-const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onApply }) => {
+const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onApply, onRemoveTag }) => {
   const [open, setOpen] = React.useState(false);
   return (
     <div className="mt-2 px-1 py-4">
@@ -19,11 +19,12 @@ const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onA
             <div className="flex flex-wrap items-center gap-2 md:gap-3">
               {tags.map((tag, index) => (
                 <button
-                  key={`${tag}-${index}`}
+                  key={`${tag.key}-${tag.value}-${index}`}
                   type="button"
+                  onClick={() => onRemoveTag(tag)}
                   className="inline-flex items-center justify-between gap-2 rounded-full bg-[#E4E7EC] px-4 py-1 text-sm font-normal leading-none text-[#344054] md:text-base hover:bg-gray-200 transition-colors"
                 >
-                  <span className="text-[14px]">{typeof tag === 'string' ? tag : tag.label}</span>
+                  <span className="text-[14px]">{tag.label}</span>
                   <X className="h-4 w-4 text-[#98A2B3]" />
                 </button>
               ))}

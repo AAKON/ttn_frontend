@@ -33,33 +33,50 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
   const activeTags = useMemo(() => {
     const tags = [];
     const title = searchParams.get("title");
-    const categoryId = searchParams.get("category_id");
     const locationIds = searchParams.getAll("location_id[]");
     const companyIds = searchParams.getAll("company_id[]");
     const years = searchParams.getAll("year[]");
 
-    if (title) tags.push(title);
-    years.forEach((year) => tags.push(year));
-
-    if (categoryId) {
-      const selectedCategory = businessCategories.find(
-        (category) => String(category.id) === String(categoryId)
-      );
-      tags.push(selectedCategory?.name || categoryId);
+    if (title) {
+      tags.push({ label: title, key: "title", value: title });
     }
 
+    years.forEach((year) => {
+      tags.push({ label: year, key: "year[]", value: year });
+    });
+
     locationIds.forEach((value) => {
-      const item = initialData.country.find(d => d.id === value);
-      tags.push(item?.label || value);
+      const item = initialData.country.find((d) => d.id === value);
+      tags.push({ label: item?.label || value, key: "location_id[]", value: value });
     });
 
     companyIds.forEach((value) => {
-      const item = initialData.organizer.find(d => d.id === value);
-      tags.push(item?.label || value);
+      const item = initialData.organizer.find((d) => d.id === value);
+      tags.push({ label: item?.label || value, key: "company_id[]", value: value });
     });
 
     return tags;
-  }, [searchParams, businessCategories]);
+  }, [searchParams]);
+
+  const handleRemoveTag = (tag) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (tag.key === "title") {
+      params.delete("title");
+    } else {
+      // Get all values for this key
+      const values = params.getAll(tag.key);
+      // Remove the specific value
+      params.delete(tag.key);
+      values
+        .filter((v) => v !== tag.value)
+        .forEach((v) => params.append(tag.key, v));
+    }
+
+    params.set("page", "1");
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  };
 
   const handleApplyFilters = (filters) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -109,6 +126,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
           tags={activeTags}
           selectedFilters={selectedFilters}
           onApply={handleApplyFilters}
+          onRemoveTag={handleRemoveTag}
         />
         <ExproListSection exproList={exproList} loading={false} />
       </Container>
