@@ -5,30 +5,8 @@ import { SlidersHorizontal, X } from "lucide-react";
 import * as React from "react";
 import { ExproFilterPopoverContent, initialData } from "./expro-filter-popover-content";
 
-const ExproResultsToolbar = ({ totalResults = 66, appliedFilters, onApply }) => {
+const ExproResultsToolbar = ({ totalResults = 0, tags = [] }) => {
   const [open, setOpen] = React.useState(false);
-
-  const removeTag = (section, id) => {
-    onApply({
-      ...appliedFilters,
-      [section]: appliedFilters[section].filter((item) => item !== id),
-    });
-  };
-
-  // Derive active tags for rendering
-  const activeTags = React.useMemo(() => {
-    const tags = [];
-    Object.keys(appliedFilters).forEach((section) => {
-      appliedFilters[section].forEach((id) => {
-        const item = initialData[section]?.find((d) => d.id === id);
-        if (item) {
-          tags.push({ section, id, label: item.label });
-        }
-      });
-    });
-    return tags;
-  }, [appliedFilters]);
-
   return (
     <div className="mt-2 px-1 py-4">
       <div className="flex flex-row justify-between gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -37,19 +15,20 @@ const ExproResultsToolbar = ({ totalResults = 66, appliedFilters, onApply }) => 
             Expo : {totalResults} Results
           </p>
 
-          <div className="hidden md:flex flex-wrap items-center gap-2 md:gap-3">
-            {activeTags.map((tag) => (
-              <button
-                key={`${tag.section}-${tag.id}`}
-                type="button"
-                onClick={() => removeTag(tag.section, tag.id)}
-                className="inline-flex items-center justify-between gap-2 rounded-full bg-[#E4E7EC] px-4 py-1 text-sm font-normal leading-none text-[#344054] md:text-base hover:bg-gray-200 transition-colors"
-              >
-                <span className="text-[14px]">{tag.label}</span>
-                <X className="h-4 w-4 text-[#98A2B3]" />
-              </button>
-            ))}
-          </div>
+          {tags.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
+              {tags.map((tag, index) => (
+                <button
+                  key={`${tag}-${index}`}
+                  type="button"
+                  className="inline-flex items-center justify-between gap-2 rounded-full bg-[#E4E7EC] px-4 py-1 text-sm font-normal leading-none text-[#344054] md:text-base hover:bg-gray-200 transition-colors"
+                >
+                  <span className="text-[14px]">{typeof tag === 'string' ? tag : tag.label}</span>
+                  <X className="h-4 w-4 text-[#98A2B3]" />
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <Popover open={open} onOpenChange={setOpen}>
@@ -70,8 +49,6 @@ const ExproResultsToolbar = ({ totalResults = 66, appliedFilters, onApply }) => 
           <PopoverContent className="w-[380px] p-0" align="end" sideOffset={8}>
             <ExproFilterPopoverContent
               onClose={() => setOpen(false)}
-              selectedFilters={appliedFilters}
-              onApply={onApply}
             />
           </PopoverContent>
         </Popover>

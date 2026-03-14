@@ -30,31 +30,42 @@ const posterVariants = {
 
 const ExproCard = ({ expro }) => {
   const variant = posterVariants[expro.variant] || posterVariants.emerald;
+  const hasImage = Boolean(expro.imageUrl);
 
   return (
     <article className="overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
       <div className={`relative h-[190px] overflow-hidden ${variant.wrapper}`}>
-        <span
-          className={`absolute -right-16 -top-14 h-44 w-72 rotate-[32deg] rounded-full border-[20px] ${variant.ribbonA}`}
-        />
-        <span
-          className={`absolute -left-24 bottom-0 h-36 w-80 -rotate-[26deg] rounded-full border-[18px] ${variant.ribbonB}`}
-        />
-        <span
-          className={`absolute right-10 -bottom-16 h-44 w-72 rotate-[24deg] rounded-full border-[16px] ${variant.ribbonC}`}
-        />
+        {hasImage ? (
+          <img
+            src={expro.imageUrl}
+            alt={expro.title}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <>
+            <span
+              className={`absolute -right-16 -top-14 h-44 w-72 rotate-[32deg] rounded-full border-[20px] ${variant.ribbonA}`}
+            />
+            <span
+              className={`absolute -left-24 bottom-0 h-36 w-80 -rotate-[26deg] rounded-full border-[18px] ${variant.ribbonB}`}
+            />
+            <span
+              className={`absolute right-10 -bottom-16 h-44 w-72 rotate-[24deg] rounded-full border-[16px] ${variant.ribbonC}`}
+            />
 
-        <div className="relative z-10 p-4 md:p-5">
-          <p className={`text-[52px] font-light leading-none ${variant.title}`}>
-            {expro.posterWord}
-          </p>
-          <p className={`mt-2 max-w-[190px] text-[11px] font-semibold uppercase leading-tight ${variant.subtitle}`}>
-            {expro.posterTagline}
-          </p>
-          <p className={`mt-3 text-[22px] font-semibold leading-none ${variant.subtitle}`}>
-            {expro.posterDate}
-          </p>
-        </div>
+            <div className="relative z-10 p-4 md:p-5">
+              <p className={`text-[52px] font-light leading-none ${variant.title}`}>
+                {expro.posterWord}
+              </p>
+              <p className={`mt-2 max-w-[190px] text-[11px] font-semibold uppercase leading-tight ${variant.subtitle}`}>
+                {expro.posterTagline}
+              </p>
+              <p className={`mt-3 text-[22px] font-semibold leading-none ${variant.subtitle}`}>
+                {expro.posterDate}
+              </p>
+            </div>
+          </>
+        )}
 
         {expro.posterCta ? (
           <span className="absolute bottom-4 right-4 rounded-full bg-[#0FAA60] px-5 py-1.5 text-[13px] font-semibold text-white shadow-[0_4px_14px_rgba(16,24,40,0.2)]">

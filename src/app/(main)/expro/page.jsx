@@ -1,94 +1,118 @@
-"use client";
+import { Suspense } from "react";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import ExproClient from "./components/expro-client";
 
-import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Container } from "@/shared";
-import ExproHeroSearch from "./components/expro-hero-search";
-import ExproCategoryStrip from "./components/expro-category-strip";
-import ExproResultsToolbar from "./components/expro-results-toolbar";
-import ExproListSection from "./components/expro-list-section";
+const getFilterOptions = async () => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/expo/categories`,
+      { cache: "no-store" }
+    );
+    const data = await response.json();
+    console.log({ data });
 
-const ExproPage = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [filterOptionLoading, setFilterOptionLoading] = useState(true);
-  const [businessCategories, setBusinessCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+    return data?.data || [];
+  } catch (error) {
+    console.error("Error fetching filter options:", error);
+    return [];
+  }
+};
 
-  useEffect(() => {
-    const businessCategoryIds = searchParams.get("businessCategoryIds");
-    if (!businessCategoryIds) {
-      setSelectedCategoryId("all");
-      return;
-    }
+const toArray = (value) => {
+  if (Array.isArray(value)) return value;
+  if (value === undefined || value === null || value === "") return [];
+  return [value];
+};
 
-    const parsedId = Number(businessCategoryIds.split(",")[0]);
-    setSelectedCategoryId(Number.isNaN(parsedId) ? "all" : parsedId);
-  }, [searchParams]);
+const getFirst = (value) => {
+  if (Array.isArray(value)) return value[0];
+  return value;
+};
 
-  useEffect(() => {
-    const fetchFilterOptions = async () => {
-      setFilterOptionLoading(true);
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/company/filter-options`
-        );
-        const data = await response.json();
-        setBusinessCategories(data?.data?.business_categories || []);
-      } catch (error) {
-        console.error("Error fetching filter options:", error);
-      } finally {
-        setFilterOptionLoading(false);
-      }
+const getExproList = async (token, searchParamsInput = {}) => {
+  const searchParams = await Promise.resolve(searchParamsInput);
+  const queryParams = new URLSearchParams();
+
+  const title = getFirst(searchParams?.title);
+  const categoryId = getFirst(searchParams?.category_id);
+  const locationIds = toArray(searchParams?.["location_id[]"]);
+  const companyIds = toArray(searchParams?.["company_id[]"]);
+  const years = toArray(searchParams?.["year[]"]);
+  const perPage = getFirst(searchParams?.per_page);
+  const page = getFirst(searchParams?.page);
+
+  if (title) queryParams.set("title", String(title));
+  if (categoryId) queryParams.set("category_id", String(categoryId));
+  locationIds.forEach((value) => queryParams.append("location_id[]", String(value)));
+  companyIds.forEach((value) => queryParams.append("company_id[]", String(value)));
+  years.forEach((value) => queryParams.append("year[]", String(value)));
+  if (perPage) queryParams.set("per_page", String(perPage));
+  queryParams.set("page", page ? String(page) : "1");
+
+  try {
+    const headers = {
+      "Content-Type": "application/json",
     };
 
-    fetchFilterOptions();
-  }, []);
-
-  const handleCategorySelect = (categoryId) => {
-    const nextCategoryId = categoryId === "all" ? "all" : Number(categoryId);
-    setSelectedCategoryId(nextCategoryId);
-
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (nextCategoryId === "all" || Number.isNaN(nextCategoryId)) {
-      params.delete("businessCategoryIds");
-    } else {
-      params.set("businessCategoryIds", String(nextCategoryId));
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
 
-    const query = params.toString();
-    router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  };
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/expo?${queryParams.toString()}`,
+      {
+        method: "GET",
+        cache: "no-store",
+        headers,
+      }
+    );
+    const data = await response.json();
+    const payload = data?.data ?? data;
 
-  const [appliedFilters, setAppliedFilters] = useState({
-    country: [],
-    year: [],
-    organizer: [],
-  });
+    const listData = Array.isArray(payload?.data)
+      ? payload.data
+      : Array.isArray(payload)
+        ? payload
+        : Array.isArray(payload?.items)
+          ? payload.items
+          : [];
 
-  const handleApplyFilters = (newFilters) => {
-    setAppliedFilters(newFilters);
-  };
+    const pagination = payload?.pagination ?? payload?.meta;
+    const total = pagination?.total ?? payload?.total ?? listData.length;
+
+    return {
+      list: listData,
+      total: total || 0,
+    };
+  } catch (error) {
+    console.error("Error fetching expo list:", error);
+    return {
+      list: [],
+      total: 0,
+    };
+  }
+};
+
+const ExproPage = async ({ searchParams }) => {
+  const session = await getServerSession(authOptions);
+  const token = session?.accessToken;
+
+  const [businessCategories, exproData] = await Promise.all([
+    getFilterOptions(),
+    getExproList(token, searchParams),
+  ]);
+  console.log({ businessCategories });
+
 
   return (
-    <section className="bg-500 py-8 md:py-20 lg:py-24">
-      <Container>
-        <ExproHeroSearch />
-        <ExproCategoryStrip
-          categories={businessCategories}
-          loading={filterOptionLoading}
-          selectedCategoryId={selectedCategoryId}
-          onCategorySelect={handleCategorySelect}
-        />
-        <ExproResultsToolbar
-          appliedFilters={appliedFilters}
-          onApply={handleApplyFilters}
-        />
-        <ExproListSection />
-      </Container>
-    </section>
+    <Suspense fallback={<div className="container py-10">Loading...</div>}>
+      <ExproClient
+        businessCategories={businessCategories}
+        exproList={exproData.list}
+        totalResults={exproData.total}
+      />
+    </Suspense>
   );
 };
 
