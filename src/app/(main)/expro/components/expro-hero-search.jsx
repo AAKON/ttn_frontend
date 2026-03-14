@@ -11,7 +11,7 @@ const ExproHeroSearch = () => {
   const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
-    setKeyword(searchParams.get("keyword") || "");
+    setKeyword(searchParams.get("title") || "");
   }, [searchParams]);
 
   const handleSearchSubmit = (event) => {
@@ -21,11 +21,12 @@ const ExproHeroSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
 
     if (trimmedKeyword) {
-      params.set("keyword", trimmedKeyword);
+      params.set("title", trimmedKeyword);
     } else {
-      params.delete("keyword");
+      params.delete("title");
     }
 
+    params.set("page", "1");
     const queryString = params.toString();
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };

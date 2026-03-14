@@ -1,8 +1,6 @@
 import { SlidersHorizontal, X } from "lucide-react";
 
-const defaultTags = ["Bangladesh", "2024", "Intex", "3"];
-
-const ExproResultsToolbar = ({ totalResults = 66, tags = defaultTags }) => {
+const ExproResultsToolbar = ({ totalResults = 0, tags = [] }) => {
   return (
     <div className="mt-2 px-1 py-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -11,18 +9,20 @@ const ExproResultsToolbar = ({ totalResults = 66, tags = defaultTags }) => {
             Expo : {totalResults} Results
           </p>
 
-          <div className="flex flex-wrap items-center gap-2 md:gap-3">
-            {tags.map((tag) => (
-              <button
-                key={tag}
-                type="button"
-                className="inline-flex items-center justify-between gap-2 rounded-full bg-[#E4E7EC] px-4 py-1 text-sm font-normal leading-none text-[#344054] md:text-base"
-              >
-                <span className="text-[14px]">{tag}</span>
-                <X className="h-4 w-4 text-[#98A2B3]" />
-              </button>
-            ))}
-          </div>
+          {tags.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-2 md:gap-3">
+              {tags.map((tag, index) => (
+                <button
+                  key={`${tag}-${index}`}
+                  type="button"
+                  className="inline-flex items-center justify-between gap-2 rounded-full bg-[#E4E7EC] px-4 py-1 text-sm font-normal leading-none text-[#344054] md:text-base"
+                >
+                  <span className="text-[14px]">{tag}</span>
+                  <X className="h-4 w-4 text-[#98A2B3]" />
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <button
