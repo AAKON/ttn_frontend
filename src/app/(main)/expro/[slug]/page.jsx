@@ -29,6 +29,18 @@ const formatDateRange = (startDate, endDate) => {
     return formattedStart || formattedEnd || "Date not available";
 };
 
+const getExpoImage = (item) => {
+    return (
+        item?.cover_image ||
+        item?.cover_image_url ||
+        item?.banner_image ||
+        item?.banner_image_url ||
+        item?.image ||
+        item?.image_url ||
+        ""
+    );
+};
+
 const getExproDetails = async (token, slug) => {
     try {
         const headers = {
@@ -107,6 +119,7 @@ const ExproDetailsPage = async ({ params }) => {
         location: exproData.location?.name || exproData.location_name || exproData.country,
         organizer: exproData.company?.name || exproData.company_name || exproData.organizer,
         description: exproData.description || exproData.short_description,
+        imageUrl: getExpoImage(exproData),
     };
 
     const similarExpros = similarExprosData
@@ -118,7 +131,8 @@ const ExproDetailsPage = async ({ params }) => {
             dateRange: formatDateRange(item.start_date || item.from_date, item.end_date || item.to_date),
             country: item.location?.name || item.location_name || item.country,
             organizer: item.company?.name || item.company_name || item.organizer,
-            posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0]
+            posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0],
+            imageUrl: getExpoImage(item),
         }));
 
     return (

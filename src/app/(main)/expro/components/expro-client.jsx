@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Container } from "@/shared";
 import ExproHeroSearch from "./expro-hero-search";
@@ -8,11 +8,13 @@ import ExproCategoryStrip from "./expro-category-strip";
 import ExproResultsToolbar from "./expro-results-toolbar";
 import ExproListSection from "./expro-list-section";
 import { initialData } from "./expro-filter-popover-content";
+import ExpoRegistrationModal from "./expo-registration-modal";
 
 const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0 }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
 
   const selectedCategoryId = useMemo(() => {
     const categoryId = searchParams.get("category_id");
@@ -110,7 +112,31 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
     const query = params.toString();
     router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
+const handleRegistrationModalOpenChange = (nextOpen) => {
+    setIsRegistrationModalOpen(nextOpen);
 
+    if (!nextOpen) {
+      const params = new URLSearchParams(searchParams.toString());
+      let shouldUpdateUrl = false;
+
+      if (params.has("expoRegistration")) {
+        params.delete("expoRegistration");
+        shouldUpdateUrl = true;
+      }
+
+      if (params.has("expoRole")) {
+        params.delete("expoRole");
+        shouldUpdateUrl = true;
+      }
+
+      if (shouldUpdateUrl) {
+        const query = params.toString();
+        router.replace(query ? `${pathname}?${query}` : pathname, {
+          scroll: false,
+        });
+      }
+    }
+  };
   return (
     <section className="bg-500 py-8 md:py-20 lg:py-24">
       <Container>
@@ -128,8 +154,14 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
           onApply={handleApplyFilters}
           onRemoveTag={handleRemoveTag}
         />
-        <ExproListSection exproList={exproList} loading={false} />
+        <ExproListSection
+        onRegisterClick={() => setIsRegistrationModalOpen(true)}
+        exproList={exproList} loading={false} />
       </Container>
+       <ExpoRegistrationModal
+        open={isRegistrationModalOpen}
+        onOpenChange={handleRegistrationModalOpenChange}
+      />
     </section>
   );
 };

@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 import {
-    Building2,
     MapPin,
     Calendar,
     Clock,
@@ -11,10 +10,12 @@ import {
     Eye,
     Share2,
     Bookmark,
-    ChevronRight
 } from "lucide-react";
 
 const ExproDetailsTopSection = ({ expro }) => {
+    const hasBannerImage = Boolean(expro?.banner_url || expro?.imageUrl);
+  console.log({expro});
+  
     // Mock data for countdown (replace with actual logic if needed)
     const countdown = [
         { label: "Days", value: "1" },
@@ -29,22 +30,31 @@ const ExproDetailsTopSection = ({ expro }) => {
                 {/* Left Side: Banner Image */}
                 <div className="w-full lg:w-[565px] flex-shrink-0">
                     <div className="relative aspect-[16/9] lg:aspect-auto lg:h-full rounded-xl overflow-hidden bg-gray-100">
-                        {/* Using a placeholder since we don't have the real image yet */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 flex flex-col justify-center p-8 text-white">
-                            <p className="text-xs font-semibold opacity-90 uppercase tracking-wider mb-2">
-                                16th Intex
-                            </p>
-                            <h2 className="text-4xl font-bold leading-tight">intex</h2>
-                            <p className="text-[10px] uppercase mt-2 max-w-[150px]">
-                                The Premier International Textiles Sourcing Show of South Asia
-                            </p>
-                            <div className="mt-auto">
-                                <p className="text-sm font-bold uppercase">Bangladesh</p>
-                                <p className="text-xs">25-26-27 June, 2025</p>
-                                <p className="text-[10px] opacity-80 mt-1">ICCB, Dhaka</p>
+                        {hasBannerImage ? (
+                            <Image
+                                src={expro.banner_url}
+                                alt={expro.title || "Expo banner"}
+                                fill
+                                priority
+                                sizes="(max-width: 1024px) 100vw, 565px"
+                                className="object-cover"
+                            />
+                        ) : (
+                            <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 flex flex-col justify-center p-8 text-white">
+                                <p className="text-xs font-semibold opacity-90 uppercase tracking-wider mb-2">
+                                    16th Intex
+                                </p>
+                                <h2 className="text-4xl font-bold leading-tight">intex</h2>
+                                <p className="text-[10px] uppercase mt-2 max-w-[150px]">
+                                    The Premier International Textiles Sourcing Show of South Asia
+                                </p>
+                                <div className="mt-auto">
+                                    <p className="text-sm font-bold uppercase">Bangladesh</p>
+                                    <p className="text-xs">25-26-27 June, 2025</p>
+                                    <p className="text-[10px] opacity-80 mt-1">ICCB, Dhaka</p>
+                                </div>
                             </div>
-                        </div>
-                        {/* Real image if available: <Image src={expro.banner} alt={expro.title} fill className="object-cover" /> */}
+                        )}
                     </div>
                 </div>
 

@@ -28,7 +28,7 @@ const posterVariants = {
   },
 };
 
-const ExproCard = ({ expro }) => {
+const ExproCard = ({ expro,onRegisterClick }) => {
   const variant = posterVariants[expro.variant] || posterVariants.emerald;
   const hasImage = Boolean(expro.imageUrl);
 
@@ -97,6 +97,7 @@ const ExproCard = ({ expro }) => {
         <div className="mt-5 grid grid-cols-2 gap-3">
           <button
             type="button"
+             onClick={onRegisterClick}
             className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
           >
             Register Now

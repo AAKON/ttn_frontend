@@ -68,7 +68,7 @@ const mapExpoFromApi = (item, index) => {
   };
 };
 
-const ExproListSection = ({ exproList = [], loading = false }) => {
+const ExproListSection = ({ exproList = [], loading = false,onRegisterClick }) => {
   const list = exproList.map((item, index) => mapExpoFromApi(item, index));
 
   return (
@@ -93,7 +93,7 @@ const ExproListSection = ({ exproList = [], loading = false }) => {
       {!loading && list.length > 0 ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {list.map((expro) => (
-            <ExproCard key={expro.id} expro={expro} />
+            <ExproCard key={expro.id} onRegisterClick={onRegisterClick} expro={expro} />
           ))}
         </div>
       ) : null}
