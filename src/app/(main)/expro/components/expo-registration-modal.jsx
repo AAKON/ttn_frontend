@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, ChevronDown, Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import { z } from "zod";
@@ -126,28 +126,41 @@ const RegistrationTypeSelector = ({
   onRegistrationRoleChange,
 }) => (
   <div className={panelClasses}>
-    <p className="text-[18px] font-semibold leading-7 text-[#1D2939]">
+    <p className="text-[16px] font-semibold leading-7 text-[#1D2939]">
       Registration as a
     </p>
 
     <RadioGroup
       value={registrationRole}
       onValueChange={onRegistrationRoleChange}
-      className="mt-4 grid grid-cols-3 gap-0 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 md:p-2"
+      className="mt-3 grid grid-cols-3 gap-0 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 md:p-2"
     >
       {roleOptions.map((option) => {
+        const optionId = `expo-role-${option.value}`;
+
         return (
-          <label
+          <div
             key={option.value}
-            className="flex min-h-[48px] cursor-pointer items-center justify-center gap-2.5 rounded-[12px] px-2 py-2 text-[15px] font-semibold leading-5 text-[#344054] transition-colors hover:bg-[#FCFCFD] md:min-h-[58px] md:gap-4 md:px-5 md:py-3 md:text-[16px] md:leading-6"
+            className="flex  cursor-pointer items-center justify-start gap-2.5 rounded-[12px] px-2 py-2 text-[14px] font-semibold leading-5 text-[#344054] transition-colors hover:bg-[#FCFCFD]  md:gap-2 md:px-3 md:py-2 md:text-[14px] md:leading-6"
             onClick={() => onRegistrationRoleChange(option.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onRegistrationRoleChange(option.value);
+              }
+            }}
+            role="button"
+            tabIndex={0}
           >
             <RadioGroupItem
+              id={optionId}
               value={option.value}
-              className="h-6 w-6 border-[2px] border-[#667085] text-transparent shadow-none transition-colors focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=checked]:border-[#F79009] data-[state=checked]:bg-[#F79009] data-[state=checked]:text-white md:h-8 md:w-8 md:border-[2.5px] [&>span>svg]:h-[8px] [&>span>svg]:w-[8px] md:[&>span>svg]:h-[11px] md:[&>span>svg]:w-[11px] [&>span>svg]:fill-current [&>span>svg]:stroke-0"
+              className="cs_radio_inp"
             />
-            <span>{option.label}</span>
-          </label>
+            <label htmlFor={optionId} className="cursor-pointer select-none">
+              {option.label}
+            </label>
+          </div>
         );
       })}
     </RadioGroup>
@@ -161,6 +174,7 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
   const { data: session, status } = useSession();
   const { toast } = useToast();
   const companyListId = useId();
+  const hasAppliedUrlRoleRef = useRef(false);
   const [registrationRole, setRegistrationRole] = useState("exhibitor");
   const [submitting, setSubmitting] = useState(false);
 
@@ -177,11 +191,19 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
   );
 
   useEffect(() => {
+    if (!open) {
+      hasAppliedUrlRoleRef.current = false;
+      return;
+    }
+
+    if (hasAppliedUrlRoleRef.current) return;
+
     const requestedRole = searchParams.get("expoRole");
     if (requestedRole && roleOptions.some((option) => option.value === requestedRole)) {
       setRegistrationRole(requestedRole);
     }
-  }, [searchParams]);
+    hasAppliedUrlRoleRef.current = true;
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -248,7 +270,7 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
         className={`w-[calc(100%-24px)] max-w-[512px] gap-0 overflow-hidden rounded-[24px] border border-[#EAECF0] bg-white p-0 shadow-[0_24px_64px_rgba(16,24,40,0.12)] [&>button]:right-4 [&>button]:top-4 [&>button]:rounded-full [&>button]:bg-transparent [&>button]:p-1.5 [&>button]:text-[#667085] [&>button]:opacity-100 [&>button]:transition-colors [&>button:hover]:bg-[#F2F4F7] [&>button:hover]:opacity-100 md:w-full md:[&>button]:right-7 md:[&>button]:top-6 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:border-x-0 max-md:border-b-0 max-md:data-[state=open]:slide-in-from-bottom max-md:data-[state=closed]:slide-out-to-bottom ${modalMaxWidth}`}
       >
         <div className="flex max-h-[88vh] flex-col">
-          <DialogHeader className="border-b border-[#EAECF0] px-5 py-4 text-left md:px-9 md:py-6">
+          <DialogHeader className="border-b border-[#EAECF0] px-5 py-4 text-left md:px-6 md:py-5">
             <DialogTitle className="text-[20px] font-semibold leading-8 text-[#1D2939]">
               Expo Registration
             </DialogTitle>
@@ -259,13 +281,13 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
           </DialogHeader>
 
           {showLoadingState ? (
-            <div className="flex min-h-[220px] items-center justify-center px-6 py-12 text-[#667085]">
+            <div className="flex min-h-[220px] items-center justify-center px-6 py-6 text-[#667085]">
               <Loader2 className="h-6 w-6 animate-spin" />
             </div>
           ) : null}
 
           {showLoginPrompt ? (
-            <div className="px-5 py-5 md:px-9 md:py-8">
+            <div className="px-5 py-5 md:px-5 md:py-6">
               <RegistrationTypeSelector
                 registrationRole={registrationRole}
                 onRegistrationRoleChange={setRegistrationRole}
@@ -293,8 +315,8 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
 
           {showVisitorRegistration ? (
             <div className="flex flex-col">
-              <div className="px-5 py-5 md:px-8 md:py-8">
-                <div className="space-y-5">
+              <div className="px-5 py-5 md:px-6 md:py-6">
+                <div className="space-y-3">
                   <RegistrationTypeSelector
                     registrationRole={registrationRole}
                     onRegistrationRoleChange={setRegistrationRole}
