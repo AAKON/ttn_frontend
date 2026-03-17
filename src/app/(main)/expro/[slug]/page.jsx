@@ -31,6 +31,7 @@ const formatDateRange = (startDate, endDate) => {
 
 const getExpoImage = (item) => {
     return (
+        item?.banner_url ||
         item?.cover_image ||
         item?.cover_image_url ||
         item?.banner_image ||
@@ -60,36 +61,20 @@ const getExproDetails = async (token, slug) => {
             }
         );
         const resData = await response.json();
-        return resData?.data?.expo || resData?.data || resData;
+        const payload = resData?.data ?? resData;
+
+        if (payload?.expo) {
+            return {
+                ...payload.expo,
+                gallery_urls: payload.gallery_urls ?? payload.expo.gallery_urls ?? [],
+                similar_expos: payload.similar_expos ?? payload.expo.similar_expos ?? [],
+            };
+        }
+
+        return payload;
     } catch (error) {
         console.error("Error fetching expo details:", error);
         return null;
-    }
-};
-
-const getSimilarExpros = async (token) => {
-    try {
-        const headers = {
-            "Content-Type": "application/json",
-        };
-
-        if (token) {
-            headers.Authorization = `Bearer ${token}`;
-        }
-
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/expo?per_page=3`,
-            {
-                method: "GET",
-                cache: "no-store",
-                headers,
-            }
-        );
-        const resData = await response.json();
-        return resData?.data?.data || resData?.data || [];
-    } catch (error) {
-        console.error("Error fetching similar expros:", error);
-        return [];
     }
 };
 
@@ -98,10 +83,7 @@ const ExproDetailsPage = async ({ params }) => {
     const session = await getServerSession(authOptions);
     const token = session?.accessToken;
 
-    const [exproData, similarExprosData] = await Promise.all([
-        getExproDetails(token, slug),
-        getSimilarExpros(token),
-    ]);
+    const exproData = await getExproDetails(token, slug);
 
     if (!exproData) {
         return (
@@ -117,20 +99,36 @@ const ExproDetailsPage = async ({ params }) => {
         title: exproData.title || exproData.name,
         dateRange: formatDateRange(exproData.start_date || exproData.from_date, exproData.end_date || exproData.to_date),
         location: exproData.location?.name || exproData.location_name || exproData.country,
-        organizer: exproData.company?.name || exproData.company_name || exproData.organizer,
+        organizer: exproData.company?.name || exproData.organizer_name || exproData.company_name || exproData.organizer,
         description: exproData.description || exproData.short_description,
         imageUrl: getExpoImage(exproData),
+        galleryImages: Array.isArray(exproData.gallery_urls)
+            ? exproData.gallery_urls
+                .map((item, index) => {
+                    const src = item?.original || item?.medium || item?.thumbnail;
+                    if (!src) return null;
+                    return {
+                        id: item?.id || index,
+                        src,
+                        alt: `${exproData.title || exproData.name || "Expo"} gallery image ${index + 1}`,
+                    };
+                })
+                .filter(Boolean)
+            : [],
     };
+
+    const similarExprosData = Array.isArray(exproData.similar_expos)
+        ? exproData.similar_expos
+        : [];
 
     const similarExpros = similarExprosData
         .filter(item => String(item.id) !== String(exproData.id) && String(item.slug) !== slug)
-        .slice(0, 3)
-        .map((item, index) => ({
+        .map((item) => ({
             ...item,
             title: item.title || item.name,
             dateRange: formatDateRange(item.start_date || item.from_date, item.end_date || item.to_date),
             country: item.location?.name || item.location_name || item.country,
-            organizer: item.company?.name || item.company_name || item.organizer,
+            organizer: item.company?.name || item.organizer_name || item.company_name || item.organizer,
             posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0],
             imageUrl: getExpoImage(item),
         }));

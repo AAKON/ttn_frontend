@@ -52,13 +52,19 @@ const jobTitleOptions = [
   "Marketing Lead",
 ];
 
-const companyOptions = [
-  "Textile Network",
-  "Inter Textile Shanghai Apparel Fabrics",
-  "Global Fabric House",
-  "Denim Sourcing Ltd.",
-  "Apparel Connect Group",
-];
+const normalizeCompanyOptions = (items = []) => {
+  const seen = new Set();
+
+  return items
+    .map((item) => item?.name || item?.label || item?.company_name || item?.title)
+    .filter((item) => Boolean(item))
+    .map((item) => String(item).trim())
+    .filter((item) => {
+      if (!item || seen.has(item.toLowerCase())) return false;
+      seen.add(item.toLowerCase());
+      return true;
+    });
+};
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name is required." }),
@@ -177,11 +183,13 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
   const hasAppliedUrlRoleRef = useRef(false);
   const [registrationRole, setRegistrationRole] = useState("exhibitor");
   const [submitting, setSubmitting] = useState(false);
+  const [companyOptions, setCompanyOptions] = useState([]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: getDefaultValues(session?.user),
   });
+  const companyQuery = form.watch("company");
 
   const selectedRoleLabel = useMemo(
     () =>
@@ -214,6 +222,86 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
     session?.user?.full_name,
     session?.user?.user_name,
     form,
+  ]);
+
+  useEffect(() => {
+    if (!open) {
+      setCompanyOptions([]);
+      return;
+    }
+    if (status !== "authenticated" || registrationRole === "visitor") {
+      setCompanyOptions([]);
+      return;
+    }
+
+    const query = String(companyQuery || "").trim();
+    if (!query) {
+      setCompanyOptions([]);
+      return;
+    }
+
+    let isCancelled = false;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(async () => {
+      try {
+        const params = new URLSearchParams({
+          name: query,
+          per_page: "3",
+          page: "1",
+        });
+
+        const headers = {
+          "Content-Type": "application/json",
+        };
+
+        if (session?.accessToken) {
+          headers.Authorization = `Bearer ${session.accessToken}`;
+        }
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/expo/companies?${params.toString()}`,
+          {
+            method: "GET",
+            cache: "no-store",
+            headers,
+            signal: controller.signal,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        const payload = data?.data ?? data;
+        const listData = Array.isArray(payload?.data)
+          ? payload.data
+          : Array.isArray(payload)
+            ? payload
+            : Array.isArray(payload?.items)
+              ? payload.items
+              : [];
+
+        if (isCancelled) return;
+        setCompanyOptions(normalizeCompanyOptions(listData));
+      } catch (error) {
+        if (isCancelled || error?.name === "AbortError") return;
+        console.error("Error fetching company options:", error);
+        setCompanyOptions([]);
+      }
+    }, 300);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [
+    open,
+    status,
+    registrationRole,
+    companyQuery,
+    session?.accessToken,
   ]);
 
   const handleLogin = () => {

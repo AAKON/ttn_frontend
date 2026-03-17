@@ -10,7 +10,6 @@ const getFilterOptions = async () => {
       { cache: "no-store" }
     );
     const data = await response.json();
-    console.log({ data });
 
     return data?.data || [];
   } catch (error) {
@@ -19,36 +18,9 @@ const getFilterOptions = async () => {
   }
 };
 
-const toArray = (value) => {
-  if (Array.isArray(value)) return value;
-  if (value === undefined || value === null || value === "") return [];
-  return [value];
-};
-
-const getFirst = (value) => {
-  if (Array.isArray(value)) return value[0];
-  return value;
-};
-
-const getExproList = async (token, searchParamsInput = {}) => {
-  const searchParams = await Promise.resolve(searchParamsInput);
+const getExproList = async (token) => {
   const queryParams = new URLSearchParams();
-
-  const title = getFirst(searchParams?.title);
-  const categoryId = getFirst(searchParams?.category_id);
-  const locationIds = toArray(searchParams?.["location_id[]"]);
-  const companyIds = toArray(searchParams?.["company_id[]"]);
-  const years = toArray(searchParams?.["year[]"]);
-  const perPage = getFirst(searchParams?.per_page);
-  const page = getFirst(searchParams?.page);
-
-  if (title) queryParams.set("title", String(title));
-  if (categoryId) queryParams.set("category_id", String(categoryId));
-  locationIds.forEach((value) => queryParams.append("location_id[]", String(value)));
-  companyIds.forEach((value) => queryParams.append("company_id[]", String(value)));
-  years.forEach((value) => queryParams.append("year[]", String(value)));
-  if (perPage) queryParams.set("per_page", String(perPage));
-  queryParams.set("page", page ? String(page) : "1");
+  queryParams.set("page", "1");
 
   try {
     const headers = {
@@ -94,16 +66,14 @@ const getExproList = async (token, searchParamsInput = {}) => {
   }
 };
 
-const ExproPage = async ({ searchParams }) => {
+const ExproPage = async () => {
   const session = await getServerSession(authOptions);
   const token = session?.accessToken;
 
   const [businessCategories, exproData] = await Promise.all([
     getFilterOptions(),
-    getExproList(token, searchParams),
+    getExproList(token),
   ]);
-  console.log({ businessCategories });
-
 
   return (
     <Suspense fallback={<div className="container py-10">Loading...</div>}>

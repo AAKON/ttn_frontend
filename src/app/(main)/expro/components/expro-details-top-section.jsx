@@ -11,11 +11,14 @@ import {
     Share2,
     Bookmark,
 } from "lucide-react";
+import ExpoRegistrationModal from "./expo-registration-modal";
+import ShareModal from "@/components/company/share-modal";
+import BookmarkCompany from "../../company/[slug]/components/bookmarkCompany";
 
 const ExproDetailsTopSection = ({ expro }) => {
+    const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
     const hasBannerImage = Boolean(expro?.banner_url || expro?.imageUrl);
-  console.log({expro});
-  
+
     // Mock data for countdown (replace with actual logic if needed)
     const countdown = [
         { label: "Days", value: "1" },
@@ -111,19 +114,23 @@ const ExproDetailsTopSection = ({ expro }) => {
 
                         {/* Actions */}
                         <div className="flex items-center gap-3">
-                            <button className="flex items-center justify-center h-12 w-12 border border-[#D0D5DD] rounded-xl hover:bg-gray-50 transition-colors">
-                                <Share2 className="h-4 w-5 text-[#344054]" />
-                            </button>
-                            <button className="flex items-center justify-center h-12 w-12 border border-[#D0D5DD] rounded-xl hover:bg-gray-50 transition-colors">
-                                <Bookmark className="h-5 w-5 text-[#344054]" />
-                            </button>
-                            <button className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm">
+                            <ShareModal />
+                            <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorite} />
+                            <button
+                                type="button"
+                                onClick={() => setIsRegistrationModalOpen(true)}
+                                className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                            >
                                 Register Now
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <ExpoRegistrationModal
+                open={isRegistrationModalOpen}
+                onOpenChange={setIsRegistrationModalOpen}
+            />
         </div>
     );
 };

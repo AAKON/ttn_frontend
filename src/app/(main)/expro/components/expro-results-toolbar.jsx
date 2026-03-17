@@ -3,9 +3,17 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SlidersHorizontal, X } from "lucide-react";
 import * as React from "react";
-import { ExproFilterPopoverContent, initialData } from "./expro-filter-popover-content";
+import { ExproFilterPopoverContent } from "./expro-filter-popover-content";
 
-const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onApply, onRemoveTag }) => {
+const ExproResultsToolbar = ({
+  totalResults = 0,
+  tags = [],
+  selectedFilters,
+  organizerOptions = [],
+  onOrganizerOptionsLoaded,
+  onApply,
+  onRemoveTag,
+}) => {
   const [open, setOpen] = React.useState(false);
   return (
     <div className="mt-2 px-1 py-4">
@@ -49,8 +57,11 @@ const ExproResultsToolbar = ({ totalResults = 0, tags = [], selectedFilters, onA
           </PopoverTrigger>
           <PopoverContent className="w-[380px] p-0" align="end" sideOffset={8}>
             <ExproFilterPopoverContent
+              open={open}
               onClose={() => setOpen(false)}
               selectedFilters={selectedFilters}
+              organizerOptions={organizerOptions}
+              onOrganizerOptionsLoaded={onOrganizerOptionsLoaded}
               onApply={onApply}
             />
           </PopoverContent>

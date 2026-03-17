@@ -2,7 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
-import { Building2, MapPin, ExternalLink, ChevronRight } from "lucide-react";
+import { Building2, MapPin } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { showErrorToast, showSuccessToast } from "@/utils/toast";
 
 const SimilarExproCard = ({ expro }) => (
     <div className="group border border-[#EAECF0] rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-white">
@@ -40,6 +42,50 @@ const SimilarExproCard = ({ expro }) => (
 );
 
 const ExproDetailsSidebar = ({ similarExpros = [] }) => {
+    const { toast } = useToast();
+    const [email, setEmail] = React.useState("");
+    const [isSubscribing, setIsSubscribing] = React.useState(false);
+
+    const handleReminderSubscribe = async (event) => {
+        event.preventDefault();
+
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) {
+            showErrorToast(toast, "Email is required.");
+            return;
+        }
+
+        setIsSubscribing(true);
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/expo/reminder/subscribe`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: trimmedEmail }),
+                }
+            );
+
+            const data = await response.json().catch(() => ({}));
+            const isSuccess = response.ok && (data?.status === true || data?.code === 200);
+
+            if (!isSuccess) {
+                showErrorToast(toast, data?.message || "Failed to subscribe reminder.");
+                return;
+            }
+
+            showSuccessToast(toast, data?.message || "Subscribed successfully!");
+            setEmail("");
+        } catch (error) {
+            showErrorToast(toast, error?.message || "Failed to subscribe reminder.");
+        } finally {
+            setIsSubscribing(false);
+        }
+    };
+
     return (
         <div className="space-y-6">
             {/* Reminder Widget */}
@@ -51,15 +97,23 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
                     Enter your email to get the latest updates about the upcoming fairs & events!
                 </p>
 
-                <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-3" onSubmit={handleReminderSubscribe}>
                     <div className="flex gap-2">
                         <input
                             type="email"
                             placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            disabled={isSubscribing}
                             className="flex-1 px-4 h-11 border border-[#D0D5DD] rounded-lg outline-none focus:border-[#1570EF] focus:ring-1 focus:ring-[#1570EF] transition-all text-sm"
                         />
-                        <button className="px-5 h-11 bg-[#ED8A19] text-white font-semibold rounded-lg hover:bg-[#da7f18] transition-colors text-sm whitespace-nowrap">
-                            Subscribe
+                        <button
+                            type="submit"
+                            disabled={isSubscribing}
+                            className="px-5 h-11 bg-[#ED8A19] text-white font-semibold rounded-lg hover:bg-[#da7f18] transition-colors text-sm whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-70"
+                        >
+                            {isSubscribing ? "Subscribing..." : "Subscribe"}
                         </button>
                     </div>
                     <p className="text-[12px] text-[#667085]">
@@ -70,11 +124,14 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
 
             {/* Similar Expo Widget */}
             <div className="bg-white rounded-2xl border border-[#EAECF0] p-6 shadow-sm">
+                
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-bold text-[#101828]">Similar Expo</h3>
-                    <Link href="/expro" className="text-sm font-semibold text-[#1570EF] hover:underline">
-                        View All
-                    </Link>
+                    {similarExpros.length > 0 ? (
+                        <Link href="/expro" className="text-sm font-semibold text-[#1570EF] hover:underline">
+                            View All
+                        </Link>
+                    ) : null}
                 </div>
 
                 <div className="space-y-4">

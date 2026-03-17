@@ -6,7 +6,7 @@ import { delFavsCompanyFaq } from "@/services/company";
 import { useToast } from "@/hooks/use-toast";
 import { HeartIcon } from "lucide-react";
 
-function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false }) {
+function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false, expro=false   }) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false }
     setIsAdding(true);
     try {
       setIsFavorite((prev) => !prev);
-      await delFavsCompanyFaq(slug, toast);
+      await delFavsCompanyFaq(slug, toast, expro);
     } catch (err) {
       setError(err.message);
       setIsFavorite((prev) => !prev);

@@ -1,34 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 
-const ExproHeroSearch = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [keyword, setKeyword] = useState("");
-
-  useEffect(() => {
-    setKeyword(searchParams.get("title") || "");
-  }, [searchParams]);
-
+const ExproHeroSearch = ({ keyword = "", onKeywordChange = () => {}, onSearch }) => {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-
-    const trimmedKeyword = keyword.trim();
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (trimmedKeyword) {
-      params.set("title", trimmedKeyword);
-    } else {
-      params.delete("title");
+    if (typeof onSearch === "function") {
+      onSearch(keyword.trim());
     }
-
-    params.set("page", "1");
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
   };
 
   return (
@@ -54,7 +33,7 @@ const ExproHeroSearch = () => {
             type="search"
             placeholder="Search here..."
             value={keyword}
-            onChange={(event) => setKeyword(event.target.value)}
+            onChange={(event) => onKeywordChange(event.target.value)}
             className="w-full bg-transparent text-md text-[#475569] placeholder:text-[#64748b] outline-none"
           />
         </div>

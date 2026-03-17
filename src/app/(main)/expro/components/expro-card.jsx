@@ -28,17 +28,17 @@ const posterVariants = {
   },
 };
 
-const ExproCard = ({ expro,onRegisterClick }) => {
-  const variant = posterVariants[expro.variant] || posterVariants.emerald;
-  const hasImage = Boolean(expro.imageUrl);
+const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
+  const variant = posterVariants[expro?.variant] || posterVariants?.emerald;
+  const hasImage = Boolean(expro?.imageUrl);
 
   return (
     <article className="overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
       <div className={`relative h-[190px] overflow-hidden ${variant.wrapper}`}>
         {hasImage ? (
           <img
-            src={expro.imageUrl}
-            alt={expro.title}
+            src={expro?.imageUrl}
+            alt={expro?.title}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -94,14 +94,17 @@ const ExproCard = ({ expro,onRegisterClick }) => {
           </span>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <button
-            type="button"
-             onClick={onRegisterClick}
-            className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
-          >
-            Register Now
-          </button>
+        <div className={`mt-5 grid gap-3 ${!withRegisterAction ? "grid-cols-2" : "grid-cols-1"}`}>
+          {!withRegisterAction && (
+            <button
+              type="button"
+              onClick={onRegisterClick}
+              className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
+            >
+              Register Now
+            </button>
+          )}
+
           <Link
             href={`/expro/${expro.slug}`}
             className="flex items-center justify-center h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"

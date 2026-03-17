@@ -1,20 +1,9 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 const ExproDetailsContent = ({ expro }) => {
-    const galleryImages = [
-        { src: "https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?q=80&w=2070&auto=format&fit=crop", alt: "Expo Panel Discussion" },
-        { src: "https://images.unsplash.com/photo-1531050171651-648c70428f52?q=80&w=2070&auto=format&fit=crop", alt: "Expo Display Items" },
-        { src: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2070&auto=format&fit=crop", alt: "Expo Floor View" },
-        { src: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=2070&auto=format&fit=crop", alt: "Expo Presentation" },
-        { src: "https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?q=80&w=2070&auto=format&fit=crop", alt: "Expo Panel Discussion 2" },
-        { src: "https://images.unsplash.com/photo-1531050171651-648c70428f52?q=80&w=2070&auto=format&fit=crop", alt: "Expo Display Items 2" },
-        { src: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=2070&auto=format&fit=crop", alt: "Expo Floor View 2" },
-        { src: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=2070&auto=format&fit=crop", alt: "Expo Presentation 2" },
-        { src: "https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?q=80&w=2070&auto=format&fit=crop", alt: "Expo Panel Discussion 3" },
-    ];
+    const galleryImages = Array.isArray(expro?.galleryImages) ? expro.galleryImages : [];
 
     return (
         <div className="space-y-6">
@@ -48,20 +37,24 @@ const ExproDetailsContent = ({ expro }) => {
                     Gallery
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
-                    {galleryImages.map((image, idx) => (
-                        <div
-                            key={idx}
-                            className="relative aspect-[3/2] overflow-hidden rounded-xl bg-gray-100"
-                        >
-                            <img
-                                src={image.src}
-                                alt={image.alt}
-                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
-                            />
-                        </div>
-                    ))}
-                </div>
+                {galleryImages.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
+                        {galleryImages.map((image, idx) => (
+                            <div
+                                key={image.id || idx}
+                                className="relative aspect-[3/2] overflow-hidden rounded-xl bg-gray-100"
+                            >
+                                <img
+                                    src={image.src}
+                                    alt={image.alt}
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-sm text-[#667085] italic">No gallery images found.</p>
+                )}
             </div>
         </div>
     );

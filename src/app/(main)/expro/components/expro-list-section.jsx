@@ -1,4 +1,5 @@
 import ExproCard from "./expro-card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formatDateRange = (startDate, endDate) => {
   const formatter = new Intl.DateTimeFormat("en-US", {
@@ -68,7 +69,26 @@ const mapExpoFromApi = (item, index) => {
   };
 };
 
-const ExproListSection = ({ exproList = [], loading = false,onRegisterClick }) => {
+const ExproCardShimmer = () => (
+  <article className="overflow-hidden rounded-2xl border border-[#E4E7EC] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
+    <Skeleton className="h-[190px] w-full rounded-none" />
+    <div className="space-y-3 p-4 md:p-5">
+      <Skeleton className="h-4 w-32" />
+      <Skeleton className="h-6 w-full" />
+      <Skeleton className="h-6 w-11/12" />
+      <div className="flex gap-3 pt-1">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-28" />
+      </div>
+      <div className="grid grid-cols-2 gap-3 pt-2">
+        <Skeleton className="h-12 w-full rounded-xl" />
+        <Skeleton className="h-12 w-full rounded-xl" />
+      </div>
+    </div>
+  </article>
+);
+
+const ExproListSection = ({ exproList = [], loading = false, onRegisterClick }) => {
   const list = exproList.map((item, index) => mapExpoFromApi(item, index));
 
   return (
@@ -76,10 +96,7 @@ const ExproListSection = ({ exproList = [], loading = false,onRegisterClick }) =
       {loading ? (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           {Array.from({ length: 3 }).map((_, index) => (
-            <div
-              key={index}
-              className="h-[430px] animate-pulse rounded-2xl border border-[#E4E7EC] bg-white"
-            />
+            <ExproCardShimmer key={index} />
           ))}
         </div>
       ) : null}
