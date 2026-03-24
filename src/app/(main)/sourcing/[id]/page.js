@@ -178,7 +178,7 @@ export default async function SourcingDetails({ params }) {
 				</div>
 			</Section>
 
-			<GetInTouch />
+			{/* <GetInTouch /> */}
 		</>
 	);
 }
