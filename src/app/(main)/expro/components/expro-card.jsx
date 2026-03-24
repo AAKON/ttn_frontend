@@ -98,7 +98,7 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
           {!withRegisterAction && (
             <button
               type="button"
-              onClick={onRegisterClick}
+              onClick={() => onRegisterClick?.(expro?.slug)}
               className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
             >
               Register Now

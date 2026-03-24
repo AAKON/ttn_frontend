@@ -130,6 +130,7 @@ const ExproDetailsTopSection = ({ expro }) => {
             <ExpoRegistrationModal
                 open={isRegistrationModalOpen}
                 onOpenChange={setIsRegistrationModalOpen}
+                expoSlug={expro?.slug}
             />
         </div>
     );

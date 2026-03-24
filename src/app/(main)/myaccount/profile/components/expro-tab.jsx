@@ -254,6 +254,7 @@ const ExproTab = () => {
   const [myExpos, setMyExpos] = useState([]);
   const [savedExpos, setSavedExpos] = useState([]);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+  const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
 
   useEffect(() => {
     if (status === "loading") return;
@@ -368,14 +369,23 @@ const ExproTab = () => {
             title={section.title}
             expos={section.expos}
             withRegisterAction={section.withRegisterAction}
-            onRegisterClick={() => setIsRegistrationModalOpen(true)}
+            onRegisterClick={(expoSlug) => {
+              setSelectedExpoSlug(String(expoSlug || ""));
+              setIsRegistrationModalOpen(true);
+            }}
           />
         ))
       )}
 
       <ExpoRegistrationModal
         open={isRegistrationModalOpen}
-        onOpenChange={setIsRegistrationModalOpen}
+        onOpenChange={(nextOpen) => {
+          setIsRegistrationModalOpen(nextOpen);
+          if (!nextOpen) {
+            setSelectedExpoSlug("");
+          }
+        }}
+        expoSlug={selectedExpoSlug}
       />
     </div>
   );

@@ -59,6 +59,7 @@ const buildExpoQueryParams = ({
 const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0 }) => {
   const { data: session, status } = useSession();
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+  const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
   const [organizerFilterData, setOrganizerFilterData] = useState([]);
   const [keywordInput, setKeywordInput] = useState("");
   const [appliedKeyword, setAppliedKeyword] = useState("");
@@ -251,6 +252,9 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
 
   const handleRegistrationModalOpenChange = (nextOpen) => {
     setIsRegistrationModalOpen(nextOpen);
+    if (!nextOpen) {
+      setSelectedExpoSlug("");
+    }
   };
 
   return (
@@ -277,7 +281,10 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
           onRemoveTag={handleRemoveTag}
         />
         <ExproListSection
-          onRegisterClick={() => setIsRegistrationModalOpen(true)}
+          onRegisterClick={(expoSlug) => {
+            setSelectedExpoSlug(String(expoSlug || ""));
+            setIsRegistrationModalOpen(true);
+          }}
           exproList={clientExproList}
           loading={isListLoading}
         />
@@ -285,6 +292,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
       <ExpoRegistrationModal
         open={isRegistrationModalOpen}
         onOpenChange={handleRegistrationModalOpenChange}
+        expoSlug={selectedExpoSlug}
       />
     </section>
   );

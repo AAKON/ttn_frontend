@@ -3,15 +3,15 @@
 import "react-phone-input-2/lib/style.css";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, ChevronDown, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { showSuccessToast } from "@/utils/toast";
+import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import {
   Dialog,
   DialogContent,
@@ -91,6 +91,10 @@ const fieldClasses =
 
 const selectTriggerClasses =
   "h-12 rounded-[12px] border-[#D0D5DD] bg-white px-4 text-[14px] text-[#101828] shadow-[0_1px_2px_rgba(16,24,40,0.04)] focus:ring-0 focus:ring-offset-0 [&>span]:text-left data-[placeholder]:text-[#98A2B3] [&>svg]:text-[#667085] [&>svg]:opacity-100";
+
+const expoCompaniesBaseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
+const fallbackExpoRegistrationSlug = "aspernatur-qui-dicta";
 
 const FieldLabel = ({ label, required = false }) => (
   <span className="mb-2.5 block text-[14px] font-medium leading-5 text-[#101828]">
@@ -173,23 +177,46 @@ const RegistrationTypeSelector = ({
   </div>
 );
 
-const ExpoRegistrationModal = ({ open, onOpenChange }) => {
+const getPhonePayload = (rawPhone = "", selectedPhoneCode = "+1") => {
+  const sanitizedPhone = String(rawPhone || "").replace(/\D/g, "");
+  const sanitizedCode = String(selectedPhoneCode || "").replace(/\D/g, "");
+
+  if (!sanitizedPhone) {
+    return {
+      phone_code: "",
+      phone: "",
+    };
+  }
+
+  if (sanitizedCode && sanitizedPhone.startsWith(sanitizedCode)) {
+    return {
+      phone_code: selectedPhoneCode || "",
+      phone: sanitizedPhone.slice(sanitizedCode.length),
+    };
+  }
+
+  return {
+    phone_code: selectedPhoneCode || "",
+    phone: sanitizedPhone,
+  };
+};
+
+const ExpoRegistrationModal = ({ open, onOpenChange, expoSlug = "" }) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const { toast } = useToast();
-  const companyListId = useId();
   const hasAppliedUrlRoleRef = useRef(false);
   const [registrationRole, setRegistrationRole] = useState("exhibitor");
   const [submitting, setSubmitting] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
+  const [phoneCode, setPhoneCode] = useState("+1");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: getDefaultValues(session?.user),
   });
-  const companyQuery = form.watch("company");
 
   const selectedRoleLabel = useMemo(
     () =>
@@ -197,6 +224,15 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
       "Exhibitor",
     [registrationRole]
   );
+  const resolvedExpoSlug = useMemo(() => {
+    const trimmedExpoSlug = String(expoSlug || "").trim();
+    if (trimmedExpoSlug) return trimmedExpoSlug;
+
+    const pathMatch = pathname?.match(/^\/expro\/([^/?#]+)/);
+    if (pathMatch?.[1]) return decodeURIComponent(pathMatch[1]);
+
+    return fallbackExpoRegistrationSlug;
+  }, [expoSlug, pathname]);
 
   useEffect(() => {
     if (!open) {
@@ -215,6 +251,7 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
 
   useEffect(() => {
     if (!open) return;
+    setPhoneCode("+1");
     form.reset(getDefaultValues(session?.user));
   }, [
     open,
@@ -234,19 +271,17 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
       return;
     }
 
-    const query = String(companyQuery || "").trim();
-    if (!query) {
-      setCompanyOptions([]);
-      return;
-    }
-
     let isCancelled = false;
     const controller = new AbortController();
     const timeoutId = setTimeout(async () => {
       try {
+        if (!expoCompaniesBaseUrl) {
+          setCompanyOptions([]);
+          return;
+        }
+
         const params = new URLSearchParams({
-          name: query,
-          per_page: "3",
+          per_page: 50,
           page: "1",
         });
 
@@ -259,7 +294,7 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/expo/companies?${params.toString()}`,
+          `${expoCompaniesBaseUrl}/expo/companies?${params.toString()}`,
           {
             method: "GET",
             cache: "no-store",
@@ -300,7 +335,6 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
     open,
     status,
     registrationRole,
-    companyQuery,
     session?.accessToken,
   ]);
 
@@ -321,20 +355,6 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
     onOpenChange(false);
   };
 
-  const submitRegistration = async () => {
-    setSubmitting(true);
-    try {
-      showSuccessToast(
-        toast,
-        `Expo registration submitted as ${selectedRoleLabel}.`
-      );
-      form.reset(getDefaultValues(session?.user));
-      onOpenChange(false);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const isAuthenticated = status === "authenticated";
   const isVisitorRegistration = registrationRole === "visitor";
   const showLoadingState = status === "loading" && !isVisitorRegistration;
@@ -348,8 +368,82 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
       ? "sm:max-w-[720px]"
       : "sm:max-w-[804px]";
 
-  const onSubmit = async () => {
-    await submitRegistration();
+  const submitRegistration = async (formValues) => {
+    setSubmitting(true);
+    try {
+      if (!isVisitorRegistration) {
+        if (!expoCompaniesBaseUrl) {
+          throw new Error("Registration API URL is not configured.");
+        }
+
+        const jobTitleId = jobTitleOptions.findIndex(
+          (option) => option === formValues?.job_title
+        ) + 1;
+
+        if (jobTitleId <= 0) {
+          throw new Error("Please select a valid job title.");
+        }
+
+        const { phone_code, phone } = getPhonePayload(
+          formValues?.phone,
+          phoneCode
+        );
+
+        const payload = {
+          type: registrationRole,
+          name: String(formValues?.name || "").trim(),
+          email: String(formValues?.email || "").trim(),
+          phone_code,
+          phone,
+          company: String(formValues?.company || "").trim(),
+          job_title_id: jobTitleId,
+          job_function: String(formValues?.job_function || "").trim(),
+        };
+
+        const headers = {
+          "Content-Type": "application/json",
+        };
+
+        if (session?.accessToken) {
+          headers.Authorization = `Bearer ${session.accessToken}`;
+        }
+
+        const response = await fetch(
+          `${expoCompaniesBaseUrl}/expo/${resolvedExpoSlug}/register`,
+          {
+            method: "POST",
+            cache: "no-store",
+            headers,
+            body: JSON.stringify(payload),
+          }
+        );
+
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || data?.status === false) {
+          throw new Error(
+            data?.message || `Registration failed with status ${response.status}`
+          );
+        }
+      }
+
+      showSuccessToast(
+        toast,
+        `Expo registration submitted as ${selectedRoleLabel}.`
+      );
+      form.reset(getDefaultValues(session?.user));
+      onOpenChange(false);
+    } catch (error) {
+      showErrorToast(
+        toast,
+        error?.message || "Failed to submit expo registration."
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const onSubmit = async (values) => {
+    await submitRegistration(values);
   };
 
   return (
@@ -516,7 +610,12 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
                                   enableSearch
                                   specialLabel=""
                                   value={field.value}
-                                  onChange={field.onChange}
+                                  onChange={(value, country) => {
+                                    field.onChange(value);
+                                    if (country?.dialCode) {
+                                      setPhoneCode(`+${country.dialCode}`);
+                                    }
+                                  }}
                                   containerClass="!w-full"
                                   inputClass="!h-12 !w-full !rounded-[12px] !border !border-[#D0D5DD] !bg-white !pl-[72px] !pr-4 !text-[14px] !font-normal !text-[#101828] !shadow-[0_1px_2px_rgba(16,24,40,0.04)] placeholder:!text-[#98A2B3]"
                                   buttonClass="!left-0 !top-0 !h-12 !rounded-l-[12px] !rounded-r-none !border-0 !border-r !border-[#D0D5DD] !bg-transparent !px-3"
@@ -536,22 +635,33 @@ const ExpoRegistrationModal = ({ open, onOpenChange }) => {
                               <FormLabel>
                                 <FieldLabel label="Company" required />
                               </FormLabel>
-                              <FormControl>
-                                <div className="relative">
-                                  <Input
-                                    {...field}
-                                    list={companyListId}
-                                    placeholder="Type company name or select"
-                                    className={`${fieldClasses} pr-11`}
-                                  />
-                                  <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#667085]" />
-                                  <datalist id={companyListId}>
-                                    {companyOptions.map((option) => (
-                                      <option key={option} value={option} />
-                                    ))}
-                                  </datalist>
-                                </div>
-                              </FormControl>
+                              <Select
+                                value={field.value || undefined}
+                                onValueChange={field.onChange}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className={selectTriggerClasses}>
+                                    <SelectValue placeholder="Select company" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="rounded-[12px] border border-[#D0D5DD] bg-white p-1 shadow-[0_12px_24px_rgba(16,24,40,0.12)]">
+                                  {companyOptions.length > 0 ? (
+                                    companyOptions.map((option) => (
+                                      <SelectItem
+                                        key={option}
+                                        value={option}
+                                        className="rounded-[10px] py-2.5 text-[14px] text-[#101828]"
+                                      >
+                                        {option}
+                                      </SelectItem>
+                                    ))
+                                  ) : (
+                                    <div className="px-2 py-2.5 text-[13px] text-[#667085]">
+                                      No company options available
+                                    </div>
+                                  )}
+                                </SelectContent>
+                              </Select>
                               <FormMessage className="pt-1.5 text-[12px]" />
                             </FormItem>
                           )}
