@@ -31,7 +31,8 @@ const posterVariants = {
 const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
   const variant = posterVariants[expro?.variant] || posterVariants?.emerald;
   const hasImage = Boolean(expro?.imageUrl);
-
+ console.log({expro});
+ 
   return (
     <article className="overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
       <div className={`relative h-[190px] overflow-hidden ${variant.wrapper}`}>
@@ -98,7 +99,12 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
           {!withRegisterAction && (
             <button
               type="button"
-              onClick={() => onRegisterClick?.(expro?.slug)}
+              onClick={() =>
+                onRegisterClick?.(
+                  expro?.slug,
+                  expro?.visitor_reg_url || expro?.visitorRegUrl || ""
+                )
+              }
               className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
             >
               Register Now

@@ -54,6 +54,7 @@ const mapExpoFromApi = (item, index) => {
     organizer:
       item?.company?.name ||
       item?.company_name ||
+      item?.organizer_name ||
       item?.organizer ||
       "Unknown company",
     variant: ["emerald", "crimson", "plum"][index % 3],
@@ -65,6 +66,13 @@ const mapExpoFromApi = (item, index) => {
       item?.banner_image_url ||
       item?.image ||
       item?.image_url ||
+      "",
+    visitor_reg_url:
+      item?.visitor_reg_url ||
+      item?.visitor_registration_url ||
+      item?.registration_url ||
+      item?.reg_url ||
+      item?.visitorRegUrl ||
       "",
   };
 };

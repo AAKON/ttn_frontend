@@ -69,17 +69,14 @@ const mapExpoFromApi = (item, index) => ({
     item?.organizer ||
     "Unknown organizer",
   imageUrl: getExpoImage(item),
+  visitor_reg_url:
+    item?.visitor_reg_url ||
+    item?.visitor_registration_url ||
+    item?.registration_url ||
+    item?.reg_url ||
+    item?.visitorRegUrl ||
+    "",
 });
-
-const fallbackExpos = Array.from({ length: 5 }, (_, index) => ({
-  id: index + 1,
-  slug: `expo-${index + 1}`,
-  title: "INDEX 26 - The World's Leading Nonwovens Exhibition",
-  dateRange: "7 Feb, 2026 - 9 Feb, 2026",
-  country: "Bangladesh",
-  organizer: "Intex South Asia",
-  imageUrl: "",
-}));
 
 const sliderOptions = {
   type: "slide",
@@ -255,6 +252,7 @@ const ExproTab = () => {
   const [savedExpos, setSavedExpos] = useState([]);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
+  const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = useState("");
 
   useEffect(() => {
     if (status === "loading") return;
@@ -332,8 +330,8 @@ const ExproTab = () => {
 
         if (!isMounted) return;
 
-        setMyExpos((myExpoData.length > 0 ? myExpoData : fallbackExpos).slice(0, 5));
-        setSavedExpos((savedExpoData.length > 0 ? savedExpoData : fallbackExpos).slice(0, 5));
+        setMyExpos(myExpoData.slice(0, 5));
+        setSavedExpos(savedExpoData.slice(0, 5));
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -369,8 +367,9 @@ const ExproTab = () => {
             title={section.title}
             expos={section.expos}
             withRegisterAction={section.withRegisterAction}
-            onRegisterClick={(expoSlug) => {
+            onRegisterClick={(expoSlug, visitorRegUrl) => {
               setSelectedExpoSlug(String(expoSlug || ""));
+              setSelectedVisitorRegUrl(String(visitorRegUrl || ""));
               setIsRegistrationModalOpen(true);
             }}
           />
@@ -383,9 +382,11 @@ const ExproTab = () => {
           setIsRegistrationModalOpen(nextOpen);
           if (!nextOpen) {
             setSelectedExpoSlug("");
+            setSelectedVisitorRegUrl("");
           }
         }}
         expoSlug={selectedExpoSlug}
+        visitorRegUrl={selectedVisitorRegUrl}
       />
     </div>
   );

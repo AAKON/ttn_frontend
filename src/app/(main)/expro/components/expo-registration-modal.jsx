@@ -201,7 +201,12 @@ const getPhonePayload = (rawPhone = "", selectedPhoneCode = "+1") => {
   };
 };
 
-const ExpoRegistrationModal = ({ open, onOpenChange, expoSlug = "" }) => {
+const ExpoRegistrationModal = ({
+  open,
+  onOpenChange,
+  expoSlug = "",
+  visitorRegUrl = "",
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -233,6 +238,10 @@ const ExpoRegistrationModal = ({ open, onOpenChange, expoSlug = "" }) => {
 
     return fallbackExpoRegistrationSlug;
   }, [expoSlug, pathname]);
+  const resolvedVisitorRegUrl = useMemo(
+    () => String(visitorRegUrl || "").trim(),
+    [visitorRegUrl]
+  );
 
   useEffect(() => {
     if (!open) {
@@ -371,6 +380,17 @@ const ExpoRegistrationModal = ({ open, onOpenChange, expoSlug = "" }) => {
   const submitRegistration = async (formValues) => {
     setSubmitting(true);
     try {
+      if (isVisitorRegistration && resolvedVisitorRegUrl) {
+        if (typeof window !== "undefined") {
+          window.open(resolvedVisitorRegUrl, "_blank", "noopener,noreferrer");
+        }
+
+        showSuccessToast(toast, "Redirecting to visitor registration.");
+        form.reset(getDefaultValues(session?.user));
+        onOpenChange(false);
+        return;
+      }
+
       if (!isVisitorRegistration) {
         if (!expoCompaniesBaseUrl) {
           throw new Error("Registration API URL is not configured.");

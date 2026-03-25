@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
     MapPin,
     Calendar,
@@ -15,21 +16,231 @@ import ExpoRegistrationModal from "./expo-registration-modal";
 import ShareModal from "@/components/company/share-modal";
 import BookmarkCompany from "../../company/[slug]/components/bookmarkCompany";
 
+const SECOND_IN_MS = 1000;
+const MINUTE_IN_MS = 60 * SECOND_IN_MS;
+const HOUR_IN_MS = 60 * MINUTE_IN_MS;
+const DAY_IN_MS = 24 * HOUR_IN_MS;
+
+const twoDigits = (value) => String(value).padStart(2, "0");
+const isValidTimestamp = (value) => Number.isFinite(value) && !Number.isNaN(value);
+
+const parseDateString = (value) => {
+    if (!value) return null;
+
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    const directParse = Date.parse(raw);
+    if (isValidTimestamp(directParse)) return directParse;
+
+    const dmyMatch = raw.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);
+    if (dmyMatch) {
+        const [, day, month, year] = dmyMatch;
+        const isoLike = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}T00:00:00`;
+        const dmyParse = Date.parse(isoLike);
+        if (isValidTimestamp(dmyParse)) return dmyParse;
+    }
+
+    return null;
+};
+
+const parseExpoTimestamp = (value, pickFromRange = "start") => {
+    if (value === null || value === undefined) return null;
+
+    if (typeof value === "number") {
+        const normalized = value < 1e12 ? value * 1000 : value;
+        return isValidTimestamp(normalized) ? normalized : null;
+    }
+
+    if (value instanceof Date) {
+        const timestamp = value.getTime();
+        return isValidTimestamp(timestamp) ? timestamp : null;
+    }
+
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    const directParse = parseDateString(raw);
+    if (isValidTimestamp(directParse)) return directParse;
+
+    const delimiter = raw.includes(" - ") ? " - " : raw.includes(" to ") ? " to " : null;
+    if (!delimiter) return null;
+
+    const parts = raw.split(delimiter).map((part) => part.trim()).filter(Boolean);
+    if (parts.length === 0) return null;
+
+    const targetPart = pickFromRange === "end" ? parts[parts.length - 1] : parts[0];
+    return parseDateString(targetPart);
+};
+
 const ExproDetailsTopSection = ({ expro }) => {
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
+    const [nowTimestamp, setNowTimestamp] = React.useState(null);
+    const [showStickyCountdown, setShowStickyCountdown] = React.useState(false);
+    const sectionRef = React.useRef(null);
+
     const hasBannerImage = Boolean(expro?.banner_url || expro?.imageUrl);
+    const organizerName = expro?.organizer || "Unknown Organizer";
+    const companySlug = expro?.company_slug || expro?.company?.slug || expro?.company?.company_slug;
+    const startDateValue =
+        expro?.start_date ||
+        expro?.from_date ||
+        expro?.startDate ||
+        expro?.start_datetime ||
+        expro?.event_start_date ||
+        expro?.dateRange;
+    const endDateValue =
+        expro?.end_date ||
+        expro?.to_date ||
+        expro?.endDate ||
+        expro?.end_datetime ||
+        expro?.event_end_date ||
+        expro?.dateRange;
+    const visitorRegUrl =
+        expro?.visitor_reg_url ||
+        expro?.visitor_registration_url ||
+        expro?.registration_url ||
+        expro?.reg_url ||
+        "";
 
-    // Mock data for countdown (replace with actual logic if needed)
-    const countdown = [
-        { label: "Days", value: "1" },
-        { label: "Hours", value: "10" },
-        { label: "Minutes", value: "30" },
-        { label: "Seconds", value: "20" },
-    ];
+    const startTimestamp = React.useMemo(
+        () => parseExpoTimestamp(startDateValue, "start"),
+        [startDateValue]
+    );
+    const endTimestamp = React.useMemo(
+        () => parseExpoTimestamp(endDateValue, "end"),
+        [endDateValue]
+    );
 
+    React.useEffect(() => {
+        setNowTimestamp(Date.now());
+    }, []);
+
+    React.useEffect(() => {
+        if (!startTimestamp && !endTimestamp) return undefined;
+
+        const timerId = window.setInterval(() => {
+            setNowTimestamp(Date.now());
+        }, SECOND_IN_MS);
+
+        return () => {
+            window.clearInterval(timerId);
+        };
+    }, [startTimestamp, endTimestamp]);
+
+    const countdownInfo = React.useMemo(() => {
+        if (nowTimestamp === null) {
+            return {
+                isActive: false,
+                values: [],
+            };
+        }
+
+        let targetTimestamp = null;
+        if (startTimestamp && nowTimestamp < startTimestamp) {
+            targetTimestamp = startTimestamp;
+        } else if (endTimestamp && nowTimestamp < endTimestamp) {
+            targetTimestamp = endTimestamp;
+        }
+
+        if (!targetTimestamp) {
+            return {
+                isActive: false,
+                values: [],
+            };
+        }
+
+        const timeLeft = Math.max(targetTimestamp - nowTimestamp, 0);
+        const days = Math.floor(timeLeft / DAY_IN_MS);
+        const hours = Math.floor((timeLeft % DAY_IN_MS) / HOUR_IN_MS);
+        const minutes = Math.floor((timeLeft % HOUR_IN_MS) / MINUTE_IN_MS);
+        const seconds = Math.floor((timeLeft % MINUTE_IN_MS) / SECOND_IN_MS);
+
+        return {
+            isActive: true,
+            values: [
+                { label: "Days", value: String(days) },
+                { label: "Hours", value: twoDigits(hours) },
+                { label: "Minutes", value: twoDigits(minutes) },
+                { label: "Seconds", value: twoDigits(seconds) },
+            ],
+        };
+    }, [nowTimestamp, startTimestamp, endTimestamp]);
+
+    React.useEffect(() => {
+        if (!countdownInfo.isActive) {
+            setShowStickyCountdown(false);
+            return undefined;
+        }
+
+        const updateStickyVisibility = () => {
+            const sectionElement = sectionRef.current;
+            if (!sectionElement || window.innerWidth < 1024) {
+                setShowStickyCountdown(false);
+                return;
+            }
+
+            const headerHeight = window.scrollY > 100 ? 88 : 0;
+            const sectionRect = sectionElement.getBoundingClientRect();
+            const shouldShow = sectionRect.bottom <= headerHeight + 8;
+
+            setShowStickyCountdown((prevState) =>
+                prevState === shouldShow ? prevState : shouldShow
+            );
+        };
+
+        updateStickyVisibility();
+        window.addEventListener("scroll", updateStickyVisibility, { passive: true });
+        window.addEventListener("resize", updateStickyVisibility);
+
+        return () => {
+            window.removeEventListener("scroll", updateStickyVisibility);
+            window.removeEventListener("resize", updateStickyVisibility);
+        };
+    }, [countdownInfo.isActive]);
+    
     return (
-        <div className="bg-white rounded-2xl border border-[#EAECF0] overflow-hidden shadow-sm">
-            <div className="flex flex-col lg:flex-row p-4 md:p-6 gap-6 md:gap-8">
+        <>
+            {countdownInfo.isActive && showStickyCountdown ? (
+                <div className="hidden lg:block fixed left-0 right-0 top-[88px] z-[60]">
+                    <div className=" border border-[#EAECF0] bg-white px-8 xl:px-12 py-3 shadow-sm ">
+                        <div className="container flex items-center justify-between gap-6">
+                            <h2 className="text-[16px] xl:text-[18px] font-bold text-[#1D2939] leading-tight line-clamp-2 flex-1 min-w-0">
+                                {expro?.title || "Expo"}
+                            </h2>
+
+                            <div className="flex items-center gap-3 flex-shrink-0">
+                                <div className="flex gap-2.5">
+                                    {countdownInfo.values.map((item, idx) => (
+                                        <div
+                                            key={`sticky-countdown-${idx}`}
+                                            className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg"
+                                        >
+                                            <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-normal text-md">
+                                                {item.value}
+                                            </div>
+                                            <span className="text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                                {["Day", "Hr", "Min", "Sec"][idx] || item.label}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setIsRegistrationModalOpen(true)}
+                                    className="px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                >
+                                    Register Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : null}
+
+            <div ref={sectionRef} className="bg-white rounded-2xl border border-[#EAECF0] overflow-hidden shadow-sm">
+                <div className="flex flex-col lg:flex-row p-4 md:p-6 gap-6 md:gap-8">
                 {/* Left Side: Banner Image */}
                 <div className="w-full lg:w-[565px] flex-shrink-0">
                     <div className="relative aspect-[16/9] lg:aspect-auto lg:h-full rounded-xl overflow-hidden bg-gray-100">
@@ -66,11 +277,25 @@ const ExproDetailsTopSection = ({ expro }) => {
                     {/* Top Line: Organizer & Views */}
                     <div className="flex items-center justify-between mb-2">
                         <p className="text-[14px] md:text-lg text-gray-600">
-                            Event By <br className="md:hidden" /> <span className="text-[#1570EF] font-[14px] md:font-medium cursor-pointer hover:underline">{expro?.organizer || "Unknown Organizer"}</span>
+                            Event By <br className="md:hidden" />{" "}
+                            {companySlug ? (
+                                <Link
+                                    href={`/company/${companySlug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#1570EF] font-[14px] md:font-medium cursor-pointer hover:underline"
+                                >
+                                    {organizerName}
+                                </Link>
+                            ) : (
+                                <span className="text-[#1570EF] font-[14px] md:font-medium">
+                                    {organizerName}
+                                </span>
+                            )}
                         </p>
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1570EF] text-white text-xs font-medium">
                             <Eye className="h-3.5 w-3.5" />
-                            25 Views
+                            {expro?.view_count} Views
                         </div>
                     </div>
 
@@ -97,25 +322,29 @@ const ExproDetailsTopSection = ({ expro }) => {
                     </div>
 
                     {/* Bottom Row: Countdown & Actions */}
-                    <div className="mt-auto flex flex-col md:flex-row md:items-center justify-between gap-6 pt-2">
+                    <div
+                        className={`mt-auto flex flex-col md:flex-row md:items-center gap-6 pt-2 ${countdownInfo.isActive ? "justify-between" : "md:justify-end"}`}
+                    >
                         {/* Countdown */}
-                        <div className="flex gap-2.5">
-                            {countdown.map((item, idx) => (
-                                <div key={idx} className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg ">
-                                    <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-medium text-lg">
-                                        {item.value}
+                        {countdownInfo?.isActive ? (
+                            <div className="flex gap-2.5">
+                                {countdownInfo.values.map((item, idx) => (
+                                    <div key={idx} className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg ">
+                                        <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-medium text-lg">
+                                            {item.value}
+                                        </div>
+                                        <span className=" text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                            {item.label}
+                                        </span>
                                     </div>
-                                    <span className=" text-[10px] font-normal text-[#667085] uppercase tracking-wider">
-                                        {item.label}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                            </div>
+                        ) : null}
 
                         {/* Actions */}
                         <div className="flex items-center gap-3">
                             <ShareModal />
-                            <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorite} />
+                            <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
                             <button
                                 type="button"
                                 onClick={() => setIsRegistrationModalOpen(true)}
@@ -126,13 +355,15 @@ const ExproDetailsTopSection = ({ expro }) => {
                         </div>
                     </div>
                 </div>
+                </div>
+                <ExpoRegistrationModal
+                    open={isRegistrationModalOpen}
+                    onOpenChange={setIsRegistrationModalOpen}
+                    expoSlug={expro?.slug}
+                    visitorRegUrl={visitorRegUrl}
+                />
             </div>
-            <ExpoRegistrationModal
-                open={isRegistrationModalOpen}
-                onOpenChange={setIsRegistrationModalOpen}
-                expoSlug={expro?.slug}
-            />
-        </div>
+        </>
     );
 };
 

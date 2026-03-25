@@ -23,6 +23,7 @@ function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false, 
       setIsAdding(false);
     }
   };
+console.log({isFavorite});
 
   return (
     <div className="flex gap-1">

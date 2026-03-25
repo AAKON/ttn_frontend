@@ -5,46 +5,80 @@ import Link from "next/link";
 import { Building2, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
+import ExpoRegistrationModal from "./expo-registration-modal";
 
-const SimilarExproCard = ({ expro }) => (
-    <div className="group border border-[#EAECF0] rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-white">
-        <div className="relative aspect-[16/9] bg-gray-100">
-            {/* Fallback pattern if no image */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">{expro.posterWord || "Expro"}</span>
-            </div>
-        </div>
-        <div className="p-4">
-            <p className="text-xs font-semibold text-[#667085] mb-2">{expro.dateRange}</p>
-            <h4 className="text-sm font-bold text-[#101828] mb-3 line-clamp-2 leading-tight group-hover:text-[#1570EF] transition-colors">
-                {expro.title}
-            </h4>
-            <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-xs text-[#475467]">
-                    <MapPin className="h-3.5 w-3.5 text-[#667085]" />
-                    <span>{expro.country}</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-[#475467]">
-                    <Building2 className="h-3.5 w-3.5 text-[#667085]" />
-                    <span>{expro.organizer}</span>
+const SimilarExproCard = ({ expro, onRegisterClick }) => {
+    const visitorRegUrl =
+        expro?.visitor_reg_url ||
+        expro?.visitor_registration_url ||
+        expro?.visitorRegUrl ||
+        expro?.registration_url ||
+        "";
+
+    return (
+        <div className="group border border-[#EAECF0] rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-white">
+            <div className="relative aspect-[16/9] bg-gray-100">
+                {/* Fallback pattern if no image */}
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                    <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">{expro.posterWord || "Expro"}</span>
                 </div>
             </div>
-            <div className="grid grid-cols-2 gap-2">
-                <button className="py-2 text-xs font-semibold border border-[#D0D5DD] rounded-lg hover:bg-gray-50 transition-colors">
-                    Register Now
-                </button>
-                <button className="py-2 text-xs font-semibold border border-[#ED8A19] text-[#ED8A19] rounded-lg hover:bg-[#FFFAEB] transition-colors">
-                    View Details
-                </button>
+            <div className="p-4">
+                <p className="text-xs font-semibold text-[#667085] mb-2">{expro.dateRange}</p>
+                <h4 className="text-sm font-bold text-[#101828] mb-3 line-clamp-2 leading-tight group-hover:text-[#1570EF] transition-colors">
+                    {expro.title}
+                </h4>
+                <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-xs text-[#475467]">
+                        <MapPin className="h-3.5 w-3.5 text-[#667085]" />
+                        <span>{expro.country}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-[#475467]">
+                        <Building2 className="h-3.5 w-3.5 text-[#667085]" />
+                        <span>{expro.organizer}</span>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        type="button"
+                        onClick={() => onRegisterClick?.(expro?.slug, visitorRegUrl)}
+                        className="w-full bg-white py-2 text-xs font-semibold text-[#344054] border border-[#D0D5DD] rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                        Register Now
+                    </button>
+                    <Link
+                        href={expro?.slug ? `/expro/${expro.slug}` : "/expro"}
+                        className="w-full bg-white py-2 text-xs font-semibold border border-[#ED8A19] text-[#ED8A19] rounded-lg hover:bg-[#FFFAEB] transition-colors text-center"
+                    >
+                        View Details
+                    </Link>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 const ExproDetailsSidebar = ({ similarExpros = [] }) => {
     const { toast } = useToast();
     const [email, setEmail] = React.useState("");
     const [isSubscribing, setIsSubscribing] = React.useState(false);
+    const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
+    const [selectedExpoSlug, setSelectedExpoSlug] = React.useState("");
+    const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = React.useState("");
+
+    const handleRegistrationModalOpenChange = (nextOpen) => {
+        setIsRegistrationModalOpen(nextOpen);
+        if (!nextOpen) {
+            setSelectedExpoSlug("");
+            setSelectedVisitorRegUrl("");
+        }
+    };
+
+    const handleRegisterNow = (expoSlug, visitorRegUrl) => {
+        setSelectedExpoSlug(String(expoSlug || ""));
+        setSelectedVisitorRegUrl(String(visitorRegUrl || ""));
+        setIsRegistrationModalOpen(true);
+    };
 
     const handleReminderSubscribe = async (event) => {
         event.preventDefault();
@@ -137,13 +171,24 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
                 <div className="space-y-4">
                     {similarExpros.length > 0 ? (
                         similarExpros.map((expro, idx) => (
-                            <SimilarExproCard key={idx} expro={expro} />
+                            <SimilarExproCard
+                                key={idx}
+                                expro={expro}
+                                onRegisterClick={handleRegisterNow}
+                            />
                         ))
                     ) : (
                         <p className="text-sm text-[#667085] italic">No similar events found.</p>
                     )}
                 </div>
             </div>
+
+            <ExpoRegistrationModal
+                open={isRegistrationModalOpen}
+                onOpenChange={handleRegistrationModalOpenChange}
+                expoSlug={selectedExpoSlug}
+                visitorRegUrl={selectedVisitorRegUrl}
+            />
         </div>
     );
 };

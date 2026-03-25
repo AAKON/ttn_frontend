@@ -208,7 +208,7 @@ export function ExproFilterPopoverContent({
                                 <div className="flex items-center space-x-3">
                                     <Checkbox
                                         id={`${section}-${item.id}`}
-                                        className="w-2 h-2 border-[#D0D5DD] data-[state=checked]:border-[#ED8A19] data-[state=checked]:text-[#ED8A19] !bg-transparent"
+                                        className="h-4 !w-3 rounded-[4px] border-[#D0D5DD] bg-transparent data-[state=checked]:border-[#ED8A19] data-[state=checked]:!bg-transparent data-[state=checked]:text-[#ED8A19] focus-visible:ring-[#FEC88B]"
                                         checked={tempFilters[section]?.includes(item.id)}
                                         onCheckedChange={() => handleToggle(section, item.id)}
                                     />

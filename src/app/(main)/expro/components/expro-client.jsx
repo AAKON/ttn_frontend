@@ -60,6 +60,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
   const { data: session, status } = useSession();
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
+  const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = useState("");
   const [organizerFilterData, setOrganizerFilterData] = useState([]);
   const [keywordInput, setKeywordInput] = useState("");
   const [appliedKeyword, setAppliedKeyword] = useState("");
@@ -254,6 +255,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
     setIsRegistrationModalOpen(nextOpen);
     if (!nextOpen) {
       setSelectedExpoSlug("");
+      setSelectedVisitorRegUrl("");
     }
   };
 
@@ -281,8 +283,9 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
           onRemoveTag={handleRemoveTag}
         />
         <ExproListSection
-          onRegisterClick={(expoSlug) => {
+          onRegisterClick={(expoSlug, visitorRegUrl) => {
             setSelectedExpoSlug(String(expoSlug || ""));
+            setSelectedVisitorRegUrl(String(visitorRegUrl || ""));
             setIsRegistrationModalOpen(true);
           }}
           exproList={clientExproList}
@@ -293,6 +296,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
         open={isRegistrationModalOpen}
         onOpenChange={handleRegistrationModalOpenChange}
         expoSlug={selectedExpoSlug}
+        visitorRegUrl={selectedVisitorRegUrl}
       />
     </section>
   );
