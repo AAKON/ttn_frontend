@@ -6,8 +6,7 @@ import Link from "next/link";
 import { AuthHeader } from "@/shared";
 import Button from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
-import React, { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -36,14 +35,18 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const callbackUrl = useMemo(() => {
-    const requested = String(searchParams.get("callbackUrl") || "").trim();
-    if (!requested) return "/";
-    return requested.startsWith("/") ? requested : "/";
-  }, [searchParams]);
+  const [callbackUrl, setCallbackUrl] = useState("/");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const requested = String(
+      new URLSearchParams(window.location.search).get("callbackUrl") || ""
+    ).trim();
+    if (!requested) return;
+    setCallbackUrl(requested.startsWith("/") ? requested : "/");
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(formSchema),

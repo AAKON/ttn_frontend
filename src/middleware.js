@@ -1,28 +1,26 @@
 const { NextResponse } = require('next/server');
 const { getToken } = require('next-auth/jwt');
 const {
-    ROOT,
     PROTECTED_ROUTE,
     AUTH_ROUTES,
     DEFAULT_REDIRECT
 } = require('@/lib/routes');
 
 async function middleware(req) {
-    const { pathname } = req.nextUrl;
+    const { pathname, search } = req.nextUrl;
 
     // Get authentication token
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    const currentTime = Math.floor(Date.now() / 1000);
-    const isAuthenticated = token && token.accessToken && (typeof token.exp !== 'number' || token.exp > currentTime);
+    const isAuthenticated = Boolean(token);
 
     // Check Route Types
     const isProtectedPath = pathname.startsWith(PROTECTED_ROUTE);
     const isAuthPath = AUTH_ROUTES.some(route => pathname.startsWith(route));
-    const isPublicPath = pathname === ROOT;
 
     // 1. If accessing protected route without being authenticated, redirect to login
     if (isProtectedPath && !isAuthenticated) {
         const loginUrl = new URL('/login', req.url);
+        loginUrl.searchParams.set('callbackUrl', `${pathname}${search || ''}`);
         return NextResponse.redirect(loginUrl);
     }
 
@@ -37,7 +35,7 @@ async function middleware(req) {
 }
 
 const config = {
-    matcher: ['/myaccount', '/login', '/register', '/'],
+    matcher: ['/myaccount/:path*', '/login', '/register'],
 };
 
 module.exports = { middleware, config };
