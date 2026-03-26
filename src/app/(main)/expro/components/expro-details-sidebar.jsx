@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Building2, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -14,14 +15,30 @@ const SimilarExproCard = ({ expro, onRegisterClick }) => {
         expro?.visitorRegUrl ||
         expro?.registration_url ||
         "";
+    const imageUrl =
+        expro?.imageUrl ||
+        expro?.banner_url ||
+        expro?.image ||
+        expro?.image_url ||
+        "";
+    const hasImage = Boolean(imageUrl);
 
     return (
         <div className="group border border-[#EAECF0] rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-white">
             <div className="relative aspect-[16/9] bg-gray-100">
-                {/* Fallback pattern if no image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">{expro.posterWord || "Expro"}</span>
-                </div>
+                {hasImage ? (
+                    <Image
+                        src={imageUrl}
+                        alt={expro?.title || "Expo image"}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 340px"
+                        className="object-cover"
+                    />
+                ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400 text-xs font-medium uppercase tracking-widest">{expro.posterWord || "Expro"}</span>
+                    </div>
+                )}
             </div>
             <div className="p-4">
                 <p className="text-xs font-semibold text-[#667085] mb-2">{expro.dateRange}</p>
@@ -188,6 +205,7 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
                 onOpenChange={handleRegistrationModalOpenChange}
                 expoSlug={selectedExpoSlug}
                 visitorRegUrl={selectedVisitorRegUrl}
+                modalId="expro_details_sidebar"
             />
         </div>
     );

@@ -44,6 +44,49 @@ const parseDateString = (value) => {
     return null;
 };
 
+const parseTimeString = (value) => {
+    if (!value) return null;
+
+    const raw = String(value).trim();
+    if (!raw) return null;
+
+    const match = raw.match(/^(\d{1,2})(?::(\d{1,2}))?(?::(\d{1,2}))?$/);
+    if (!match) return null;
+
+    const hours = Number(match[1]);
+    const minutes = Number(match[2] ?? 0);
+    const seconds = Number(match[3] ?? 0);
+
+    if (
+        Number.isNaN(hours) ||
+        Number.isNaN(minutes) ||
+        Number.isNaN(seconds) ||
+        hours < 0 ||
+        hours > 23 ||
+        minutes < 0 ||
+        minutes > 59 ||
+        seconds < 0 ||
+        seconds > 59
+    ) {
+        return null;
+    }
+
+    return { hours, minutes, seconds };
+};
+
+const formatExpoTime = (value) => {
+    const parsed = parseTimeString(value);
+    if (!parsed) return null;
+
+    const date = new Date(Date.UTC(2000, 0, 1, parsed.hours, parsed.minutes, parsed.seconds));
+    return new Intl.DateTimeFormat("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: "UTC",
+    }).format(date);
+};
+
 const parseExpoTimestamp = (value, pickFromRange = "start") => {
     if (value === null || value === undefined) return null;
 
@@ -101,6 +144,18 @@ const ExproDetailsTopSection = ({ expro }) => {
         expro?.visitor_registration_url ||
         expro?.registration_url ||
         expro?.reg_url ||
+        "";
+    const startTimeValue =
+        expro?.start_time ||
+        expro?.startTime ||
+        expro?.from_time ||
+        expro?.event_start_time ||
+        "";
+    const endTimeValue =
+        expro?.end_time ||
+        expro?.endTime ||
+        expro?.to_time ||
+        expro?.event_end_time ||
         "";
 
     const startTimestamp = React.useMemo(
@@ -167,6 +222,20 @@ const ExproDetailsTopSection = ({ expro }) => {
         };
     }, [nowTimestamp, startTimestamp, endTimestamp]);
 
+    const timeRangeLabel = React.useMemo(() => {
+        const formattedStartTime = formatExpoTime(startTimeValue);
+        const formattedEndTime = formatExpoTime(endTimeValue);
+
+        if (formattedStartTime && formattedEndTime) {
+            return `${formattedStartTime} - ${formattedEndTime}`;
+        }
+
+        if (formattedStartTime) return formattedStartTime;
+        if (formattedEndTime) return formattedEndTime;
+
+        return "10:00 AM - 05:00 PM";
+    }, [startTimeValue, endTimeValue]);
+
     React.useEffect(() => {
         if (!countdownInfo.isActive) {
             setShowStickyCountdown(false);
@@ -198,11 +267,19 @@ const ExproDetailsTopSection = ({ expro }) => {
             window.removeEventListener("resize", updateStickyVisibility);
         };
     }, [countdownInfo.isActive]);
+    console.log("fff",expro);
+    
     
     return (
         <>
-            {countdownInfo.isActive && showStickyCountdown ? (
-                <div className="hidden lg:block fixed left-0 right-0 top-[88px] z-[60]">
+            {countdownInfo.isActive ? (
+                <div
+                    className={`hidden lg:block fixed left-0 right-0 top-[88px] z-[60] transform-gpu transition-all duration-300 ease-out ${
+                        showStickyCountdown
+                            ? "translate-y-0 opacity-100 pointer-events-auto"
+                            : "-translate-y-2 opacity-0 pointer-events-none"
+                    }`}
+                >
                     <div className=" border border-[#EAECF0] bg-white px-8 xl:px-12 py-3 shadow-sm ">
                         <div className="container flex items-center justify-between gap-6">
                             <h2 className="text-[16px] xl:text-[18px] font-bold text-[#1D2939] leading-tight line-clamp-2 flex-1 min-w-0">
@@ -243,7 +320,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                 <div className="flex flex-col lg:flex-row p-4 md:p-6 gap-6 md:gap-8">
                 {/* Left Side: Banner Image */}
                 <div className="w-full lg:w-[565px] flex-shrink-0">
-                    <div className="relative aspect-[16/9] lg:aspect-auto lg:h-full rounded-xl overflow-hidden bg-gray-100">
+                    <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden bg-gray-100">
                         {hasBannerImage ? (
                             <Image
                                 src={expro.banner_url}
@@ -317,7 +394,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                         </div>
                         <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
                             <Clock className="h-4 w-4 text-[#667085] flex-shrink-0" />
-                            <span>10:00 AM - 05:00 PM</span>
+                            <span>{timeRangeLabel}</span>
                         </div>
                     </div>
 
@@ -361,6 +438,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                     onOpenChange={setIsRegistrationModalOpen}
                     expoSlug={expro?.slug}
                     visitorRegUrl={visitorRegUrl}
+                    modalId="expro_details_top"
                 />
             </div>
         </>

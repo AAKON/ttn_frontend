@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import { z } from "zod";
@@ -105,7 +105,7 @@ const FieldLabel = ({ label, required = false }) => (
 
 const RegistrationTerms = ({ showNote = true }) => (
   <div className="space-y-4 px-0.5 text-[14px] leading-7 text-[#475467]">
-    <p>
+    <p className="text-[14px]">
       By submitting, you agree to our{" "}
       <span className="font-semibold text-[#344054] underline">
         Terms of Use
@@ -121,7 +121,7 @@ const RegistrationTerms = ({ showNote = true }) => (
     </p>
 
     {showNote ? (
-      <p>
+      <p className="text-[14px]">
         <span className="font-semibold text-[#101828]">Note:-</span>{" "}
         Please note your information might be shared with the organizer for the
         sole purpose to assist you with your interest in exhibiting or visiting
@@ -143,7 +143,7 @@ const RegistrationTypeSelector = ({
     <RadioGroup
       value={registrationRole}
       onValueChange={onRegistrationRoleChange}
-      className="mt-3 grid grid-cols-3 gap-0 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 md:p-2"
+      className="mt-3 grid grid-cols-1 gap-1 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 sm:grid-cols-3 md:p-2"
     >
       {roleOptions.map((option) => {
         const optionId = `expo-role-${option.value}`;
@@ -151,7 +151,7 @@ const RegistrationTypeSelector = ({
         return (
           <div
             key={option.value}
-            className="flex  cursor-pointer items-center justify-start gap-2.5 rounded-[12px] px-2 py-2 text-[14px] font-semibold leading-5 text-[#344054] transition-colors hover:bg-[#FCFCFD]  md:gap-2 md:px-3 md:py-2 md:text-[14px] md:leading-6"
+            className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-[12px] px-3 py-2 text-[14px] font-semibold leading-5 text-[#344054] transition-colors hover:bg-[#FCFCFD] md:gap-2 md:text-[14px] md:leading-6"
             onClick={() => onRegistrationRoleChange(option.value)}
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") {
@@ -165,9 +165,9 @@ const RegistrationTypeSelector = ({
             <RadioGroupItem
               id={optionId}
               value={option.value}
-              className="cs_radio_inp"
+              className="cs_radio_inp shrink-0"
             />
-            <label htmlFor={optionId} className="cursor-pointer select-none">
+            <label htmlFor={optionId} className="cursor-pointer select-none text-[14px] leading-5">
               {option.label}
             </label>
           </div>
@@ -206,6 +206,7 @@ const ExpoRegistrationModal = ({
   onOpenChange,
   expoSlug = "",
   visitorRegUrl = "",
+  modalId = "expo_registration_modal",
 }) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -213,6 +214,7 @@ const ExpoRegistrationModal = ({
   const { data: session, status } = useSession();
   const { toast } = useToast();
   const hasAppliedUrlRoleRef = useRef(false);
+  const hasAutoOpenedFromQueryRef = useRef(false);
   const [registrationRole, setRegistrationRole] = useState("exhibitor");
   const [submitting, setSubmitting] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
@@ -229,19 +231,62 @@ const ExpoRegistrationModal = ({
       "Exhibitor",
     [registrationRole]
   );
+
+  const clearRegistrationQueryFlags = useCallback(() => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    const keysToDelete = ["expoRegistration", "expoRole", "expoModalId"];
+
+    let hasRemovedAny = false;
+    keysToDelete.forEach((key) => {
+      if (nextParams.has(key)) {
+        nextParams.delete(key);
+        hasRemovedAny = true;
+      }
+    });
+
+    if (!hasRemovedAny) return;
+
+    const query = nextParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }, [pathname, router, searchParams]);
+
   const resolvedExpoSlug = useMemo(() => {
     const trimmedExpoSlug = String(expoSlug || "").trim();
     if (trimmedExpoSlug) return trimmedExpoSlug;
+
+    const queryExpoSlug = String(searchParams.get("expoSlug") || "").trim();
+    if (queryExpoSlug) return queryExpoSlug;
 
     const pathMatch = pathname?.match(/^\/expro\/([^/?#]+)/);
     if (pathMatch?.[1]) return decodeURIComponent(pathMatch[1]);
 
     return fallbackExpoRegistrationSlug;
-  }, [expoSlug, pathname]);
-  const resolvedVisitorRegUrl = useMemo(
-    () => String(visitorRegUrl || "").trim(),
-    [visitorRegUrl]
-  );
+  }, [expoSlug, pathname, searchParams]);
+  const resolvedVisitorRegUrl = useMemo(() => {
+    const trimmedVisitorRegUrl = String(visitorRegUrl || "").trim();
+    if (trimmedVisitorRegUrl) return trimmedVisitorRegUrl;
+
+    return String(searchParams.get("expoVisitorRegUrl") || "").trim();
+  }, [searchParams, visitorRegUrl]);
+
+  useEffect(() => {
+    if (open) return;
+    if (hasAutoOpenedFromQueryRef.current) return;
+
+    const shouldOpenFromQuery = searchParams.get("expoRegistration") === "1";
+    if (!shouldOpenFromQuery) return;
+
+    const requestedModalId = String(searchParams.get("expoModalId") || "").trim();
+    if (requestedModalId && requestedModalId !== modalId) return;
+    const requestedRole = String(searchParams.get("expoRole") || "").trim();
+    if (requestedRole && roleOptions.some((option) => option.value === requestedRole)) {
+      setRegistrationRole(requestedRole);
+    }
+
+    onOpenChange(true);
+    hasAutoOpenedFromQueryRef.current = true;
+    clearRegistrationQueryFlags();
+  }, [clearRegistrationQueryFlags, modalId, onOpenChange, open, searchParams]);
 
   useEffect(() => {
     if (!open) {
@@ -256,7 +301,7 @@ const ExpoRegistrationModal = ({
       setRegistrationRole(requestedRole);
     }
     hasAppliedUrlRoleRef.current = true;
-  }, [open]);
+  }, [open, searchParams]);
 
   useEffect(() => {
     if (!open) return;
@@ -351,6 +396,13 @@ const ExpoRegistrationModal = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("expoRegistration", "1");
     params.set("expoRole", registrationRole);
+    params.set("expoModalId", String(modalId || "").trim() || "expo_registration_modal");
+    if (resolvedExpoSlug) {
+      params.set("expoSlug", resolvedExpoSlug);
+    }
+    if (resolvedVisitorRegUrl) {
+      params.set("expoVisitorRegUrl", resolvedVisitorRegUrl);
+    }
 
     const query = params.toString();
     const callbackUrl = query ? `${pathname}?${query}` : pathname;
@@ -372,10 +424,7 @@ const ExpoRegistrationModal = ({
   const showVisitorRegistration = isVisitorRegistration;
   const showDetailedRegistrationForm =
     isAuthenticated && !isVisitorRegistration;
-  const modalMaxWidth =
-    !isAuthenticated || isVisitorRegistration
-      ? "sm:max-w-[720px]"
-      : "sm:max-w-[804px]";
+  const modalMaxWidth = "sm:max-w-[650px]";
 
   const submitRegistration = async (formValues) => {
     setSubmitting(true);
@@ -469,7 +518,7 @@ const ExpoRegistrationModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className={`w-[calc(100%-24px)] max-w-[512px] gap-0 overflow-hidden rounded-[24px] border border-[#EAECF0] bg-white p-0 shadow-[0_24px_64px_rgba(16,24,40,0.12)] [&>button]:right-4 [&>button]:top-4 [&>button]:rounded-full [&>button]:bg-transparent [&>button]:p-1.5 [&>button]:text-[#667085] [&>button]:opacity-100 [&>button]:transition-colors [&>button:hover]:bg-[#F2F4F7] [&>button:hover]:opacity-100 md:w-full md:[&>button]:right-7 md:[&>button]:top-6 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:border-x-0 max-md:border-b-0 max-md:data-[state=open]:slide-in-from-bottom max-md:data-[state=closed]:slide-out-to-bottom ${modalMaxWidth}`}
+        className={`w-[calc(100%-24px)] max-w-[650px] gap-0 overflow-hidden rounded-[24px] border border-[#EAECF0] bg-white p-0 shadow-[0_24px_64px_rgba(16,24,40,0.12)] [&>button]:right-4 [&>button]:top-4 [&>button]:rounded-full [&>button]:bg-transparent [&>button]:p-1.5 [&>button]:text-[#667085] [&>button]:opacity-100 [&>button]:transition-colors [&>button:hover]:bg-[#F2F4F7] [&>button:hover]:opacity-100 md:w-full md:[&>button]:right-7 md:[&>button]:top-6 max-md:left-0 max-md:right-0 max-md:top-auto max-md:bottom-0 max-md:w-full max-md:max-w-none max-md:translate-x-0 max-md:translate-y-0 max-md:rounded-b-none max-md:border-x-0 max-md:border-b-0 max-md:data-[state=open]:slide-in-from-bottom max-md:data-[state=closed]:slide-out-to-bottom ${modalMaxWidth}`}
       >
         <div className="flex max-h-[88vh] flex-col">
           <DialogHeader className="border-b border-[#EAECF0] px-5 py-4 text-left md:px-6 md:py-5">
@@ -489,17 +538,17 @@ const ExpoRegistrationModal = ({
           ) : null}
 
           {showLoginPrompt ? (
-            <div className="px-5 py-5 md:px-5 md:py-6">
+            <div className="px-5 py-4 md:px-5 md:py-4">
               <RegistrationTypeSelector
                 registrationRole={registrationRole}
                 onRegistrationRoleChange={setRegistrationRole}
               />
 
               <div className="px-2 pb-2 pt-14 text-center md:px-10 md:pt-16">
-                <h3 className="text-[22px] font-semibold text-[#1D2939] md:text-[24px]">
+                <h3 className="text-[20px] font-semibold text-[#1D2939] md:text-[24px]">
                   Login to Expo Registration.
                 </h3>
-                <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-8 text-[#667085]">
+                <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-6 text-[#667085]">
                   You must login to registration. By logged in you will manage
                   your registration & bookmark expo easily from your profile.
                 </p>
@@ -566,7 +615,7 @@ const ExpoRegistrationModal = ({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex min-h-0 flex-1 flex-col"
               >
-                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-9 md:py-9">
+                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 md:px-6 md:py-6">
                   <div className="space-y-5 md:space-y-6">
                     <RegistrationTypeSelector
                       registrationRole={registrationRole}

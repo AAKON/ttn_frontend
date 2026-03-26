@@ -25,6 +25,8 @@ const formatDateRange = (startDate, endDate) => {
 };
 
 const mapExpoFromApi = (item, index) => {
+  console.log({item});
+  
   const title = item?.title || item?.name || "Untitled Expo";
   const posterWord = item?.poster_word || title.split(" ")[0] || "Expo";
   const posterTagline =
@@ -60,12 +62,7 @@ const mapExpoFromApi = (item, index) => {
     variant: ["emerald", "crimson", "plum"][index % 3],
     slug: item?.slug || item?.id || String(index + 1),
     imageUrl:
-      item?.cover_image ||
-      item?.cover_image_url ||
-      item?.banner_image ||
-      item?.banner_image_url ||
-      item?.image ||
-      item?.image_url ||
+      item?.banner_url ||
       "",
     visitor_reg_url:
       item?.visitor_reg_url ||

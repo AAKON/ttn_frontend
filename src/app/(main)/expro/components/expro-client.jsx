@@ -297,6 +297,7 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
         onOpenChange={handleRegistrationModalOpenChange}
         expoSlug={selectedExpoSlug}
         visitorRegUrl={selectedVisitorRegUrl}
+        modalId="expro_list"
       />
     </section>
   );

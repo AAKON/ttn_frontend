@@ -6,8 +6,8 @@ import Link from "next/link";
 import { AuthHeader } from "@/shared";
 import Button from "@/components/shared/button";
 import { Input } from "@/components/ui/input";
-import React, {useState} from "react";
-import { useRouter } from "next/navigation";
+import React, { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -21,7 +21,7 @@ import { signIn, getSession } from "next-auth/react";
 import { showErrorToast, showSuccessToast } from "@/utils/toast";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
-import {Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z
@@ -36,9 +36,14 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const callbackUrl = useMemo(() => {
+    const requested = String(searchParams.get("callbackUrl") || "").trim();
+    if (!requested) return "/";
+    return requested.startsWith("/") ? requested : "/";
+  }, [searchParams]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,7 +61,7 @@ export default function Login() {
         email: email,
         password: password,
         redirect: false,
-        callbackUrl: "/",
+        callbackUrl,
       })
       if (res?.error) {
           showErrorToast(toast, "The username or password you entered is incorrect. Please try again");
@@ -68,8 +73,11 @@ export default function Login() {
           console.error("Failed to refresh session:", sessionError);
           showErrorToast(toast, "Session refresh failed. Please reload the page.");
         }
-          // router.push("/");
-        window.location.href = "/";
+        const nextPath =
+          typeof res?.url === "string" && res.url.startsWith("/")
+            ? res.url
+            : callbackUrl;
+        window.location.href = nextPath;
         }
     } catch (error) {
       showErrorToast(toast, "Sign in faild, Try again");
@@ -144,7 +152,7 @@ export default function Login() {
                   </Button>
                   <p className="text-gray-500 text-md text-center">or</p>
                   <Button secondary className="w-full" type="button"
-                          onClick={() => signIn("google", { callbackUrl: "/" })}
+                          onClick={() => signIn("google", { callbackUrl })}
                   >
                     <Image
                       src="/icons/google-icon.svg"

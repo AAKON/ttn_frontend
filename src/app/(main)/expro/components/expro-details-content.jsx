@@ -111,7 +111,7 @@ const ExproDetailsContent = ({ expro }) => {
                 {galleryImages.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5">
                         {galleryImages.map((image, idx) => (
-                            <button
+                            <div
                                 type="button"
                                 key={image.id || idx}
                                 onClick={() => handleOpenPreview(idx)}
@@ -123,7 +123,7 @@ const ExproDetailsContent = ({ expro }) => {
                                     alt={image.alt}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 cursor-pointer"
                                 />
-                            </button>
+                            </div>
                         ))}
                     </div>
                 ) : (
