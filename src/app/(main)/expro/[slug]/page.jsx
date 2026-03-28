@@ -84,6 +84,8 @@ const ExproDetailsPage = async ({ params }) => {
     const token = session?.accessToken;
 
     const exproData = await getExproDetails(token, slug);
+    console.log({exproData});
+    
 
     if (!exproData) {
         return (

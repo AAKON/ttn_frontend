@@ -25,6 +25,7 @@ import {z} from "zod";
 import {useToast} from "@/hooks/use-toast";
 import {regAuth} from "@/services/auth/auth";
 import {useRouter} from "next/navigation";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import {Loader2} from "lucide-react";
 
@@ -279,7 +280,7 @@ export const Seller = () => {
                                 )}
                             </Button>
                             <p className="text-gray-500 text-md text-center">or</p>
-                            <Button secondary className="w-full" type="button">
+                            <Button secondary className="w-full" type="button" onClick={() => signIn("google", { callbackUrl: "/" })}>
                                 <Image
                                     src="/icons/google-icon.svg"
                                     width={20}

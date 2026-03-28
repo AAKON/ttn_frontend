@@ -76,11 +76,16 @@ export default function Login() {
           console.error("Failed to refresh session:", sessionError);
           showErrorToast(toast, "Session refresh failed. Please reload the page.");
         }
-        const nextPath =
-          typeof res?.url === "string" && res.url.startsWith("/")
-            ? res.url
-            : callbackUrl;
-        window.location.href = nextPath;
+        let nextPath = callbackUrl;
+        if (typeof res?.url === "string") {
+          try {
+            const parsedUrl = new URL(res.url);
+            nextPath = parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
+          } catch (e) {
+            nextPath = res.url.startsWith("/") ? res.url : callbackUrl;
+          }
+        }
+        window.location.href = nextPath || "/";
         }
     } catch (error) {
       showErrorToast(toast, "Sign in faild, Try again");

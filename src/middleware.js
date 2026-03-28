@@ -9,8 +9,15 @@ const {
 async function middleware(req) {
     const { pathname, search } = req.nextUrl;
 
-    // Get authentication token
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    // Dynamically check which cookie NextAuth set, to avoid HTTP/HTTPS mismatches on Vercel Edge
+    const secureCookieName = '__Secure-next-auth.session-token';
+    const hasSecureCookie = req.cookies.getAll().some(cookie => cookie.name.startsWith(secureCookieName));
+
+    const token = await getToken({
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+        secureCookie: hasSecureCookie
+    });
     const isAuthenticated = Boolean(token);
 
     // Check Route Types
@@ -35,7 +42,7 @@ async function middleware(req) {
 }
 
 const config = {
-    matcher: ['/myaccount/:path*', '/login', '/register'],
+    matcher: ['/myaccount', '/login', '/register'],
 };
 
 module.exports = { middleware, config };
