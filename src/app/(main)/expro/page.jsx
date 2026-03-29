@@ -18,9 +18,14 @@ const getFilterOptions = async () => {
   }
 };
 
-const getExproList = async (token) => {
+const getExproList = async (token, categoryId = "all") => {
   const queryParams = new URLSearchParams();
   queryParams.set("page", "1");
+  const parsedCategoryId = Number(categoryId);
+
+  if (Number.isFinite(parsedCategoryId)) {
+    queryParams.set("category_id", String(parsedCategoryId));
+  }
 
   try {
     const headers = {
@@ -66,13 +71,21 @@ const getExproList = async (token) => {
   }
 };
 
-const ExproPage = async () => {
+const ExproPage = async ({ searchParams }) => {
   const session = await getServerSession(authOptions);
   const token = session?.accessToken;
+  const resolvedSearchParams = await searchParams;
+  const rawCategoryId = Array.isArray(resolvedSearchParams?.category_id)
+    ? resolvedSearchParams.category_id[0]
+    : resolvedSearchParams?.category_id;
+  const parsedCategoryId = Number(rawCategoryId);
+  const initialCategoryId = Number.isFinite(parsedCategoryId)
+    ? parsedCategoryId
+    : "all";
 
   const [businessCategories, exproData] = await Promise.all([
     getFilterOptions(),
-    getExproList(token),
+    getExproList(token, initialCategoryId),
   ]);
 
   return (
@@ -81,6 +94,7 @@ const ExproPage = async () => {
         businessCategories={businessCategories}
         exproList={exproData.list}
         totalResults={exproData.total}
+        initialCategoryId={initialCategoryId}
       />
     </Suspense>
   );

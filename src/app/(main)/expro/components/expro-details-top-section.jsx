@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
     MapPin,
     Calendar,
@@ -117,6 +118,7 @@ const parseExpoTimestamp = (value, pickFromRange = "start") => {
 };
 
 const ExproDetailsTopSection = ({ expro }) => {
+    const searchParams = useSearchParams();
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
     const [nowTimestamp, setNowTimestamp] = React.useState(null);
     const [showStickyCountdown, setShowStickyCountdown] = React.useState(false);
@@ -158,6 +160,7 @@ const ExproDetailsTopSection = ({ expro }) => {
         expro?.event_end_time ||
         "";
     const locationLabel = expro?.location || "Guangzhou Exhibition Centre, Guangzhou, China";
+    const shouldHideRegisterAction = searchParams.get("fromMyExpo") === "1";
 
     const startTimestamp = React.useMemo(
         () => parseExpoTimestamp(startDateValue, "start"),
@@ -337,13 +340,15 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     ))}
                                 </div>
 
-                                <button
-                                    type="button"
-                                    onClick={() => setIsRegistrationModalOpen(true)}
-                                    className="px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
-                                >
-                                    Register Now
-                                </button>
+                                {!shouldHideRegisterAction ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsRegistrationModalOpen(true)}
+                                        className="px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                    >
+                                        Register Now
+                                    </button>
+                                ) : null}
                             </div>
                         </div>
                     </div>
@@ -464,13 +469,15 @@ const ExproDetailsTopSection = ({ expro }) => {
                         <div className="flex items-center gap-3">
                             <ShareModal />
                             <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
-                            <button
-                                type="button"
-                                onClick={() => setIsRegistrationModalOpen(true)}
-                                className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
-                            >
-                                Register Now
-                            </button>
+                            {!shouldHideRegisterAction ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsRegistrationModalOpen(true)}
+                                    className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                >
+                                    Register Now
+                                </button>
+                            ) : null}
                         </div>
                     </div>
                 </div>

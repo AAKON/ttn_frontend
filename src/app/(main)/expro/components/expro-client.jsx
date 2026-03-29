@@ -56,7 +56,12 @@ const buildExpoQueryParams = ({
   return params;
 };
 
-const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0 }) => {
+const ExproClient = ({
+  businessCategories = [],
+  exproList = [],
+  totalResults = 0,
+  initialCategoryId = "all",
+}) => {
   const { data: session, status } = useSession();
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
@@ -64,7 +69,11 @@ const ExproClient = ({ businessCategories = [], exproList = [], totalResults = 0
   const [organizerFilterData, setOrganizerFilterData] = useState([]);
   const [keywordInput, setKeywordInput] = useState("");
   const [appliedKeyword, setAppliedKeyword] = useState("");
-  const [selectedCategoryId, setSelectedCategoryId] = useState("all");
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    initialCategoryId === "all" || Number.isNaN(Number(initialCategoryId))
+      ? "all"
+      : Number(initialCategoryId)
+  );
   const [selectedFilters, setSelectedFilters] = useState({
     country: [],
     year: [],

@@ -29,9 +29,17 @@ const posterVariants = {
   },
 };
 
-const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
+const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery }) => {
   const variant = posterVariants[expro?.variant] || posterVariants?.emerald;
   const hasImage = Boolean(expro?.imageUrl);
+  const detailsHref = expro?.slug
+    ? detailsQuery
+      ? {
+          pathname: `/expro/${expro.slug}`,
+          query: detailsQuery,
+        }
+      : `/expro/${expro.slug}`
+    : "/expro";
  console.log({expro,hasImage});
  
   return (
@@ -115,7 +123,7 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction }) => {
           )}
 
           <Link
-            href={`/expro/${expro.slug}`}
+            href={detailsHref}
             className="flex items-center justify-center h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
           >
             View Details

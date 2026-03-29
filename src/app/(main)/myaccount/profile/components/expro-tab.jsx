@@ -185,6 +185,7 @@ const ExproSection = ({
   title,
   expos = [],
   withRegisterAction = false,
+  detailsQuery,
   onRegisterClick,
 }) => {
   const splideRef = useRef(null);
@@ -233,6 +234,7 @@ const ExproSection = ({
               <ExproCard
                 expro={expo}
                 withRegisterAction={withRegisterAction}
+                detailsQuery={detailsQuery}
                 onRegisterClick={onRegisterClick}
               />
             </SplideSlide>
@@ -348,8 +350,20 @@ const ExproTab = () => {
 
   const sections = useMemo(
     () => [
-      { id: "my-expo", title: "My Expo", expos: myExpos, withRegisterAction: true },
-      { id: "saved-expo", title: "Saved Expo", expos: savedExpos, withRegisterAction: false },
+      {
+        id: "my-expo",
+        title: "My Expo",
+        expos: myExpos,
+        withRegisterAction: true,
+        detailsQuery: { fromMyExpo: "1" },
+      },
+      {
+        id: "saved-expo",
+        title: "Saved Expo",
+        expos: savedExpos,
+        withRegisterAction: false,
+        detailsQuery: undefined,
+      },
     ],
     [myExpos, savedExpos]
   );
@@ -367,6 +381,7 @@ const ExproTab = () => {
             title={section.title}
             expos={section.expos}
             withRegisterAction={section.withRegisterAction}
+            detailsQuery={section.detailsQuery}
             onRegisterClick={(expoSlug, visitorRegUrl) => {
               setSelectedExpoSlug(String(expoSlug || ""));
               setSelectedVisitorRegUrl(String(visitorRegUrl || ""));

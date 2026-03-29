@@ -75,13 +75,17 @@ const SimilarExproCard = ({ expro, onRegisterClick }) => {
     );
 };
 
-const ExproDetailsSidebar = ({ similarExpros = [] }) => {
+const ExproDetailsSidebar = ({ similarExpros = [], categoryId = null }) => {
     const { toast } = useToast();
     const [email, setEmail] = React.useState("");
     const [isSubscribing, setIsSubscribing] = React.useState(false);
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
     const [selectedExpoSlug, setSelectedExpoSlug] = React.useState("");
     const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = React.useState("");
+    const parsedCategoryId = Number(categoryId);
+    const viewAllHref = Number.isFinite(parsedCategoryId)
+        ? `/expro?category_id=${parsedCategoryId}`
+        : "/expro";
 
     const handleRegistrationModalOpenChange = (nextOpen) => {
         setIsRegistrationModalOpen(nextOpen);
@@ -179,7 +183,7 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-bold text-[#101828]">Similar Expo</h3>
                     {similarExpros.length > 0 ? (
-                        <Link href="/expro" className="text-sm font-semibold text-[#1570EF] hover:underline">
+                        <Link href={viewAllHref} className="text-sm font-semibold text-[#1570EF] hover:underline">
                             View All
                         </Link>
                     ) : null}

@@ -42,6 +42,43 @@ const getExpoImage = (item) => {
     );
 };
 
+const getExpoCategoryId = (item) => {
+    const directCandidates = [
+        item?.category_id,
+        item?.categoryId,
+        item?.expo_category_id,
+        item?.business_category_id,
+        item?.category?.id,
+        item?.expo_category?.id,
+        item?.business_category?.id,
+    ];
+
+    for (const value of directCandidates) {
+        const parsedValue = Number(value);
+        if (Number.isFinite(parsedValue)) return parsedValue;
+    }
+
+    const collectionCandidates = [
+        item?.categories,
+        item?.category,
+        item?.expo_categories,
+        item?.business_categories,
+    ];
+
+    for (const collection of collectionCandidates) {
+        if (!Array.isArray(collection)) continue;
+        for (const value of collection) {
+            const parsedValue =
+                typeof value === "object" && value !== null
+                    ? Number(value.id)
+                    : Number(value);
+            if (Number.isFinite(parsedValue)) return parsedValue;
+        }
+    }
+
+    return null;
+};
+
 const getExproDetails = async (token, slug) => {
     try {
         const headers = {
@@ -147,6 +184,7 @@ const ExproDetailsPage = async ({ params }) => {
             posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0],
             imageUrl: getExpoImage(item),
         }));
+    const exproCategoryId = getExpoCategoryId(exproData);
 
     return (
         <div className="min-h-screen pb-16 pt-8 md:pt-10">
@@ -157,7 +195,10 @@ const ExproDetailsPage = async ({ params }) => {
                 {/* Content Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_400px] gap-8 mt-10 items-start">
                     <ExproDetailsContent expro={expro} />
-                    <ExproDetailsSidebar similarExpros={similarExpros} />
+                    <ExproDetailsSidebar
+                        similarExpros={similarExpros}
+                        categoryId={exproCategoryId}
+                    />
                 </div>
             </Container>
         </div>

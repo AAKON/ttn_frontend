@@ -64,7 +64,7 @@ const TabComponents = () => {
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="expro"
           >
-            Expro
+            Expo
           </TabsTrigger>
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
