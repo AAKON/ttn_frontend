@@ -157,6 +157,7 @@ const ExproDetailsTopSection = ({ expro }) => {
         expro?.to_time ||
         expro?.event_end_time ||
         "";
+    const locationLabel = expro?.location || "Guangzhou Exhibition Centre, Guangzhou, China";
 
     const startTimestamp = React.useMemo(
         () => parseExpoTimestamp(startDateValue, "start"),
@@ -235,6 +236,39 @@ const ExproDetailsTopSection = ({ expro }) => {
 
         return "10:00 AM - 05:00 PM";
     }, [startTimeValue, endTimeValue]);
+
+    const googleMapsUrl = React.useMemo(() => {
+        const directMapUrl =
+            expro?.google_map_url ||
+            expro?.google_maps_url ||
+            expro?.map_url ||
+            expro?.location_url;
+
+        if (directMapUrl) return directMapUrl;
+
+        const latitude =
+            expro?.latitude ??
+            expro?.lat ??
+            expro?.locationData?.latitude ??
+            expro?.locationData?.lat;
+        const longitude =
+            expro?.longitude ??
+            expro?.lng ??
+            expro?.lon ??
+            expro?.locationData?.longitude ??
+            expro?.locationData?.lng ??
+            expro?.locationData?.lon;
+
+        const hasLatitude = latitude !== undefined && latitude !== null && String(latitude).trim() !== "";
+        const hasLongitude = longitude !== undefined && longitude !== null && String(longitude).trim() !== "";
+
+        if (hasLatitude && hasLongitude) {
+            // `search` with lat/lng opens a dropped marker in Google Maps.
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${latitude},${longitude}`)}`;
+        }
+
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locationLabel)}`;
+    }, [expro, locationLabel]);
 
     React.useEffect(() => {
         if (!countdownInfo.isActive) {
@@ -385,8 +419,16 @@ const ExproDetailsTopSection = ({ expro }) => {
                     <div className="space-y-1 mb-2">
                         <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
                             <MapPin className="h-4 w-4 text-[#667085] flex-shrink-0" />
-                            <span>{expro.location || "Guangzhou Exhibition Centre, Guangzhou, China"}</span>
-                            <ExternalLink className="h-3 w-3 text-[#2E90FA] cursor-pointer" />
+                            <span>{locationLabel}</span>
+                            <a
+                                href={googleMapsUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Open ${locationLabel} in Google Maps`}
+                                className="inline-flex"
+                            >
+                                <ExternalLink className="h-3 w-3 text-[#2E90FA] cursor-pointer" />
+                            </a>
                         </div>
                         <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
                             <Calendar className="h-4 w-4 text-[#667085] flex-shrink-0" />

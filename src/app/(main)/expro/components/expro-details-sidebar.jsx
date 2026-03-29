@@ -168,7 +168,7 @@ const ExproDetailsSidebar = ({ similarExpros = [] }) => {
                         </button>
                     </div>
                     <p className="text-[12px] text-[#667085]">
-                        We care about your data in our <Link href="#" className="underline hover:text-[#101828]">privacy policy</Link>.
+                        We care about your data in our <Link href="/privacy-policy" className="underline hover:text-[#101828]">privacy policy</Link>.
                     </p>
                 </form>
             </div>

@@ -101,6 +101,19 @@ const ExproDetailsPage = async ({ params }) => {
         title: exproData.title || exproData.name,
         dateRange: formatDateRange(exproData.start_date || exproData.from_date, exproData.end_date || exproData.to_date),
         location: exproData.location?.name || exproData.location_name || exproData.country,
+        locationData: exproData.location,
+        latitude:
+            exproData.latitude ??
+            exproData.lat ??
+            exproData.location?.latitude ??
+            exproData.location?.lat,
+        longitude:
+            exproData.longitude ??
+            exproData.lng ??
+            exproData.lon ??
+            exproData.location?.longitude ??
+            exproData.location?.lng ??
+            exproData.location?.lon,
         organizer: exproData.company?.name || exproData.organizer_name || exproData.company_name || exproData.organizer,
         description: exproData.description || exproData.short_description,
         imageUrl: getExpoImage(exproData),

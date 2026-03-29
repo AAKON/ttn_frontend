@@ -253,7 +253,6 @@ export function ExproFilterPopoverContent({
                 <Accordion
                     type="single"
                     collapsible
-                    defaultValue="organizer"
                     className="w-full space-y-3"
                 >
                     {/* By Country */}

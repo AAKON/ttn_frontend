@@ -107,10 +107,10 @@ const RegistrationTerms = ({ showNote = true }) => (
   <div className="space-y-4 px-0.5 text-[14px] leading-7 text-[#475467]">
     <p className="text-[14px]">
       By submitting, you agree to our{" "}
-      <span className="font-semibold text-[#344054] underline">
+      {/* <span className="font-semibold text-[#344054] underline">
         Terms of Use
-      </span>{" "}
-      and{" "}
+      </span>{" "} */}
+      {/* and{" "} */}
       <Link
         href="/privacy-policy"
         className="font-semibold text-[#344054] underline"
@@ -215,7 +215,7 @@ const ExpoRegistrationModal = ({
   const { toast } = useToast();
   const hasAppliedUrlRoleRef = useRef(false);
   const hasAutoOpenedFromQueryRef = useRef(false);
-  const [registrationRole, setRegistrationRole] = useState("exhibitor");
+  const [registrationRole, setRegistrationRole] = useState("visitor");
   const [submitting, setSubmitting] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
   const [phoneCode, setPhoneCode] = useState("+1");
@@ -228,7 +228,7 @@ const ExpoRegistrationModal = ({
   const selectedRoleLabel = useMemo(
     () =>
       roleOptions.find((option) => option.value === registrationRole)?.label ||
-      "Exhibitor",
+      "Visitor",
     [registrationRole]
   );
 

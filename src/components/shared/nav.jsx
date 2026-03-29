@@ -32,7 +32,7 @@ const menuItems = [
   { id: 3, label: "Sourcing", path: "/sourcing" },
   { id: 4, label: "Blog", path: "/blog" },
   { id: 5, label: "Pricing", path: "/pricing" },
-  { id: 6, label: "Expro", path: "/expro" },
+  { id: 6, label: "Expo", path: "/expro" },
 ];
 const moreItems = [
   { id: 1, label: "About Us", path: "/about" },
