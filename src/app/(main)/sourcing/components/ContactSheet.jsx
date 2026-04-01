@@ -9,17 +9,15 @@ export default function ContactSheet({ sourcing }) {
 	return (
 		<>
 			{/* Mobile Contact Button */}
-			{sourcing.status !== "pending" && (
-				<div className="lg:hidden">
-					<button
-						onClick={() => setShowContact(true)}
-						className="w-full bg-brand-600 text-white py-3 px-4 rounded-xl flex items-center justify-between cursor-pointer shadow-sm hover:bg-brand-700 transition-colors"
-					>
-						<span className="font-semibold">Contact Buyer</span>
-						<ChevronUp className="w-5 h-5 text-white" />
-					</button>
-				</div>
-			)}
+			<div className="lg:hidden fixed inset-x-0 bottom-0 z-50 px-4 pt-2 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+				<button
+					onClick={() => setShowContact(true)}
+					className="w-full bg-brand-600 text-white py-3 px-4 rounded-xl flex items-center justify-between cursor-pointer shadow-sm hover:bg-brand-700 transition-colors"
+				>
+					<span className="font-semibold">Contact With Business Owner</span>
+					<ChevronUp className="w-5 h-5 text-white" />
+				</button>
+			</div>
 
 			{/* Mobile Bottom Sheet/Modal */}
 			{showContact && sourcing.status !== "pending" && (

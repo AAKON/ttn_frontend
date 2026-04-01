@@ -4,6 +4,7 @@ import "./profile-tabs.css";
 import ProfileInfoForm from "./profile-info-form";
 import MyCompanies from "./my-companies";
 import Sourcing from "./sourcing";
+import ExproTab from "./expro-tab";
 import { useEffect, useState } from "react";
 import PasswordForm from "@/app/(main)/myaccount/profile/components/password-form";
 
@@ -61,6 +62,12 @@ const TabComponents = () => {
           </TabsTrigger>
           <TabsTrigger
             className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
+            value="expro"
+          >
+            Expo
+          </TabsTrigger>
+          <TabsTrigger
+            className={`bg-transparent border-none rounded-none shadow-none lg:text-base text-sm font-semibold text-gray-600 h-full inline-block capitalize`}
             value="danger-zone"
           >
             Settings
@@ -77,6 +84,9 @@ const TabComponents = () => {
         </TabsContent>
         <TabsContent value="sourcing">
           <Sourcing />
+        </TabsContent>
+        <TabsContent value="expro">
+          <ExproTab />
         </TabsContent>
         <TabsContent value="danger-zone">
           <div className="bg-white shadow-sm rounded-2xl p-6 border border-gray-100">

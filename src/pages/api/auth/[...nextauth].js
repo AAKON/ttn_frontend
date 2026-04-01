@@ -104,10 +104,10 @@ export const authOptions = {
             session.accessToken = token.accessToken;
             return session;
         },
-        callbacks: {
-            async redirect({url, baseUrl}) {
-                return baseUrl + '/';
-            }
+        async redirect({url, baseUrl}) {
+            if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+            else if (new URL(url).origin === baseUrl) return url;
+            return baseUrl;
         }
     },
     secret: process.env.NEXTAUTH_SECRET,

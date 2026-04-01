@@ -1,28 +1,55 @@
 const { NextResponse } = require('next/server');
 const { getToken } = require('next-auth/jwt');
 const {
-    ROOT,
     PROTECTED_ROUTE,
     AUTH_ROUTES,
     DEFAULT_REDIRECT
 } = require('@/lib/routes');
 
-async function middleware(req) {
-    const { pathname } = req.nextUrl;
+async function getAuthToken(req) {
+    const baseOptions = {
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+    };
 
-    // Get authentication token
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-    const currentTime = Math.floor(Date.now() / 1000);
-    const isAuthenticated = token && token.accessToken && (typeof token.exp !== 'number' || token.exp > currentTime);
+    let token = await getToken(baseOptions);
+    if (token) return token;
+
+    token = await getToken({ ...baseOptions, secureCookie: true });
+    if (token) return token;
+
+    return getToken({ ...baseOptions, secureCookie: false });
+}
+
+function isPathMatch(pathname, route) {
+    return pathname === route || pathname.startsWith(`${route}/`);
+}
+
+function hasSessionCookie(req) {
+    const cookieNames = req.cookies.getAll().map(cookie => cookie.name);
+    return cookieNames.some(name =>
+        name === 'next-auth.session-token' ||
+        name.startsWith('next-auth.session-token.') ||
+        name === '__Secure-next-auth.session-token' ||
+        name.startsWith('__Secure-next-auth.session-token.')
+    );
+}
+
+async function middleware(req) {
+    const { pathname, search } = req.nextUrl;
+
+    const token = await getAuthToken(req);
+    const isAuthenticated = Boolean(token);
+    const hasSession = hasSessionCookie(req);
 
     // Check Route Types
-    const isProtectedPath = pathname.startsWith(PROTECTED_ROUTE);
-    const isAuthPath = AUTH_ROUTES.some(route => pathname.startsWith(route));
-    const isPublicPath = pathname === ROOT;
+    const isProtectedPath = isPathMatch(pathname, PROTECTED_ROUTE);
+    const isAuthPath = AUTH_ROUTES.some(route => isPathMatch(pathname, route));
 
     // 1. If accessing protected route without being authenticated, redirect to login
-    if (isProtectedPath && !isAuthenticated) {
+    if (isProtectedPath && !isAuthenticated && !hasSession) {
         const loginUrl = new URL('/login', req.url);
+        loginUrl.searchParams.set('callbackUrl', `${pathname}${search || ''}`);
         return NextResponse.redirect(loginUrl);
     }
 
@@ -37,7 +64,7 @@ async function middleware(req) {
 }
 
 const config = {
-    matcher: ['/myaccount', '/login', '/register', '/'],
+    matcher: ['/myaccount/:path*', '/login/:path*', '/register/:path*'],
 };
 
 module.exports = { middleware, config };

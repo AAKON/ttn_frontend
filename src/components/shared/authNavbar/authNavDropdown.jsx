@@ -24,14 +24,24 @@ function AuthNavDropdown({ userInfo }) {
     router.push(path);
   };
 
-  const handleSignout = () => {
+  const handleSignout = async () => {
     try {
-      signOut({ callbackUrl: "/", redirect: true });
+      const res = await signOut({ callbackUrl: "/", redirect: false });
       // Clear session cookies explicitly
       document.cookie = "next-auth.session-token=; Max-Age=0; path=/;";
       document.cookie = "next-auth.csrf-token=; Max-Age=0; path=/;";
       showSuccessToast(toast, "Sign Out successful!");
-      // router.replace(router.asPath);
+
+      let nextPath = "/";
+      if (typeof res?.url === "string") {
+        try {
+          const parsedUrl = new URL(res.url);
+          nextPath = parsedUrl.pathname + parsedUrl.search + parsedUrl.hash;
+        } catch (e) {
+          nextPath = res.url.startsWith("/") ? res.url : "/";
+        }
+      }
+      window.location.href = nextPath || "/";
     } catch (error) {
       console.error("Sign-out error:", error);
       showErrorToast(toast, "Sign Out failed!");

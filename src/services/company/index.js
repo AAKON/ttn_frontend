@@ -128,14 +128,14 @@ export async function getMyFavsCompanies() {
     return result?.data;
 }
 
-export async function delFavsCompanyFaq(slug, toast) {
+export async function delFavsCompanyFaq(slug, toast, expro=false) {
 
     const session = await getSession();
     const token = session?.accessToken;
 
-    const endpoint = `my/favorite/${slug}`;
+    const endpoint = expro ? `expo/${slug}/favorite` : `my/favorite/${slug}`;
     const options = {
-        method: 'GET',
+        method: expro ? 'POST' : 'GET',
         next: { revalidate: 60 },
         cache: "force-cache"
     };
