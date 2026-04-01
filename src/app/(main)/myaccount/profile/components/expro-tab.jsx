@@ -4,8 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
-import ExpoRegistrationModal from "@/app/(main)/expro/components/expo-registration-modal";
-import ExproCard from "@/app/(main)/expro/components/expro-card";
+import ExpoRegistrationModal from "@/app/(main)/expo/components/expo-registration-modal";
+import ExproCard from "@/app/(main)/expo/components/expro-card";
 
 const formatDateRange = (startDate, endDate) => {
   const formatter = new Intl.DateTimeFormat("en-US", {
@@ -170,7 +170,7 @@ const ArrowIcon = ({ left = false, className = "" }) => (
 //             </button>
 //           ) : null}
 //           <Link
-//             href={`/expro/${expo.slug}`}
+//             href={`/expo/${expo.slug}`}
 //             className="flex h-12 items-center justify-center rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
 //           >
 //             View Details
@@ -208,14 +208,14 @@ const ExproSection = ({
           <button
             type="button"
             onClick={handlePrev}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[#D0D5DD] bg-white p-0 leading-none text-[#344054] transition-colors hover:bg-[#F9FAFB]"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[#D0D5DD] bg-white p-0 leading-none text-[#344054] shadow-sm transition-colors hover:bg-[#F9FAFB]"
           >
             <ArrowIcon left className="h-3.5 w-[9px]" />
           </button>
           <button
             type="button"
             onClick={handleNext}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[#ED8A19] bg-[#ED8A19] p-0 leading-none text-white transition-colors hover:bg-[#da7f18]"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-[#ED8A19] bg-[#ED8A19] p-0 leading-none text-white shadow-sm transition-colors hover:bg-[#da7f18]"
           >
             <ArrowIcon className="h-3.5 w-[9px]" />
           </button>

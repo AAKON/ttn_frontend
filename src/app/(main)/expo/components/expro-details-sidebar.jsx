@@ -64,7 +64,7 @@ const SimilarExproCard = ({ expro, onRegisterClick }) => {
                         Register Now
                     </button>
                     <Link
-                        href={expro?.slug ? `/expro/${expro.slug}` : "/expro"}
+                        href={expro?.slug ? `/expo/${expro.slug}` : "/expo"}
                         className="w-full bg-white py-2 text-xs font-semibold border border-[#ED8A19] text-[#ED8A19] rounded-lg hover:bg-[#FFFAEB] transition-colors text-center"
                     >
                         View Details
@@ -84,8 +84,8 @@ const ExproDetailsSidebar = ({ similarExpros = [], categoryId = null }) => {
     const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = React.useState("");
     const parsedCategoryId = Number(categoryId);
     const viewAllHref = Number.isFinite(parsedCategoryId)
-        ? `/expro?category_id=${parsedCategoryId}`
-        : "/expro";
+        ? `/expo?category_id=${parsedCategoryId}`
+        : "/expo";
 
     const handleRegistrationModalOpenChange = (nextOpen) => {
         setIsRegistrationModalOpen(nextOpen);
@@ -179,7 +179,7 @@ const ExproDetailsSidebar = ({ similarExpros = [], categoryId = null }) => {
 
             {/* Similar Expo Widget */}
             <div className="bg-white rounded-2xl border border-[#EAECF0] p-6 shadow-sm">
-                
+
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-lg font-bold text-[#101828]">Similar Expo</h3>
                     {similarExpros.length > 0 ? (

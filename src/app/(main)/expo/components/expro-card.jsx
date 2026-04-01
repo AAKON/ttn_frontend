@@ -35,13 +35,13 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery })
   const detailsHref = expro?.slug
     ? detailsQuery
       ? {
-          pathname: `/expro/${expro.slug}`,
-          query: detailsQuery,
-        }
-      : `/expro/${expro.slug}`
-    : "/expro";
- console.log({expro,hasImage});
- 
+        pathname: `/expo/${expro.slug}`,
+        query: detailsQuery,
+      }
+      : `/expo/${expro.slug}`
+    : "/expo";
+  console.log({ expro, hasImage });
+
   return (
     <article className="overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
       <div className={`relative aspect-[2/1] overflow-hidden ${variant.wrapper}`}>
