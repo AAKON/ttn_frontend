@@ -9,7 +9,7 @@ const BusinessProfile = () => {
   return (
     <section className="bg-gray-50 py-20">
       <Container>
-        {/* tabs part start */}
+        
         <div className="mt-8">
           <TabComponents />
         </div>
