@@ -257,7 +257,7 @@ const ExpoRegistrationModal = ({
     const queryExpoSlug = String(searchParams.get("expoSlug") || "").trim();
     if (queryExpoSlug) return queryExpoSlug;
 
-    const pathMatch = pathname?.match(/^\/expro\/([^/?#]+)/);
+    const pathMatch = pathname?.match(/^\/expo\/([^/?#]+)/);
     if (pathMatch?.[1]) return decodeURIComponent(pathMatch[1]);
 
     return fallbackExpoRegistrationSlug;

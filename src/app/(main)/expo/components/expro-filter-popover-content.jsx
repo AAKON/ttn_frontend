@@ -21,10 +21,10 @@ const yearOptions = Array.from({ length: FUTURE_YEAR_COUNT }, (_, index) => {
 
 export const initialData = {
     country: [
-        { id: "bangladesh", label: "Bangladesh", count: 12 },
-        { id: "india", label: "India", count: 8 },
-        { id: "china", label: "China", count: 15 },
-        { id: "pakistan", label: "Pakistan", count: 4 },
+        { id: "bangladesh", label: "Bangladesh", },
+        { id: "india", label: "India", },
+        { id: "china", label: "China", },
+        { id: "pakistan", label: "Pakistan", },
     ],
     year: yearOptions,
     organizer: [],
