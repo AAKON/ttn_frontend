@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Container } from "@/shared";
 import ExproHeroSearch from "./expro-hero-search";
@@ -63,6 +64,9 @@ const ExproClient = ({
   initialCategoryId = "all",
 }) => {
   const { data: session, status } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [selectedExpoSlug, setSelectedExpoSlug] = useState("");
   const [selectedVisitorRegUrl, setSelectedVisitorRegUrl] = useState("");
@@ -179,6 +183,17 @@ const ExproClient = ({
     fetchExproListClient,
   ]);
 
+  useEffect(() => {
+    const rawCategoryId = searchParams.get("category_id");
+    const parsedCategoryId =
+      rawCategoryId === null || rawCategoryId === ""
+        ? NaN
+        : Number(rawCategoryId);
+    const nextCategoryId = Number.isFinite(parsedCategoryId) ? parsedCategoryId : "all";
+
+    setSelectedCategoryId((prev) => (prev === nextCategoryId ? prev : nextCategoryId));
+  }, [searchParams]);
+
   const activeTags = useMemo(() => {
     const tags = [];
     if (appliedKeyword) {
@@ -248,10 +263,24 @@ const ExproClient = ({
 
   const handleCategorySelect = (categoryId) => {
     const nextCategoryId = categoryId === "all" ? "all" : Number(categoryId);
-    setSelectedCategoryId(
-      nextCategoryId === "all" || Number.isNaN(nextCategoryId) ? "all" : nextCategoryId
-    );
+    const normalizedCategoryId =
+      nextCategoryId === "all" || Number.isNaN(nextCategoryId) ? "all" : nextCategoryId;
+
+    setSelectedCategoryId(normalizedCategoryId);
     setCurrentPage(1);
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+
+    if (normalizedCategoryId === "all") {
+      nextParams.delete("category_id");
+    } else {
+      nextParams.set("category_id", String(normalizedCategoryId));
+    }
+
+    nextParams.set("page", "1");
+
+    const query = nextParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 
   const handleSearch = (nextKeyword) => {

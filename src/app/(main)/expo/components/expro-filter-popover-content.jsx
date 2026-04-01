@@ -242,9 +242,9 @@ export function ExproFilterPopoverContent({
                 <h3 className="text-lg font-bold text-[#101828]">Filter</h3>
                 <button
                     onClick={onClose}
-                    className="p-1 rounded-full transition-colors"
+                    className="group rounded-full bg-transparent p-1 transition-colors hover:bg-gray-100"
                 >
-                    <X className="h-5 w-5 text-gray-500" />
+                    <X className="h-5 w-5 text-gray-500 transition-colors group-hover:text-gray-700" />
                 </button>
             </div>
 
@@ -253,10 +253,10 @@ export function ExproFilterPopoverContent({
                 <Accordion
                     type="single"
                     collapsible
-                    className="w-full space-y-3"
+                    className="w-full space-y-3 "
                 >
                     {/* By Country */}
-                    <AccordionItem value="country" className="border rounded-[8px] py-2 px-3">
+                    <AccordionItem value="country" className="border rounded-[8px] py-2 px-3 bg-gray-100">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Country
                         </AccordionTrigger>
@@ -266,7 +266,7 @@ export function ExproFilterPopoverContent({
                     </AccordionItem>
 
                     {/* By Year */}
-                    <AccordionItem value="year" className="border rounded-[8px] py-2 px-3">
+                    <AccordionItem value="year" className="border rounded-[8px] py-2 px-3 bg-gray-100">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Year
                         </AccordionTrigger>
@@ -276,7 +276,7 @@ export function ExproFilterPopoverContent({
                     </AccordionItem>
 
                     {/* By Organizer */}
-                    <AccordionItem value="organizer" className="border rounded-[8px] py-2 px-3">
+                    <AccordionItem value="organizer" className="border rounded-[8px] py-2 px-3 bg-gray-100">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Organizer
                         </AccordionTrigger>
