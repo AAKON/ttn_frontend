@@ -227,7 +227,7 @@ const ExproDetailsTopSection = ({ expro }) => {
         if (formattedStartTime) return formattedStartTime;
         if (formattedEndTime) return formattedEndTime;
 
-        return "10:00 AM - 05:00 PM";
+        return null;
     }, [startTimeValue, endTimeValue]);
 
     const googleMapsUrl = React.useMemo(() => {
@@ -425,10 +425,12 @@ const ExproDetailsTopSection = ({ expro }) => {
                                 <Calendar className="h-4 w-4 text-[#667085] flex-shrink-0" />
                                 <span>{expro.dateRange || "7 Feb, 2026 (Tuesday) - 9 Feb, 2026 (Thursday)"}</span>
                             </div>
-                            <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
-                                <Clock className="h-4 w-4 text-[#667085] flex-shrink-0" />
-                                <span>{timeRangeLabel}</span>
-                            </div>
+                            {timeRangeLabel ? (
+                                <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
+                                    <Clock className="h-4 w-4 text-[#667085] flex-shrink-0" />
+                                    <span>{timeRangeLabel}</span>
+                                </div>
+                            ) : null}
                         </div>
 
                         {/* Bottom Row: Countdown & Actions */}
