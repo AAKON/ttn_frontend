@@ -271,12 +271,13 @@ const ExproDetailsTopSection = ({ expro }) => {
 
         const updateStickyVisibility = () => {
             const sectionElement = sectionRef.current;
-            if (!sectionElement || window.innerWidth < 1024) {
+            if (!sectionElement) {
                 setShowStickyCountdown(false);
                 return;
             }
 
-            const headerHeight = window.scrollY > 100 ? 88 : 0;
+            const headerHeight =
+                window.innerWidth >= 1024 && window.scrollY > 100 ? 88 : 0;
             const sectionRect = sectionElement.getBoundingClientRect();
             const shouldShow = sectionRect.bottom <= headerHeight + 8;
 
@@ -298,28 +299,28 @@ const ExproDetailsTopSection = ({ expro }) => {
         <>
             {countdownInfo.isActive ? (
                 <div
-                    className={`hidden lg:block fixed left-0 right-0 top-[88px] z-[60] transform-gpu transition-all duration-300 ease-out ${showStickyCountdown
+                    className={`fixed left-0 right-0 top-[70px] lg:top-[88px] z-[60] transform-gpu transition-all duration-300 ease-out ${showStickyCountdown
                             ? "translate-y-0 opacity-100 pointer-events-auto"
                             : "-translate-y-2 opacity-0 pointer-events-none"
                         }`}
                 >
-                    <div className=" border border-[#EAECF0] bg-white px-8 xl:px-12 py-3 shadow-sm ">
-                        <div className="container flex items-center justify-between gap-6">
-                            <h2 className="text-[16px] xl:text-[18px] font-bold text-[#1D2939] leading-tight line-clamp-2 flex-1 min-w-0">
+                    <div className="border border-[#EAECF0] bg-white px-3 py-2 shadow-sm md:px-6 md:py-3 xl:px-12">
+                        <div className="container flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:gap-6">
+                            <h2 className="min-w-0 flex-1 text-[13px] font-bold leading-tight text-[#1D2939] line-clamp-2 sm:text-[16px] xl:text-[18px]">
                                 {expro?.title || "Expo"}
                             </h2>
 
-                            <div className="flex items-center gap-3 flex-shrink-0">
-                                <div className="flex gap-2.5">
+                            <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:gap-3 flex-shrink-0">
+                                <div className="flex min-w-0 gap-1 overflow-x-auto pb-0.5 sm:gap-2.5 sm:overflow-visible sm:pb-0">
                                     {countdownInfo.values.map((item, idx) => (
                                         <div
                                             key={`sticky-countdown-${idx}`}
-                                            className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg"
+                                            className="flex min-w-[38px] flex-col items-center justify-center rounded-md border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:min-w-0 sm:rounded-lg sm:p-1"
                                         >
-                                            <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-normal text-md">
+                                            <div className="flex h-4 w-6 items-center justify-center text-[16px] font-medium text-[#B54708] sm:h-9 sm:w-10 sm:text-md md:w-14">
                                                 {item.value}
                                             </div>
-                                            <span className="text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                            <span className="text-[7px] font-normal text-[#667085] uppercase leading-none tracking-normal sm:text-[10px] sm:tracking-wider">
                                                 {["Day", "Hr", "Min", "Sec"][idx] || item.label}
                                             </span>
                                         </div>
@@ -330,7 +331,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                        className="h-8 shrink-0 rounded-md bg-[#ED8A19] px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-[#da7f18] sm:h-14 sm:rounded-xl sm:px-10 sm:text-[16px]"
                                     >
                                         Register Now
                                     </button>
@@ -437,13 +438,16 @@ const ExproDetailsTopSection = ({ expro }) => {
                         >
                             {/* Countdown */}
                             {countdownInfo?.isActive ? (
-                                <div className="flex gap-2.5">
+                                <div className="flex gap-2 sm:gap-2.5">
                                     {countdownInfo.values.map((item, idx) => (
-                                        <div key={idx} className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg ">
-                                            <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-medium text-lg">
+                                        <div
+                                            key={idx}
+                                            className="flex h-14 min-w-[44px] flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1.5 py-1 sm:h-16 sm:min-w-[52px] md:min-w-[56px]"
+                                        >
+                                            <div className="flex h-7 w-8 items-center justify-center text-base font-medium text-[#B54708] sm:h-8 sm:w-10 sm:text-lg md:w-14">
                                                 {item.value}
                                             </div>
-                                            <span className=" text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                            <span className="text-[9px] font-normal uppercase tracking-wider text-[#667085] sm:text-[10px]">
                                                 {item.label}
                                             </span>
                                         </div>
@@ -452,14 +456,14 @@ const ExproDetailsTopSection = ({ expro }) => {
                             ) : null}
 
                             {/* Actions */}
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-2 sm:gap-3">
                                 <ShareModal />
                                 <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
                                 {!shouldHideRegisterAction ? (
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-10 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-14 md:px-10 md:text-base"
                                     >
                                         Register Now
                                     </button>

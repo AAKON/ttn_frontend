@@ -7,6 +7,25 @@ import ExproDetailsTopSection from "../components/expro-details-top-section";
 import ExproDetailsContent from "../components/expro-details-content";
 import ExproDetailsSidebar from "../components/expro-details-sidebar";
 
+const getBaseUrl = () => {
+    const baseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL ||
+        process.env.NEXT_PUBLIC_APP_URL ||
+        "";
+
+    return baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+};
+
+const getAbsoluteUrl = (value) => {
+    if (!value) return "";
+    if (/^https?:\/\//i.test(value)) return value;
+
+    const baseUrl = getBaseUrl();
+    if (!baseUrl) return value;
+
+    return value.startsWith("/") ? `${baseUrl}${value}` : `${baseUrl}/${value}`;
+};
+
 const getExpoImage = (item) => {
     return (
         item?.banner_url ||
@@ -57,6 +76,61 @@ const getExpoCategoryId = (item) => {
     return null;
 };
 
+const getExpoTitle = (item) => item?.title || item?.name || "Expo Details";
+
+const getExpoDescription = (item) => {
+    const description =
+        item?.meta_description ||
+        item?.short_description ||
+        item?.description ||
+        "";
+
+    return description
+        ? description.replace(/<[^>]*>/g, "").trim().slice(0, 160)
+        : "Explore expo details, dates, location, and organizer information on Textile Network.";
+};
+
+const buildExpoMetadata = (item, slug) => {
+    const title = getExpoTitle(item);
+    const description = getExpoDescription(item);
+    const imageUrl = getAbsoluteUrl(getExpoImage(item));
+    const pageUrl = getAbsoluteUrl(`/expo/${slug}`);
+    const keywords = item?.meta_keywords || item?.keywords;
+
+    return {
+        title,
+        description,
+        keywords,
+        alternates: pageUrl
+            ? {
+                  canonical: pageUrl,
+              }
+            : undefined,
+        openGraph: {
+            title,
+            description,
+            type: "article",
+            url: pageUrl || undefined,
+            images: imageUrl
+                ? [
+                      {
+                          url: imageUrl,
+                          width: 1200,
+                          height: 630,
+                          alt: title,
+                      },
+                  ]
+                : [],
+        },
+        twitter: {
+            card: imageUrl ? "summary_large_image" : "summary",
+            title,
+            description,
+            images: imageUrl ? [imageUrl] : [],
+        },
+    };
+};
+
 const getExproDetails = async (token, slug) => {
     try {
         const headers = {
@@ -93,14 +167,26 @@ const getExproDetails = async (token, slug) => {
     }
 };
 
+export async function generateMetadata({ params }) {
+    const { slug } = await params;
+    const exproData = await getExproDetails(null, slug);
+
+    if (!exproData) {
+        return {
+            title: "Expo Details Not Found",
+            description: "The expo details you are looking for could not be found.",
+        };
+    }
+
+    return buildExpoMetadata(exproData, slug);
+}
+
 const ExproDetailsPage = async ({ params }) => {
     const { slug } = await params;
     const session = await getServerSession(authOptions);
     const token = session?.accessToken;
 
     const exproData = await getExproDetails(token, slug);
-    console.log({exproData});
-    
 
     if (!exproData) {
         return (
