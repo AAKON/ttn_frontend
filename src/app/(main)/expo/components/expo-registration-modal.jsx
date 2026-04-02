@@ -28,7 +28,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -140,40 +139,47 @@ const RegistrationTypeSelector = ({
       Registration as a
     </p>
 
-    <RadioGroup
-      value={registrationRole}
-      onValueChange={onRegistrationRoleChange}
+    <div
+      role="radiogroup"
+      aria-label="Registration type"
       className="mt-3 grid grid-cols-1 gap-1 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 sm:grid-cols-3 md:p-2"
     >
       {roleOptions.map((option) => {
-        const optionId = `expo-role-${option.value}`;
+        const isSelected = registrationRole === option.value;
 
         return (
-          <div
+          <button
+            type="button"
             key={option.value}
-            className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-[12px] px-3 py-2 text-[14px] font-semibold leading-5 text-[#344054] transition-colors hover:bg-[#FCFCFD] md:gap-2 md:text-[14px] md:leading-6"
+            role="radio"
+            aria-checked={isSelected}
+            className={`flex min-h-11 items-center gap-2.5 rounded-[12px] px-3 py-2 text-left text-[14px] font-semibold leading-5 text-[#344054] transition-colors md:gap-2 md:text-[14px] md:leading-6 ${
+              isSelected
+                ? "bg-[#FFFAEB]"
+                : "hover:bg-[#FCFCFD]"
+            }`}
             onClick={() => onRegistrationRoleChange(option.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                onRegistrationRoleChange(option.value);
-              }
-            }}
-            role="button"
-            tabIndex={0}
           >
-            <RadioGroupItem
-              id={optionId}
-              value={option.value}
-              className="cs_radio_inp shrink-0"
-            />
-            <label htmlFor={optionId} className="cursor-pointer select-none text-[14px] leading-5">
+            <span
+              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                isSelected
+                  ? "border-[#F79009] text-[#F79009]"
+                  : "border-[#D0D5DD] text-transparent"
+              }`}
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${
+                  isSelected ? "bg-current" : "bg-transparent"
+                }`}
+              />
+            </span>
+            <span className="select-none text-[14px] leading-5">
               {option.label}
-            </label>
-          </div>
+            </span>
+          </button>
         );
       })}
-    </RadioGroup>
+    </div>
   </div>
 );
 
@@ -231,6 +237,8 @@ const ExpoRegistrationModal = ({
       "Visitor",
     [registrationRole]
   );
+  console.log({selectedRoleLabel,registrationRole});
+  
 
   const clearRegistrationQueryFlags = useCallback(() => {
     const nextParams = new URLSearchParams(searchParams.toString());

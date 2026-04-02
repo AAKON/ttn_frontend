@@ -127,20 +127,6 @@ const ExproDetailsTopSection = ({ expro }) => {
     const hasBannerImage = Boolean(expro?.banner_url || expro?.imageUrl);
     const organizerName = expro?.organizer || "Unknown Organizer";
     const companySlug = expro?.company_slug || expro?.company?.slug || expro?.company?.company_slug;
-    const startDateValue =
-        expro?.start_date ||
-        expro?.from_date ||
-        expro?.startDate ||
-        expro?.start_datetime ||
-        expro?.event_start_date ||
-        expro?.dateRange;
-    const endDateValue =
-        expro?.end_date ||
-        expro?.to_date ||
-        expro?.endDate ||
-        expro?.end_datetime ||
-        expro?.event_end_date ||
-        expro?.dateRange;
     const visitorRegUrl =
         expro?.visitor_reg_url ||
         expro?.visitor_registration_url ||
@@ -159,24 +145,27 @@ const ExproDetailsTopSection = ({ expro }) => {
         expro?.to_time ||
         expro?.event_end_time ||
         "";
+    const countdownStartValue = expro?.countdown_start || expro?.countdownStart;
+    const countdownEndValue = expro?.countdown_end || expro?.countdownEnd;
     const locationLabel = expro?.location || "Guangzhou Exhibition Centre, Guangzhou, China";
     const shouldHideRegisterAction = searchParams.get("fromMyExpo") === "1";
 
-    const startTimestamp = React.useMemo(
-        () => parseExpoTimestamp(startDateValue, "start"),
-        [startDateValue]
+    const countdownStartTimestamp = React.useMemo(
+        () => parseExpoTimestamp(countdownStartValue, "start"),
+        [countdownStartValue]
     );
-    const endTimestamp = React.useMemo(
-        () => parseExpoTimestamp(endDateValue, "end"),
-        [endDateValue]
+    const countdownEndTimestamp = React.useMemo(
+        () => parseExpoTimestamp(countdownEndValue, "end"),
+        [countdownEndValue]
     );
+    const hasCountdownSection = countdownStartTimestamp !== null;
 
     React.useEffect(() => {
         setNowTimestamp(Date.now());
     }, []);
 
     React.useEffect(() => {
-        if (!startTimestamp && !endTimestamp) return undefined;
+        if (!hasCountdownSection) return undefined;
 
         const timerId = window.setInterval(() => {
             setNowTimestamp(Date.now());
@@ -185,10 +174,10 @@ const ExproDetailsTopSection = ({ expro }) => {
         return () => {
             window.clearInterval(timerId);
         };
-    }, [startTimestamp, endTimestamp]);
+    }, [hasCountdownSection]);
 
     const countdownInfo = React.useMemo(() => {
-        if (nowTimestamp === null) {
+        if (nowTimestamp === null || !hasCountdownSection) {
             return {
                 isActive: false,
                 values: [],
@@ -196,10 +185,10 @@ const ExproDetailsTopSection = ({ expro }) => {
         }
 
         let targetTimestamp = null;
-        if (startTimestamp && nowTimestamp < startTimestamp) {
-            targetTimestamp = startTimestamp;
-        } else if (endTimestamp && nowTimestamp < endTimestamp) {
-            targetTimestamp = endTimestamp;
+        if (nowTimestamp < countdownStartTimestamp) {
+            targetTimestamp = countdownStartTimestamp;
+        } else if (countdownEndTimestamp && nowTimestamp < countdownEndTimestamp) {
+            targetTimestamp = countdownEndTimestamp;
         }
 
         if (!targetTimestamp) {
@@ -224,7 +213,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                 { label: "Seconds", value: twoDigits(seconds) },
             ],
         };
-    }, [nowTimestamp, startTimestamp, endTimestamp]);
+    }, [nowTimestamp, hasCountdownSection, countdownStartTimestamp, countdownEndTimestamp]);
 
     const timeRangeLabel = React.useMemo(() => {
         const formattedStartTime = formatExpoTime(startTimeValue);
@@ -304,9 +293,6 @@ const ExproDetailsTopSection = ({ expro }) => {
             window.removeEventListener("resize", updateStickyVisibility);
         };
     }, [countdownInfo.isActive]);
-    console.log("fff", expro);
-
-
     return (
         <>
             {countdownInfo.isActive ? (
