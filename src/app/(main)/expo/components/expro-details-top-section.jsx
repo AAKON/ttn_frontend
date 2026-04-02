@@ -13,6 +13,7 @@ import {
     Share2,
     Bookmark,
 } from "lucide-react";
+import { getDateTimestamp } from "@/utils/dateRange";
 import ExpoRegistrationModal from "./expo-registration-modal";
 import ShareModal from "@/components/company/share-modal";
 import BookmarkCompany from "../../company/[slug]/components/bookmarkCompany";
@@ -31,7 +32,7 @@ const parseDateString = (value) => {
     const raw = String(value).trim();
     if (!raw) return null;
 
-    const directParse = Date.parse(raw);
+    const directParse = getDateTimestamp(raw);
     if (isValidTimestamp(directParse)) return directParse;
 
     const dmyMatch = raw.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})$/);

@@ -6,29 +6,7 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import ExpoRegistrationModal from "@/app/(main)/expo/components/expo-registration-modal";
 import ExproCard from "@/app/(main)/expo/components/expro-card";
-
-const formatDateRange = (startDate, endDate) => {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-
-  const parseDate = (value) => {
-    if (!value) return null;
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return formatter.format(date);
-  };
-
-  const formattedStart = parseDate(startDate);
-  const formattedEnd = parseDate(endDate);
-
-  if (formattedStart && formattedEnd) {
-    return `${formattedStart} - ${formattedEnd}`;
-  }
-  return formattedStart || formattedEnd || "Date not available";
-};
+import { formatDateRange } from "@/utils/dateRange";
 
 const getExpoImage = (item) =>
   item?.banner_url ||
@@ -54,8 +32,8 @@ const mapExpoFromApi = (item, index) => ({
   slug: item?.slug || String(item?.id || index + 1),
   title: item?.title || item?.name || "Untitled Expo",
   dateRange: formatDateRange(
-    item?.start_date || item?.from_date,
-    item?.end_date || item?.to_date
+    item?.from_date || item?.start_date,
+    item?.to_date || item?.end_date
   ),
   country:
     item?.location?.name ||

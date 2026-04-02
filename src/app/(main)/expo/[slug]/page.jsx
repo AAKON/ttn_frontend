@@ -2,32 +2,10 @@ import React from "react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Container } from "@/shared";
+import { formatDateRange } from "@/utils/dateRange";
 import ExproDetailsTopSection from "../components/expro-details-top-section";
 import ExproDetailsContent from "../components/expro-details-content";
 import ExproDetailsSidebar from "../components/expro-details-sidebar";
-
-const formatDateRange = (startDate, endDate) => {
-    const formatter = new Intl.DateTimeFormat("en-US", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    });
-
-    const parseDate = (value) => {
-        if (!value) return null;
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return value;
-        return formatter.format(date);
-    };
-
-    const formattedStart = parseDate(startDate);
-    const formattedEnd = parseDate(endDate);
-
-    if (formattedStart && formattedEnd) {
-        return `${formattedStart} - ${formattedEnd}`;
-    }
-    return formattedStart || formattedEnd || "Date not available";
-};
 
 const getExpoImage = (item) => {
     return (
@@ -136,7 +114,7 @@ const ExproDetailsPage = async ({ params }) => {
     const expro = {
         ...exproData,
         title: exproData.title || exproData.name,
-        dateRange: formatDateRange(exproData.start_date || exproData.from_date, exproData.end_date || exproData.to_date),
+        dateRange: formatDateRange(exproData.from_date || exproData.start_date, exproData.to_date || exproData.end_date),
         location: exproData.location?.name || exproData.location_name || exproData.country,
         locationData: exproData.location,
         latitude:
@@ -178,7 +156,7 @@ const ExproDetailsPage = async ({ params }) => {
         .map((item) => ({
             ...item,
             title: item.title || item.name,
-            dateRange: formatDateRange(item.start_date || item.from_date, item.end_date || item.to_date),
+            dateRange: formatDateRange(item.from_date || item.start_date, item.to_date || item.end_date),
             country: item.location?.name || item.location_name || item.country,
             organizer: item.company?.name || item.organizer_name || item.company_name || item.organizer,
             posterWord: item.poster_word || (item.title || item.name || "Expo").split(" ")[0],
