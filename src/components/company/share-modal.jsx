@@ -45,7 +45,7 @@ const ShareModal = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button secondary className="!p-3 lg:!size-[48px] text-gray-400">
+        <Button secondary className="!size-10 !p-0 text-gray-400 md:!size-14 lg:!size-[60px]">
           <ShareBoldIcon />
         </Button>
       </DialogTrigger>

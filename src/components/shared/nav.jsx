@@ -27,11 +27,10 @@ import {
 import { set } from "lodash";
 
 const menuItems = [
-  { id: 1, label: "Home", path: "/" },
-  { id: 2, label: "Company", path: "/company" },
-  { id: 3, label: "Sourcing", path: "/sourcing" },
-  { id: 4, label: "Expo", path: "/expo" },
-  { id: 5, label: "Pricing", path: "/pricing" },
+  { id: 1, label: "Company", path: "/company" },
+  { id: 2, label: "Sourcing", path: "/sourcing" },
+  { id: 3, label: "Expo", path: "/expo" },
+  { id: 4, label: "Pricing", path: "/pricing" },
 ];
 const moreItems = [
   { id: 1, label: "Blog", path: "/blog" },
@@ -138,8 +137,8 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
               </Link>
             </div>
 
-            <div className="flex-1 hidden items-center lg:gap-6 lg:flex">
-              <ul className="flex lg:gap-8 md:gap-6 items-center">
+            <div className="flex-1 hidden items-center justify-center lg:gap-6 lg:flex">
+              <ul className="flex items-center justify-center lg:gap-8 md:gap-6">
                 {menuItems?.map((item) => (
                   <li key={item.id}>
                     <Link

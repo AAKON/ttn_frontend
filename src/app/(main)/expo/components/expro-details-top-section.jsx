@@ -343,9 +343,9 @@ const ExproDetailsTopSection = ({ expro }) => {
             ) : null}
 
             <div ref={sectionRef} className="bg-white rounded-2xl border border-[#EAECF0] overflow-hidden shadow-sm">
-                <div className="flex flex-col lg:flex-row p-4 md:p-6 gap-6 md:gap-8">
+                <div className="flex flex-col xl:flex-row p-4 md:p-6 gap-6 xl:gap-7 2xl:gap-8">
                     {/* Left Side: Banner Image */}
-                    <div className="w-full lg:w-[565px] flex-shrink-0">
+                    <div className="w-full xl:w-[48%] 2xl:w-[565px] xl:flex-shrink-0">
                         <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden bg-gray-100">
                             {hasBannerImage ? (
                                 <Image
@@ -353,7 +353,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     alt={expro.title || "Expo banner"}
                                     fill
                                     priority
-                                    sizes="(max-width: 1024px) 100vw, 565px"
+                                    sizes="(max-width: 1279px) 100vw, (max-width: 1535px) 48vw, 565px"
                                     className="object-cover"
                                 />
                             ) : (
@@ -376,10 +376,10 @@ const ExproDetailsTopSection = ({ expro }) => {
                     </div>
 
                     {/* Right Side: Information */}
-                    <div className="flex-1 flex flex-col pt-2">
+                    <div className="flex min-w-0 flex-1 flex-col pt-2">
                         {/* Top Line: Organizer & Views */}
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-[14px] md:text-lg text-gray-600">
+                        <div className="mb-2 flex items-start justify-between gap-3 min-[1100px]:flex-row min-[1100px]:items-start min-[1100px]:justify-between">
+                            <p className="min-w-0 text-[14px] md:text-lg text-gray-600">
                                 Event By <br className="md:hidden" />{" "}
                                 {companySlug ? (
                                     <Link
@@ -396,14 +396,14 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     </span>
                                 )}
                             </p>
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1570EF] text-white text-xs font-medium">
+                            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#1570EF] px-2.5 py-1 text-xs font-medium text-white">
                                 <Eye className="h-3.5 w-3.5" />
                                 {expro?.view_count} Views
                             </div>
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-xl md:text-[28px] font-bold text-[#101828] leading-tight mb-3 max-w-2xl">
+                        <h1 className="mb-3 max-w-2xl text-xl font-bold leading-tight text-[#101828] md:text-[28px] 2xl:max-w-[720px]">
                             {expro.title}
                         </h1>
 
@@ -419,7 +419,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     aria-label={`Open ${locationLabel} in Google Maps`}
                                     className="inline-flex"
                                 >
-                                    <ExternalLink className="h-3 w-3 text-[#2E90FA] cursor-pointer" />
+                                    <ExternalLink className="h-4 w-4 text-[#2E90FA] cursor-pointer" />
                                 </a>
                             </div>
                             <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
@@ -434,15 +434,15 @@ const ExproDetailsTopSection = ({ expro }) => {
 
                         {/* Bottom Row: Countdown & Actions */}
                         <div
-                            className={`mt-auto flex flex-col md:flex-row md:items-center gap-6 pt-2 ${countdownInfo.isActive ? "justify-between" : "md:justify-end"}`}
+                            className={`mt-auto flex flex-col gap-6 pt-2 min-[1100px]:flex-row min-[1100px]:items-end xl:items-center ${countdownInfo.isActive ? "min-[1100px]:justify-between" : "min-[1100px]:justify-end"}`}
                         >
                             {/* Countdown */}
                             {countdownInfo?.isActive ? (
-                                <div className="flex gap-2 sm:gap-2.5">
+                                <div className="flex w-full gap-2 sm:w-auto sm:gap-2.5">
                                     {countdownInfo.values.map((item, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex h-14 min-w-[44px] flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1.5 py-1 sm:h-16 sm:min-w-[52px] md:min-w-[56px]"
+                                            className="flex h-14 flex-1 flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:h-16 sm:min-w-[52px] sm:flex-none sm:px-1.5 md:min-w-[56px]"
                                         >
                                             <div className="flex h-7 w-8 items-center justify-center text-base font-medium text-[#B54708] sm:h-8 sm:w-10 sm:text-lg md:w-14">
                                                 {item.value}
@@ -456,14 +456,14 @@ const ExproDetailsTopSection = ({ expro }) => {
                             ) : null}
 
                             {/* Actions */}
-                            <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-[1100px]:justify-end">
                                 <ShareModal />
                                 <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
                                 {!shouldHideRegisterAction ? (
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-10 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-14 md:px-10 md:text-base"
+                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-10 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-16 md:px-10 md:text-base"
                                     >
                                         Register Now
                                     </button>

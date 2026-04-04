@@ -4,9 +4,9 @@ import "react-phone-input-2/lib/style.css";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import { z } from "zod";
@@ -28,13 +28,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const roleOptions = [
   { label: "Visitor", value: "visitor" },
@@ -42,14 +35,17 @@ const roleOptions = [
   { label: "Sponsor", value: "sponsor" },
 ];
 
-const jobTitleOptions = [
-  "CEO / Founder",
-  "Director",
-  "Manager",
-  "Merchandiser",
-  "Procurement Lead",
-  "Marketing Lead",
-];
+const normalizeJobTitleOptions = (items = []) =>
+  items
+    .map((item) => {
+      const id = Number(item?.id);
+      const name = String(item?.name || "").trim();
+
+      if (!Number.isFinite(id) || !name) return null;
+
+      return { id, name };
+    })
+    .filter(Boolean);
 
 const normalizeCompanyOptions = (items = []) => {
   const seen = new Set();
@@ -87,9 +83,6 @@ const panelClasses = "rounded-[16px] bg-[#F8FAFC] p-4 md:p-5";
 
 const fieldClasses =
   "h-12 rounded-[12px] border-[#D0D5DD] bg-white px-4 text-[14px] font-normal text-[#101828] placeholder:text-[#98A2B3] shadow-[0_1px_2px_rgba(16,24,40,0.04)] transition-colors focus-visible:border-[#FDB022] focus-visible:ring-0 focus-visible:ring-offset-0";
-
-const selectTriggerClasses =
-  "h-12 rounded-[12px] border-[#D0D5DD] bg-white px-4 text-[14px] text-[#101828] shadow-[0_1px_2px_rgba(16,24,40,0.04)] focus:ring-0 focus:ring-offset-0 [&>span]:text-left data-[placeholder]:text-[#98A2B3] [&>svg]:text-[#667085] [&>svg]:opacity-100";
 
 const expoCompaniesBaseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
@@ -142,7 +135,7 @@ const RegistrationTypeSelector = ({
     <div
       role="radiogroup"
       aria-label="Registration type"
-      className="mt-3 grid grid-cols-1 gap-1 rounded-[14px] border border-[#DCE3EE] bg-white p-1.5 sm:grid-cols-3 md:p-2"
+      className="mt-3 grid grid-cols-3 gap-1 rounded-[14px] border border-[#DCE3EE] bg-white p-1 md:p-2"
     >
       {roleOptions.map((option) => {
         const isSelected = registrationRole === option.value;
@@ -153,27 +146,23 @@ const RegistrationTypeSelector = ({
             key={option.value}
             role="radio"
             aria-checked={isSelected}
-            className={`flex min-h-11 items-center gap-2.5 rounded-[12px] px-3 py-2 text-left text-[14px] font-semibold leading-5 text-[#344054] transition-colors md:gap-2 md:text-[14px] md:leading-6 ${
-              isSelected
-                ? "bg-[#FFFAEB]"
-                : "hover:bg-[#FCFCFD]"
-            }`}
+            className="flex min-h-10 items-center gap-1.5 rounded-[12px] bg-transparent px-2 py-2 text-left text-[12px] font-semibold leading-4 text-[#344054] transition-colors hover:bg-transparent md:min-h-11 md:gap-2 md:px-3 md:text-[14px] md:leading-6"
             onClick={() => onRegistrationRoleChange(option.value)}
           >
             <span
-              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+              className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors md:h-5 md:w-5 ${
                 isSelected
                   ? "border-[#F79009] text-[#F79009]"
                   : "border-[#D0D5DD] text-transparent"
               }`}
             >
               <span
-                className={`h-2.5 w-2.5 rounded-full ${
+                className={`h-2 w-2 rounded-full md:h-2.5 md:w-2.5 ${
                   isSelected ? "bg-current" : "bg-transparent"
                 }`}
               />
             </span>
-            <span className="select-none text-[14px] leading-5">
+            <span className="select-none text-[12px] leading-4 md:text-[14px] md:leading-5">
               {option.label}
             </span>
           </button>
@@ -207,6 +196,92 @@ const getPhonePayload = (rawPhone = "", selectedPhoneCode = "+1") => {
   };
 };
 
+const AutocompleteField = ({
+  value,
+  onChange,
+  options = [],
+  placeholder,
+  emptyMessage,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const normalizedValue = String(value || "");
+  const normalizedOptions = useMemo(
+    () =>
+      options
+        .map((option) => String(option || "").trim())
+        .filter(Boolean),
+    [options]
+  );
+
+  const filteredOptions = useMemo(() => {
+    const query = normalizedValue.trim().toLowerCase();
+
+    if (!query) return normalizedOptions.slice(0, 12);
+
+    return normalizedOptions
+      .filter((option) => option.toLowerCase().includes(query))
+      .slice(0, 8);
+  }, [normalizedOptions, normalizedValue]);
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (!containerRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <Input
+        value={normalizedValue}
+        onChange={(event) => {
+          onChange(event.target.value);
+          setIsOpen(true);
+        }}
+        onFocus={() => setIsOpen(true)}
+        placeholder={placeholder}
+        autoComplete="off"
+        className={fieldClasses}
+      />
+
+      {isOpen ? (
+        <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-[50020] overflow-hidden rounded-[12px] border border-[#D0D5DD] bg-white shadow-[0_12px_24px_rgba(16,24,40,0.12)]">
+          {filteredOptions.length > 0 ? (
+            <div className="max-h-56 overflow-y-auto p-1.5">
+              {filteredOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className="flex w-full items-center justify-start rounded-[10px] bg-transparent px-3 py-2.5 text-left text-[14px] font-normal text-[#101828] transition-colors hover:bg-[#F2F4F7]"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onChange(option);
+                    setIsOpen(false);
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="px-3 py-3 text-[13px] text-[#667085]">
+              {emptyMessage}
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 const ExpoRegistrationModal = ({
   open,
   onOpenChange,
@@ -214,16 +289,14 @@ const ExpoRegistrationModal = ({
   visitorRegUrl = "",
   modalId = "expo_registration_modal",
 }) => {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
   const { toast } = useToast();
-  const hasAppliedUrlRoleRef = useRef(false);
-  const hasAutoOpenedFromQueryRef = useRef(false);
   const [registrationRole, setRegistrationRole] = useState("visitor");
   const [submitting, setSubmitting] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
+  const [jobTitleOptions, setJobTitleOptions] = useState([]);
   const [phoneCode, setPhoneCode] = useState("+1");
 
   const form = useForm({
@@ -237,26 +310,6 @@ const ExpoRegistrationModal = ({
       "Visitor",
     [registrationRole]
   );
-  console.log({selectedRoleLabel,registrationRole});
-  
-
-  const clearRegistrationQueryFlags = useCallback(() => {
-    const nextParams = new URLSearchParams(searchParams.toString());
-    const keysToDelete = ["expoRegistration", "expoRole", "expoModalId"];
-
-    let hasRemovedAny = false;
-    keysToDelete.forEach((key) => {
-      if (nextParams.has(key)) {
-        nextParams.delete(key);
-        hasRemovedAny = true;
-      }
-    });
-
-    if (!hasRemovedAny) return;
-
-    const query = nextParams.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
-  }, [pathname, router, searchParams]);
 
   const resolvedExpoSlug = useMemo(() => {
     const trimmedExpoSlug = String(expoSlug || "").trim();
@@ -278,40 +331,6 @@ const ExpoRegistrationModal = ({
   }, [searchParams, visitorRegUrl]);
 
   useEffect(() => {
-    if (open) return;
-    if (hasAutoOpenedFromQueryRef.current) return;
-
-    const shouldOpenFromQuery = searchParams.get("expoRegistration") === "1";
-    if (!shouldOpenFromQuery) return;
-
-    const requestedModalId = String(searchParams.get("expoModalId") || "").trim();
-    if (requestedModalId && requestedModalId !== modalId) return;
-    const requestedRole = String(searchParams.get("expoRole") || "").trim();
-    if (requestedRole && roleOptions.some((option) => option.value === requestedRole)) {
-      setRegistrationRole(requestedRole);
-    }
-
-    onOpenChange(true);
-    hasAutoOpenedFromQueryRef.current = true;
-    clearRegistrationQueryFlags();
-  }, [clearRegistrationQueryFlags, modalId, onOpenChange, open, searchParams]);
-
-  useEffect(() => {
-    if (!open) {
-      hasAppliedUrlRoleRef.current = false;
-      return;
-    }
-
-    if (hasAppliedUrlRoleRef.current) return;
-
-    const requestedRole = searchParams.get("expoRole");
-    if (requestedRole && roleOptions.some((option) => option.value === requestedRole)) {
-      setRegistrationRole(requestedRole);
-    }
-    hasAppliedUrlRoleRef.current = true;
-  }, [open, searchParams]);
-
-  useEffect(() => {
     if (!open) return;
     setPhoneCode("+1");
     form.reset(getDefaultValues(session?.user));
@@ -325,10 +344,70 @@ const ExpoRegistrationModal = ({
 
   useEffect(() => {
     if (!open) {
+      setJobTitleOptions([]);
+      return;
+    }
+
+    let isCancelled = false;
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(async () => {
+      try {
+        if (!expoCompaniesBaseUrl) {
+          setJobTitleOptions([]);
+          return;
+        }
+
+        const headers = {
+          "Content-Type": "application/json",
+        };
+
+        if (session?.accessToken) {
+          headers.Authorization = `Bearer ${session.accessToken}`;
+        }
+
+        const response = await fetch(
+          `${expoCompaniesBaseUrl}/expo/registration-options`,
+          {
+            method: "GET",
+            cache: "no-store",
+            headers,
+            signal: controller.signal,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        const payload = data?.data ?? data;
+        const listData = Array.isArray(payload?.job_titles)
+          ? payload.job_titles
+          : [];
+
+        if (isCancelled) return;
+        setJobTitleOptions(normalizeJobTitleOptions(listData));
+      } catch (error) {
+        if (isCancelled || error?.name === "AbortError") return;
+        console.error("Error fetching registration options:", error);
+        setJobTitleOptions([]);
+      }
+    }, 200);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [open, session?.accessToken]);
+
+  useEffect(() => {
+    if (!open) {
       setCompanyOptions([]);
       return;
     }
-    if (status !== "authenticated" || registrationRole === "visitor") {
+    if (registrationRole === "visitor") {
       setCompanyOptions([]);
       return;
     }
@@ -395,43 +474,19 @@ const ExpoRegistrationModal = ({
     };
   }, [
     open,
-    status,
     registrationRole,
     session?.accessToken,
   ]);
-
-  const handleLogin = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("expoRegistration", "1");
-    params.set("expoRole", registrationRole);
-    params.set("expoModalId", String(modalId || "").trim() || "expo_registration_modal");
-    if (resolvedExpoSlug) {
-      params.set("expoSlug", resolvedExpoSlug);
-    }
-    if (resolvedVisitorRegUrl) {
-      params.set("expoVisitorRegUrl", resolvedVisitorRegUrl);
-    }
-
-    const query = params.toString();
-    const callbackUrl = query ? `${pathname}?${query}` : pathname;
-
-    onOpenChange(false);
-    router.push(`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`);
-  };
 
   const handleCancel = () => {
     form.reset(getDefaultValues(session?.user));
     onOpenChange(false);
   };
 
-  const isAuthenticated = status === "authenticated";
   const isVisitorRegistration = registrationRole === "visitor";
-  const showLoadingState = status === "loading" && !isVisitorRegistration;
-  const showLoginPrompt =
-    !isAuthenticated && status !== "loading" && !isVisitorRegistration;
+  const showLoadingState = false;
   const showVisitorRegistration = isVisitorRegistration;
-  const showDetailedRegistrationForm =
-    isAuthenticated && !isVisitorRegistration;
+  const showDetailedRegistrationForm = !isVisitorRegistration;
   const modalMaxWidth = "sm:max-w-[650px]";
 
   const submitRegistration = async (formValues) => {
@@ -453,13 +508,10 @@ const ExpoRegistrationModal = ({
           throw new Error("Registration API URL is not configured.");
         }
 
-        const jobTitleId = jobTitleOptions.findIndex(
-          (option) => option === formValues?.job_title
-        ) + 1;
-
-        if (jobTitleId <= 0) {
-          throw new Error("Please select a valid job title.");
-        }
+        const selectedJobTitle = jobTitleOptions.find(
+          (option) => option.name === formValues?.job_title
+        );
+        const jobTitleId = selectedJobTitle?.id ?? null;
 
         const { phone_code, phone } = getPhonePayload(
           formValues?.phone,
@@ -474,6 +526,7 @@ const ExpoRegistrationModal = ({
           phone,
           company: String(formValues?.company || "").trim(),
           job_title_id: jobTitleId,
+          job_title: String(formValues?.job_title || "").trim(),
           job_function: String(formValues?.job_function || "").trim(),
         };
 
@@ -542,33 +595,6 @@ const ExpoRegistrationModal = ({
           {showLoadingState ? (
             <div className="flex min-h-[220px] items-center justify-center px-6 py-6 text-[#667085]">
               <Loader2 className="h-6 w-6 animate-spin" />
-            </div>
-          ) : null}
-
-          {showLoginPrompt ? (
-            <div className="px-5 py-4 md:px-5 md:py-4">
-              <RegistrationTypeSelector
-                registrationRole={registrationRole}
-                onRegistrationRoleChange={setRegistrationRole}
-              />
-
-              <div className="px-2 pb-2 pt-14 text-center md:px-10 md:pt-16">
-                <h3 className="text-[20px] font-semibold text-[#1D2939] md:text-[24px]">
-                  Login to Expo Registration.
-                </h3>
-                <p className="mx-auto mt-4 max-w-[560px] text-[16px] leading-6 text-[#667085]">
-                  You must login to registration. By logged in you will manage
-                  your registration & bookmark expo easily from your profile.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={handleLogin}
-                  className="mt-8 inline-flex h-12 min-w-[202px] items-center justify-center rounded-[12px] bg-[#F79009] px-8 text-[16px] font-semibold text-white transition-colors hover:bg-[#DC6803]"
-                >
-                  Log In Now
-                </button>
-              </div>
             </div>
           ) : null}
 
@@ -712,33 +738,15 @@ const ExpoRegistrationModal = ({
                               <FormLabel>
                                 <FieldLabel label="Company" required />
                               </FormLabel>
-                              <Select
-                                value={field.value || undefined}
-                                onValueChange={field.onChange}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className={selectTriggerClasses}>
-                                    <SelectValue placeholder="Select company" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent className="rounded-[12px] border border-[#D0D5DD] bg-white p-1 shadow-[0_12px_24px_rgba(16,24,40,0.12)]">
-                                  {companyOptions.length > 0 ? (
-                                    companyOptions.map((option) => (
-                                      <SelectItem
-                                        key={option}
-                                        value={option}
-                                        className="rounded-[10px] py-2.5 text-[14px] text-[#101828]"
-                                      >
-                                        {option}
-                                      </SelectItem>
-                                    ))
-                                  ) : (
-                                    <div className="px-2 py-2.5 text-[13px] text-[#667085]">
-                                      No company options available
-                                    </div>
-                                  )}
-                                </SelectContent>
-                              </Select>
+                              <FormControl>
+                                <AutocompleteField
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={companyOptions}
+                                  placeholder="Search or type company"
+                                  emptyMessage="No company options found. You can type your company."
+                                />
+                              </FormControl>
                               <FormMessage className="pt-1.5 text-[12px]" />
                             </FormItem>
                           )}
@@ -752,27 +760,15 @@ const ExpoRegistrationModal = ({
                               <FormLabel>
                                 <FieldLabel label="Job Title" required />
                               </FormLabel>
-                              <Select
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
-                                <FormControl>
-                                  <SelectTrigger className={selectTriggerClasses}>
-                                    <SelectValue placeholder="Select your job title" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent className="rounded-[12px] border border-[#D0D5DD] bg-white p-1 shadow-[0_12px_24px_rgba(16,24,40,0.12)]">
-                                  {jobTitleOptions.map((option) => (
-                                    <SelectItem
-                                      key={option}
-                                      value={option}
-                                      className="rounded-[10px] py-2.5 text-[14px] text-[#101828]"
-                                    >
-                                      {option}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                              <FormControl>
+                                <AutocompleteField
+                                  value={field.value}
+                                  onChange={field.onChange}
+                                  options={jobTitleOptions.map((option) => option.name)}
+                                  placeholder="Search or type your job title"
+                                  emptyMessage="No job title found. You can type your own."
+                                />
+                              </FormControl>
                               <FormMessage className="pt-1.5 text-[12px]" />
                             </FormItem>
                           )}

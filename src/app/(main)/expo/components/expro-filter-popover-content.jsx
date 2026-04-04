@@ -20,15 +20,24 @@ const yearOptions = Array.from({ length: FUTURE_YEAR_COUNT }, (_, index) => {
 });
 
 export const initialData = {
-    country: [
-        { id: "bangladesh", label: "Bangladesh", },
-        { id: "india", label: "India", },
-        { id: "china", label: "China", },
-        { id: "pakistan", label: "Pakistan", },
-    ],
+    country: [],
     year: yearOptions,
     organizer: [],
 };
+
+const normalizeCountryOptions = (items = []) =>
+    items
+        .map((item) => {
+            const label = item?.name;
+            if (!label) return null;
+
+            return {
+                id: String(item?.id ?? item?.country_code ?? label),
+                label: String(label),
+                count: 0,
+            };
+        })
+        .filter(Boolean);
 
 const normalizeOrganizerOptions = (items = []) =>
     items
@@ -69,6 +78,8 @@ export function ExproFilterPopoverContent({
     onOrganizerOptionsLoaded,
     onApply
 }) {
+    const registrationOptionsBaseUrl =
+        process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
     const [searchQueries, setSearchQueries] = React.useState({
         country: "",
         year: "",
@@ -76,6 +87,9 @@ export function ExproFilterPopoverContent({
     });
 
     const [tempFilters, setTempFilters] = React.useState(selectedFilters);
+    const [countryData, setCountryData] = React.useState(initialData.country);
+    const [isCountryLoading, setIsCountryLoading] = React.useState(false);
+    const [countryLoadError, setCountryLoadError] = React.useState("");
     const [organizerData, setOrganizerData] = React.useState(organizerOptions);
     const [isOrganizerLoading, setIsOrganizerLoading] = React.useState(false);
     const [organizerLoadError, setOrganizerLoadError] = React.useState("");
@@ -84,6 +98,56 @@ export function ExproFilterPopoverContent({
     React.useEffect(() => {
         setTempFilters(selectedFilters);
     }, [JSON.stringify(selectedFilters)]);
+
+    React.useEffect(() => {
+        if (!open) return;
+
+        let isCancelled = false;
+        const controller = new AbortController();
+        const timeoutId = setTimeout(async () => {
+            setIsCountryLoading(true);
+            setCountryLoadError("");
+
+            try {
+                if (!registrationOptionsBaseUrl) {
+                    setCountryData([]);
+                    return;
+                }
+
+                const response = await fetch(
+                    `${registrationOptionsBaseUrl}/expo/registration-options`,
+                    { method: "GET", cache: "no-store", signal: controller.signal }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                const payload = data?.data ?? data;
+                const listData = Array.isArray(payload?.locations)
+                    ? payload.locations
+                    : [];
+
+                if (isCancelled) return;
+                setCountryData(normalizeCountryOptions(listData));
+            } catch (error) {
+                if (isCancelled || error?.name === "AbortError") return;
+                console.error("Error fetching country options:", error);
+                setCountryLoadError("Failed to load countries.");
+            } finally {
+                if (!isCancelled) {
+                    setIsCountryLoading(false);
+                }
+            }
+        }, 200);
+
+        return () => {
+            isCancelled = true;
+            clearTimeout(timeoutId);
+            controller.abort();
+        };
+    }, [open, registrationOptionsBaseUrl]);
 
     React.useEffect(() => {
         if (!open) return;
@@ -257,17 +321,27 @@ export function ExproFilterPopoverContent({
                     className="w-full space-y-3 "
                 >
                     {/* By Country */}
-                    <AccordionItem value="country" className="border rounded-[8px] py-2 px-3 bg-gray-100">
+                    <AccordionItem value="country" className="border rounded-[8px] py-2 px-3 bg-gray-50">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Country
                         </AccordionTrigger>
                         <AccordionContent>
-                            {renderFilterList("country", initialData.country)}
+                            {isCountryLoading ? (
+                                <p className="py-4 text-center text-sm text-gray-500">
+                                    Loading countries...
+                                </p>
+                            ) : countryLoadError ? (
+                                <p className="py-4 text-center text-sm text-red-500">
+                                    {countryLoadError}
+                                </p>
+                            ) : (
+                                renderFilterList("country", countryData)
+                            )}
                         </AccordionContent>
                     </AccordionItem>
 
                     {/* By Year */}
-                    <AccordionItem value="year" className="border rounded-[8px] py-2 px-3 bg-gray-100">
+                    <AccordionItem value="year" className="border rounded-[8px] py-2 px-3 bg-gray-50">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Year
                         </AccordionTrigger>
@@ -277,7 +351,7 @@ export function ExproFilterPopoverContent({
                     </AccordionItem>
 
                     {/* By Organizer */}
-                    <AccordionItem value="organizer" className="border rounded-[8px] py-2 px-3 bg-gray-100">
+                    <AccordionItem value="organizer" className="border rounded-[8px] py-2 px-3 bg-gray-50">
                         <AccordionTrigger className="bg-transparent text-[#344054] font-semibold py-2 px-1 no-underline hover:no-underline">
                             By Organizer
                         </AccordionTrigger>
