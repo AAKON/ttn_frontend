@@ -3,8 +3,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDateRange } from "@/utils/dateRange";
 
 const mapExpoFromApi = (item, index) => {
-  console.log({item});
-  
   const title = item?.title || item?.name || "Untitled Expo";
   const posterWord = item?.poster_word || title.split(" ")[0] || "Expo";
   const posterTagline =

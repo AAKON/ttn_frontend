@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
+    Flag,
     MapPin,
     Calendar,
     Clock,
@@ -119,6 +120,8 @@ const parseExpoTimestamp = (value, pickFromRange = "start") => {
 };
 
 const ExproDetailsTopSection = ({ expro }) => {
+    console.log({expro});
+    
     const searchParams = useSearchParams();
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = React.useState(false);
     const [nowTimestamp, setNowTimestamp] = React.useState(null);
@@ -149,6 +152,7 @@ const ExproDetailsTopSection = ({ expro }) => {
     const countdownStartValue = expro?.countdown_start || expro?.countdownStart;
     const countdownEndValue = expro?.countdown_end || expro?.countdownEnd;
     const locationLabel = expro?.location || "Guangzhou Exhibition Centre, Guangzhou, China";
+    const venueLabel = expro?.venue || null
     const shouldHideRegisterAction = searchParams.get("fromMyExpo") === "1";
 
     const countdownStartTimestamp = React.useMemo(
@@ -271,12 +275,13 @@ const ExproDetailsTopSection = ({ expro }) => {
 
         const updateStickyVisibility = () => {
             const sectionElement = sectionRef.current;
-            if (!sectionElement || window.innerWidth < 1024) {
+            if (!sectionElement) {
                 setShowStickyCountdown(false);
                 return;
             }
 
-            const headerHeight = window.scrollY > 100 ? 88 : 0;
+            const headerHeight =
+                window.innerWidth >= 1024 && window.scrollY > 100 ? 88 : 0;
             const sectionRect = sectionElement.getBoundingClientRect();
             const shouldShow = sectionRect.bottom <= headerHeight + 8;
 
@@ -298,28 +303,28 @@ const ExproDetailsTopSection = ({ expro }) => {
         <>
             {countdownInfo.isActive ? (
                 <div
-                    className={`hidden lg:block fixed left-0 right-0 top-[88px] z-[60] transform-gpu transition-all duration-300 ease-out ${showStickyCountdown
+                    className={`fixed left-0 right-0 top-[70px] lg:top-[88px] z-[60] transform-gpu transition-all duration-300 ease-out ${showStickyCountdown
                             ? "translate-y-0 opacity-100 pointer-events-auto"
                             : "-translate-y-2 opacity-0 pointer-events-none"
                         }`}
                 >
-                    <div className=" border border-[#EAECF0] bg-white px-8 xl:px-12 py-3 shadow-sm ">
-                        <div className="container flex items-center justify-between gap-6">
-                            <h2 className="text-[16px] xl:text-[18px] font-bold text-[#1D2939] leading-tight line-clamp-2 flex-1 min-w-0">
+                    <div className="border border-[#EAECF0] bg-white px-3 py-2 shadow-sm md:px-6 md:py-3 xl:px-12">
+                        <div className="container flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:gap-6">
+                            <h2 className="min-w-0 flex-1 text-[13px] font-bold leading-tight text-[#1D2939] line-clamp-2 sm:text-[16px] xl:text-[18px]">
                                 {expro?.title || "Expo"}
                             </h2>
 
-                            <div className="flex items-center gap-3 flex-shrink-0">
-                                <div className="flex gap-2.5">
+                            <div className="flex items-center justify-between gap-2 sm:flex-row sm:items-center sm:gap-3 flex-shrink-0">
+                                <div className="flex min-w-0 gap-1 overflow-x-auto pb-0.5 sm:gap-2.5 sm:overflow-visible sm:pb-0">
                                     {countdownInfo.values.map((item, idx) => (
                                         <div
                                             key={`sticky-countdown-${idx}`}
-                                            className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg"
+                                            className="flex min-w-[25px] flex-col items-center justify-center rounded-md border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:min-w-0 sm:rounded-lg sm:p-1 md:h-[51px] md:w-[78px] md:min-w-[78px] md:px-2 md:py-1"
                                         >
-                                            <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-normal text-md">
+                                            <div className="flex h-4 w-6 items-center justify-center text-[16px] font-medium text-[#B54708] sm:h-9 sm:w-10 sm:text-md md:h-6 md:w-full">
                                                 {item.value}
                                             </div>
-                                            <span className="text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                            <span className="text-[7px] font-normal text-[#667085] uppercase leading-none tracking-normal sm:text-[10px] sm:tracking-wider">
                                                 {["Day", "Hr", "Min", "Sec"][idx] || item.label}
                                             </span>
                                         </div>
@@ -330,7 +335,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                        className="h-8 shrink-0 rounded-md bg-[#ED8A19] px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-[#da7f18] sm:h-[51px] sm:rounded-xl sm:px-10 sm:text-[16px]"
                                     >
                                         Register Now
                                     </button>
@@ -342,9 +347,9 @@ const ExproDetailsTopSection = ({ expro }) => {
             ) : null}
 
             <div ref={sectionRef} className="bg-white rounded-2xl border border-[#EAECF0] overflow-hidden shadow-sm">
-                <div className="flex flex-col lg:flex-row p-4 md:p-6 gap-6 md:gap-8">
+                <div className="flex flex-col xl:flex-row p-4 md:p-6 gap-6 xl:gap-7 2xl:gap-8">
                     {/* Left Side: Banner Image */}
-                    <div className="w-full lg:w-[565px] flex-shrink-0">
+                    <div className="w-full xl:w-[48%] 2xl:w-[565px] xl:flex-shrink-0">
                         <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden bg-gray-100">
                             {hasBannerImage ? (
                                 <Image
@@ -352,7 +357,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     alt={expro.title || "Expo banner"}
                                     fill
                                     priority
-                                    sizes="(max-width: 1024px) 100vw, 565px"
+                                    sizes="(max-width: 1279px) 100vw, (max-width: 1535px) 48vw, 565px"
                                     className="object-cover"
                                 />
                             ) : (
@@ -375,10 +380,10 @@ const ExproDetailsTopSection = ({ expro }) => {
                     </div>
 
                     {/* Right Side: Information */}
-                    <div className="flex-1 flex flex-col pt-2">
+                    <div className="flex min-w-0 flex-1 flex-col pt-2">
                         {/* Top Line: Organizer & Views */}
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-[14px] md:text-lg text-gray-600">
+                        <div className="mb-2 flex items-start justify-between gap-3 min-[1100px]:flex-row min-[1100px]:items-start min-[1100px]:justify-between">
+                            <p className="min-w-0 text-[14px] md:text-lg text-gray-600">
                                 Event By <br className="md:hidden" />{" "}
                                 {companySlug ? (
                                     <Link
@@ -395,22 +400,27 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     </span>
                                 )}
                             </p>
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1570EF] text-white text-xs font-medium">
+                            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-[#1570EF] px-2.5 py-1 text-xs font-medium text-white">
                                 <Eye className="h-3.5 w-3.5" />
                                 {expro?.view_count} Views
                             </div>
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-xl md:text-[28px] font-bold text-[#101828] leading-tight mb-3 max-w-2xl">
+                        <h1 className="mb-3 max-w-2xl text-xl font-bold leading-tight text-[#101828] md:text-[28px] 2xl:max-w-[720px]">
                             {expro.title}
                         </h1>
 
                         {/* Metadata */}
                         <div className="space-y-1 mb-2">
                             <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
-                                <MapPin className="h-4 w-4 text-[#667085] flex-shrink-0" />
+                                <Flag className="h-4 w-4 text-[#667085] flex-shrink-0" />
                                 <span>{locationLabel}</span>
+                               
+                            </div>
+                            <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
+                                <MapPin className="h-4 w-4 text-[#667085] flex-shrink-0" />
+                                <span>{venueLabel}</span>
                                 <a
                                     href={googleMapsUrl}
                                     target="_blank"
@@ -418,7 +428,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     aria-label={`Open ${locationLabel} in Google Maps`}
                                     className="inline-flex"
                                 >
-                                    <ExternalLink className="h-3 w-3 text-[#2E90FA] cursor-pointer" />
+                                    <ExternalLink className="h-4 w-4 text-[#2E90FA] cursor-pointer" />
                                 </a>
                             </div>
                             <div className="flex items-center gap-2.5 text-[#475467] text-[14px] md:text-[15px]">
@@ -435,17 +445,20 @@ const ExproDetailsTopSection = ({ expro }) => {
 
                         {/* Bottom Row: Countdown & Actions */}
                         <div
-                            className={`mt-auto flex flex-col md:flex-row md:items-center gap-6 pt-2 ${countdownInfo.isActive ? "justify-between" : "md:justify-end"}`}
+                            className={`mt-auto flex flex-col gap-6 pt-2 min-[1100px]:flex-row min-[1100px]:items-end xl:items-center ${countdownInfo.isActive ? "min-[1100px]:justify-between" : "min-[1100px]:justify-end"}`}
                         >
                             {/* Countdown */}
                             {countdownInfo?.isActive ? (
-                                <div className="flex gap-2.5">
+                                <div className="flex w-full gap-2 sm:w-auto sm:gap-2.5">
                                     {countdownInfo.values.map((item, idx) => (
-                                        <div key={idx} className="flex flex-col items-center bg-[#FFFAEB] border border-[#FEF0C7] p-1 rounded-lg ">
-                                            <div className="w-10 md:w-14 flex items-center justify-center text-[#B54708] font-medium text-lg">
+                                        <div
+                                            key={idx}
+                                            className="flex h-14 flex-1 flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:h-16 sm:min-w-[52px] sm:flex-none sm:px-1.5 md:h-[51px] md:w-[78px] md:min-w-[78px] md:px-2"
+                                        >
+                                            <div className="flex h-7 w-8 items-center justify-center text-base font-medium text-[#B54708] sm:h-8 sm:w-10 sm:text-lg md:h-6 md:w-full">
                                                 {item.value}
                                             </div>
-                                            <span className=" text-[10px] font-normal text-[#667085] uppercase tracking-wider">
+                                            <span className="text-[9px] font-normal uppercase tracking-wider text-[#667085] sm:text-[10px]">
                                                 {item.label}
                                             </span>
                                         </div>
@@ -454,14 +467,18 @@ const ExproDetailsTopSection = ({ expro }) => {
                             ) : null}
 
                             {/* Actions */}
-                            <div className="flex items-center gap-3">
-                                <ShareModal />
-                                <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-[1100px]:justify-end">
+                                <div className="[&>button]:!h-12 [&>button]:!w-12 [&>button]:!min-w-12 [&>button]:!p-0 [&_[data-slot='dialog-trigger']]:!h-12 [&_[data-slot='dialog-trigger']]:!w-12 [&_[data-slot='dialog-trigger']]:!min-w-12 [&_[data-slot='dialog-trigger']]:!p-0">
+                                    <ShareModal />
+                                </div>
+                                <div className="[&>div>button]:!h-12 [&>div>button]:!w-12 [&>div>button]:!min-w-12 [&>div>button]:!p-0">
+                                    <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
+                                </div>
                                 {!shouldHideRegisterAction ? (
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="flex-1 md:flex-none px-10 h-12 bg-[#ED8A19] text-white font-bold rounded-xl hover:bg-[#da7f18] transition-colors shadow-sm"
+                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-12 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-12 md:w-[164px] md:px-0 md:text-base"
                                     >
                                         Register Now
                                     </button>

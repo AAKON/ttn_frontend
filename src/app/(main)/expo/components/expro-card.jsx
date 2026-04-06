@@ -1,6 +1,9 @@
+"use client";
+
 import { Building2, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const posterVariants = {
   emerald: {
@@ -30,6 +33,7 @@ const posterVariants = {
 };
 
 const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery }) => {
+  const router = useRouter();
   const variant = posterVariants[expro?.variant] || posterVariants?.emerald;
   const hasImage = Boolean(expro?.imageUrl);
   const detailsHref = expro?.slug
@@ -40,10 +44,25 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery })
       }
       : `/expo/${expro.slug}`
     : "/expo";
-  console.log({ expro, hasImage });
+
+  const handleNavigateToDetails = () => {
+    router.push(typeof detailsHref === "string" ? detailsHref : `/expo/${expro.slug}`);
+  };
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]">
+    <article
+      className="relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-[#D0D5DD] bg-white shadow-[0_1px_2px_rgba(16,24,40,0.06)]"
+      onClick={handleNavigateToDetails}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleNavigateToDetails();
+        }
+      }}
+      role="link"
+      tabIndex={0}
+      aria-label={`View details for ${expro?.title || "expo"}`}
+    >
       <div className={`relative aspect-[2/1] overflow-hidden ${variant.wrapper}`}>
         {hasImage ? (
           <Image
@@ -86,16 +105,16 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery })
         ) : null}
       </div>
 
-      <div className="border-t border-[#EAECF0] p-4 md:p-5">
+      <div className="relative z-20 flex flex-1 flex-col border-t border-[#EAECF0] p-4 md:p-5">
         <p className="text-[14px] font-semibold leading-[20px] text-[#475467]">
           {expro.dateRange}
         </p>
 
-        <h3 className="mt-2.5 min-h-[34px] text-[18px] font-semibold leading-[1.35] text-[#101828]">
+        <h3 className="mt-2.5 min-h-[50px] text-[18px] font-semibold leading-[1.35] text-[#101828]">
           {expro.title}
         </h3>
 
-        <div className="mt-3.5 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <div className="mt-3.5 min-h-[48px] flex flex-wrap items-start gap-x-4 gap-y-2">
           <span className="inline-flex items-center gap-1.5 text-[14px] leading-[20px] text-[#475467]">
             <MapPin className="h-4 w-4 text-[#667085]" />
             {expro.country}
@@ -106,16 +125,17 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery })
           </span>
         </div>
 
-        <div className={`mt-5 grid gap-3 ${!withRegisterAction ? "grid-cols-2" : "grid-cols-1"}`}>
+        <div className={`mt-auto pt-5 grid gap-3 ${!withRegisterAction ? "grid-cols-2" : "grid-cols-1"}`}>
           {!withRegisterAction && (
             <button
               type="button"
-              onClick={() =>
+              onClick={(event) => {
+                event.stopPropagation();
                 onRegisterClick?.(
                   expro?.slug,
                   expro?.visitor_reg_url || expro?.visitorRegUrl || ""
-                )
-              }
+                );
+              }}
               className="h-12 rounded-xl border border-[#D0D5DD] bg-[#F9FAFB] text-[16px] font-semibold text-[#344054] transition-colors hover:bg-white"
             >
               Register Now
@@ -124,7 +144,8 @@ const ExproCard = ({ expro, onRegisterClick, withRegisterAction, detailsQuery })
 
           <Link
             href={detailsHref}
-            className="flex items-center justify-center h-12 rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
+            onClick={(event) => event.stopPropagation()}
+            className="relative z-20 flex h-12 items-center justify-center rounded-xl border border-[#F7B267] bg-white text-[16px] font-semibold text-[#ED8A19] transition-colors hover:bg-[#FFF7ED]"
           >
             View Details
           </Link>

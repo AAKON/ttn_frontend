@@ -266,14 +266,8 @@ const SourcingClient = ({
 			{/* Hero Section */}
 			<Section className="bg-gray-50">
 				<div className="max-w-4xl mx-auto text-center">
-					<h1 className="main-title sm:text-2xl lg:text-[42px] text-gray-900 leading-normal pb-8 md:pb-10">
-						Find Your{" "}
-						<TextAnimator
-							animationWordArray={["Order", "Inquiry", "Buying"]}
-							className={"text-primary"}
-							cursorColor={"text-brand-600"}
-						/>
-						Proposal From The Buyer
+					<h1 className="main-title sm:text-2xl lg:text-[44px] text-gray-900 leading-normal pb-8 md:pb-10">
+						Inquiry to Order, Simplify Your Sourcing
 					</h1>
 
 					<div className="max-w-[1096px] mx-auto">

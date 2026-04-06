@@ -6,6 +6,7 @@ import { formatDateRange } from "@/utils/dateRange";
 import ExproDetailsTopSection from "../components/expro-details-top-section";
 import ExproDetailsContent from "../components/expro-details-content";
 import ExproDetailsSidebar from "../components/expro-details-sidebar";
+import { buildExpoPageMetadata } from "./page-metadata";
 
 const getExpoImage = (item) => {
     return (
@@ -93,14 +94,26 @@ const getExproDetails = async (token, slug) => {
     }
 };
 
+export async function generateMetadata({ params }) {
+    const { slug } = await params;
+    const exproData = await getExproDetails(null, slug);
+
+    if (!exproData) {
+        return {
+            title: "Expo Details Not Found",
+            description: "The expo details you are looking for could not be found.",
+        };
+    }
+
+    return buildExpoPageMetadata(exproData, slug);
+}
+
 const ExproDetailsPage = async ({ params }) => {
     const { slug } = await params;
     const session = await getServerSession(authOptions);
     const token = session?.accessToken;
 
     const exproData = await getExproDetails(token, slug);
-    console.log({exproData});
-    
 
     if (!exproData) {
         return (

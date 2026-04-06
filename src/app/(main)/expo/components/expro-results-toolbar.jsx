@@ -55,7 +55,7 @@ const ExproResultsToolbar = ({
               )}
             </button>
           </PopoverTrigger>
-          <PopoverContent className="w-[380px] p-0" align="end" side="bottom" sideOffset={8}>
+          <PopoverContent className="w-[380px] p-0" align="end" side="bottom" sideOffset={8} avoidCollisions={false}>
             <ExproFilterPopoverContent
               open={open}
               onClose={() => setOpen(false)}

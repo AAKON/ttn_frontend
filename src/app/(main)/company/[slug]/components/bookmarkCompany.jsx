@@ -23,13 +23,12 @@ function BookmarkCompany({ slug, is_favorite: initialFavorite, heartIcon=false, 
       setIsAdding(false);
     }
   };
-console.log({isFavorite});
 
   return (
     <div className="flex gap-1">
       <Button
           secondary={!isFavorite}
-          className={`${isFavorite ? 'border-brand-600' : 'border-brand-300'} lg:text-[16px] text-[14px] !font-semibold lg:!size-[48px] !p-3`}
+          className={`${isFavorite ? 'border-brand-600' : 'border-brand-300'} text-[14px] !font-semibold !size-10 !p-0 md:!size-14 lg:!size-[60px] lg:text-[16px]`}
           disabled={isAdding}
           onClick={() => handleAddFavourite(slug)}
       >

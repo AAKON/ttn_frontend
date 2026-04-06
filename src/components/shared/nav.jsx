@@ -27,17 +27,16 @@ import {
 import { set } from "lodash";
 
 const menuItems = [
-  { id: 1, label: "Home", path: "/" },
-  { id: 2, label: "Company", path: "/company" },
-  { id: 3, label: "Sourcing", path: "/sourcing" },
-  { id: 4, label: "Blog", path: "/blog" },
-  { id: 5, label: "Pricing", path: "/pricing" },
-  { id: 6, label: "Expo", path: "/expo" },
+  { id: 1, label: "Company", path: "/company" },
+  { id: 2, label: "Sourcing", path: "/sourcing" },
+  { id: 3, label: "Expo", path: "/expo" },
+  { id: 4, label: "Pricing", path: "/pricing" },
 ];
 const moreItems = [
-  { id: 1, label: "About Us", path: "/about" },
-  { id: 2, label: "Partner", path: "/partner" },
-  { id: 3, label: "Contact Us", path: "/contact" },
+  { id: 1, label: "Blog", path: "/blog" },
+  { id: 2, label: "Our Partner", path: "/partner" },
+  { id: 3, label: "About Us", path: "/about" },
+  { id: 4, label: "Contact Us", path: "/contact" },
 ];
 
 export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
@@ -138,8 +137,8 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
               </Link>
             </div>
 
-            <div className="flex-1 hidden items-center lg:gap-6 lg:flex">
-              <ul className="flex lg:gap-8 md:gap-6 items-center">
+            <div className="flex-1 hidden items-center justify-center lg:gap-6 lg:flex">
+              <ul className="flex items-center justify-center lg:gap-8 md:gap-6">
                 {menuItems?.map((item) => (
                   <li key={item.id}>
                     <Link
@@ -158,6 +157,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                 <DropdownMenuTrigger asChild>
                   <span
                     className={`text-base font-semibold flex gap-2 items-center cursor-pointer ${pathname === "/partner" ||
+                      pathname === "/blog" ||
                       pathname === "/about" ||
                       pathname === "/contact"
                       ? "active-nav-item"
@@ -173,24 +173,15 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 z-[10000]">
                   <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => handleNavigate("/partner")}
-                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
-                    >
-                      Partner
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleNavigate("/about")}
-                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
-                    >
-                      About Us
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleNavigate("/contact")}
-                      className="cursor-pointer h-9 text-base font-semibold text-gray-900"
-                    >
-                      Contact Us
-                    </DropdownMenuItem>
+                    {moreItems?.map((item) => (
+                      <DropdownMenuItem
+                        key={item.id}
+                        onClick={() => handleNavigate(item.path)}
+                        className="cursor-pointer h-9 text-base font-semibold text-gray-900"
+                      >
+                        {item.label}
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -218,7 +209,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
 // Mobile Nav
 function MobileNav({ closeMobileNav, setShowMobileNav }) {
   return (
-    <div className="h-screen w-screen bg-white fixed z-30 top-[76px] p-4 lg:hidden">
+    <div className="fixed top-[76px] z-[200] h-screen w-screen bg-white p-4 lg:hidden">
       <HeroForm />
       <div className="mt-4 overflow-x-scroll max-h-[calc(100vh-300px)] scrollbar-hidden">
         <div className="space-y-3">
