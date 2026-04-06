@@ -209,7 +209,7 @@ export const Nav = ({ showMobileNav, setShowMobileNav, isSticky }) => {
 // Mobile Nav
 function MobileNav({ closeMobileNav, setShowMobileNav }) {
   return (
-    <div className="h-screen w-screen bg-white fixed z-30 top-[76px] p-4 lg:hidden">
+    <div className="fixed top-[76px] z-[200] h-screen w-screen bg-white p-4 lg:hidden">
       <HeroForm />
       <div className="mt-4 overflow-x-scroll max-h-[calc(100vh-300px)] scrollbar-hidden">
         <div className="space-y-3">

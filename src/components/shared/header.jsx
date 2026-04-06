@@ -27,9 +27,9 @@ export const Header = () => {
 
 	return (
 		<header
-			className={`py-5 h-[76px] lg:h-[88px] top-0 left-0 right-0 z-10 w-full ${
+			className={`py-5 h-[76px] lg:h-[88px] top-0 left-0 right-0 w-full ${
 				pathname === "/" ? "bg-transparent fixed" : "bg-white"
-			} ${sticky && "fixed"}`}
+			} ${sticky && "fixed"} ${showMobileNav ? "z-[300]" : "z-10"}`}
 			ref={nav}
 		>
 			<Nav

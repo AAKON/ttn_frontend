@@ -315,9 +315,9 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     {countdownInfo.values.map((item, idx) => (
                                         <div
                                             key={`sticky-countdown-${idx}`}
-                                            className="flex min-w-[38px] flex-col items-center justify-center rounded-md border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:min-w-0 sm:rounded-lg sm:p-1"
+                                            className="flex min-w-[25px] flex-col items-center justify-center rounded-md border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:min-w-0 sm:rounded-lg sm:p-1 md:h-[51px] md:w-[78px] md:min-w-[78px] md:px-2 md:py-1"
                                         >
-                                            <div className="flex h-4 w-6 items-center justify-center text-[16px] font-medium text-[#B54708] sm:h-9 sm:w-10 sm:text-md md:w-14">
+                                            <div className="flex h-4 w-6 items-center justify-center text-[16px] font-medium text-[#B54708] sm:h-9 sm:w-10 sm:text-md md:h-6 md:w-full">
                                                 {item.value}
                                             </div>
                                             <span className="text-[7px] font-normal text-[#667085] uppercase leading-none tracking-normal sm:text-[10px] sm:tracking-wider">
@@ -331,7 +331,7 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="h-8 shrink-0 rounded-md bg-[#ED8A19] px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-[#da7f18] sm:h-14 sm:rounded-xl sm:px-10 sm:text-[16px]"
+                                        className="h-8 shrink-0 rounded-md bg-[#ED8A19] px-3 text-[11px] font-bold text-white shadow-sm transition-colors hover:bg-[#da7f18] sm:h-[51px] sm:rounded-xl sm:px-10 sm:text-[16px]"
                                     >
                                         Register Now
                                     </button>
@@ -442,9 +442,9 @@ const ExproDetailsTopSection = ({ expro }) => {
                                     {countdownInfo.values.map((item, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex h-14 flex-1 flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:h-16 sm:min-w-[52px] sm:flex-none sm:px-1.5 md:min-w-[56px]"
+                                            className="flex h-14 flex-1 flex-col items-center justify-center rounded-lg border border-[#FEF0C7] bg-[#FFFAEB] px-1 py-1 sm:h-16 sm:min-w-[52px] sm:flex-none sm:px-1.5 md:h-[51px] md:w-[78px] md:min-w-[78px] md:px-2"
                                         >
-                                            <div className="flex h-7 w-8 items-center justify-center text-base font-medium text-[#B54708] sm:h-8 sm:w-10 sm:text-lg md:w-14">
+                                            <div className="flex h-7 w-8 items-center justify-center text-base font-medium text-[#B54708] sm:h-8 sm:w-10 sm:text-lg md:h-6 md:w-full">
                                                 {item.value}
                                             </div>
                                             <span className="text-[9px] font-normal uppercase tracking-wider text-[#667085] sm:text-[10px]">
@@ -457,13 +457,17 @@ const ExproDetailsTopSection = ({ expro }) => {
 
                             {/* Actions */}
                             <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-[1100px]:justify-end">
-                                <ShareModal />
-                                <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
+                                <div className="[&>button]:!h-12 [&>button]:!w-12 [&>button]:!min-w-12 [&>button]:!p-0 [&_[data-slot='dialog-trigger']]:!h-12 [&_[data-slot='dialog-trigger']]:!w-12 [&_[data-slot='dialog-trigger']]:!min-w-12 [&_[data-slot='dialog-trigger']]:!p-0">
+                                    <ShareModal />
+                                </div>
+                                <div className="[&>div>button]:!h-12 [&>div>button]:!w-12 [&>div>button]:!min-w-12 [&>div>button]:!p-0">
+                                    <BookmarkCompany expro slug={expro?.slug} is_favorite={expro?.is_favorited} />
+                                </div>
                                 {!shouldHideRegisterAction ? (
                                     <button
                                         type="button"
                                         onClick={() => setIsRegistrationModalOpen(true)}
-                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-10 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-16 md:px-10 md:text-base"
+                                        className="flex-1 rounded-xl bg-[#ED8A19] px-5 h-12 text-sm font-bold text-white transition-colors shadow-sm hover:bg-[#da7f18] md:flex-none md:h-12 md:w-[164px] md:px-0 md:text-base"
                                     >
                                         Register Now
                                     </button>
